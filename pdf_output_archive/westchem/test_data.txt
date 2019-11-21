@@ -1,0 +1,7 @@
+{'customer': 'Greens Hotel (Test data)', 'contact': 'Joe Brown', 'customer_email': 'gordonlindsay@virginmedia.com', 'customer_phone': '07493136169', 'machine': 'Hotpoint', 'make': 'Daneke', 'model': 'Dishwasher 7a'}
+{'results': True, 'wash_temp_55C': False, 'rinse_temp_82C': True, 'is_a_descale_required': False, 'rinse_jets_blocked': True, 'rinse_jets_missing': False, 'wash_jets_clean': True, 'other_fault': False, 'wall_racks': True, 'auto_dosing_clean': True, 'auto_dosing_pump_head': False, 'auto_dosing_tube_stiffeners': True, 'control_systems_clean': False, 'control_system_damaged': True, 'wall_charts': False}
+{'results': True, 'other_faults': False, 'clean': True, 'pump_heads': False, 'tube_stiffener': True, 'touch_pad_attached': False, 'wall_charts': False}
+{'is_water_hard': True, 'is_water_softener_working': False}
+{'pot_washing': True, 'glass_washing': False, 'food_prep_areas': True, 'floors_and_surfaces': False, 'ovens': True, 'hand_soap': False, 'hand_sanitiser': True, 'drains': False, 'laundry': True, 'housekeeping': False}
+{'comments': 'These are my comments on the checks.'}
+{'hydroclean5L_s': 3, 'hydroclean5L_o': 8, 'hydroclean10L_s': 10, 'hydroclean10L_o': 2, 'soilmaster5L_s': 9, 'soilmaster5L_o': 9, 'soilmaster10L_s': None, 'soilmaster10L_o': None, 'quadrant_s': None, 'quadrant_o': None, 'ace87_s': 45, 'ace87_o': 0, 'dp100_s': None, 'dp100_o': None, 'bravo_s': 1, 'bravo_o': 9, 'fabricare_s': 7, 'fabricare_o': 4, 'encore5L_s': None, 'encore5L_o': None}

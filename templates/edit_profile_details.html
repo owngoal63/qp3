@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h2>Edit Your Information</h2>
+
+    <form method="POST" name="ProfileForm">
+        {% csrf_token %}
+
+        <div class="form-group">
+            {{ form.first_name.label}} *<br>
+            {{ form.first_name }}
+        </div>
+
+        <div class="form-group">
+            {{ form.last_name.label}} *<br>
+            {{ form.last_name }}
+        </div>
+
+        <div class="form-group">
+            {{ form.email.label}} *<br>
+            {{ form.email }}
+        </div>
+
+        <div class="form-group">
+            {{ form.company_name.label}} *<br>
+            {{ form.company_name }}
+        </div>
+
+        <div class="form-group">
+            {{ form.telephone.label}} *<br>
+            {{ form.telephone }}
+        </div>
+
+        <div class="form-group">
+            {{ form.daily_work_rate.label}}<br>
+            {{ form.daily_work_rate }}
+        </div>
+
+        <div class="form-group">
+            {{ form.quote_prefix.label}}<br>
+            {{ form.quote_prefix }}
+        </div>
+
+
+        <div class="form-group">
+            {{ form.current_quote_number.label}} *<br>
+            {{ form.current_quote_number }}
+        </div>
+
+        <input type="hidden" name="alert" value="{{alert}}" readonly>
+
+        <button type="submit" class="btn btn-primary" value="Login">Submit</button>
+
+        <a class="btn btn-secondary" href="{% url 'home'%}">Cancel</a>
+
+    </form>
+
+</div>
+<script>
+    profile_form_validation_response()
+</script>
+
+{% endblock content %}

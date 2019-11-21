@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load quotepad_extras %}
+
+{% block content %}
+
+<div class="container">
+
+{% for pdf_file in pdf_files %}
+
+    {% if pdf_file == cur_report_name %}
+        <h4>Current Report</h4>
+        
+            <a href="{% url 'generate_quote_from_fileWC' 'PDFOutput' 'currentquote' %}" target="_blank">View Current Quote</a><br>
+            <a href="{% url 'generate_quote_from_fileWC' 'EmailOutput' 'currentquote' %}">Email Current Quote to customer</a><br><br>
+
+        <hr>
+        <h4>Historical Reports for {{request.user}}</h4>
+    {% else %}
+        {% if pdf_file != "test_data.txt" %}
+            <a href="{% url 'pdfviewWC' pdf_file %}" target="_blank">{{ pdf_file }}</a><br>
+        {% endif %}
+    {% endif %}
+    
+    {% empty %}
+    <p>No quotes found.</p>
+    
+{% endfor %}
+
+<br>
+<a class="btn btn-secondary" href="/home/">Return to Dashboard</a>
+
+</div>
+
+{% endblock %}

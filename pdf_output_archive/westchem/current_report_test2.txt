@@ -1,0 +1,7 @@
+{'customer': 'Greens Hotel', 'contact': 'jhgjhg', 'customer_email': 'gordonlindsay@virginmedia.com', 'customer_phone': '07493136169', 'machine': 'sdfgdfg', 'make': 'sdfgfdg', 'model': 'sdfgfg'}
+{'results': False, 'wash_temp_55C': True, 'rinse_temp_82C': False, 'is_a_descale_required': True, 'rinse_jets_blocked': False, 'rinse_jets_missing': False, 'wash_jets_clean': False, 'other_fault': True, 'wall_racks': True, 'auto_dosing_clean': False, 'auto_dosing_pump_head': True, 'auto_dosing_tube_stiffeners': False, 'control_systems_clean': True, 'control_system_damaged': False, 'wall_charts': False}
+{'results': False, 'other_faults': True, 'clean': False, 'pump_heads': True, 'tube_stiffener': True, 'touch_pad_attached': False, 'wall_charts': False}
+{'is_water_hard': True, 'is_water_softener_working': False}
+{'pot_washing': True, 'glass_washing': False, 'food_prep_areas': True, 'floors_and_surfaces': False, 'ovens': False, 'hand_soap': True, 'hand_sanitiser': False, 'drains': False, 'laundry': False, 'housekeeping': False}
+{'comments': 'Blah blah'}
+{'hydroclean5L_s': 1, 'hydroclean5L_o': 2, 'hydroclean10L_s': None, 'hydroclean10L_o': None, 'soilmaster5L_s': None, 'soilmaster5L_o': None, 'soilmaster10L_s': None, 'soilmaster10L_o': None, 'quadrant_s': None, 'quadrant_o': None, 'ace87_s': None, 'ace87_o': None, 'dp100_s': None, 'dp100_o': None, 'bravo_s': None, 'bravo_o': None, 'fabricare_s': None, 'fabricare_o': None, 'encore5L_s': None, 'encore5L_o': None}

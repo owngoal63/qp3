@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<div class="jumbotron container">
+  <h1 class="display-4">Subscribe Here - Only £15!</h1>
+  <p class="lead">In order to create bespoke quotations for your customers you will need to purchase the full version of
+    Quotepad. Build and send as many quotes as you like
+    making the survey process faster and easier.
+  </p>
+  <hr class="my-4">
+  <p>The £15.00 subscription represents incredible value for money, get it at this promotional price for a short time
+    only.</p>
+  <form action="{% url 'charge' %}" method="post">
+    {% csrf_token %}
+    <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="{{ key }}"
+      data-description="Quotepad Subscription Charge" data-amount="1500" < data-locale="auto" data-currency=gbp>
+    </script>
+
+    <a href="{% url 'home' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+
+
+<div class="container">
+  <blockquote class="blockquote subscribe-blockquote text-center text-primary">
+    <p class="mb-0">Quotepad has allowed out business to generate more sales and reduce the time spent surveying, the
+      process is easy to follow and emails arrive with out customers instantly.</p>
+    <footer class="blockquote-footer text-success">James Heaton from <cite title="Source Title">Heaton Heating</cite>
+    </footer>
+  </blockquote>
+
+  <blockquote class="blockquote subscribe-blockquote text-center text-primary">
+    <p class="mb-0">We were looking for a solution like this for our engineers for a long time. We could not afford to
+      develop the software ourselves so this product is perfect for out business.</p>
+    <footer class="blockquote-footer text-success">Clarissa Everidge from <cite title="Source Title">Stoke Heating
+        Solutions</cite>
+    </footer>
+  </blockquote>
+
+  <blockquote class="blockquote subscribe-blockquote text-center text-primary">
+    <p class="mb-0">This technology has really brought my buusiness into the 21st Century!</p>
+    <footer class="blockquote-footer text-success">Alexander Peters from <cite title="Source Title">AP Heating
+        Co.</cite>
+    </footer>
+  </blockquote>
+
+</div>
+{% endblock %}

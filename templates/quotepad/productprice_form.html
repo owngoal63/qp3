@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container edit-product-container">
+
+    <h2>{{ form_instructions }}</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="form-group">
+            {{ form.brand.label}} *<br>
+            {{ form.brand }}
+        </div>
+
+        <div class="form-group">
+            {{ form.model_name.label}} *<br>
+            {{ form.model_name }}
+        </div>
+
+        <div class="form-group">
+            {{ form.product_code.label}} *<br>
+            {{ form.product_code }}
+        </div>
+
+        <div class="form-group">
+            {{ form.price.label}} (£) *<br>
+            {{ form.price }}
+        </div>
+
+        <div class="form-group">
+            {{ form.product_image.label}}<br>
+            {{ form.product_image}}<br>
+        </div>
+        <button class="btn btn-primary" type="submit">Save</button>
+        <a href="/productpricelist/" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock content %}

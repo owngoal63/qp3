@@ -1,0 +1,701 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <title>Quote PDF</title>
+    <style type="text/css">
+        body {
+            font-weight: 200;
+            font-size: 14px;
+        }
+
+        .section_header {
+            font-size: 18px;
+            font-weight: 100;
+        }
+
+        .section_italics {
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        .header {
+            font-size: 25px;
+            font-weight: 900;
+            text-align: left;
+            color: darkgray;
+        }
+
+        .title {
+            font-size: 22px;
+            font-weight: 100;
+            /* text-align: right;*/
+            padding: 10px 20px 0px 20px;
+        }
+
+        .title span {
+            color: #007cae;
+        }
+
+        .details {
+            padding: 10px 20px 0px 20px;
+            text-align: left !important;
+            /*margin-left: 40%;*/
+        }
+
+        .hrItem {
+            border: none;
+            height: 1px;
+            /* Set the hr color */
+            color: #333;
+            /* old IE */
+            background-color: #fff;
+            /* Modern Browsers */
+        }
+
+        .logo {
+            height: 100px;
+            width: auto;
+        }
+
+        .footer {
+            border: 2px solid rgb(164,164,164);
+            border-radius: 5px;
+            background-color: rgb(253,25,32);
+            color: white;
+            font-size: 10px;
+            font-weight: 100;
+            text-align: center;
+            padding: 6px 0px 0px 0px;
+        }
+
+        .customer-details {
+            font-size: 14px;
+        }
+
+        .product-usage {
+            font-size: 10px;
+        }
+
+        .comments{
+            text-align: left;
+            border: 1px solid black;
+            padding: 2px 2px 2px 2px;
+        }
+
+        .order-table {
+            border-bottom: 1px solid #ddd;
+            padding: 4px 0px 0px 0px;
+        }
+
+    </style>
+</head>
+
+<body>
+        <table>
+            <tr>
+                <td><div class='header'>SERVICE REPORT</div></td>
+                <td align="right"><img src="{{frecords.0.document.url}}" width="350px"></td>
+            </tr>
+            <tr>    
+                <td colspan="2">
+                        <div class='footer'>
+                                WESTCHEM | THE OLD STATION | STATION ROAD | SIDMOUTH | DEVON | EX10 9DN | TEL: 01395 514624 | EMAIL: sales@westchem.co.uk
+                            </div>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <div class="customer-details">
+        <table>
+            <tr>
+                <td width="60%">
+                    <b>CUSTOMER: </b>{{ form_data.0.customer }}
+                </td>
+                <td width="40%">
+                    <b>PHONE: </b>{{ form_data.0.customer_phone }}
+                </td>
+            </tr>
+            <tr>
+                <td width="60%">
+                        <b>CONTACT: </b>{{ form_data.0.contact }}
+                </td>
+                <td width="40%">
+                    <b>REPORT REF: </b>{{ idx.quote_prefix }}-{{ idx.current_quote_number }}
+                </td>
+            </tr>
+            <tr>
+                <td width="60%">
+                    <b>EMAIL: </b>{{ form_data.0.customer_email }}
+                </td>
+                <td width="40%">
+                        <b>DATE: </b>{% now "jS F Y " %}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"align="right"><sub>Report completed by: {{idx.first_name}} {{idx.last_name}} from {{idx.company_name}}</sub></td>
+            </tr>
+        </table>
+        </div>
+
+        <!-- <hr class='hrItem' /> -->
+        <div class='section_header'>
+            <b>KITCHEN</b>
+        </div>
+        <div class='section_italics'>
+            <b>Machine Details: </b>{{ form_data.0.machine }} / {{ form_data.0.make }} / {{ form_data.0.model }} 
+        </div>
+        <table>
+            <tr>
+                <td width="33%">
+                    <b>RESULTS</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.1.results %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+                <td class = "comments" width="60%" rowspan="28" valign="top">
+                    <b>COMMENTS</b><br><sub>{{form_data.5.comments}}</sub>
+                </td>
+            </tr>
+            <tr>
+                <td width="33%">
+                    <b>WASH TEMP (55&deg;C)</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.1.wash_temp_55C %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td width="33%">
+                    <b>RINSE TEMP (82&deg;C)</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.1.rinse_temp_82C %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td width="33%">
+                    <b>IS A DESCALE REQUIRED</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.1.is_a_descale_required %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td width="33%">
+                    <b>RINSE JETS BLOCKED</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.1.rinse_jets_blocked %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td width="33%">
+                    <b>RINSE JETS MISSING</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.1.rinse_jets_missing %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td width="33%">
+                    <b>WASH JETS CLEAN</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.1.wash_jets_clean %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td width="33%">
+                    <b>OTHER FAULT</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.1.other_fault %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td width="33%">
+                    <b>WALL RACKS</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.1.wall_racks %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+            </tr>
+        <tr>
+            <td>
+            <div class='section_italics'>
+                <b>Our Equipment </b>    
+            </div>
+            </td>
+        </tr>    
+            <tr>
+                <td width="33%">
+                    <b>AUTO DOSING CLEAN</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.1.auto_dosing_clean %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td width="33%">
+                    <b>AUTO DOSING PUMP HEAD</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.1.auto_dosing_pump_head %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td width="33%">
+                    <b>AUTO DOSING TUBE STIFFENERS</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.1.auto_dosing_tube_stiffeners %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td width="33%">
+                    <b>CONTROL SYSTEMS CLEAN</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.1.control_systems_clean %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td width="33%">
+                    <b>CONTROL SYSTEMS DAMAGED</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.1.control_system_damaged %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td width="33%">
+                    <b>WALL CHARTS</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.1.wall_charts %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+            </tr>
+            
+        <tr>
+            <td colspan="2">
+                <hr class='hrItem' />
+                <div class='section_header'>
+                    <b>LAUNDRY</b>
+                </div>
+            </td>
+        </tr>
+            <tr>
+                <td width="33%">
+                    <b>RESULTS</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.2.results %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td width="33%">
+                    <b>OTHER FAULTS</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.2.other_faults %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class='section_italics'>
+                        <b>Our Equipment </b>    
+                    </div>
+                </td>
+            </tr>    
+            
+            <tr>
+                <td width="33%">
+                    <b>CLEAN</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.2.clean %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td width="33%">
+                    <b>PUMP HEADS</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.2.pump_heads %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td width="33%">
+                    <b>TUBE STIFFENER</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.2.tube_stiffener %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td width="33%">
+                    <b>TOUCH PAD ATTACHED</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.2.touch_pad_attached %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td width="33%">
+                    <b>WALL CHARTS</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.2.wall_charts %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <hr class='hrItem' />
+                    <div class='section_header'>
+                        <b>WATER SOFTENER</b>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td width="33%">
+                    <b>IS THE WATER HARD</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.3.is_water_hard %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td width="33%">
+                    <b>IS WATER SOFTENER WORKING</b>    
+                </td>
+                <td width="7%">
+                    {% if form_data.3.is_water_softener_working %}
+                    <img src="{{frecords.6.document.url}}" width="20px">
+                    {% else %}
+                    <img src="{{frecords.5.document.url}}" width="20px">
+                    {% endif %}
+                </td>
+            </tr>
+           
+        </table>
+
+       <br>
+
+        <div class='section_header'>
+            <b>USAGE OF WESTCHEM PRODUCTS</b>
+        </div>
+        <div class="product-usage">
+        {% if form_data.4.pot_washing %}
+            POT WASHING&middot;
+        {% endif %}    
+        {% if form_data.4.glass_washing %}
+            GLASS WASHING&middot;
+        {% endif %}    
+        {% if form_data.4.food_prep_areas %}
+            FOOD PREP AREAS&middot;
+        {% endif %}    
+        {% if form_data.4.floors_and_surfaces %}
+            FLOORS & SURFACES&middot;
+        {% endif %}    
+        {% if form_data.4.ovens %}
+            OVENS&middot;
+        {% endif %}    
+        {% if form_data.4.hand_soap %}
+            HAND SOAP&middot;
+        {% endif %}    
+        {% if form_data.4.hand_sanitiser %}
+            HAND SANITISER&middot;
+        {% endif %}    
+        {% if form_data.4.drains %}
+            DRAINS&middot;
+        {% endif %}    
+        {% if form_data.4.laundry %}
+            LAUNDRY&middot;
+        {% endif %}    
+        {% if form_data.4.housekeeping %}
+            HOUSEKEEPING
+        {% endif %}    
+        </div>
+        <br>
+    <table>
+        <tr>
+            <td align="right"><img src="{{frecords.7.document.url}}" width="75px"></td>
+        </tr>
+    </table>   
+    
+    <table>
+        <tr>
+            <td><div class='header'>ORDER FORM</div></td>
+            <td align="right"><img src="{{frecords.0.document.url}}" width="350px"></td>
+        </tr>
+        <tr>    
+            <td colspan="2">
+                <div class='footer'>
+                WESTCHEM | THE OLD STATION | STATION ROAD | SIDMOUTH | DEVON | EX10 9DN | TEL: 01395 514624 | EMAIL: sales@westchem.co.uk
+                </div>
+            </td>
+        </tr>
+        </table>
+        <br>
+        <table>
+            <th class="order-table" width="50%" align="left">
+              Product  
+            </th>
+            <th class="order-table" width="20%" align="left">
+              Size  
+            </th>
+            <th class="order-table" width="15%" align="right">
+              Stock Qty
+            </th>
+            <th class="order-table" width="15%" align="right">
+              Ord. Qty  
+            </th>
+            <tr>
+                <td class="order-table" width="50%" align="left">
+                    HYDROCLEAN
+                </td>
+                <td class="order-table" width="20%">
+                    5L
+                </td>
+                <td class="order-table" width="15%" align="right">
+                    {{ form_data.6.hydroclean5L_s|default:"--" }}
+                </td>
+                <td class="order-table" width="15%" align="right">
+                    {{ form_data.6.hydroclean5L_o|default:"--" }}
+                </td>
+            </tr>
+            <tr>
+                <td class="order-table" width="50%" align="left">
+                    HYDROCLEAN
+                </td>
+                <td class="order-table" width="20%">
+                    10L
+                </td>
+                <td class="order-table" width="15%" align="right">
+                    {{ form_data.6.hydroclean10L_s|default:"--" }}
+                </td>
+                <td class="order-table" width="15%" align="right">
+                    {{ form_data.6.hydroclean10L_s|default:"--" }}
+                </td>
+            </tr>
+            <tr>
+                <td class="order-table" width="50%" align="left">
+                    SOILMASTER
+                </td>
+                <td class="order-table" width="20%">
+                    5L
+                </td>
+                <td class="order-table" width="15%" align="right">
+                    {{ form_data.6.soilmaster5L_s|default:"--" }}
+                </td>
+                <td class="order-table" width="15%" align="right">
+                    {{ form_data.6.soilmaster5L_o|default:"--" }}
+                </td>
+            </tr>
+            <tr>
+                <td class="order-table" width="50%" align="left">
+                    SOILMASTER
+                </td>
+                <td class="order-table" width="20%">
+                    10L
+                </td>
+                <td class="order-table" width="15%" align="right">
+                    {{ form_data.6.soilmaster10L_s|default:"--" }}
+                </td>
+                <td class="order-table" width="15%" align="right">
+                    {{ form_data.6.soilmaster10L_o|default:"--" }}
+                </td>
+            </tr>
+            <tr>
+                <td class="order-table" width="50%" align="left">
+                        QUADRANT
+                </td>
+                <td class="order-table" width="20%">
+                    5L
+                </td>
+                <td class="order-table" width="15%" align="right">
+                    {{ form_data.6.quadrant_s|default:"--" }}
+                </td>
+                <td class="order-table" width="15%" align="right">
+                    {{ form_data.6.quadrant_o|default:"--" }}
+                </td>
+            </tr>
+            <tr>
+                <td class="order-table" width="50%" align="left">
+                    ACE 87
+                </td>
+                <td class="order-table" width="20%">
+                    5L
+                </td>
+                <td class="order-table" width="15%" align="right">
+                    {{ form_data.6.ace87_s|default:"--" }}
+                </td>
+                <td class="order-table" width="15%" align="right">
+                    {{ form_data.6.ace87_o|default:"--" }}
+                </td>
+            </tr>
+            <tr>
+                <td class="order-table" width="50%" align="left">
+                    DP100
+                </td>
+                <td class="order-table" width="20%">
+                    5L
+                </td>
+                <td class="order-table" width="15%" align="right">
+                    {{ form_data.6.dp100_s|default:"--" }}
+                </td>
+                <td class="order-table" width="15%" align="right">
+                    {{ form_data.6.dp100_o|default:"--" }}
+                </td>
+            </tr>
+            <tr>
+                <td class="order-table" width="50%" align="left">
+                    BRAVO
+                </td>
+                <td class="order-table" width="20%">
+                    5L
+                </td>
+                <td class="order-table" width="15%" align="right">
+                    {{ form_data.6.bravo_s|default:"--" }}
+                </td>
+                <td class="order-table" width="15%" align="right">
+                    {{ form_data.6.bravo_o|default:"--" }}
+                </td>
+            </tr>
+            <tr>
+                <td class="order-table" width="50%" align="left">
+                    FABRICARE
+                </td>
+                <td class="order-table" width="20%">
+                    5L
+                </td>
+                <td class="order-table" width="15%" align="right">
+                    {{ form_data.6.fabricare_s|default:"--" }}
+                </td>
+                <td class="order-table" width="15%" align="right">
+                    {{ form_data.6.fabricare_o|default:"--" }}
+                </td>
+            </tr>
+            <tr>
+                <td class="order-table" width="50%" align="left">
+                    ENCORE
+                </td>
+                <td class="order-table" width="20%">
+                    5L
+                </td>
+                <td class="order-table" width="15%" align="right">
+                    {{ form_data.6.encore5L_s|default:"--" }}
+                </td>
+                <td class="order-table" width="15%" align="right">
+                    {{ form_data.6.encore5L_o|default:"--" }}
+                </td>
+            </tr>
+            
+        </table>
+        <br>
+        <table>
+            <tr>
+                <td align="right"><img src="{{frecords.7.document.url}}" width="75px"></td>
+            </tr>
+        </table> 
+        
+        {% if form_data.6.quadrant_s is not None or form_data.6.quadrant_o is not None %}
+
+        {% endif %} 
+
+</body>
+
+</html>

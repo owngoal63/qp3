@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Quotepad Template Design Helpsheet</title>
+    <style>
+        table, th, td {
+          border: 1px solid black;
+          border-collapse: collapse;
+        }
+        </style>
+</head>
+<body>
+    <h3>Quotepad Template Design Helpsheet</h3>
+
+    <hr>
+    <h4>Rendering Data Captured in the Quote Form</h4>
+
+    <h4>Quote Form Step One (Render Index 0)</h4>
+    <table border="1">
+        <th>Quote Form Element</th>
+        <th>Page Layout Identifer</th>
+        <tr>
+                <td>customer_first_name</td>
+                <td>{% verbatim %}{{ form_data.0.customer_first_name }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>customer_last_name</td>
+                <td>{% verbatim %}{{ form_data.0.customer_last_name }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>customer_home_phone</td>
+                <td>{% verbatim %}{{ form_data.0.customer_home_phone }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>customer_mobile_phone</td>
+                <td>{% verbatim %}{{ form_data.0.customer_mobile_phone }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>customer_email</td>
+                <td>{% verbatim %}{{ form_data.0.customer_email }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>owner_or_tenant</td>
+                <td>{% verbatim %}{{ form_data.0.owner_or_tenant }}{% endverbatim %}</td>  
+        </tr>
+    </table>
+
+    <h4>Quote Form Step Two (Render Index 1)</h4>
+    <table border="1">
+        <th>Quote Form Element</th>
+        <th>Page Layout Identifer</th>
+        <tr>
+                <td>installation_address</td>
+                <td>{% verbatim %}{{ form_data.1.installation_address }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>street_address</td>
+                <td>{% verbatim %}{{ form_data.1.street_address }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>city</td>
+                <td>{% verbatim %}{{ form_data.1.city }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>county</td>
+                <td>{% verbatim %}{{ form_data.1.county }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>postcode</td>
+                <td>{% verbatim %}{{ form_data.1.postcode }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>property_type</td>
+                <td>{% verbatim %}{{ form_data.1.property_type }}{% endverbatim %}</td>  
+        </tr>
+    </table>
+
+    <h4>Quote Form Step Three (Render Index 2)</h4>
+    <table border="1">
+        <th>Quote Form Element</th>
+        <th>Page Layout Identifer</th>
+        <tr>
+                <td>current_fuel_type</td>
+                <td>{% verbatim %}{{ form_data.2.current_fuel_type }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>current_boiler_type</td>
+                <td>{% verbatim %}{{ form_data.2.current_boiler_type }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>current_boiler_location</td>
+                <td>{% verbatim %}{{ form_data.2.current_boiler_location }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>current_flue_system</td>
+                <td>{% verbatim %}{{ form_data.2.current_flue_system }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>current_flue_location</td>
+                <td>{% verbatim %}{{ form_data.2.current_flue_location }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>current_controls</td>
+                <td>{% verbatim %}{{ form_data.2.current_controls }}{% endverbatim %}</td>  
+        </tr>
+    </table>
+
+
+    <h4>Quote Form Step Four (Render Index 3)</h4>
+    <table border = "1">
+        <th>Quote Form Element</th>
+        <th>Page Layout Identifer (code snippet)</th>
+        <tr>
+                <td>removals</td>
+                <td>{% verbatim %}{% for removal_item in form_data.3.removals %}{% endverbatim %}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;{% verbatim %}{{ removal_item }} &nbsp;{% endverbatim %}<br> 
+                    {% verbatim %}{% endfor %}{% endverbatim %} 
+                </td>  
+        </tr>
+    </table>
+
+    <h4>Quote Form Step Five (Render Index 4)</h4>
+    <table border="1">
+        <th>Quote Form Element</th>
+        <th>Page Layout Identifer</th>
+        <tr>
+                <td>new_fuel_type</td>
+                <td>{% verbatim %}{{ form_data.4.new_fuel_type }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>new_boiler_type</td>
+                <td>{% verbatim %}{{ form_data.4.new_boiler_type }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>new_boiler_location</td>
+                <td>{% verbatim %}{{ form_data.4.new_boiler_location }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>new_flue_system</td>
+                <td>{% verbatim %}{{ form_data.4.new_flue_system }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>new_flue_location</td>
+                <td>{% verbatim %}{{ form_data.4.new_flue_location }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>new_flue_diameter</td>
+                <td>{% verbatim %}{{ form_data.4.new_flue_diameter }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>plume_management_kit</td>
+                <td>{% verbatim %}{{ form_data.4.plume_management_kit }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>condensate_termination</td>
+                <td>{% verbatim %}{{ form_data.4.condensate_termination }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>new_controls</td>
+                <td>{% verbatim %}{{ form_data.4.new_controls }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>cws_flow_rate</td>
+                <td>{% verbatim %}{{ form_data.4.cws_flow_rate }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>new_flue_metres</td>
+                <td>{% verbatim %}{{ form_data.4.new_flue_metres }}{% endverbatim %}</td>  
+        </tr>       
+    </table>    
+
+    <h4>Quote Form Step Six (Render Index 5)</h4>
+    <table border="1">
+        <th>Quote Form Element</th>
+        <th>Page Layout Identifer</th>
+        <tr>
+                <td>system_treatment</td>
+                <td>{% verbatim %}{{ form_data.5.system_treatment }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>gas_supply</td>
+                <td>{% verbatim %}{{ form_data.5.gas_supply }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>gas_supply_length</td>
+                <td>{% verbatim %}{{ form_data.5.gas_supply_length }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>asbestos_containing_materials_identified</td>
+                <td>{% verbatim %}{{ form_data.5.asbestos_containing_materials_identified }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>electrical_work_required</td>
+                <td>{% verbatim %}{{ form_data.5.electrical_work_required }}{% endverbatim %}</td>  
+        </tr>       
+    </table>
+
+    <h4>Quote Form Step Seven (Render Index 6)</h4>
+    <table border="1">
+        <th>Quote Form Element</th>
+        <th>Page Layout Identifer</th>
+        <tr>
+                <td>boiler_manufacturer</td>
+                <td>{% verbatim %}{{ form_data.6.boiler_manufacturer }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>manufacturer_guarantee</td>
+                <td>{% verbatim %}{{ form_data.6.manufacturer_guarantee }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>flue_components</td>
+                <td>{% verbatim %}{{ form_data.6.flue_components }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>programmer_thermostat</td>
+                <td>{% verbatim %}{{ form_data.6.programmer_thermostat }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>central_heating_system_filter</td>
+                <td>{% verbatim %}{{ form_data.6.central_heating_system_filter }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>scale_reducer</td>
+                <td>{% verbatim %}{{ form_data.6.scale_reducer }}{% endverbatim %}</td>  
+        </tr>       
+    </table>
+
+    <h4>Quote Form Step Eight (Render Index 7)</h4>
+    <table border="1">
+        <th>Quote Form Element</th>
+        <th>Page Layout Identifer</th>
+        <tr>
+                <td>radiator_requirements</td>
+                <td>{% verbatim %}{{ form_data.7.radiator_requirements }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>thermostatic_radiator_valves_size</td>
+                <td>{% verbatim %}{{ form_data.7.thermostatic_radiator_valves_size }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>thermostatic_radiator_valves_type</td>
+                <td>{% verbatim %}{{ form_data.7.thermostatic_radiator_valves_type }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>programmer_thermostat</td>
+                <td>{% verbatim %}{{ form_data.7.programmer_thermostat }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>thermostatic_radiator_valves_quantity</td>
+                <td>{% verbatim %}{{ form_data.7.thermostatic_radiator_valves_quantity }}{% endverbatim %}</td>  
+        </tr>
+    </table>  
+    
+    <h4>Quote Form Step Nine (Render Index 8)</h4>
+    <table border="1">
+        <th>Quote Form Element</th>
+        <th>Page Layout Identifer</th>
+        <tr>
+                <td>estimated_duration</td>
+                <td>{% verbatim %}{{ form_data.8.estimated_duration }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>description_of_works</td>
+                <td>{% verbatim %}{{ form_data.8.description_of_works }}{% endverbatim %}</td>  
+        </tr>
+
+    </table>  
+
+    <hr>
+    <h4>Rendering Data regarding the User producing the quote</h4>
+
+    <h4>User Details</h4>
+    <table border="1">
+        <th>User details Element</th>
+        <th>Page Layout Identifer</th>
+        <tr>
+                <td>first_name</td>
+                <td>{% verbatim %}{{ idx.first_name }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>last_name</td>
+                <td>{% verbatim %}{{ idx.last_name }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>company_name</td>
+                <td>{% verbatim %}{{ idx.company_name }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>email</td>
+                <td>{% verbatim %}{{ idx.email }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>telephone</td>
+                <td>{% verbatim %}{{ idx.telephone }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>daily_work_rate</td>
+                <td>{% verbatim %}{{ idx.daily_work_rate }}{% endverbatim %}</td>  
+        </tr>        
+        <tr>
+                <td>quote_prefix</td>
+                <td>{% verbatim %}{{ idx.quote_prefix }}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>cur_quote_no</td>
+                <td>{% verbatim %}{{ idx.cur_quote_no }}{% endverbatim %}</td>  
+        </tr>
+    </table>    
+
+    <hr>
+    <h4>Rendering Data related to the product selected for the quote</h4>
+
+    <h4>Product Details</h4>
+    <table border="1">
+        <th>Product details Element</th>
+        <th>Page Layout Identifer</th>
+        <tr>
+                <td>brand</td>
+                <td>{% verbatim %}{{product_record.brand}}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>model_name</td>
+                <td>{% verbatim %}{{product_record.model_name}}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>product_code</td>
+                <td>{% verbatim %}{{product_record.product_code}}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>price</td>
+                <td>{% verbatim %}{{product_record.price}}{% endverbatim %}</td>  
+        </tr>
+    </table>    
+
+    <hr>
+    <h4>Rendering the Image for the selected product</h4>
+
+    <h4>Product Image</h4>
+    <table border="1">
+        
+        <th>Page Layout Identifer (use within an image source tag)</th>
+        <tr>
+                <td>{% verbatim %}{{img_record.document.url}} {% endverbatim %}</td>  
+        </tr>
+        
+    </table>
+
+    <hr>
+    <h4>Rendering Data on Calculated Field(s)</h4>
+
+    <h4>Calculated Field(s)</h4>
+    <table border="1">
+        
+        <th>Calculated Field</th>
+        <th>Page Layout Identifer</th>
+        <tr>
+                <td>workload_cost (daily_work_rate x estimated_duration)</td>
+                <td>{% verbatim %}{{workload_cost}}{% endverbatim %}</td>  
+        </tr>
+        <tr>
+                <td>total_quote_price (workload_cost x product_record.price)</td>
+                <td>{% verbatim %}{{ total_quote_price }}{% endverbatim %}</td>  
+        </tr>
+        
+    </table>
+
+    <hr>
+    <h4>Rendering Uploaded Images to the template</h4>
+
+    Uploaded images are displayed within an HTML image source tag.<br>
+    Use the Page Layout Identifer(s) below to render these images.<br>
+
+    <h4>Uploaded Images</h4>
+    <table border="1">
+            <th>Image</th>
+            <th>Page Layout Identifer</th>
+    {% for frecord in frecords %}
+        <tr>
+        <td><img src="{{frecord.document.url}}"  height="70" style="border:1px solid grey" >{{ frecord.description }}</td>
+        <td>{% templatetag openvariable %}frecords.{{forloop.revcounter0}}.document.url{% templatetag closevariable %}</td>
+        </tr>
+    
+
+    {% empty %}
+    <p>You have no images saved on the website.</p>
+
+    {% endfor %}
+</table>
+
+</body>
+</html>

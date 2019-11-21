@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+  <h2>{{ form_instructions }}</h2>
+
+  <form method="post" enctype="multipart/form-data" id=file-upload-form>
+    {% csrf_token %}
+
+    <div class="form-group">
+      {{ form.document.label}} *<br>
+      {{ form.document}}
+    </div>
+
+    <div class="form-group">
+      {{ form.description.label }} *  <button type="button" class="btn" data-toggle="popover" data-trigger="focus" title="Image Description" data-content="We advise you give the image a name so later you know which one to select for your quote, i.e company logo, name of boiler."><i class="fas fa-info-circle"></i></button><br>
+      {{ form.description }}
+    </div>
+
+    <button class="btn btn-primary" type="submit">Upload</button>
+    <a class="btn btn-secondary" href="/home/">Cancel</a>
+
+  </form>
+
+  <br>
+</div>
+
+<script type="text/javascript">
+  $(function () {
+    $('[data-toggle="popover"]').popover()
+  })
+  
+  $('.popover-dismiss').popover({
+    trigger: 'focus'
+  })
+  </script>
+{% endblock %}

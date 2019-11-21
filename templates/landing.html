@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="container-fluid">
+    <div class="heading-section-landing">
+        <h1>Boiler Quotepad</h1>
+        <p class="text-primary">Generate instant quotations for your customers from your tablet or mobile, delivered as
+            PDF's
+            to their email.</p>
+        <a href="/register" class="btn btn-primary">Sign Up Now!</a>
+    </div>
+</section>
+
+<section class="container-fluid home-info-section">
+
+    <div class="row">
+
+        <div class="col-sm-12 col-md-4 landing-info-col">
+            <i class="fas fa-edit landing-info-icons text-primary"></i>
+            <h2 class="text-success landing-info-titles">Upload Your Products And Brand</h2>
+            <p>Users can upload their products and branding, these can then be added to your bespoke quotations.
+                Allowing a customisable solution for your business</p>
+        </div>
+
+        <div class="col-sm-12 col-md-4 landing-info-col">
+            <i class="fas fa-tablet landing-info-icons text-primary"></i>
+            <h2 class="text-success landing-info-titles">Complete A Survey</h2>
+            <p>Complete a survey on the customer's heating solution using our comprehensive yet easy to use form. All
+                information will be captured and used to generate a bespoke quotation.</p>
+        </div>
+
+        <div class="col-sm-12 col-md-4 landing-info-col">
+            <i class="fas fa-envelope-square landing-info-icons text-primary"></i>
+            <h2 class="text-success landing-info-titles">Delivered By Email To Your Customer</h2>
+            <p>The completed quotation can be stored in the archive as a PDF for use later or emailed instantly to your
+                customer, allowing you to win more business.</p>
+        </div>
+
+
+    </div>
+
+</section>
+
+<section class="container-fluid process-section">
+
+    <div class="row">
+        <div class="col-sm-12 col-md-6 process-list-col">
+            <img class="img-fluid" src="https://www.ncbar.org/media/933988/864pop_web.jpg" alt="Paperless">
+        </div>
+
+        <div class="col-sm-12 col-md-6 process-image-col bg-primary">
+            <ul class="process-list">
+                <li class="process-list-item-heading text-success">6 Easy Steps!</li>
+                <li>1. Register with our site</li>
+                <li>2. Edit your profile</li>
+                <li>3. Upload your branding</li>
+                <li>4. Customise your quotation template</li>
+                <li>5. Complete surveys to generate quotes</li>
+                <li>6. Quotation automatically emailed to your customer</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="row quote-row">
+        <div class="col-sm-12">
+            <blockquote class="blockquote text-center">
+                <p class="mb-0">Quotepad has completely changed the way we work!</p>
+                <footer class="blockquote-footer text-success">Steve Jones from <cite title="Source Title">Boiler
+                        Review</cite>
+                </footer>
+            </blockquote>
+
+        </div>
+
+        <div class="col-sm-12 btn-col">
+            <img class="img-fluid trustpilot-logo"
+                src="https://www.abbeylocks.co.uk/wp-content/uploads/2019/01/trustpilot-logo-1.png"
+                alt="Trustpilot Logo">
+        </div>
+        <div class="col-sm-12 btn-col">
+            <a href="/register" class="btn btn-primary">Sign Up!</a>
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

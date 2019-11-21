@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+    <div class = "container quote-form-container">
+
+    <form action="" method="post">
+    {% csrf_token %}
+    <!--This section requires an if block for every step in the process-->
+    {% if wizard.steps.step1 == 2 %}
+        <h3>KITCHEN CHECKS</h3>
+    {% endif %}
+    {% if wizard.steps.step1 == 3 %}
+        <h3>LAUNDRY CHECKS</h3>
+    {% endif %}
+    {% if wizard.steps.step1 == 4 %}
+        <h3>WATER SOFTENER CHECKS</h3>
+    {% endif %}
+    {% if wizard.steps.step1 == 5 %}
+        <h3>USAGE OF WESTCHEM PRODUCTS</h3>
+    {% endif %}
+    
+    <h5>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</h5>
+    
+    {{ wizard.management_form }}
+    {% if wizard.form.forms %}
+        {{ wizard.form.management_form }}
+        {% for form in wizard.form.forms %}
+          {{ form }}
+        {% endfor %}
+    {% else %}
+    <div class = "row">
+            {% for field in wizard.form %} 
+                    {% if wizard.steps.step1 == 2 and forloop.counter == 10 %}
+                        <div class = "col-4"><b><u>Our Equipment</u></b></div>
+                        <div class = "col-4"></div>
+                        <div class = "col-4"></div>
+                    {% endif %}
+                    {% if wizard.steps.step1 == 3 and forloop.counter == 3 %}
+                        <div class = "col-4"><b><u>Our Equipment</u></b></div>
+                        <div class = "col-4"></div>
+                        <div class = "col-4"></div>
+                    {% endif %}
+                    <div class = "col-4">
+                        {{ field.label }}: 
+                    </div>
+                    <div class = "col-4">            
+                        {{ field }}
+                    </div>    
+                    <div class = "col-4">        
+                    </div>
+                            
+                                <!-- below code to be updated where further info is required on WestChem fields -->
+                                {% if field.label == "Product choice" %}
+                                <button type="button" class="btn" data-toggle="popover" data-trigger="focus" title="Product Choice" data-content="This is where you select the product that has to be included on the quote"><i class="fas fa-info-circle"></i></button>
+                                {% endif %}
+                                
+                        <!-- </div> -->
+                    
+                    
+                    
+                    {% endfor %}
+                </div>    <!-- row-->
+            <br>
+    {% endif %}
+        
+            <div class = "row">
+            <div class="col-12">
+            <div class="boilerformbtns">
+                {% if wizard.steps.prev %}
+                <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.first }}" class="boilerbtn">First step</button>
+                <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.prev }}" class="boilerbtn">Previous step</button>
+                {% endif %}
+                {% if wizard.steps.step1 != 6 %}
+                <input class="btn btn-primary" id="next-step-btn" type="submit" value="Next Step" class="boilerbtn"/>
+                {% else %}
+                <input class="btn btn-primary" type="submit" value="Final Step" class="boilerbtn"/>
+                {% endif %}
+            </div>  
+            </div>
+            </div>
+        </form>
+        <br>
+    </div> 
+{% endif %} 
+<script type="text/javascript">
+$(function () {
+  $('[data-toggle="popover"]').popover()
+})
+
+$('.popover-dismiss').popover({
+  trigger: 'focus'
+})
+</script>
+
+{% endblock %}

@@ -1,0 +1,130 @@
+{% load static %}
+{% load quotepad_extras %}
+<!DOCTYPE html>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+
+<head>
+  <title>Boiler Survey</title>
+  <meta charset="UTF-8">
+  <meta name="google" content="notranslate">
+  <meta http-equiv="Content-Language" content="en">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.3.1/flatly/bootstrap.min.css"
+    integrity="sha256-0mhswpc4tUm8b+EHmWyk817AlGI+X5NmVsKbJkQ342c=" crossorigin="anonymous" />
+  <link href="{% static 'css/main.css' %}" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css"
+    integrity="sha256-zmfNZmXoNWBMemUOo1XUGFfc0ihGGLYdgtJS3KCr/l0=" crossorigin="anonymous" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+  <script src="{% static 'js/script.js' %}"></script>
+</head>
+
+<body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" charset="utf-8"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+    integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous">
+  </script>
+
+  {% if user.is_authenticated %}
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="/home">Quotepad - {{ user.username }}</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
+      aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/home">Dashboard<span class="sr-only">(current)</span></a>
+        </li>
+        {% if request.session.created_quote %}
+          {% if request.user|has_group:"WESTCHEM" %}
+            <li class="nav-item">
+              <a class="nav-item nav-link" href="/listreportarchive">Previous Reports</a>
+            </li>
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-item nav-link" href="/listquotearchive">Previous Quotes</a>
+          </li>    
+        {% endif %}
+      </ul>
+
+      <span class="nav-item dropdown">
+        <a class="nav-link dropdown dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <i class="fas fa-cogs"></i>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="/edit_Profile_details">Edit Profile</a>
+          <a class="dropdown-item" href="/showuploadedfiles">Show Uploaded Images</a>
+          <a class="dropdown-item" href="/changepassword">Change Password</a>
+          <a class="dropdown-item" href="/stripecheckout">Subscribe</a>
+          {% if request.session.created_quote %}
+            <div class="dropdown-divider"></div>
+            {% if request.user|has_group:"WESTCHEM" %}
+              <a class="dropdown-item" href="/listreportarchive">Previous Reports</a>
+            {% endif %}
+            <a class="dropdown-item" href="/listquotearchive">Previous Quotes</a>
+          {% endif %}
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="/logout">Logout</a>
+        </div>
+      </span>
+
+    </div>
+  </nav>
+
+
+
+  {% else %}
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand mr-auto" href="/landing">Quotepad</a>
+    <a class="btn btn-primary my-2 my-sm-0" type="submit" href="/register">Register</a>
+    <a class="btn btn-primary" type="submit" href="/login">Login</a>
+  </nav>
+  {% endif %}
+
+
+  <div class="white-space">
+    <main>
+      {% block content %}
+
+      {% endblock content %}
+    </main>
+  </div>
+
+  <footer class="bg-primary base-footer">
+    <div class="container">
+      <div class="row">
+        <div class=" col-12 col-lg-6">
+          <h5>Boiler Quotepad</h5>
+          <p class="">Designed by heating engineers for use in the trade.</p>
+        </div>
+        <div class="col-12 col-lg-4 offset-lg-2">
+          <h5>Follow Us</h5>
+          <ul>
+            <li class="social-list"><a href="https://www.instagram.com" target="_blank"><i
+                  class="fab fa-instagram"></i></a></li>
+            <li class="social-list"><a href="https://www.facebook.com" target="_blank"><i
+                  class="fab fa-facebook-f"></i></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+        © 2019 Copyright
+        <a class="grey-text text-lighten-4 right" href="https://github.com/Rorywork" target="_blank">Designed by
+          Rorywork</a>
+      </div>
+    </div>
+
+  </footer>
+
+
+</body>
+
+</html>

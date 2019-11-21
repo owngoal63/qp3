@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+    <div class = "container quote-form-container">
+
+    <form action="" method="post">
+    {% csrf_token %}
+    <!--This section requires an if block for every step in the process-->
+        <h3>SERVICE REPORT COMMENTS</h3>
+    
+    <h5>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</h5>
+    
+    {{ wizard.management_form }}
+    {% if wizard.form.forms %}
+        {{ wizard.form.management_form }}
+        {% for form in wizard.form.forms %}
+          {{ form }}
+        {% endfor %}
+    {% else %}
+            {% for field in wizard.form %} 
+                <div class = "row">
+                    <div class = "col-12">
+                              
+                        <div class="form-group">
+                            <label>{{ field.label }}</label>{% if field.field.required %} *{% endif %}<br>
+                            {{ field }}
+        
+                        </div>
+                    
+                    </div>  <!-- col-12-->
+
+            {% endfor %}
+            
+            {% endif %}
+        
+            <div class = "row">
+            <div class="col-12">
+            <div class="boilerformbtns">
+                {% if wizard.steps.prev %}
+                <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.first }}" class="boilerbtn">First step</button>
+                <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.prev }}" class="boilerbtn">Previous step</button>
+                {% endif %}
+                {% if wizard.steps.step1 != 7 %}
+                <input class="btn btn-primary" id="next-step-btn" type="submit" value="Next Step" class="boilerbtn"/>
+                {% else %}
+                <input class="btn btn-primary" type="submit" value="Final Step" class="boilerbtn"/>
+                {% endif %}
+            </div>  
+            </div>
+            </div>
+        </form>
+        <br>
+    </div> 
+{% endif %} 
+<script type="text/javascript">
+$(function () {
+  $('[data-toggle="popover"]').popover()
+})
+
+$('.popover-dismiss').popover({
+  trigger: 'focus'
+})
+</script>
+
+{% endblock %}

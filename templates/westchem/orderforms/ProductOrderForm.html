@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+    <div class = "container quote-form-container">
+
+    <form action="" method="post">
+    {% csrf_token %}
+    <!--This section requires an if block for every step in the process-->
+    {% if wizard.steps.step1 == 2 %}
+        <h3>KITCHEN CHECKS</h3>
+    {% endif %}
+    {% if wizard.steps.step1 == 3 %}
+        <h3>LAUNDRY CHECKS</h3>
+    {% endif %}
+    {% if wizard.steps.step1 == 4 %}
+        <h3>WATER SOFTENER CHECKS</h3>
+    {% endif %}
+    {% if wizard.steps.step1 == 5 %}
+        <h3>USAGE OF WESTCHEM PRODUCTS</h3>
+    {% endif %}
+    
+    <h5>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</h5>
+    
+    {{ wizard.management_form }}
+    {% if wizard.form.forms %}
+        {{ wizard.form.management_form }}
+        {% for form in wizard.form.forms %}
+          {{ form }}
+        {% endfor %}
+    {% else %}
+    <!-- <div class = "row"> -->
+        <table border="1">
+            <th>
+            PRODUCT
+            </th>
+            <th>
+            SIZE
+            </th>
+            <th>
+            S
+            </th>
+            <th>
+            O
+            </th>
+            <th>
+            PRODUCT
+            </th>
+            <th>
+            SIZE
+            </th>
+            <th>
+            S
+            </th>
+            <th>
+            O
+            </th>
+            <th>
+            PRODUCT
+            </th>
+            <th>
+            SIZE
+            </th>
+            <th>
+            S
+            </th>
+            <th>
+            O
+            </th>
+            <tr>
+                <td>
+                HYDROCLEAN  
+                </td>
+                <td>
+                5L
+                </td>
+                <td>
+                <div class="input-int">
+                {{ wizard.form.hydroclean5L_s }}
+                </div>
+                </td>
+                <td>
+                {{ wizard.form.hydroclean5L_o }} 
+                </td>
+                <td>
+                QUADRANT  
+                </td>
+                <td>
+                5L
+                </td>
+                <td>
+                {{ wizard.form.quadrant_s }} 
+                </td>
+                <td>
+                {{ wizard.form.quadrant_o }} 
+                </td>
+                <td>
+                BRAVO  
+                </td>
+                <td>
+                10L
+                </td>
+                <td>
+                {{ wizard.form.bravo_s }} 
+                </td>
+                <td>
+                {{ wizard.form.bravo_o }} 
+                </td>
+            </tr>
+            <tr>
+                <td>
+                HYDROCLEAN  
+                </td>
+                <td>
+                10L
+                </td>
+                <td>
+                <div class="input-int">
+                {{ wizard.form.hydroclean10L_s }}
+                </div>
+                </td>
+                <td>
+                {{ wizard.form.hydroclean10L_o }} 
+                </td>
+                <td>
+                ACE 87  
+                </td>
+                <td>
+                5L
+                </td>
+                <td>
+                {{ wizard.form.ace87_s }} 
+                </td>
+                <td>
+                {{ wizard.form.ace87_o }} 
+                </td>
+                <td>
+                FABRICARE  
+                </td>
+                <td>
+                10L
+                </td>
+                <td>
+                {{ wizard.form.fabricare_s }} 
+                </td>
+                <td>
+                {{ wizard.form.fabricare_o }} 
+                </td>
+            </tr>
+            <tr>
+                <td>
+                SOILMASTER  
+                </td>
+                <td>
+                5L
+                </td>
+                <td>
+                <div class="input-int">
+                {{ wizard.form.soilmaster5L_s }}
+                </div>
+                </td>
+                <td>
+                {{ wizard.form.soilmaster5L_o }} 
+                </td>
+                <td>
+                DP100  
+                </td>
+                <td>
+                5L
+                </td>
+                <td>
+                {{ wizard.form.dp100_s }} 
+                </td>
+                <td>
+                {{ wizard.form.dp100_s }} 
+                </td>
+                <td>
+                ENCORE  
+                </td>
+                <td>
+                5L
+                </td>
+                <td>
+                {{ wizard.form.encore5L_s }} 
+                </td>
+                <td>
+                {{ wizard.form.encore5L_s }} 
+                </td>
+            </tr>
+
+
+
+
+
+        </table>
+            <br>
+    {% endif %}
+        
+            <div class = "row">
+            <div class="col-12">
+            <div class="boilerformbtns">
+                {% if wizard.steps.prev %}
+                <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.first }}" class="boilerbtn">First step</button>
+                <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.prev }}" class="boilerbtn">Previous step</button>
+                {% endif %}
+                {% if wizard.steps.step1 != 7 %}
+                <input class="btn btn-primary" id="next-step-btn" type="submit" value="Next Step" class="boilerbtn"/>
+                {% else %}
+                <input class="btn btn-primary" type="submit" value="Final Step" class="boilerbtn"/>
+                {% endif %}
+            </div>  
+            </div>
+            </div>
+        </form>
+        <br>
+    </div> 
+{% endif %} 
+<script type="text/javascript">
+$(function () {
+  $('[data-toggle="popover"]').popover()
+})
+
+$('.popover-dismiss').popover({
+  trigger: 'focus'
+})
+</script>
+
+{% endblock %}

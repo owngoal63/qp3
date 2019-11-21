@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+<h4>Quote creation not yet possible</h4>
+
+<p>Before you can create a quote you must first complete the following:</p>
+<ul>
+    {% if not request.session.Profile_updated %}   
+        <li>Provide your personal details (<a href="{% url 'edit_Profile_details' %}">Update your profile</a>)</li>
+    {% endif %}
+    {% if not request.session.Image_loaded %}
+        <li>Provide images that will be used in the quote (<a href="{% url 'file_upload' %}">Upload Image Files</a>)</li>
+    {% endif %}
+    {% if not request.session.ProductPrice_record %}
+        <li>Create at least one product for your quote (<a href="{% url 'productpricelist' %}">Edit Product Details</a>)</li>
+    {% endif %}
+    {% if not request.session.created_quote_template %}
+        <li>View quote layout (<a href="{% url 'test_quote_generated' %}">View Quote Design</a>)</li>
+    {% endif %}
+    {% if not request.session.User_subscribed %}
+        <li>Provide your Subscription details (<a href="{% url 'stripe_checkout' %}">Subscribe to Quotepad</a>)</li>
+    {% endif %}    
+</ul>
+
+<a class="btn btn-secondary" href="/home/">Return to Dashboard</a>
+
+</div>
+
+<script>
+    not_all_good_no_redirect("Quote Processing", "It is not possible to create your quote yet as you need to provide more information.")
+</script>
+
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h4>Product Delete?</h4>
+<form method="post">
+    {% csrf_token %}
+    Are you sure you want to delete this product?
+    <input type="submit" value="Submit" />
+</form>
+
+<br>
+{% endblock content %}

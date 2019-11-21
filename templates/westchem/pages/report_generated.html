@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load quotepad_extras %}
+
+{% block content %}
+
+<div class="container">
+
+    <h4>Report Generation</h4>
+
+    <p>Your Report has been generated and is available to view and email to the customer.</p>
+
+        <a href="{% url 'generate_quote_from_fileWC' 'PDFOutput' 'currentquote' %}" target="_blank">View Service and Order Report</a><br>
+        <a href="{% url 'generate_quote_from_fileWC' 'EmailOutput' 'currentquote' %}">Email Report to customer</a><br><br>
+    
+
+    <a class="btn btn-secondary" href="/home/">Return to Dashboard</a>
+
+</div>
+
+<script>
+    all_good_no_redirect("Report Generation",
+        "Your report has been generated and is available to view and/or email to the customer.")
+</script>
+
+{% endblock %}

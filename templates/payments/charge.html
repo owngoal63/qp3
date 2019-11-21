@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h4>Subscription Processing</h4>
+
+<div class="container">
+    {% if request.session.User_subscribed %}
+        {% if not request.session.Profile_updated or not request.session.Image_loaded or not request.session.ProductPrice_record or not request.session.created_quote_template %}
+            <p>Your subscription has been processed - thank you. However there are still some outstanding steps that you must
+            complete before you can create your first quote.</p>
+            <p><a href="/quotenotpossible">View outstanding steps</a></p>
+        {% else %}
+            <p>Your subscription has been processed - thank you. </p>
+            <a class="btn btn-primary" href="/boilerform/">Create Quote</a>
+        {% endif %}
+    {% else %}
+        <a class="btn btn-primary" href="/stripecheckout/">Subscribe to Quotepad</a>
+    {% endif %}
+
+
+    <a class="btn btn-secondary" href="/home/">Return to Dashboard</a>
+
+</div>
+
+<script>
+    all_good_no_redirect("Many Thanks",
+        "Your payment has been processed. This provides you access to create your own quotes.")
+</script>
+
+{% endblock %}

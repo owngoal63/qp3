@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h4>Uploaded Images</h4>
+
+    {% for frecord in frecords %}
+
+        <hr>
+        <img src="{{frecord.document.url}}"  height="100" style="border:1px solid grey" ><br>
+        Description: {{frecord.description}}   | uploaded on: {{frecord.uploaded_at}}<br>
+        <!-- <p>Image Url: {{frecord.document}}</p> -->
+        <p>PDF unique ID: <b>frecords.{{forloop.revcounter0}}.document.url</b></p>
+
+        {% empty %}
+        <p>You have no images saved on the website.</p>
+
+    {% endfor %}
+
+    <a class="btn btn-primary" href="/fileupload/">Upload an image</a>
+    <a class="btn btn-secondary" href="/home/">Return to Dashboard</a>
+
+</div>
+
+{% if frecords|length == 1 %}
+<script>
+    Swal.fire("Good Progress", "You have a logo for your quote. Now upload a Product Image.", "info")
+</script>
+
+{% elif frecords|length == 2 %}
+<script>
+    Swal.fire("Great news", "You now have the minimum number of images to create a quote.", "success")
+</script>
+
+{% endif %}
+ 
+{% endblock %}

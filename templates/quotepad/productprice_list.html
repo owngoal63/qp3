@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+
+<div class="container product-details-container">
+    <div class="row">
+        <div class="col-12">
+            <h2>List of Products</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-4">
+        </div>
+    </div>
+
+    <div class="row price-list-headings">
+        <div class="col-4">
+            <h4>Product</h4>
+        </div>
+        <div class="col-2">
+            <h4>Price</h4>
+        </div>
+        <div class="col-2">
+            <h4>Image</h4>
+        </div>
+        <div class="col-4">
+            <h4>Action</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for prod in products_by_user %}
+        <div class="col-4">
+            {{ prod.brand }}
+            {{ prod.model_name }}
+        </div>
+
+        <div class="col-2">
+            £{{ prod.price }}
+        </div>
+        <div class="col-2">
+            {% if prod.product_image != null %}
+                <i class="fas fa-image text-primary"></i>
+            {% endif %}
+        </div>
+
+        <div class="col-4">
+            <a href="{% url 'productpriceupdate' prod.pk  %}" class="btn btn-primary btn-sm" role="button">Edit</a>
+            <a href="{% url 'productpricedelete' prod.pk  %}" class="btn btn-secondary btn-sm" role="button">Del</a>
+        </div>
+
+    </div>
+
+    <div class="row">
+        {% empty %}
+
+        <p class="text-muted product-list-sub-text">You have no products registered.</p>
+
+        {% endfor %}
+    </div>
+
+    <a href="{% url 'productpricecreate' %}" class="btn btn-primary" role="button">Add</a>
+</div>
+
+{% endblock content %}

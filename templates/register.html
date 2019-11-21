@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}User Registration{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+
+        <h2>User Registration</h2>
+
+        <form method="POST">
+                {% csrf_token %}
+
+                <div class="form-group">
+                        <label for="registerUsername">Username</label>
+                        <input name="username" type="text" class="form-control" id="registerUsername"
+                                placeholder="Username" required autofocus>
+                </div>
+
+                <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input name="email" type="email" class="form-control" id="registerEmail" placeholder="Email"
+                                required>
+                </div>
+
+                <div class="form-group">
+                        <label for="registerPassword">Password</label>
+                        <input name="password" type="password" class="form-control" id="registerPassword"
+                                placeholder="Password" required>
+                </div>
+
+                <div class="form-group">
+                        <label for="registerCompanyName">Company Name</label>
+                        <input name="company_name" type="text" class="form-control" id="registerCompanyName"
+                                placeholder="Company Name" required>
+                </div>
+
+
+                <button type="submit" class="btn btn-primary" value="Login">Submit</button>
+
+        </form>
+
+</div>
+
+{% endblock content %}

@@ -1,0 +1,9 @@
+{'customer_first_name': 'Gordon', 'customer_last_name': 'Lindsay', 'customer_home_phone': '07493136169', 'customer_mobile_phone': '07493136169', 'customer_email': 'gordonlindsay@virginmedia.com', 'owner_or_tenant': 'Owner'}
+{'house_name_or_number': '22', 'street_address': 'Stourcliffe Avenue', 'city': 'Bournemouth', 'county': 'Dorset', 'postcode': 'BH6 3PT', 'property_type': 'Detached'}
+{'current_fuel_type': 'Gas', 'current_boiler_type': 'Floor Standing - Conventional', 'current_boiler_location': 'Kitchen', 'current_flue_system': 'Vertical - Open Flue', 'current_flue_location': 'Ground Floor', 'current_controls': 'Wired - Programmer'}
+{'removals': ['Nothing To Remove']}
+{'new_fuel_type': 'Gas', 'new_boiler_type': 'Floor Standing - Conventional', 'new_boiler_location': 'Kitchen', 'new_flue_system': 'Vertical - Open Flue', 'new_flue_location': 'Ground Floor', 'new_flue_diameter': '100mm', 'plume_management_kit': 'Not Required', 'condensate_termination': 'Drain', 'new_controls': 'Wired - Programmer', 'cws_flow_rate': '4', 'new_flue_metres': '1'}
+{'system_treatment': 'Chemical Flush & Inhibitor', 'gas_supply': 'Use existing supply', 'gas_supply_length': 'N/A', 'asbestos_containing_materials_identified': 'No Asbestos Identified', 'electrical_work_required': 'Connect to existing wiring'}
+{'manufacturer_guarantee': '5 Years', 'flue_components': 'Horizontal Flue Kit', 'programmer_thermostat': 'Drayton Twin Channel Programmer', 'central_heating_system_filter': 'Worcester Bosch 22mm System Filter', 'scale_reducer': '15mm in line scale reducer', 'boiler_manufacturer': 'Worcester Bosch'}
+{'radiator_requirements': 'N/A', 'thermostatic_radiator_valves_size': '', 'thermostatic_radiator_valves_type': '', 'thermostatic_radiator_valves_quantity': ''}
+{'estimated_duration': '1 Day', 'description_of_works': 'In and out.', 'product_choice': '1'}
