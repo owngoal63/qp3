@@ -30,6 +30,7 @@ from quotepad.forms import CustomerProductForm, KitchenChecksForm, LaundryChecks
 @login_required
 def report_generated(request):
 	''' Function to render the quote_generated page '''
+	# Below settings removed for Westchem
 	#request.session['created_quote'] = True
 	#created_quote_group = Group.objects.get(name = 'created_quote')
 	#request.user.groups.add(created_quote_group)
