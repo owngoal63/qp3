@@ -255,7 +255,7 @@ def generate_quote_from_file(request, outputformat, quotesource):
 			'total_quote_price': total_quote_price})        
 	
 @login_required
-def edit_Profile_details(request):
+def edit_profile_details(request):
 	''' Function to render the page on which the user provide extended profile details used for the quote '''
 	print(request.user.username)
 	profile = get_object_or_404(Profile, user = request.user )
@@ -271,7 +271,7 @@ def edit_Profile_details(request):
 		alert = None
 		form = ProfileForm(instance=profile)
 		
-	return render(request,"edit_Profile_details.html",{'form': form, 'alert': alert}) 
+	return render(request,"edit_profile_details.html",{'form': form, 'alert': alert}) 
 
 ''' Views and classes to perform CRUD operations on the ProductPrice model '''
 

@@ -13,7 +13,7 @@ from quotepad.views import generate_quote_from_fileWC
 from quotepad.views import BoilerFormWizardView, WestChemFormWizardView, model_form_upload, report_generated, list_report_archive, pdf_viewWC
 from django.contrib.auth.decorators import login_required
 
-from quotepad.views import edit_Profile_details, show_uploaded_files, quote_generated, test_quote_generated, quote_emailed, quote_not_possible, quotepad_template_help
+from quotepad.views import edit_profile_details, show_uploaded_files, quote_generated, test_quote_generated, quote_emailed, quote_not_possible, quotepad_template_help
 from quotepad.views import ProductPriceList, ProductPriceCreate, ProductPriceUpdate, ProductPriceDelete
 from quotepad.views import generate_quote_from_file, edit_quote_template, list_quote_archive, pdf_view
 
@@ -50,7 +50,7 @@ urlpatterns = [
     path('boilerform/', login_required(BoilerFormWizardView.as_view([FormStepOne,FormStepTwo,FormStepThree, FormStepFour, FormStepFive, FormStepSix, FormStepSeven, FormStepEight, FormStepNine])), name = 'boilerform'),
     path('generatequotefromfile/<str:outputformat>/<str:quotesource>', generate_quote_from_file, name = 'generate_quote_from_file'),
 
-    path('edit_Profile_details/', edit_Profile_details, name = 'edit_Profile_details'),
+    path('editprofiledetails/', edit_profile_details, name = 'editprofiledetails'),
     path('editquotetemplate/', edit_quote_template, name = 'editquotetemplate'),
 
     path('productpricelist/', login_required(ProductPriceList.as_view()), name = 'productpricelist'),
