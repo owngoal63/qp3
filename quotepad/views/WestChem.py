@@ -70,9 +70,13 @@ def customer_order(request):
 			# Assign file name to store generated PDF (will need revisting to increment rather than overwrite)
 			outputFilename = Path(settings.BASE_DIR + "/pdf_output_archive/westchem/customer_order/Customer_Order.pdf")
 
+			# Get the image file records
+			frecords = Document.objects.filter(user=request.user.username).order_by('uploaded_at')
+
 			# Generate the PDF file
 			convertHtmlToPdf2(sourceHtml, outputFilename, 
 			{'form_data': form_data,
+			'frecords': frecords,
 			'sub_total': sub_total,
 			'total_inc_vat': total_inc_vat,
 			'grand_total': grand_total}
