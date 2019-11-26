@@ -27,6 +27,74 @@ from quotepad.models import Profile, ProductPrice, Document
 from quotepad.forms import ProfileForm, UserProfileForm, ProductPriceForm, EditQuoteTemplateForm
 from quotepad.forms import CustomerProductForm, KitchenChecksForm, LaundryChecksForm, WaterSoftenerChecksForm, ProductsUsedForForm, CommentsForm, ProductOrderForm
 
+from quotepad.forms import ProductForm
+from django.forms import formset_factory
+
+@login_required
+def customer_order(request):
+
+	if request.method =="POST":
+
+		ProductFormSet = formset_factory(ProductForm)
+
+		# Grab the form from the POST variable
+		formset = ProductFormSet(request.POST)
+
+		if formset.is_valid():
+
+			# Initialise calculated variables for output
+			form_data = []
+			sub_total = 0
+
+			# Deconstruct and Reconstruct the formset adding extended price
+			for f in formset:
+				cd = f.cleaned_data
+				extended_price = cd.get("quantity") * cd.get("price")
+				sub_total += extended_price
+				
+				# Add the extended price to the dict.
+				cd.update({'extended_price': extended_price})
+				form_data.append(cd)
+
+			# Finalise calculated variables
+			total_inc_vat = round(float(sub_total) * 0.20, 2)
+			grand_total = round(float(sub_total) + total_inc_vat, 2)
+
+			# Get the pdf template file
+			usr_pdf_template_file = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customerorder_for_pdf.html".format(request.user.username))
+			if os.path.isfile(usr_pdf_template_file):
+				sourceHtml = "pdf/user_{}/customerorder_for_pdf.html".format(request.user.username)      # Under templates folder
+			else:
+				sourceHtml = "pdf/customerorder_for_pdf.html"      # Under templates folder
+
+			# Assign file name to store generated PDF (will need revisting to increment rather than overwrite)
+			outputFilename = Path(settings.BASE_DIR + "/pdf_output_archive/westchem/customer_order/Customer_Order.pdf")
+
+			# Generate the PDF file
+			convertHtmlToPdf2(sourceHtml, outputFilename, 
+			{'form_data': form_data,
+			'sub_total': sub_total,
+			'total_inc_vat': total_inc_vat,
+			'grand_total': grand_total}
+			)
+
+		# Redirect to page listing the pdf output file(s)
+		return redirect('/orderreportgenerated/')
+
+
+	# If the form is not being processed, create a new ProductFormSet and render it
+	else:
+
+		product_list = []
+
+		for product in ProductPrice.objects.filter(user=request.user):
+			product_list.append({'product_id': product.id, 'model_name': product.model_name, 'size': product.product_code, 'price': product.price, 'stock': 0, 'quantity': 0})
+
+		ProductFormSet = formset_factory(ProductForm, extra=0)
+		formset = ProductFormSet(initial=product_list)
+		return render(request, 'westchem/orderforms/CustomerOrderForm.html', {'formset': formset})
+
+
 @login_required
 def report_generated(request):
 	''' Function to render the quote_generated page '''
@@ -35,6 +103,14 @@ def report_generated(request):
 	#created_quote_group = Group.objects.get(name = 'created_quote')
 	#request.user.groups.add(created_quote_group)
 	return render(request,'westchem/pages/report_generated.html')
+
+@login_required
+def order_report_generated(request):
+	folder = Path(settings.BASE_DIR + "/pdf_output_archive/westchem/customer_order")
+	#path="C:\\somedirectory"  # insert the path to your directory   
+	pdf_files =os.listdir(folder)
+	#cur_report_name = "current_report_{}.txt".format(request.user.username)   
+	return render(request, 'westchem/pages/order_report_generated.html', {'pdf_files': pdf_files})
 
 @login_required
 def list_report_archive(request):
@@ -52,7 +128,16 @@ def pdf_viewWC(request, pdf_file):
 	try:
 		return FileResponse(open(file_to_render, 'rb'), content_type='application/pdf')
 	except FileNotFoundError:
-		raise Http404()	
+		raise Http404()
+
+@login_required
+def cust_ord_pdf_viewWC(request, pdf_file):
+	''' Function to return *.pdf file in a user specific folder '''
+	file_to_render = Path(settings.BASE_DIR + "/pdf_output_archive/westchem/customer_order", pdf_file)
+	try:
+		return FileResponse(open(file_to_render, 'rb'), content_type='application/pdf')
+	except FileNotFoundError:
+		raise Http404()			
 
 class WestChemFormWizardView(SessionWizardView):
 	''' Main Quotepad form functionaility to capture the details for the quote using the Formwizard functionaility in the formtools library '''

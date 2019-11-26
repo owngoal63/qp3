@@ -158,8 +158,21 @@ a:hover {
   }
 
 
+.input-disabled {
+  text-align: left;
+  background-color :rgb(246, 245, 242);
+}
+
 .input-int {
   max-width: 60px;
+  text-align: right;
+  background-color : rgb(177, 243, 177);
+}
+
+.input-price {
+  max-width: 60px;
+  text-align: right;
+  background-color :rgb(246, 245, 242);
 }
 
   

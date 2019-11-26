@@ -693,6 +693,23 @@ class ProductOrderForm(forms.Form):
 	encore5L_s = forms.IntegerField(required=False, min_value=0, max_value=999)
 	encore5L_o = forms.IntegerField(required=False, min_value=0, max_value=999)
 
+class ProductForm(forms.Form):
+	#def __init__(self, *args, **kwargs):
+		#super(ProductForm, self).__init__(*args, **kwargs)
+		#for field in self: 
+		#self.quantity.widget.attrs['class'] = 'input-int'
+	product_id = forms.IntegerField(widget=forms.HiddenInput)
+	model_name = forms.CharField(label=False, required=False,
+	 widget=forms.TextInput(attrs={'readonly':'readonly','class': "input-disabled"})
+	 )
+	size = forms.CharField(label=False, required=False,
+	 widget=forms.TextInput(attrs={'readonly':'readonly','class': "input-price"})
+	 )
+	price = forms.DecimalField(label=False, required=False,
+	 widget=forms.TextInput(attrs={'readonly':'readonly','class': "input-price"})
+	 )
+	stock = forms.IntegerField(label=False, widget=forms.TextInput(attrs={'class': "input-int"}))
+	quantity = forms.IntegerField(label=False, widget=forms.TextInput(attrs={'class': "input-int"}))
 
 
 

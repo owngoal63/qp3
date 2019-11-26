@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <title>Order Report</title>
+    <style type="text/css">
+        body {
+            font-weight: 200;
+            font-size: 14px;
+        }
+
+        .section_header {
+            font-size: 18px;
+            font-weight: 100;
+        }
+
+        .section_italics {
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        .header {
+            font-size: 25px;
+            font-weight: 900;
+            text-align: left;
+            color: darkgray;
+        }
+
+        .title {
+            font-size: 22px;
+            font-weight: 100;
+            /* text-align: right;*/
+            padding: 10px 20px 0px 20px;
+        }
+
+        .title span {
+            color: #007cae;
+        }
+
+        .details {
+            padding: 10px 20px 0px 20px;
+            text-align: left !important;
+            /*margin-left: 40%;*/
+        }
+
+        .hrItem {
+            border: none;
+            height: 1px;
+            /* Set the hr color */
+            color: #333;
+            /* old IE */
+            background-color: #fff;
+            /* Modern Browsers */
+        }
+
+        .logo {
+            height: 100px;
+            width: auto;
+        }
+
+        .footer {
+            border: 2px solid rgb(164,164,164);
+            border-radius: 5px;
+            background-color: rgb(253,25,32);
+            color: white;
+            font-size: 10px;
+            font-weight: 100;
+            text-align: center;
+            padding: 6px 0px 0px 0px;
+        }
+
+        .customer-details {
+            font-size: 14px;
+        }
+
+        .product-usage {
+            font-size: 10px;
+        }
+
+        .comments{
+            text-align: left;
+            border: 1px solid black;
+            padding: 2px 2px 2px 2px;
+        }
+
+        .order-table {
+            border-bottom: 1px solid #ddd;
+            padding: 4px 0px 0px 0px;
+        }
+
+    </style>
+</head>
+
+<body>
+        <table>
+            <tr>
+                <td><div class='header'>ORDER REPORT</div></td>
+                <td align="right">&nbsp;</td>
+            </tr>
+            <tr>    
+                <td colspan="2">
+                        <div class='footer'>
+                                WESTCHEM | THE OLD STATION | STATION ROAD | SIDMOUTH | DEVON | EX10 9DN | TEL: 01395 514624 | EMAIL: sales@westchem.co.uk
+                            </div>
+                </td>
+            </tr>
+        </table>
+        <br>
+
+        <table>
+                <th class="order-table" width="40%" align="left">
+                  Product  
+                </th>
+                <th class="order-table" width="10%" align="right">
+                  Size  
+                </th>
+                <th class="order-table" width="15%" align="right">
+                  Stock Qty
+                </th>
+                <th class="order-table" width="15%" align="right">
+                  Ord. Qty  
+                </th>
+                <th class="order-table" width="15%" align="right">
+                        Unit Price  
+                </th>
+                <th class="order-table" width="15%" align="right">
+                        Total Price  
+                </th>
+
+                {% for product_row in form_data %}
+
+                <tr>
+                    <td class="order-table" width="40%" align="left">
+                        {{ product_row.model_name }} 
+                    </td>
+                    <td class="order-table" width="10%" align="right">
+                        {{ product_row.size }}
+                    </td>
+                    <td class="order-table" width="15%" align="right">
+                        {{ product_row.stock|default:"--" }}
+                    </td>
+                    <td class="order-table" width="15%" align="right">
+                        {{ product_row.quantity|default:"--" }}
+                    </td>
+                    <td class="order-table" width="15%" align="right">
+                        £{{ product_row.price }}
+                    </td>
+                    <td class="order-table" width="15%" align="right">
+                            £{{ product_row.extended_price }}
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="6" align="right">&nbsp;</td>
+                </tr>          
+                <tr>
+                    <td colspan="6" align="right">Sub Total: £{{ sub_total }}</td>
+                </tr> 
+                <tr>
+                    <td colspan="6" align="right">Vat 20%: £{{ total_inc_vat }}</td>
+                </tr>          
+                <tr>
+                    <td colspan="6" align="right">_________________________</td>
+                </tr>
+                <tr>
+                    <td colspan="6" align="right"><b>Balance Due: £{{ grand_total }}</b></td>
+                </tr> 
+                
+            </table>        
+</body>
+
+</html>

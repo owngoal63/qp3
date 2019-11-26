@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h4>Products for order</h4>
+
+    {{ formset.non_form_errors }}
+
+    <form method="post">
+    
+    {% csrf_token %}
+    <table width="45%"><tr>
+    <td width="47%">Product</td> <td width="13%">Size</td> <td width="14%">Price £</td> <td width="13%">Stock</td> <td width="13%" align="right">Ord.Qty</td>
+    </tr>
+    </table>
+    {% for frecord in formset %}
+        <div class="form-group">
+        {{ frecord }}
+        </div>
+    {% endfor %}    
+    
+    {{ formset.management_form }}
+    <br>
+    <button type="submit" class="btn btn-primary" value="Submit">Submit</button>
+    <a class="btn btn-secondary" href="/home/">Return to Dashboard</a>
+    </form>
+
+</div>    
+
+
+{% endblock %}

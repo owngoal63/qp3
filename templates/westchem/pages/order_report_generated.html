@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load quotepad_extras %}
+
+{% block content %}
+
+<div class="container">
+
+{% for pdf_file in pdf_files %}
+
+
+        <h4>Customer Order Report</h4>
+
+        <a href="{% url 'custordpdfviewWC' pdf_file %}" target="_blank">{{ pdf_file }}</a><br>
+
+    {% empty %}
+    <p>No Report found.</p>
+    
+{% endfor %}
+
+<br>
+<a class="btn btn-secondary" href="/home/">Return to Dashboard</a>
+
+</div>
+
+{% endblock %}
