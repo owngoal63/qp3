@@ -5,12 +5,13 @@ from django.conf import settings
 from django.contrib import messages
 
 # Form wizard imports
-from quotepad.forms import FormStepOne, FormStepTwo, FormStepThree, FormStepFour, FormStepFive, FormStepSix, FormStepSeven, FormStepEight, FormStepNine
+#from quotepad.forms import FormStepOne, FormStepTwo, FormStepThree, FormStepFour, FormStepFive, FormStepSix, FormStepSeven, FormStepEight, FormStepNine
+from quotepad.forms import FormStepOne_yh, FormStepTwo_yh, FormStepThree_yh, FormStepFour_yh, FormStepFive_yh, FormStepSix_yh, FormStepSeven_yh, FormStepEight_yh, FormStepNine_yh, FinanceForm_yh
 from formtools.wizard.views import SessionWizardView
 
 # imports associated with xhtml2pdf
 from django.http import HttpResponseRedirect, HttpResponse, FileResponse
-from quotepad.utils import render_to_pdf, convertHtmlToPdf, convertHtmlToPdf2
+from quotepad.utils import pdf_generation, convertHtmlToPdf, convertHtmlToPdf2
 import datetime
 from pathlib import Path, PureWindowsPath
 import os, os.path, errno
@@ -27,20 +28,20 @@ from quotepad.models import Profile, ProductPrice, Document
 from quotepad.forms import ProfileForm, UserProfileForm, ProductPriceForm, EditQuoteTemplateForm
 
 @login_required
-def quote_generated(request):
+def quote_generated_yh(request):
 	''' Function to render the quote_generated page '''
 	request.session['created_quote'] = True
 	created_quote_group = Group.objects.get(name = 'created_quote')
 	request.user.groups.add(created_quote_group)
-	return render(request,'quote_generated.html')
+	return render(request,'yourheat/pages/quote_generated.html')
 
 @login_required
-def list_quote_archive(request):
+def list_quote_archive_yh(request):
 	''' Function to render the page required to display previously generated quotes '''
 	folder = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/".format(request.user.username))
 	#path="C:\\somedirectory"  # insert the path to your directory   
 	pdf_files =os.listdir(folder)   
-	return render(request, 'list_quote_archive.html', {'pdf_files': pdf_files})
+	return render(request, 'yourheat/pages/list_quote_archive.html', {'pdf_files': pdf_files})
 
 @login_required
 def pdf_view(request, pdf_file):
@@ -49,15 +50,35 @@ def pdf_view(request, pdf_file):
 	try:
 		return FileResponse(open(file_to_render, 'rb'), content_type='application/pdf')
 	except FileNotFoundError:
-		raise Http404()			
+		raise Http404()
 
+class FinanceFormWizardView_yh(SessionWizardView):
+	''' Redundant remove when ready'''
 
+	template_name = "yourheat/orderforms/financeform.html"
+	# def get_template_names(self):
+	# 	print(self.steps.current)
+	# 	if self.steps.current == '1':
+	# 		return "yourheat/orderforms/CustomerProductForm.html"
 
-class BoilerFormWizardView(SessionWizardView):
+	form_list = [FinanceForm_yh]
+
+	def done(self, form_list, **kwargs):
+		return HttpResponseRedirect('/quotegenerated/')	
+		
+
+class BoilerFormWizardView_yh(SessionWizardView):
 	''' Main Quotepad form functionaility to capture the details for the quote using the Formwizard functionaility in the formtools library '''
 	''' Outputs the data to a PDF and a json files in the pdf_quote_archive user specific folder (user_xxxxx)  '''
 
-	template_name = "boilerform.html"
+	#template_name = "yourheat/orderforms/boilerform.html"
+
+	def get_template_names(self):
+		print(self.steps.current)
+		if self.steps.current == '9':
+			return "yourheat/orderforms/financeform.html"
+		else:
+			return "yourheat/orderforms/boilerform.html"
 
 	# Below method is to pass the logged in user to the
 	# appropriate form to filter the drop down product listing
@@ -68,11 +89,20 @@ class BoilerFormWizardView(SessionWizardView):
 			print(manuf)
 			return {'user': self.request.user, 'manufacturer': manuf}
 		elif step == '6':
-			return {'user': self.request.user}	
+			return {'user': self.request.user}
+		elif step == '9':
+			product_step_data = self.storage.get_step_data('8')
+			productx = product_step_data.get('8-product_choice','')
+			#Object.objects.get(pk=1)
+			#field_value = field_object.value_from_object(obj)
+			# print("--------------")
+			# print(ProductPrice.objects.get(id=productx).price)
+			# print(productx)
+			return {'product_price': ProductPrice.objects.get(id=productx).price}
 		else:
 			return {}
 
-	form_list = [FormStepOne, FormStepTwo, FormStepThree, FormStepFour, FormStepFive, FormStepSix, FormStepSeven, FormStepEight, FormStepNine]
+	form_list = [FormStepOne_yh, FormStepTwo_yh, FormStepThree_yh, FormStepFour_yh, FormStepFive_yh, FormStepSix_yh, FormStepSeven_yh, FormStepEight_yh, FormStepNine_yh, FinanceForm_yh]
 	
 	def done(self, form_list, **kwargs):
 		# Initial check to see if user specific PDF template file exists
@@ -89,6 +119,7 @@ class BoilerFormWizardView(SessionWizardView):
 		idx = Profile.objects.get(user = self.request.user)
 
 		product_id = ([form.cleaned_data for form in form_list][8].get('product_choice').id)
+		alt_product_id= ([form.cleaned_data for form in form_list][8].get('alt_product_choice').id)
 
 		# Get the record of the product that was selected
 		product_record = ProductPrice.objects.get(pk = product_id)
@@ -125,8 +156,15 @@ class BoilerFormWizardView(SessionWizardView):
 				string = str(line)
 				firstDelPos=string.find("<") # get the position of <
 				secondDelPos=string.find(">") # get the position of >
-				stringAfterReplace = string.replace(string[firstDelPos:secondDelPos+1], "'" + str(product_id) + "'")
-				
+				stringAfterFirstReplace = string.replace(string[firstDelPos:secondDelPos+1], "'" + str(product_id) + "'")
+				#file.write(str(stringAfterFirstReplace) + "\n")
+				print(stringAfterFirstReplace)
+				# Repeat for Alternative product Code
+				string = stringAfterFirstReplace
+				firstDelPos=string.find("<") # get the position of <
+				secondDelPos=string.find(">") # get the position of >
+				stringAfterReplace = string.replace(string[firstDelPos:secondDelPos+1], "'" + str(alt_product_id) + "'")
+
 				file.write(str(stringAfterReplace) + "\n")
 			else:	
 				file.write(str(line) + "\n")
@@ -146,10 +184,10 @@ class BoilerFormWizardView(SessionWizardView):
 		# Increment the Profile.current_quote_number by 1
 		idx.current_quote_number = idx.current_quote_number + 1
 		idx.save()
-		return HttpResponseRedirect('/quotegenerated/')
+		return HttpResponseRedirect('/quotegenerated_yh/')
 
 @login_required	  
-def generate_quote_from_file(request, outputformat, quotesource):
+def generate_quote_from_file_yh(request, outputformat, quotesource):
 	''' Function to generate the using either a generic template or a user specific one '''
 	''' Quote data is sourced from a test data file or from the specific current quote '''
 	''' Output can be rendered to screen or to an Email recipient as defined on the data from the form '''
@@ -179,6 +217,7 @@ def generate_quote_from_file(request, outputformat, quotesource):
 		
 	file_form_data = file_form_datax
 	product_id = file_form_data[8].get('product_choice')
+	alt_product_id = file_form_data[8].get('alt_product_choice')
 
 	idx = Profile.objects.get(user = request.user)
 
@@ -188,15 +227,21 @@ def generate_quote_from_file(request, outputformat, quotesource):
 			product_record = ProductPrice.objects.filter(user = request.user).first()	# A product price record exists - use the first one
 		else:	# Product Price record does not exist - select the Demo record
 			product_record = ProductPrice.objects.first()			
-	else:	# retrieve the user selected product record from the quote form
+	else:	# retrieve the user selected product record(s) from the quote form
 		product_record = ProductPrice.objects.get(pk = int(product_id))
+		alt_product_record = ProductPrice.objects.get(pk = int(alt_product_id))
 
 	frecords = Document.objects.filter(user=request.user.username).order_by('uploaded_at')
 
-	try:	# test to see if image is associated with product
+	try:	# test to see if image is associated with primary product
 		img_record = Document.objects.get(id = product_record.product_image.id )
 	except: # if not then continue with empty object
 		img_record = ""
+	try:	# test to see if image is associated with alternate product
+		alt_img_record = Document.objects.get(id = alt_product_record.product_image.id )
+	except: # if not then continue with empty object
+		alt_img_record = ""	
+		
 
 	# Calculate the daily_work_rate multiplied by the estimated_duration
 	workload_cost = idx.daily_work_rate * int(file_form_data[8].get('estimated_duration')[0])
@@ -208,12 +253,14 @@ def generate_quote_from_file(request, outputformat, quotesource):
 		request.session['created_quote_template'] = True
 		created_quote_template_group = Group.objects.get(name = 'created_quote_template')
 		request.user.groups.add(created_quote_template_group)
-		pdf = render_to_pdf(sourceHtml, {
+		pdf = pdf_generation(sourceHtml, {
 			'form_data': file_form_data,
 			'idx': idx,
 			'frecords': frecords,
 			'product_record': product_record,
+			'alt_product_record': alt_product_record,
 			'img_record': img_record,
+			'alt_img_record': alt_img_record,
 			'workload_cost': workload_cost,
 			'total_quote_price': total_quote_price}) 
 		return HttpResponse(pdf, content_type='application/pdf')
@@ -228,8 +275,10 @@ def generate_quote_from_file(request, outputformat, quotesource):
 			'form_data': file_form_data,
 			'idx':idx,
 			'frecords': frecords,
+			'alt_product_record': alt_product_record,
 			'product_record': product_record,
 			'img_record': img_record,
+			'alt_img_record': alt_img_record,
 			'workload_cost': workload_cost,
 			'total_quote_price': total_quote_price})
 		# Generate the email, attach the pdf and send out

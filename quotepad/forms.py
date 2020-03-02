@@ -302,6 +302,60 @@ ESTIMATED_DURATION_DROPDOWN = (
 	('5 Days','5 Days'),
 )
 
+''' Dropdowns for Yourheat forms '''
+
+CUSTOMER_TITLE_DROPDOWN = (
+	('Mr','Mr'),
+	('Mrs','Mrs'),
+	('Miss','Miss'),
+	('Ms','Ms'),
+	('Dr','Dr'),
+)
+
+OWNER_TENANT_OR_LANDLORD_DROPDOWN = (
+	('Owner','Owner'),
+	('Tenant','Tenant'),
+	('Landlord','Landlord'),
+)
+
+CURRENT_RADIATORS_WORKING_CORRECTLY_DROPDOWN = (
+	('Yes', 'Yes'),
+	('No', 'No'),
+)
+
+INCOMING_FLOW_RATE_DROPDOWN = (
+	('4','4'),
+	('5','5'),
+	('6','6'),
+	('7','7'),
+	('8','8'),
+	('9','9'),
+	('10','10'),
+	('11','11'),
+	('12','12'),
+	('13','13'),
+	('14','14'),
+	('15','15'),
+	('16','16'),
+	('17','17'),
+	('18+','18+'),
+)
+
+WILL_BOILER_BE_HOUSED_IN_CUPBOARD_DROPDOWN = (
+	('Yes', 'Yes'),
+	('No', 'No'),	
+)
+
+CHEMICAL_SYSTEM_TREATMENT_DROPDOWN = (
+	('Chemical Flush & Inhibitor','Chemical Flush & Inhibitor'),
+	('Magna Pro Flush & Inhibitor','Magna Pro Flush & Inhibitor'),
+	('Power Flush & Inhibitor','Power Flush & Inhibitor'),
+)
+
+SCAFFOLDING_REQUIRED_DROPDOWN = (
+	('No Scaffolding Required', 'No Scaffolding Required'),	
+	('Yes', 'Yes'),
+)
 
 ''' Section for defining the multiple forms that will be used for the boiler quote (FormWizard library) '''
 
@@ -435,7 +489,7 @@ class FormStepNine(forms.Form):
 		super(FormStepNine, self).__init__(*args, **kwargs)
 		self.fields['product_choice'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user, brand = self.manuf), empty_label = 'Select Product for quote')
 		for field in self: 
-			field.field.widget.attrs['class'] = 'form-control'
+			field.field.widget.attrs['class'] = 'form-control'	
 	estimated_duration = forms.ChoiceField(choices=ESTIMATED_DURATION_DROPDOWN)
 	description_of_works = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'rows':5, 'cols':30}))
 
@@ -500,7 +554,7 @@ class ProductPriceForm(forms.ModelForm):
 	
 	class Meta:
 		model = ProductPrice
-		fields = ['brand', 'model_name', 'product_code','price','product_image']
+		fields = ['brand', 'model_name', 'product_code','price','product_image','guarantee']
 
 		widgets = {
 			'brand': forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Enter the Manufacturer's Brand Name",  'autofocus': ''}),
@@ -508,6 +562,7 @@ class ProductPriceForm(forms.ModelForm):
 			'product_code': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter the Product Code'}),
 			'price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter the Price of the product'}),
 			'product_image': forms.Select(attrs={'class': 'form-control'}),
+			'guarantee': forms.Select(attrs={'class': 'form-control'}),
 		}
 
 
@@ -535,183 +590,341 @@ class EditQuoteTemplateForm(forms.Form):
 
 
 
-
-# class OrderedModelMultipleChoiceField(ModelMultipleChoiceField):
-# 	def clean(self, value):
-# 		qs = super(OrderedModelMultipleChoiceField, self).clean(value)
-# 		print(qs)
-# 		return sorted(qs, key=lambda x:value.index(x.pk))
-
-
 ''' Section for defining the multiple forms that will be used for the boiler quote (FormWizard library) '''
 
-class XWestChemFormStepOne(forms.Form):
+#class XWestChemFormStepOne(forms.Form):
+	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
+	# within double curly braces...
+	# form_data.0.field_name e.g. form_data.0.customer_first_name
+	#def __init__(self, *args, **kwargs):
+		#super(WestChemFormStepOne, self).__init__(*args, **kwargs)
+		#for field in self: 
+			#field.field.widget.attrs['class'] = 'form-control'
+	#customer_first_name = forms.CharField(max_length=100)
+	#customer_last_name = forms.CharField(max_length=100)
+	#customer_home_phone = forms.CharField(max_length=100, required = False)
+	#customer_mobile_phone = forms.CharField(max_length=100, required = False)
+	#customer_email = forms.EmailField()
+	#owner_or_tenant = forms.ChoiceField(choices=OWNER_OR_TENANT_DROPDOWN)
+	#choice = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user, brand = 'Worcester Bosch'), empty_label = 'Select Product for quote')
+	
+
+#class XWestChemFormStepTwo(forms.Form):
+	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
+	# within double curly braces...
+	# form_data.1.field_name e.g. form_data.1.installation_address
+	#def __init__(self, *args, **kwargs):
+		#self.user = kwargs.pop('user')
+		#super(WestChemFormStepTwo, self).__init__(*args, **kwargs)
+		# Get the user to seed the filter on the drop down.
+		#self.manuf = kwargs.pop('manufacturer')
+		#self.fields['product_choice'] = forms.ModelMultipleChoiceField(queryset=ProductPrice.objects.filter(user = self.user))
+		#self.fields['product_choice'] = ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=ProductPrice.objects.filter(user = self.user).values_list('id', flat=True))
+		#removals = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
+		#									 choices=REMOVALS_CHOICES)
+		#self.fields['product_choice'] = forms.ModelChoiceField(queryset=ProductPrice.objects.all(), empty_label = 'Select Product for quote')
+		#for field in self: 
+			#field.field.widget.attrs['class'] = 'form-control'
+	#house_name_or_number = forms.CharField(max_length=100)
+	#street_address = forms.CharField(max_length=100)
+	#city = forms.CharField(max_length=100)
+	#county = forms.CharField(max_length=100)
+	#postcode = forms.CharField(max_length=100)
+	#property_type = forms.ChoiceField(choices=PROPERTY_TYPE_DROPDOWN)
+
+# class CustomerProductForm(forms.Form):
+# 	def __init__(self, *args, **kwargs):
+# 		super(CustomerProductForm, self).__init__(*args, **kwargs)
+# 		for field in self: 
+# 			field.field.widget.attrs['class'] = 'form-control'
+# 	customer = forms.CharField(max_length=100)
+# 	contact = forms.CharField(max_length=100)
+# 	customer_email = forms.EmailField()
+# 	customer_phone= forms.CharField(max_length=100, required=False)
+# 	machine = forms.CharField(max_length=100)
+# 	make = forms.CharField(max_length=100)
+# 	model = forms.CharField(max_length=100)
+	
+
+# class KitchenChecksForm(forms.Form):
+# 	def __init__(self, *args, **kwargs):
+# 		super(KitchenChecksForm, self).__init__(*args, **kwargs)
+# 		for field in self: 
+# 			field.field.widget.attrs['class'] = 'format_chkbox'
+# 	results = forms.BooleanField(required=False)
+# 	wash_temp_55C = forms.BooleanField(required=False)
+# 	rinse_temp_82C = forms.BooleanField(required=False)
+# 	is_a_descale_required = forms.BooleanField( required=False)
+# 	rinse_jets_blocked = forms.BooleanField( required=False)
+# 	rinse_jets_missing = forms.BooleanField(required=False)
+# 	wash_jets_clean = forms.BooleanField( required=False)
+# 	other_fault = forms.BooleanField(required=False)
+# 	wall_racks = forms.BooleanField(required=False)
+# 	auto_dosing_clean = forms.BooleanField(required=False)
+# 	auto_dosing_pump_head = forms.BooleanField(required=False)
+# 	auto_dosing_tube_stiffeners = forms.BooleanField(required=False)
+# 	control_systems_clean = forms.BooleanField(required=False)
+# 	control_system_damaged = forms.BooleanField(required=False)
+# 	wall_charts = forms.BooleanField(required=False)
+
+# class LaundryChecksForm(forms.Form):
+# 	def __init__(self, *args, **kwargs):
+# 		super(LaundryChecksForm, self).__init__(*args, **kwargs)
+# 		for field in self: 
+# 			field.field.widget.attrs['class'] = 'format_chkbox'
+# 	results = forms.BooleanField(required=False)
+# 	other_faults = forms.BooleanField(required=False)
+# 	clean = forms.BooleanField(required=False)
+# 	pump_heads = forms.BooleanField(required=False)
+# 	tube_stiffener = forms.BooleanField(required=False)
+# 	touch_pad_attached = forms.BooleanField(required=False)
+# 	wall_charts = forms.BooleanField(required=False)
+
+# class WaterSoftenerChecksForm(forms.Form):
+# 	def __init__(self, *args, **kwargs):
+# 		super(WaterSoftenerChecksForm, self).__init__(*args, **kwargs)
+# 		for field in self: 
+# 			field.field.widget.attrs['class'] = 'format_chkbox'
+# 	is_water_hard = forms.BooleanField(required=False)
+# 	is_water_softener_working = forms.BooleanField(required=False)
+
+# class ProductsUsedForForm(forms.Form):
+# 	def __init__(self, *args, **kwargs):
+# 		super(ProductsUsedForForm, self).__init__(*args, **kwargs)
+# 		for field in self: 
+# 			field.field.widget.attrs['class'] = 'format_chkbox'
+# 	pot_washing = forms.BooleanField(required=False)
+# 	glass_washing = forms.BooleanField(required=False)
+# 	food_prep_areas = forms.BooleanField(required=False)
+# 	floors_and_surfaces = forms.BooleanField(required=False)
+# 	ovens = forms.BooleanField(required=False)
+# 	hand_soap = forms.BooleanField(required=False)
+# 	hand_sanitiser = forms.BooleanField(required=False)
+# 	drains = forms.BooleanField(required=False)
+# 	laundry = forms.BooleanField(required=False)
+# 	housekeeping = forms.BooleanField(required=False)
+
+# class CommentsForm(forms.Form):
+# 	def __init__(self, *args, **kwargs):
+# 		super(CommentsForm, self).__init__(*args, **kwargs)
+# 		for field in self: 
+# 			field.field.widget.attrs['class'] = 'form-control'
+# 	comments = forms.CharField(max_length=3000, required=False, widget=forms.Textarea(attrs={'rows':15, 'cols':30}))
+
+# class ProductOrderForm(forms.Form):
+# 	def __init__(self, *args, **kwargs):
+# 		super(ProductOrderForm, self).__init__(*args, **kwargs)
+# 		for field in self: 
+# 			field.field.widget.attrs['class'] = 'form-control-products'
+# 	hydroclean5L_s = forms.IntegerField(required=False, min_value=0, max_value=999)
+# 	hydroclean5L_o = forms.IntegerField(required=False, min_value=0, max_value=999)
+# 	hydroclean10L_s = forms.IntegerField(required=False, min_value=0, max_value=999)
+# 	hydroclean10L_o = forms.IntegerField(required=False, min_value=0, max_value=999)
+# 	soilmaster5L_s = forms.IntegerField(required=False, min_value=0, max_value=999)
+# 	soilmaster5L_o = forms.IntegerField(required=False, min_value=0, max_value=999)
+# 	soilmaster10L_s = forms.IntegerField(required=False, min_value=0, max_value=999)
+# 	soilmaster10L_o = forms.IntegerField(required=False, min_value=0, max_value=999)
+
+
+	# quadrant_s = forms.IntegerField(required=False, min_value=0, max_value=999)
+	# quadrant_o = forms.IntegerField(required=False, min_value=0, max_value=999)
+	# ace87_s = forms.IntegerField(required=False, min_value=0, max_value=999)
+	# ace87_o = forms.IntegerField(required=False, min_value=0, max_value=999)
+	# dp100_s = forms.IntegerField(required=False, min_value=0, max_value=999)
+	# dp100_o = forms.IntegerField(required=False, min_value=0, max_value=999)
+
+	# bravo_s = forms.IntegerField(required=False, min_value=0, max_value=999)
+	# bravo_o = forms.IntegerField(required=False, min_value=0, max_value=999)
+	# fabricare_s = forms.IntegerField(required=False, min_value=0, max_value=999)
+	# fabricare_o = forms.IntegerField(required=False, min_value=0, max_value=999)
+	# encore5L_s = forms.IntegerField(required=False, min_value=0, max_value=999)
+	# encore5L_o = forms.IntegerField(required=False, min_value=0, max_value=999)
+
+# class ProductForm(forms.Form):
+# 	product_id = forms.IntegerField(widget=forms.HiddenInput)
+# 	model_name = forms.CharField(label=False, required=False,
+# 	 widget=forms.TextInput(attrs={'readonly':'readonly','class': "input-disabled"})
+# 	 )
+# 	size = forms.CharField(label=False, required=False,
+# 	 widget=forms.TextInput(attrs={'readonly':'readonly','class': "input-price"})
+# 	 )
+# 	price = forms.DecimalField(label=False, required=False,
+# 	 widget=forms.TextInput(attrs={'readonly':'readonly','class': "input-price"})
+# 	 )
+# 	stock = forms.IntegerField(label=False, widget=forms.TextInput(attrs={'class': "input-int"}))
+# 	quantity = forms.IntegerField(label=False, widget=forms.TextInput(attrs={'class': "input-int"}))
+
+''' ----------- Form pages for yourheat -------------'''
+class FormStepOne_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
 	# within double curly braces...
 	# form_data.0.field_name e.g. form_data.0.customer_first_name
 	def __init__(self, *args, **kwargs):
-		super(WestChemFormStepOne, self).__init__(*args, **kwargs)
+		super(FormStepOne_yh, self).__init__(*args, **kwargs)
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
+	customer_title = forms.ChoiceField(choices=CUSTOMER_TITLE_DROPDOWN)
 	customer_first_name = forms.CharField(max_length=100)
 	customer_last_name = forms.CharField(max_length=100)
 	customer_home_phone = forms.CharField(max_length=100, required = False)
 	customer_mobile_phone = forms.CharField(max_length=100, required = False)
 	customer_email = forms.EmailField()
-	owner_or_tenant = forms.ChoiceField(choices=OWNER_OR_TENANT_DROPDOWN)
-	#choice = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user, brand = 'Worcester Bosch'), empty_label = 'Select Product for quote')
+	owner_tenant_or_landlord = forms.ChoiceField(choices=OWNER_TENANT_OR_LANDLORD_DROPDOWN)
 	
 
-class XWestChemFormStepTwo(forms.Form):
+# class FormStepTwo_yh(forms.Form):
+	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
+	# within double curly braces...
+	# form_data.1.field_name e.g. form_data.1.installation_address
+	# def __init__(self, *args, **kwargs):
+	# 	super(FormStepTwo_yh, self).__init__(*args, **kwargs)
+	# 	for field in self: 
+	# 		field.field.widget.attrs['class'] = 'form-control'
+	# house_name_or_number = forms.CharField(max_length=100)
+	# street_address = forms.CharField(max_length=100)
+	# city = forms.CharField(max_length=100)
+	# county = forms.CharField(max_length=100)
+	# postcode = forms.CharField(max_length=100)
+	# property_type = forms.ChoiceField(choices=PROPERTY_TYPE_DROPDOWN)
+
+class FormStepTwo_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
 	# within double curly braces...
 	# form_data.1.field_name e.g. form_data.1.installation_address
 	def __init__(self, *args, **kwargs):
-		self.user = kwargs.pop('user')
-		super(WestChemFormStepTwo, self).__init__(*args, **kwargs)
-		# Get the user to seed the filter on the drop down.
-		#self.manuf = kwargs.pop('manufacturer')
-		#self.fields['product_choice'] = forms.ModelMultipleChoiceField(queryset=ProductPrice.objects.filter(user = self.user))
-		self.fields['product_choice'] = ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=ProductPrice.objects.filter(user = self.user).values_list('id', flat=True))
-		#removals = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
-		#									 choices=REMOVALS_CHOICES)
-		#self.fields['product_choice'] = forms.ModelChoiceField(queryset=ProductPrice.objects.all(), empty_label = 'Select Product for quote')
+		super(FormStepTwo_yh, self).__init__(*args, **kwargs)
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
-	house_name_or_number = forms.CharField(max_length=100)
-	street_address = forms.CharField(max_length=100)
-	city = forms.CharField(max_length=100)
-	county = forms.CharField(max_length=100)
-	postcode = forms.CharField(max_length=100)
-	#property_type = forms.ChoiceField(choices=PROPERTY_TYPE_DROPDOWN)
+	installation_address = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'rows':5, 'cols':30}))
+	billing_address = forms.CharField(max_length=2000, required = False,  widget=forms.Textarea(attrs={'rows':5, 'cols':30, 'placeholder': 'Leave blank for Billing address same as Installation address'},))
+	property_type = forms.ChoiceField(choices=PROPERTY_TYPE_DROPDOWN)	
 
-class CustomerProductForm(forms.Form):
+class FormStepThree_yh(forms.Form):
+	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
+	# within double curly braces...
+	# form_data.2.field_name e.g. form_data.2.current_fuel_type
 	def __init__(self, *args, **kwargs):
-		super(CustomerProductForm, self).__init__(*args, **kwargs)
+		super(FormStepThree_yh, self).__init__(*args, **kwargs)
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
-	customer = forms.CharField(max_length=100)
-	contact = forms.CharField(max_length=100)
-	customer_email = forms.EmailField()
-	customer_phone= forms.CharField(max_length=100, required=False)
-	machine = forms.CharField(max_length=100)
-	make = forms.CharField(max_length=100)
-	model = forms.CharField(max_length=100)
+	current_fuel_type = forms.ChoiceField(choices=CURRENT_FUEL_TYPE_DROPDOWN)
+	current_boiler_type = forms.ChoiceField(choices=CURRENT_BOILER_TYPE_DROPDOWN)
+	current_boiler_location = forms.ChoiceField(choices=CURRENT_BOILER_LOCATION_DROPDOWN)
+	current_flue_system = forms.ChoiceField(choices=CURRENT_FLUE_SYSTEM_DROPDOWN)
+	current_flue_location = forms.ChoiceField(choices=CURRENT_FLUE_LOCATION_DROPDOWN)
+	current_controls = forms.MultipleChoiceField(choices=CURRENT_CONTROLS_DROPDOWN)
+	current_radiators_working_correctly = forms.ChoiceField(choices=CURRENT_RADIATORS_WORKING_CORRECTLY_DROPDOWN)
 	
+class FormStepFour_yh(forms.Form):
+	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
+	# within double curly braces...
+	# form_data.3.field_name e.g. form_data.3.removals
+	removals = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
+											 choices=REMOVALS_CHOICES)
 
-class KitchenChecksForm(forms.Form):
+class FormStepFive_yh(forms.Form):
+	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
+	# within double curly braces...
+	# form_data.4.field_name e.g. form_data.4.new_fuel_type
 	def __init__(self, *args, **kwargs):
-		super(KitchenChecksForm, self).__init__(*args, **kwargs)
-		for field in self: 
-			field.field.widget.attrs['class'] = 'format_chkbox'
-	results = forms.BooleanField(required=False)
-	wash_temp_55C = forms.BooleanField(required=False)
-	rinse_temp_82C = forms.BooleanField(required=False)
-	is_a_descale_required = forms.BooleanField( required=False)
-	rinse_jets_blocked = forms.BooleanField( required=False)
-	rinse_jets_missing = forms.BooleanField(required=False)
-	wash_jets_clean = forms.BooleanField( required=False)
-	other_fault = forms.BooleanField(required=False)
-	wall_racks = forms.BooleanField(required=False)
-	auto_dosing_clean = forms.BooleanField(required=False)
-	auto_dosing_pump_head = forms.BooleanField(required=False)
-	auto_dosing_tube_stiffeners = forms.BooleanField(required=False)
-	control_systems_clean = forms.BooleanField(required=False)
-	control_system_damaged = forms.BooleanField(required=False)
-	wall_charts = forms.BooleanField(required=False)
-
-class LaundryChecksForm(forms.Form):
-	def __init__(self, *args, **kwargs):
-		super(LaundryChecksForm, self).__init__(*args, **kwargs)
-		for field in self: 
-			field.field.widget.attrs['class'] = 'format_chkbox'
-	results = forms.BooleanField(required=False)
-	other_faults = forms.BooleanField(required=False)
-	clean = forms.BooleanField(required=False)
-	pump_heads = forms.BooleanField(required=False)
-	tube_stiffener = forms.BooleanField(required=False)
-	touch_pad_attached = forms.BooleanField(required=False)
-	wall_charts = forms.BooleanField(required=False)
-
-class WaterSoftenerChecksForm(forms.Form):
-	def __init__(self, *args, **kwargs):
-		super(WaterSoftenerChecksForm, self).__init__(*args, **kwargs)
-		for field in self: 
-			field.field.widget.attrs['class'] = 'format_chkbox'
-	is_water_hard = forms.BooleanField(required=False)
-	is_water_softener_working = forms.BooleanField(required=False)
-
-class ProductsUsedForForm(forms.Form):
-	def __init__(self, *args, **kwargs):
-		super(ProductsUsedForForm, self).__init__(*args, **kwargs)
-		for field in self: 
-			field.field.widget.attrs['class'] = 'format_chkbox'
-	pot_washing = forms.BooleanField(required=False)
-	glass_washing = forms.BooleanField(required=False)
-	food_prep_areas = forms.BooleanField(required=False)
-	floors_and_surfaces = forms.BooleanField(required=False)
-	ovens = forms.BooleanField(required=False)
-	hand_soap = forms.BooleanField(required=False)
-	hand_sanitiser = forms.BooleanField(required=False)
-	drains = forms.BooleanField(required=False)
-	laundry = forms.BooleanField(required=False)
-	housekeeping = forms.BooleanField(required=False)
-
-class CommentsForm(forms.Form):
-	def __init__(self, *args, **kwargs):
-		super(CommentsForm, self).__init__(*args, **kwargs)
+		super(FormStepFive_yh, self).__init__(*args, **kwargs)
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
-	comments = forms.CharField(max_length=3000, required=False, widget=forms.Textarea(attrs={'rows':15, 'cols':30}))
-
-class ProductOrderForm(forms.Form):
+	new_fuel_type = forms.ChoiceField(choices=NEW_FUEL_TYPE_DROPDOWN)
+	new_boiler_type = forms.ChoiceField(choices=NEW_BOILER_TYPE_DROPDOWN)
+	new_boiler_location = forms.ChoiceField(choices=NEW_BOILER_LOCATION_DROPDOWN)
+	new_flue_system = forms.ChoiceField(choices=NEW_FLUE_SYSTEM_DROPDOWN)
+	new_flue_location = forms.ChoiceField(choices=NEW_FLUE_LOCATION_DROPDOWN)
+	new_flue_diameter = forms.ChoiceField(choices=NEW_FLUE_DIAMETER_DROPDOWN)
+	plume_management_kit = forms.ChoiceField(choices=PLUME_MANAGEMENT_KIT_DROPDOWN)
+	condensate_termination = forms.ChoiceField(choices=CONDENSATE_TERMINATION_DROPDOWN)
+	new_controls = forms.MultipleChoiceField(choices=NEW_CONTROLS_DROPDOWN)
+	# cws_flow_rate = forms.ChoiceField(choices=CWS_FLOW_RATE_DROPDOWN)
+	incoming_flow_rate = forms.ChoiceField(choices=INCOMING_FLOW_RATE_DROPDOWN)
+	will_boiler_be_housed_in_cupboard = forms.ChoiceField(choices=WILL_BOILER_BE_HOUSED_IN_CUPBOARD_DROPDOWN)
+	#new_flue_metres = forms.ChoiceField(choices=NEW_FLUE_METRES_DROPDOWN)
+	cupboard_height = forms.IntegerField(required=False)
+	cupboard_width = forms.IntegerField(required=False)
+	cupboard_depth = forms.IntegerField(required=False)
+	
+class FormStepSix_yh(forms.Form):
+	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
+	# within double curly braces...
+	# form_data.5.field_name e.g. form_data.5.new_fuel_type
 	def __init__(self, *args, **kwargs):
-		super(ProductOrderForm, self).__init__(*args, **kwargs)
+		super(FormStepSix_yh, self).__init__(*args, **kwargs)
 		for field in self: 
-			field.field.widget.attrs['class'] = 'form-control-products'
-	hydroclean5L_s = forms.IntegerField(required=False, min_value=0, max_value=999)
-	hydroclean5L_o = forms.IntegerField(required=False, min_value=0, max_value=999)
-	hydroclean10L_s = forms.IntegerField(required=False, min_value=0, max_value=999)
-	hydroclean10L_o = forms.IntegerField(required=False, min_value=0, max_value=999)
-	soilmaster5L_s = forms.IntegerField(required=False, min_value=0, max_value=999)
-	soilmaster5L_o = forms.IntegerField(required=False, min_value=0, max_value=999)
-	soilmaster10L_s = forms.IntegerField(required=False, min_value=0, max_value=999)
-	soilmaster10L_o = forms.IntegerField(required=False, min_value=0, max_value=999)
+			field.field.widget.attrs['class'] = 'form-control'
+	chemical_system_treatment = forms.ChoiceField(choices=CHEMICAL_SYSTEM_TREATMENT_DROPDOWN)
+	gas_supply_requirements = forms.ChoiceField(choices=GAS_SUPPLY_DROPDOWN)
+	scaffolding_required = forms.ChoiceField(choices=SCAFFOLDING_REQUIRED_DROPDOWN)
+	#gas_supply_length = forms.ChoiceField(choices=GAS_SUPPLY_LENGTH_DROPDOWN)
+	asbestos_containing_materials_identified = forms.ChoiceField(choices=ASBESTOS_CONTAINING_MATERIALS_IDENTIFIED_DROPDOWN)
+	electrical_work_required = forms.ChoiceField(choices=ELECTRICAL_WORK_REQUIRED_DROPDOWN)
 
+class FormStepSeven_yh(forms.Form):
+	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
+	# within double curly braces...
+	# form_data.6.field_name e.g. form_data.6.boiler_manufactureruel_type
 
-	quadrant_s = forms.IntegerField(required=False, min_value=0, max_value=999)
-	quadrant_o = forms.IntegerField(required=False, min_value=0, max_value=999)
-	ace87_s = forms.IntegerField(required=False, min_value=0, max_value=999)
-	ace87_o = forms.IntegerField(required=False, min_value=0, max_value=999)
-	dp100_s = forms.IntegerField(required=False, min_value=0, max_value=999)
-	dp100_o = forms.IntegerField(required=False, min_value=0, max_value=999)
+	#boiler_manufacturer = forms.ChoiceField(choices=BOILER_MANUFACTURER_DROPDOWN)
+	def __init__(self, *args, **kwargs):
+		# Get the user to seed the filter on the boiler_manufacturer drop down.
+		self.user = kwargs.pop('user')
+		super(FormStepSeven_yh, self).__init__(*args, **kwargs)
+		self.fields['boiler_manufacturer'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user).order_by('brand').values_list('brand', flat=True).distinct(), to_field_name='brand',empty_label = 'Select Boiler Brand for quote')
+		for field in self: 
+			field.field.widget.attrs['class'] = 'form-control'
+	manufacturer_guarantee = forms.ChoiceField(choices=MANUFACTURER_GUARANTEE_DROPDOWN)
+	flue_components = forms.ChoiceField(choices=FLUE_COMPONENTS_DROPDOWN)
+	programmer_thermostat = forms.ChoiceField(choices=PROGRAMMER_THERMOSTAT_DROPDOWN)
+	central_heating_system_filter = forms.ChoiceField(choices=CENTRAL_HEATING_SYSTEM_FILTER_DROPDOWN)
+	scale_reducer = forms.ChoiceField(choices=SCALE_REDUCER_DROPDOWN)
+	
+class FormStepEight_yh(forms.Form):
+	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
+	# within double curly braces...
+	# form_data.7.field_name e.g. form_data.7.radiator_requirements
+	def __init__(self, *args, **kwargs):
+		super(FormStepEight_yh, self).__init__(*args, **kwargs)
+		for field in self: 
+			field.field.widget.attrs['class'] = 'form-control'
+	radiator_requirements = forms.ChoiceField(choices=RADIATOR_REQUIREMENTS_DROPDOWN)
+	thermostatic_radiator_valves_size = forms.CharField(max_length=100, required = False)
+	thermostatic_radiator_valves_type = forms.CharField(max_length=100, required = False)
+	thermostatic_radiator_valves_quantity = forms.CharField(max_length=100, required = False)
+	
+class FormStepNine_yh(forms.Form):
+	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
+	# within double curly braces...
+	# form_data.8.field_name e.g. form_data.8.estimated_duration
+	def __init__(self, *args, **kwargs):
+		# Get the user to seed the filter on the drop down.
+		self.user = kwargs.pop('user')
+		self.manuf = kwargs.pop('manufacturer')
+		super(FormStepNine_yh, self).__init__(*args, **kwargs)
+		self.fields['product_choice'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user, brand = self.manuf), empty_label = 'Select Product for quote')
+		for field in self: 
+			field.field.widget.attrs['class'] = 'form-control'
+		self.fields['alt_product_choice'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user, brand = self.manuf), empty_label = 'Select Alternative Product for quote')
+		for field in self: 
+			field.field.widget.attrs['class'] = 'form-control'	
+	estimated_duration = forms.ChoiceField(choices=ESTIMATED_DURATION_DROPDOWN)
+	description_of_works = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'rows':5, 'cols':30}))
 
-	bravo_s = forms.IntegerField(required=False, min_value=0, max_value=999)
-	bravo_o = forms.IntegerField(required=False, min_value=0, max_value=999)
-	fabricare_s = forms.IntegerField(required=False, min_value=0, max_value=999)
-	fabricare_o = forms.IntegerField(required=False, min_value=0, max_value=999)
-	encore5L_s = forms.IntegerField(required=False, min_value=0, max_value=999)
-	encore5L_o = forms.IntegerField(required=False, min_value=0, max_value=999)
+class FinanceForm_yh(forms.Form):
+	total_cost = forms.FloatField()
+	deposit_amount = forms.FloatField()
+	
+	def __init__(self, *args, **kwargs):
+		self.product_price = kwargs.pop('product_price')
+		super(FinanceForm_yh, self).__init__(*args, **kwargs)
+		self.fields['total_cost'].disabled = True
+		self.fields['total_cost'].initial = self.product_price
+		for field in self: 
+			field.field.widget.attrs['class'] = 'form-control'
 
-class ProductForm(forms.Form):
-	#def __init__(self, *args, **kwargs):
-		#super(ProductForm, self).__init__(*args, **kwargs)
-		#for field in self: 
-		#self.quantity.widget.attrs['class'] = 'input-int'
-	product_id = forms.IntegerField(widget=forms.HiddenInput)
-	model_name = forms.CharField(label=False, required=False,
-	 widget=forms.TextInput(attrs={'readonly':'readonly','class': "input-disabled"})
-	 )
-	size = forms.CharField(label=False, required=False,
-	 widget=forms.TextInput(attrs={'readonly':'readonly','class': "input-price"})
-	 )
-	price = forms.DecimalField(label=False, required=False,
-	 widget=forms.TextInput(attrs={'readonly':'readonly','class': "input-price"})
-	 )
-	stock = forms.IntegerField(label=False, widget=forms.TextInput(attrs={'class': "input-int"}))
-	quantity = forms.IntegerField(label=False, widget=forms.TextInput(attrs={'class': "input-int"}))
-
-
+	
 
 
 	

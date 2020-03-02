@@ -8,15 +8,24 @@ from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from quotepad.views import home, register, change_password, landing
 from quotepad.forms import FormStepOne, FormStepTwo, FormStepThree, FormStepFour, FormStepFive, FormStepSix, FormStepSeven, FormStepEight, FormStepNine
-from quotepad.forms import CustomerProductForm, KitchenChecksForm, LaundryChecksForm, WaterSoftenerChecksForm, ProductsUsedForForm, CommentsForm, ProductOrderForm
-from quotepad.views import generate_quote_from_fileWC
-from quotepad.views import BoilerFormWizardView, WestChemFormWizardView, model_form_upload, report_generated, list_report_archive, pdf_viewWC, order_report_generated, cust_ord_pdf_viewWC
+from quotepad.views import BoilerFormWizardView 
+from quotepad.views import model_form_upload
 from django.contrib.auth.decorators import login_required
 
 from quotepad.views import edit_profile_details, show_uploaded_files, quote_generated, test_quote_generated, quote_emailed, quote_not_possible, quotepad_template_help
 from quotepad.views import ProductPriceList, ProductPriceCreate, ProductPriceUpdate, ProductPriceDelete
 from quotepad.views import generate_quote_from_file, edit_quote_template, list_quote_archive, pdf_view
-from quotepad.views import customer_order
+
+# Imports for Westchem
+#from quotepad.forms import CustomerProductForm, KitchenChecksForm, LaundryChecksForm, WaterSoftenerChecksForm, ProductsUsedForForm, CommentsForm, ProductOrderForm
+#from quotepad.views import WestChemFormWizardView, pdf_viewWC, cust_ord_pdf_viewWC, report_generated, list_report_archive, order_report_generated
+#from quotepad.views import generate_quote_from_fileWC
+#from quotepad.views import customer_order
+
+# Imports for Yourheat
+from quotepad.views import BoilerFormWizardView_yh,generate_quote_from_file_yh, FinanceFormWizardView_yh
+from quotepad.forms import FormStepOne_yh, FormStepTwo_yh, FormStepThree_yh, FormStepFour_yh, FormStepFive_yh, FormStepSix_yh, FormStepSeven_yh, FormStepEight_yh, FormStepNine_yh, FinanceForm_yh
+from quotepad.views import quote_generated_yh, list_quote_archive_yh
 
 urlpatterns = [
     
@@ -62,14 +71,21 @@ urlpatterns = [
     path('quotepadtemplatehelp/', quotepad_template_help, name = 'quotepad_template_help'),
 
     # Patterns in views/WestChem.py
-    path('WestChemform/', login_required(WestChemFormWizardView.as_view([CustomerProductForm,KitchenChecksForm,LaundryChecksForm, WaterSoftenerChecksForm, ProductsUsedForForm, CommentsForm, ProductOrderForm])), name = 'WestChemform'),
-    path('generatequotefromfileWC/<str:outputformat>/<str:quotesource>', generate_quote_from_fileWC, name = 'generate_quote_from_fileWC'),
-    path('reportgenerated/', report_generated, name = 'report_generated'),
-    path('orderreportgenerated/', order_report_generated, name = 'order_report_generated'),
-    path('listreportarchive/', list_report_archive, name = 'listreportarchive'),
-    path('pdfviewWC/<str:pdf_file>', pdf_viewWC, name = 'pdfviewWC'),
-    path('custordpdfviewWC/<str:pdf_file>', cust_ord_pdf_viewWC, name = 'custordpdfviewWC'),
-    path('customerorder/', customer_order, name='customer_order'),
+    #path('WestChemform/', login_required(WestChemFormWizardView.as_view([CustomerProductForm,KitchenChecksForm,LaundryChecksForm, WaterSoftenerChecksForm, ProductsUsedForForm, CommentsForm, ProductOrderForm])), name = 'WestChemform'),
+    #path('generatequotefromfileWC/<str:outputformat>/<str:quotesource>', generate_quote_from_fileWC, name = 'generate_quote_from_fileWC'),
+    #path('reportgenerated/', report_generated, name = 'report_generated'),
+    #path('orderreportgenerated/', order_report_generated, name = 'order_report_generated'),
+    #path('listreportarchive/', list_report_archive, name = 'listreportarchive'),
+    #path('pdfviewWC/<str:pdf_file>', pdf_viewWC, name = 'pdfviewWC'),
+    #path('custordpdfviewWC/<str:pdf_file>', cust_ord_pdf_viewWC, name = 'custordpdfviewWC'),
+    #path('customerorder/', customer_order, name='customer_order'),
+
+    # Patterns in views/yourheat.py
+    path('boilerform_yh/', login_required(BoilerFormWizardView_yh.as_view([FormStepOne_yh,FormStepTwo_yh,FormStepThree_yh, FormStepFour_yh, FormStepFive_yh, FormStepSix_yh, FormStepSeven_yh, FormStepEight_yh, FormStepNine_yh, FinanceForm_yh])), name = 'boilerform_yh'),
+    path('generatequotefromfile_yh/<str:outputformat>/<str:quotesource>', generate_quote_from_file_yh, name = 'generate_quote_from_file_yh'),
+    #path('financeform/', FinanceFormWizardView_yh.as_view([FinanceForm_yh]), name = 'finance_form'),
+    path('quotegenerated_yh/', quote_generated_yh, name = 'quote_generated_yh'),
+    path('listquotearchive_yh/', list_quote_archive_yh, name = 'listquotearchive_yh'),
 
 	path('', include('payments.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,839 @@
+{% load static %}
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <title>Quote PDF</title>
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,400i,700,700i,900" rel="stylesheet" />
+    <style type="text/css">
+        body {
+            /* font-weight: 200;
+            font-size: 14px; */
+        }
+
+        .section_header {
+            font-size: 18px;
+            font-weight: 100;
+        }
+
+        .section_italics {
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        /* .header {
+            font-size: 8px;
+            font-weight: 100;
+            text-align: center;
+            color: #007cae;
+        } */
+
+        .title {
+            font-size: 22px;
+            font-weight: 100;
+            /* text-align: right;*/
+            padding: 10px 20px 0px 20px;
+        }
+
+        .title span {
+            color: #007cae;
+        }
+
+        .details {
+            padding: 10px 20px 0px 20px;
+            text-align: left !important;
+            /*margin-left: 40%;*/
+        }
+
+        .hrItem {
+            border: none;
+            height: 1px;
+            /* Set the hr color */
+            color: #333;
+            /* old IE */
+            background-color: #fff;
+            /* Modern Browsers */
+        }
+
+        /* .footer {
+            border: 2px solid black;
+            border-radius: 5px;
+            background-color: coral;
+            color: black;
+            font-size: 14px;
+            font-weight: 100;
+            text-align: center;
+            padding: 10px 0px 2px 0px;
+        } */
+    </style>
+</head>
+
+<body>
+    <div class="header">
+    <table>
+        <tr>
+            <td><img class="img--logo" src="{{frecords.0.document.url}}"></td>
+            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td><img class="img--checkatrade"  src="{{frecords.2.document.url}}">&nbsp; &nbsp;</td>
+            <td><img class="img--worcester-bosch" src="{{frecords.5.document.url}}">&nbsp; &nbsp;</td>
+            <td><img class="img--bosch"  src="{{frecords.6.document.url}}">&nbsp; &nbsp;</td>
+            <td><img class="img--gassafe"  src="{{frecords.7.document.url}}">&nbsp;
+            <td><div class="gas-safe-number">Gas Safe Number<br>570636</div></td>
+        </tr>
+    </table>
+    <br>
+    </div>
+
+    <div class="orange-box">
+        <div class="your-reference">Your reference: {{ idx.quote_prefix }}-{{ idx.current_quote_number }}</div>
+        <div class="salutation">{{form_data.0.customer_title}} {{form_data.0.customer_last_name}}</div>
+        <div class="thankyou">Thank you for having <b>{{idx.first_name}} {{idx.last_name}}</b> visit you today. Please
+            find your bespoke, fixed-price
+            quotation for your brand new boiler. We estimate that your installation will take
+            {{form_data.8.estimated_duration}}.</div>
+
+        <div class="product-details">
+            <table>
+                <tr>
+                    <td><img class="product-image" src="{{img_record.document.url}}" /></td>
+                    <td>
+                        <div class="price-orange-box">
+                            £{{product_record.price}} Inc. VAT
+                        </div>
+                        <div class="product-name">
+                            <p>{{product_record.brand}}<br>
+                                {{product_record.model_name}}</p>
+                                <br>
+                                <ul>
+                                    <li>{{product_record.guarantee}}*</li>
+                                    <li>Gas Safe Installation</li>
+                                    <li>Interest Free Credit Available</li>
+                                    <li>Option to Spread The Cost</li>
+                                </ul>
+                                
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+        <div class="alt-product-details">
+            <table>
+                <tr>
+                    <td><img class="alt-product-image" src="{{alt_img_record.document.url}}" /></td>
+                    <td>
+                        <div class="price-orange-box">
+                            £{{alt_product_record.price}} Inc. VAT
+                        </div>
+                        <div class="product-name">
+                            <p>{{alt_product_record.brand}}<br>
+                                {{alt_product_record.model_name}}</p>
+                                <br>
+                                <ul>
+                                    <li>{{alt_product_record.guarantee}}*</li>
+                                    <li>Gas Safe Installation</li>
+                                    <li>Interest Free Credit Available</li>
+                                    <li>Option to Spread The Cost</li>
+                                </ul>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+    </div>
+
+    <div class="rating-gray-box">
+        Rated 9.9 out of 10 on Checkatrade<br>
+        <sm>based on 350+ reviews</sm>
+    </div>
+
+    <div class="page1-lower">
+        <div class="payment-options">Payment Options</div>
+        <br>
+        <p>
+        We understand that replacing your boiler is often unplanned and the extra expense can
+        come as a surprise. We offer the ability to help you spread the cost with our finance options.
+        </p>
+
+        <table>
+            <tr>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td class="headrow">APR %</td>
+                <td class="headrow">Duration</td>
+                <td class="headrow">Deposit</td>
+                <td class="headrow">Loan Amount</td>
+                <td class="headrow">Total Payable</td>
+                <td class="headrow">Monthly Payment</td>
+            </tr>
+            <tr>
+                <td class="headrow">Accelerated 1</td>
+                <td class="midrow">9.9%</td>
+                <td class="midrow">120 Months</td>
+                <td class="midrow">£ 755.52<br>(Optional)</td>
+                <td class="midrow">£ 1,762.88</td>
+                <td class="midrow">£ 3,490.24</td>
+                <td class="endrow">£ 22.79</td>
+            </tr>
+            <tr>
+                <td class="headrow">Accelerated 2</td>
+                <td class="midrow">9.9%</td>
+                <td class="midrow">60 Months</td>
+                <td class="midrow">£ 755.52<br>(Optional)</td>
+                <td class="midrow">£ 1,762.88</td>
+                <td class="midrow">£ 2,975.77</td>
+                <td class="endrow">£ 37.00</td>
+            </tr>
+            <tr>
+                <td class="headrowx">Interest Free</td>
+                <td class="midrow">0%</td>
+                <td class="midrow">12 Months</td>
+                <td class="midrow">£ 755.52</td>
+                <td class="midrow">£ 1,762.88</td>
+                <td class="midrow">£ 2,518.40</td>
+                <td class="endrow">£ 146.91</td>
+            </tr>
+        </table>
+        <br>
+        <p>
+        Other options available such as Buy Now Pay Later. Ask for details.<br>
+        * Boiler must be serviced annually by YourHeat using our service plan. Ask for details.   
+        </p>
+    </div>
+
+
+    <div class="footer">
+        <hr>
+    </div>
+
+
+    <div class="break"></div>
+
+    <!-- Page 2 -->
+<div class="page-start"><br><br><br><br><br></div>
+
+    <div class="light-blue-box">
+        <br>
+        <h2>Customer Details</h2>
+        <hr>
+        <br>
+        <p><b>Installation Address</b><br>
+            {{ form_data.1.installation_address|linebreaks }}
+
+        </p>
+        <br>
+        <p><b>Contact Details</b><br>
+            Name: {{form_data.0.customer_first_name }} {{form_data.0.customer_last_name }}<br>
+            Home Phone: {{ form_data.0.customer_home_phone }}<br>
+            Mobile Phone: {{ form_data.0.customer_mobile_phone }}<br>
+            Email: {{form_data.0.customer_email }}<br>
+            Owner / Landlord / Tenant: {{form_data.0.owner_tenant_or_landlord }}<br>
+            Property Type: {{form_data.1.property_type }}
+        </p>
+        <br>
+    </div>
+    <br>
+    <div class="light-blue-box">
+        <br>
+        <h2>Fixed Price Promise</h2>
+        <hr>
+        <br>
+        <p>
+        This quotation is given on a fixed-price basis. That means you won't pay a penny more for all of the
+        works detailed below, even if the work takes longer to complete.    
+        </p>
+        <br>
+        <p>
+        To discuss or accept your quotation, please call our office on <b>{{idx.telephone}}</b>, alternatively email
+        <b>{{idx.email}}</b>
+        </p>
+        <br>
+    </div>
+    <br>
+    <div class="light-blue-box">
+        <br>
+        <h2>Your Next Steps</h2>
+        <hr>
+        <br>
+        <p>
+        The Yourheat team will be in touch with you shortly to make sure you have everything you need to
+        make an informed decision, in the mean time if you’d like to discuss your quote or need any further
+        support please contact us.
+        </p>
+        <br>
+    </div>
+
+    <!-- End of Page 2 -->
+
+    <div class="break"></div>
+
+    <!-- Page 3 -->
+
+    <div class="page-start"><br><br><br><br><br></div>
+
+    <div class="tech-details">
+        <table>
+            <tr>
+                <td class="tech-attrib">ADD BILLING ADDRESS?</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">
+                    {% if form_data.1.billing_address|length %}
+                        {{form_data.1.billing_address}}
+                    {% else %}
+                        &bull; No
+                    {% endif %}    
+                </td>
+            </tr>
+        </table>
+       
+        <br>
+        <table>
+            <tr>
+                <td class="tech-title" colspan="3">Current System Configuration</td>
+            </tr>
+            <tr>
+                <td class="tech-attrib">CURRENT FUEL TYPE</td>
+                <td class="tech-attrib">CURRENT BOILER TYPE</td>
+                <td class="tech-attrib">CURRENT BOILER LOCATION</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">{{form_data.2.current_fuel_type }}</td>
+                <td class="tech-value">{{form_data.2.current_boiler_type }}</td>
+                <td class="tech-value">{{form_data.2.current_boiler_location }}</td>
+            </tr>
+            <tr>
+                <td class="tech-attrib">CURRENT FLUE</td>
+                <td class="tech-attrib">CURRENT FLUE LOCATION</td>
+                <td class="tech-attrib">CURRENT CONTROL SYSTEM</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">{{form_data.2.current_flue_system }}</td>
+                <td class="tech-value">{{form_data.2.current_flue_location }}</td>
+                <td class="tech-value">
+                    {% for current_controls_item in form_data.2.current_controls  %}
+                        &bull; {{ current_controls_item }}<br>
+                    {% endfor %}
+                </td>
+            </tr>
+        </table>
+
+        <table>
+            <tr>
+                <td class="tech-attrib">CURRENT RADIATORS ALL WORKING CORRECTLY?</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">{{ form_data.2.current_radiators_working_correctly }}</td>
+            </tr>
+        </table>
+        <br>
+        <table>
+            <tr>
+                <td class="tech-title">Decommission and Removal</td>
+            </tr>
+            <tr>
+                <td class="tech-attrib">REMOVALS</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">
+                    {% for removal_item in form_data.3.removals %}
+                    &bull; {{ removal_item }}
+                    {% endfor %}
+                </td>
+            </tr>
+        </table>
+        <br>
+        <table>
+            <tr>
+                <td class="tech-title" colspan="3">New System Configuration</td>
+            </tr>
+            <tr>
+                <td class="tech-attrib">NEW FUEL TYPE</td>
+                <td class="tech-attrib">NEW BOILER TYPE</td>
+                <td class="tech-attrib">NEW BOILER LOCATION</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">{{form_data.4.new_fuel_type }}</td>
+                <td class="tech-value">{{form_data.4.new_boiler_type }}</td>
+                <td class="tech-value">{{form_data.4.new_boiler_location }}</td>
+            </tr>
+            <tr>
+                <td class="tech-attrib">NEW FLUE</td>
+                <td class="tech-attrib">NEW FLUE LOCATION</td>
+                <td class="tech-attrib">NEW FLUE DIAMETER</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">{{form_data.4.new_flue_system }}</td>
+                <td class="tech-value">{{form_data.4.new_flue_location }}</td>
+                <td class="tech-value">{{form_data.4.new_flue_diameter }}</td>
+            </tr>
+            <tr>
+                <td class="tech-attrib">PLUME KIT</td>
+                <td class="tech-attrib">CONDENSATE TERMINATION</td>
+                <td class="tech-attrib">NEW CONTROLS</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">{{form_data.4.plume_management_kit }}</td>
+                <td class="tech-value">{{form_data.4.condensate_termination }}</td>
+                <td class="tech-value">
+                    {% for new_controls_item in form_data.4.new_controls  %}
+                        &bull; {{ new_controls_item }}<br>
+                    {% endfor %}
+                </td>
+            </tr>
+        </table>
+        <br>
+        <table>
+            <tr>
+                <td class="tech-attrib">INCOMING FLOW RATE (LITRES/MIN)</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">{{ form_data.4.incoming_flow_rate }}</td>
+            </tr>
+        </table>
+        <br>
+        <table>
+            <tr>
+                <td class="tech-attrib">WILL BOILER BE HOUSED IN A CUPBOARD?</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">{{ form_data.4.will_boiler_be_housed_in_cupboard }}</td>
+            </tr>
+        </table>
+        <br>
+        <table>
+            <tr>
+                <td  colspan="3" class="tech-attrib">CUPBOARD DIMENSIONS (MM)</td>
+            </tr>
+            <tr>
+                <td class="tech-attrib-cupb">H</td>
+                <td class="tech-attrib-cupb">W</td>
+                <td class="tech-attrib-cupb">D</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">{{form_data.4.cupboard_height }}</td>
+                <td class="tech-value">{{form_data.4.cupboard_width }}</td>
+                <td class="tech-value">{{form_data.4.cupboard_depth }}</td>
+            </tr>
+        </table>
+
+    </div>
+
+
+    <!-- End of Page 3 -->
+
+    <div class="break"></div>
+
+    <!-- Page 4 -->
+
+    <div class="page-start"><br><br><br><br><br></div>
+
+    <div class="tech-details">
+
+        <table>
+            <tr>
+                <td class="tech-title" colspan="2">Installation Requirements</td>
+            </tr>
+            <tr>
+                <td class="tech-attrib">CHEMICAL SYSTEM TREATMENT</td>
+                <td class="tech-attrib">GAS SUPPLY REQUIREMENTS</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">{{form_data.5.chemical_system_treatment }}</td>
+                <td class="tech-value">{{form_data.5.gas_supply_requirements }}</td>
+            </tr>
+            <tr>
+                <td class="tech-attrib" colspan="2">SCAFFOLDING REQUIRED?</td>
+            </tr>
+            <tr>    
+                <td class="tech-value" colspan="2">{{form_data.5.scaffolding_required }}</td>
+            </tr>
+            <tr>
+                <td class="tech-attrib">ASBESTOS CONTAINING MATERIALS (ACM) IDENTIFIED?</td>
+                <td class="tech-attrib">ELECTRICAL WORK REQUIRED</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">{{form_data.5.asbestos_containing_materials_identified }}</td>
+                <td class="tech-value">{{form_data.5.electrical_work_required }}</td>
+            </tr>
+        </table>
+        <br>
+
+    </div>
+
+    <!-- End of Page 4 -->
+
+    <div class="break"></div>
+
+    <div class='header'>
+
+
+    </div>
+    <!-- Header Images -->
+
+
+    <table>
+        <tr>
+            <td width="70%">
+                <b><u>Summary</u></b><br>
+                <b>Quotation Date: </b>{% now "jS F Y " %}<br>
+                <b>Your reference: </b>{{ idx.quote_prefix }}-{{ idx.current_quote_number }}<br>
+                <b>Your boiler: </b>{{product_record.brand}}&nbsp;{{product_record.model_name}}&nbsp;&nbsp;<b>Price:
+                </b>&#163;{{product_record.price}}<br>
+                <b>Warranty: </b>10 Years<br>
+                <b>Estimated Work Duration: </b>{{form_data.8.estimated_duration}} @
+                &#163;{{ idx.daily_work_rate }}/day. <b>Total:</b> &#163;{{ workload_cost }}<br>
+                <b>Total Price: </b>&#163;{{ total_quote_price }}
+                <br><br>
+                <b><u>Fixed Price Promise</u></b><br>
+                Our quotations are produced at a fixed price. If the works we've quoted below take longer to
+                complete than we anticipated, you will not be charged additionally.<br>
+                If you want to discuss your quotation with one of the team, please give us a call on
+                {{ idx.telephone }}, alternatively email info@demo.plumbers
+            </td>
+            <td width="30%">
+                <img src="{{img_record.document.url}}" height="250px" />
+
+            </td>
+        </tr>
+    </table>
+    <p align="right"><sub>Estimate completed by: {{idx.first_name}} {{idx.last_name}} from
+            {{idx.company_name}}</sub></p>
+
+    <hr class='hrItem' />
+    <div class='section_header'>
+        <b>CUSTOMER DETAILS</b>
+    </div>
+    <div class='section_italics'>
+        Your personal information - we'll keep this secure.
+    </div>
+    <table>
+        <tr>
+            <td width="33%">
+                <b>NAME</b><br>
+                {{form_data.0.customer_first_name }} {{form_data.0.customer_last_name }}
+            </td>
+            <td width="33%">
+                <b>HOME PHONE</b><br>
+                {{ form_data.0.customer_home_phone }}
+            </td>
+            <td width="33%">
+                <b>MOBILE PHONE</b><br>
+                {{form_data.0.customer_mobile_phone }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>EMAIL</b><br>
+                {{form_data.0.customer_email }}
+            </td>
+            <td>
+                <b>OWNER OR TENANT?</b><br>
+                {{form_data.0.owner_or_tenant }}
+            </td>
+            <td>
+
+            </td>
+        </tr>
+    </table>
+    <hr class='hrItem' />
+    <div class='section_header'>
+        <b>PROPERTY DETAILS</b>
+    </div>
+    <table>
+        <tr>
+            <td width="33%">
+                <b>INSTALLATION ADDRESS</b><br>
+                {{form_data.1.house_name_or_number }} {{form_data.1.street_address }}<br>
+                {{form_data.1.city }} {{form_data.1.county }} {{form_data.1.postcode }}
+            </td>
+            <td style="width: 33%; vertical-align: top;">
+                <b>PROPERTY TYPE</b><br>
+                {{form_data.1.property_type }}
+            </td>
+            <td width="33%">
+            </td>
+        </tr>
+    </table>
+    <hr class='hrItem' />
+    <div class='section_header'>
+        <b>CURRENT SYSTEM CONFIGURATION</b>
+    </div>
+    <div class='section_italics'>
+        Details on your current setup
+    </div>
+    <table>
+        <tr>
+            <td width="33%">
+                <b>CURRENT FUEL TYPE</b><br>
+                {{form_data.2.current_fuel_type }}<br>
+            </td>
+            <td width="33%">
+                <b>CURRENT BOILER TYPE</b><br>
+                {{form_data.2.current_boiler_type }}
+            </td>
+            <td width="33%">
+                <b>CURRENT BOILER LOCATION</b><br>
+                {{form_data.2.current_boiler_location }}
+            </td>
+        </tr>
+        <tr>
+            <td width="33%">
+                <b>CURRENT FLUE</b><br>
+                {{form_data.2.current_flue_system }}<br>
+            </td>
+            <td width="33%">
+                <b>CURRENT FLUE LOCATION</b><br>
+                {{form_data.2.current_flue_location }}
+            </td>
+            <td width="33%">
+                <b>CURRENT CONTROL SYSTEM</b><br>
+                {{form_data.2.current_controls }}
+            </td>
+        </tr>
+    </table>
+    <hr class='hrItem' />
+
+    <br><br><br><br><br>
+    <div class='footerx'>
+        t: {{ idx.telephone }} &nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp; w: www.yourheat.co.uk &nbsp;&nbsp;&nbsp;|
+        &nbsp;&nbsp;&nbsp; e: {{ idx.email }}
+    </div>
+
+    <!-- <hr class='hrItem' /> -->
+    <div class='header'>
+        <p></p>
+    </div>
+    <div class='section_header'>
+        <b>DECOMMISSION AND REMOVAL</b>
+    </div>
+    <div class='section_italics'>
+        We include the decommission and removal of all redundant materials wherever it is safe to do so. We consider
+        customer safety our
+        highest priority. If the tanks in your loft are suspected to be comprised of Asbestos Containing Materials
+        and require cutting to
+        pieces to remove, then the company reserves the right to leave the tanks in their current location.
+    </div>
+
+    <hr class='hrItem' />
+    <div class='section_header'>
+        <b>REMOVALS</b>
+    </div>
+    <table>
+        <tr>
+            <td width="100%">
+                {% for removal_item in form_data.3.removals %}
+                &bull; {{ removal_item }}
+                {% endfor %}
+            </td>
+        </tr>
+    </table>
+
+    <hr class='hrItem' />
+    <div class='section_header'>
+        <b>NEW SYSTEM CONFIGURATION</b>
+    </div>
+    <div class='section_italics'>
+        Key information about your new system layout.
+    </div>
+
+    <table>
+        <tr>
+            <td width="33%">
+                <b>NEW FUEL TYPE</b><br>
+                {{ form_data.4.new_fuel_type }}
+            </td>
+            <td width="33%">
+                <b>NEW BOILER TYPE</b><br>
+                {{ form_data.4.new_boiler_type }}
+            </td>
+            <td width="33%">
+                <b>NEW BOILER LOCATION</b><br>
+                {{ form_data.4.new_boiler_location }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>NEW FLUE</b><br>
+                {{ form_data.4.new_flue_system }}
+            </td>
+            <td>
+                <b>NEW FLUE LOCATION</b><br>
+                {{ form_data.4.new_flue_system }}
+            </td>
+            <td>
+                <b>NEW FLUE DIAMETER</b><br>
+                {{ form_data.4.new_flue_system }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>PLUME KIT</b><br>
+                {{ form_data.4.plume_management_kit }}
+            </td>
+            <td>
+                <b>CONDENSATE TERMINATION</b><br>
+                {{ form_data.4.condensate_termination }}
+            </td>
+            <td>
+                <b>NEW CONTROLS</b><br>
+                {{ form_data.4.new_controls }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>CWS FLOW RATE</b><br>
+                {{ form_data.4.cws_flow_rate }}
+            </td>
+            <td>
+                <b>NEW FLUE METERS</b><br>
+                {{ form_data.4.new_flue_metres }}
+            </td>
+            <td>
+
+            </td>
+        </tr>
+    </table>
+
+    <hr class='hrItem' />
+    <div class='section_header'>
+        <b>INSTALLATION REQUIREMENTS</b>
+    </div>
+
+    <table>
+        <tr>
+            <td>
+                <b>SYSTEM TREATMENT</b><br>
+                {{ form_data.5.system_treatment }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>GAS SUPPLY</b><br>
+                {{ form_data.5.gas_supply }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>GAS SUPPLY LENGTH</b><br>
+                {{ form_data.5.gas_supply_length }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>ASBESTOS CONTAINING MATERIALS REQUIRED</b><br>
+                {{ form_data.5.asbestos_containing_materials_identified }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>ELECTRICAL WORK REQUIRED</b><br>
+                {{ form_data.5.electrical_work_required }}
+            </td>
+        </tr>
+
+    </table>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <div class='footerx'>
+        t: {{ idx.telephone }} &nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp; w: www.yourheat.co.uk &nbsp;&nbsp;&nbsp;|
+        &nbsp;&nbsp;&nbsp; e: {{ idx.email }}
+    </div>
+
+    <div class='section_header'>
+        <b>NEW INSTALLATION DETAILS</b>
+    </div>
+
+    <table>
+        <tr>
+            <td>
+                <b>BOILER MANUFACTURER</b><br>
+                {{ form_data.6.boiler_manufacturer }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>MANUFACTURER GUARANTEE</b><br>
+                {{ form_data.6.manufacturer_guarantee }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>FLUE COMPONENTS</b><br>
+                {{ form_data.6.flue_components }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>PROGRAMMER THERMOSTAT</b><br>
+                {{ form_data.6.programmer_thermostat }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>CENTRAL HEATING SYSTEM FILTER</b><br>
+                {{ form_data.6.central_heating_system_filter }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>SCALE REDUCER</b><br>
+                {{ form_data.6.scale_reducer }}
+            </td>
+        </tr>
+    </table>
+    <hr class='hrItem' />
+    <div class='section_header'>
+        <b>RADIATOR REQUIREMENTS</b>
+    </div>
+    <table>
+        <tr>
+            <td colspan="3">
+                <b>RADIATOR REQUIREMENTS</b><br>
+                {{ form_data.7.radiator_requirements }}
+            </td>
+        </tr>
+        <tr>
+            <td width="33%">
+                <b>VALVE SIZE</b><br>
+                {{ form_data.7.thermostatic_radiator_valves_size }}
+            </td>
+            <td width="33%">
+                <b>VALVE TYPE</b><br>
+                {{ form_data.7.thermostatic_radiator_valves_type }}
+            </td>
+            <td width="34%">
+                <b>VALVE QUANTITY</b><br>
+                {{ form_data.7.thermostatic_radiator_valves_quantity }}
+            </td>
+        </tr>
+    </table>
+    <hr class='hrItem' />
+    <div class='section_header'>
+        <b>INSTALLATION NOTES</b>
+    </div>
+    <table>
+        <tr>
+            <td>
+                <b>ESTIMATED INSTALLATION DURATION</b><br>
+                {{ form_data.8.estimated_duration }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>DESCRIPTION OF WORKS</b><br>
+                {{ form_data.8.description_of_works }}
+            </td>
+        </tr>
+    </table>
+    <hr class='hrItem' />
+    <img src="{{frecords.3.document.url}}">
+    <br><br>
+    <div class='footerx'>
+        t: {{ idx.telephone }} &nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp; w: www.yourheat.co.uk &nbsp;&nbsp;&nbsp;|
+        &nbsp;&nbsp;&nbsp; e: {{ idx.email }}
+    </div>
+</body>
+
+</html>

@@ -92,7 +92,7 @@
               <div class="card card-5">
               {% endif %}
               <h3 class="card-headings">5. Subscribe</h3>
-              <p class="card-text">In order to create bespoke quotations for your customers, Quotepad has a £15.00 subscription fee. Please pay this here to get full access to Quotepad.</p>
+              <p class="card-text">In order to create bespoke quotations for your customers, Quotepad has a £30.00 monthly subscription fee. Please pay this here to get full access to Quotepad.</p>
               <a class="stretched-link" href="/stripecheckout"></a>
             </div>  
       </div>
@@ -107,7 +107,11 @@
               <h3 class="card-headings">6. Complete A Quote</h3>
               <p class="card-text">You are now ready to complete a quote, follow the easy to use form to create a bespoke quotation, delivered to your customer's email. Get ready to win more business!</p>
               {% if request.session.User_subscribed %}
-                <a class="stretched-link" href="/boilerform"></a>
+                {% if request.user|has_group:"yourheat" %}
+                  <a class="stretched-link" href="/boilerform_yh"></a>
+                {% else %}
+                  <a class="stretched-link" href="/boilerform"></a>
+                {% endif %}
               {% else %}
               <a class="stretched-link" href="/quotenotpossible"></a>
               {% endif %}

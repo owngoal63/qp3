@@ -1,0 +1,397 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800&display=swap');
+
+* {
+    margin: 0px; 
+    padding: 0px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+
+}
+
+
+.img--logo {
+    height:40px;
+}
+
+.img--checkatrade {
+    width:100px;
+}
+
+.img--worcester-bosch {
+    height:40px;
+}
+
+.img--bosch {
+    width:80px;
+}
+
+.img--gassafe {
+    height:40px;
+}
+
+.gas-safe-number {
+    font-size:0.4rem;
+    
+}
+
+@page {
+
+    size: "A4";
+    
+    margin: 1.5cm 1.5cm 3.5cm 1.5cm;
+
+    @bottom-center {
+
+        content:  "Page " counter(page) " / " counter(pages);
+        
+        }
+
+    @bottom-left {
+
+        content: "Copyright Yourheat";
+            
+    }
+
+    @bottom-right {
+
+        content: "01732 622990";
+            
+    }    
+}
+
+div.break {
+    page-break-after:always;
+    }        
+
+.your-reference {
+    margin-right: 20px;
+    right:20;
+    padding:0;
+    color:grey;
+    font-size: 0.9rem;
+    font-weight: 300;
+    text-align: right;
+    }
+
+.salutation {
+    margin-left: 20px;
+    padding:0;
+    color:grey;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: left;
+    }
+
+.thankyou {
+    margin: 20px;
+    padding:0;
+    color:grey;
+    font-size: 0.9rem;
+    font-weight: 300;
+    text-align: left;
+}
+
+.page1-lower{
+    position:absolute;
+    top: 600px;
+    width:100%;
+    /* background-color: yellow; */
+    text-align: center;
+}
+
+.page1-lower p {
+    text-align: center;
+    margin-top:10px;
+    padding-left:40px;
+    padding-right:40px;
+    font-size: 0.9rem;
+}
+
+.page1-lower table {
+    margin-top:20px;
+    width:100%;
+    border:1px;
+}
+
+.headrow {
+    background-color: #393c41;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 400;
+    padding:3px 6px 3px 6px;
+    color:white;
+}
+
+.headrowx {
+    background-color: #393c41;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 400;
+    padding:9px 6px 9px 6px;
+    color:white;
+}
+
+.midrow {
+    background-color: #f1f1f1;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 200;
+    padding:3px 6px 3px 6px;
+}
+
+.endrow {
+    background-color: #4db79c;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 200;
+    padding:3px 6px 3px 6px;
+    color:white;
+}
+
+.payment-options {
+    font-size: 1.4rem;
+    font-weight: 300;
+}
+
+.header {
+    position: fixed;
+    top: 0.1cm;
+    /* bottom: 5px; */
+    width: 100%;
+    text-align: center;
+    /* font-size: 10pt;
+    border: 2px solid black;
+    border-radius: 5px;
+    background-color: coral;
+    color: black;
+    font-size: 14px;
+    font-weight: 100;
+    text-align: center; */
+    padding: 10px 0px 2px 0px;    
+}
+
+.footer {
+    position: fixed;
+    bottom: -1.5cm;
+    /* bottom: 5px; */
+    width: 100%;
+    text-align: center;
+    /* font-size: 10pt;
+    border: 2px solid black;
+    border-radius: 5px;
+    background-color: coral;
+    color: black;
+    font-size: 14px;
+    font-weight: 100;
+    text-align: center; */
+    padding: 10px 0px 2px 0px;
+    }
+
+    /* Container holding the image and the text */
+.container {
+    position: relative;
+  }
+
+.orange-box {
+    position:absolute;
+    top: 100px;
+    height:400px;
+    width:660px;
+    background-color: white;
+    border:5px solid orange;
+    border-radius: 25px 0px 25px 0px;
+    text-align: center;    
+
+}  
+
+.price-orange-box {
+    /* position: relative;
+    padding:0;
+    top: 50px;
+    left: 180px;
+    width:140px; */
+    margin-left:20px;
+    background-color: rgb(251,126,51);
+    border:5px solid rgb(251,126,51);
+    border-radius: 8px 0px 8px 0px;
+    color:white;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.rating-gray-box {
+    /* position: relative;
+    padding:0;
+    top: 50px;
+    left: 180px;
+    width:140px; */
+    position: absolute;
+    top:470px;
+    padding-left:25px;
+    padding-right:25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-left:130px;
+    margin-right: 130px;
+    background-color: #494d53;
+    border:5px solid #494d53;
+    border-radius: 40px 0px 40px 0px;
+    color:white;
+    font-size: 1.2rem;
+    font-weight: 300;
+    text-align: center;
+}
+
+.page-start {
+    top:260px;
+}
+
+.light-blue-box {
+    /* top: 80px; */
+    /* height:400px; */
+    width:650px;
+    background-color: #e8f1f4;
+    border:5px solid #e8f1f4;
+    border-radius: 10px 10px 10px 10px;
+    text-align: left;  
+
+}
+
+.light-blue-box h2 {
+    font-size: 1.5rem;
+    font-weight:400;
+    color: #5e90a6;
+    margin-left:5px;
+    margin-right:5px;
+}
+
+.light-blue-box hr {
+    color: #5e90a6;
+    margin:5px;
+}
+
+.light-blue-box p {
+    color: rgb(46, 46, 46);
+    font-size: 1rem;
+    text-align: justify;
+    margin-left:5px;
+    margin-right:5px;
+}
+  
+  /* Bottom right text */
+  .text-block {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background-color: black;
+    color: white;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  /* .product {
+    text-align: left;
+    align-content: left;
+
+  } */
+
+  .product-details {
+      /* background-color: yellow; */
+      /* height:350px; */
+      width:320px;
+      float: left;
+      /* display: inline-block; */
+      text-align: left;
+      margin:0;
+      padding:0;
+      
+
+  }
+
+  .alt-product-details {
+      /* background-color: red; */
+      /* height:350px; */
+      width:320px;
+      float:right;
+      /* display:block; */
+      text-align: left;
+      margin:0;
+      padding:0;
+  }
+
+  .product-image {
+    position: relative;
+    top: 10px;
+    left: 10px;
+    height:200px;
+
+  }
+
+  .alt-product-image {
+    position: relative;
+    top: 10px;
+    left: 10px;
+    height:200px;
+
+  }
+
+  .product-name {
+    margin:20px;
+  }
+
+  .product-name p {
+    font-size: 1rem;
+    font-weight:400;
+    color:grey;
+  }
+
+  .product-name li {
+    margin-left: 8px; 
+    font-size: 0.7rem;
+    width:140px;
+    /* font-weight:400; */
+    /* color:grey; */
+}
+
+.tech-details {
+    background-color: white;
+}
+
+.tech-title {
+    font-size: 1.1rem;
+    font-weight:300;
+    margin-top:5px;
+    margin-bottom:1px;
+    padding:0px;
+}
+
+.tech-details table {
+    width: 100%;
+    /* border-collapse: collapse; */
+    border-spacing: 8px;
+    /* margin: 5px; */
+    /* background-color: green; */
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.tech-details table tr, td {
+    font-size: 0.8rem;
+    /* border: 4px solid white; */
+    margin: 5px;
+  }
+
+.tech-attrib {
+    background-color: white;
+}
+
+.tech-attrib-cupb {
+    background-color: white;
+    font-weight:600;
+}
+
+.tech-value {
+    background-color: #f5f5f5;
+    vertical-align: top;
+}

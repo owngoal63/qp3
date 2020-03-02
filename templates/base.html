@@ -45,10 +45,15 @@
             <li class="nav-item">
               <a class="nav-item nav-link" href="/listreportarchive">Previous Reports</a>
             </li>
-          {% endif %}
+          {% elif request.user|has_group:"yourheat" %}
+          <li class="nav-item">
+            <a class="nav-item nav-link" href="/listquotearchive_yh">Previous Quotes</a>
+          </li>          
+          {% else %}
           <li class="nav-item">
             <a class="nav-item nav-link" href="/listquotearchive">Previous Quotes</a>
-          </li>    
+          </li>
+          {% endif %}
         {% endif %}
       </ul>
 
@@ -60,14 +65,18 @@
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="/editprofiledetails">Edit Profile</a>
           <a class="dropdown-item" href="/showuploadedfiles">Show Uploaded Images</a>
+          <!-- <a class="dropdown-item" href="/financeform">Finance Options</a> -->
           <a class="dropdown-item" href="/changepassword">Change Password</a>
           <a class="dropdown-item" href="/stripecheckout">Subscribe</a>
           {% if request.session.created_quote %}
             <div class="dropdown-divider"></div>
             {% if request.user|has_group:"WESTCHEM" %}
               <a class="dropdown-item" href="/listreportarchive">Previous Reports</a>
-            {% endif %}
-            <a class="dropdown-item" href="/listquotearchive">Previous Quotes</a>
+            {% elif request.user|has_group:"yourheat" %}
+              <a class="dropdown-item" href="/listquotearchive_yh">Previous Quotes</a>
+            {% else %}
+              <a class="dropdown-item" href="/listquotearchive">Previous Quotes</a>
+            {% endif %}  
           {% endif %}
           <div class="dropdown-divider"></div>
           {% if request.user|has_group:"WESTCHEM" %}

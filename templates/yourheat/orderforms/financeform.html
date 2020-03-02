@@ -1,0 +1,322 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+    <div class = "container quote-form-container">
+
+    <form id="input-finance" action="" method="post">
+    {% csrf_token %}
+
+    <h3>FINANCE OPTIONS</h3>
+    
+    <h5>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</h5>
+    
+    {{ wizard.management_form }}
+    {% if wizard.form.forms %}
+        {{ wizard.form.management_form }}
+        {% for form in wizard.form.forms %}
+          {{ form }}
+        {% endfor %}
+    {% else %}
+    <div class = "row">
+        <div class = "col-6">
+            <div class="form-group">
+                <label>{{ wizard.form.total_cost.label }}</label>
+                {{ wizard.form.total_cost }}
+            </div>
+        </div>    
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{ wizard.form.deposit_amount.label }} *</label>
+                    {{ wizard.form.deposit_amount }}
+                </div>
+            </div>    
+        </div>    
+    </div>
+
+        
+    <div class = "row">
+        <div class="col-12">
+            <div class="boilerformbtns">
+                {% if wizard.steps.prev %}
+                <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.first }}" class="boilerbtn">First step</button>
+                <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.prev }}" class="boilerbtn">Previous step</button>
+                {% endif %}
+                <button class="btn btn-danger" class="boilerbtn" type="button" onclick="doIt()">Calculate Finance</button>
+                {% if wizard.steps.step1 != 10 %}
+                <input class="btn btn-primary" id="next-step-btn" type="submit" value="Next Step" class="boilerbtn"/>
+                {% else %}
+                <input class="btn btn-primary" type="submit" value="Final Step" class="boilerbtn"/>
+                {% endif %}
+            </div>  
+        </div>
+    </div>
+    </form>
+    <br>
+
+    <table id="products">
+    </table>
+  *Subject to Status, Terms and Conditions apply. Please note this is not an offer of finance. Rep Example: Cash Price £2000.00, No Deposit. Amount of Credit: £2000.00. Interest rate: 9.9% p.a fixed. Representative: 9.9% APR. Total Term: 36 Months. 36 Monthly Repayments of: £64.05. Total Interest: £305.80. Total Amount Payable: £2305.80.  Finance is provided by Hitachi Capital (UK) PLC, authorised and 
+            regulated by the Financial Conduct Authority. Financial 
+            Services Register no. 704348. The Register can be accessed 
+            through http://fca.org.uk Registered Office: Hitachi Capital 
+             House, Thorpe Road, Staines-upon-Thames, Surrey, TW18 
+             3HP. Registered in Cardiff under company no. 1630491.
+  <td>
+  </tr>
+  </table>
+
+    </div> 
+    {% endif %} 
+{% endif %} 
+
+<!-- Hitachi page Layout code  -->
+
+
+<!-- <main>
+  <table id = "container">
+<tr>
+<td> -->
+  <!-- <form id="inputForm" action="#">
+    <table id="inputTab">
+      <tr>
+        <td><img align="left" src="data:image/bmp;base64"></td>
+        <td><input type="text" name="price" placeholder="Price" oninput="doIt()"></td>
+        <td><input type="text" name="deposit" placeholder="Deposit" oninput="doIt()"></td>
+      </tr>
+    </table>
+  </form> -->
+<!-- </td>
+</tr>
+<tr>
+<td> -->
+
+<!-- </main> -->
+
+
+
+<script type="text/javascript">
+$(function () {
+  $('[data-toggle="popover"]').popover()
+})
+
+$('.popover-dismiss').popover({
+  trigger: 'focus'
+})
+
+// Hitachi JS script 
+
+var defaultPrice = 500;
+      
+      var products =  [
+                        
+                        {name: 'Interest Bearing', minLoanAmount: 500, maxLoanAmount: 25000, rpm: 0.790, term: 36, defer: 0, minDepositPct: 0},
+                        {name: 'Interest Bearing', minLoanAmount: 500, maxLoanAmount: 25000, rpm: 0.790, term: 48, defer: 0, minDepositPct: 0},
+                        {name: 'Interest Bearing', minLoanAmount: 500, maxLoanAmount: 25000, rpm: 0.790, term: 60, defer: 0, minDepositPct: 0},
+                        {name: 'Interest Bearing', minLoanAmount: 500, maxLoanAmount: 25000, rpm: 0.790, term: 96, defer: 0, minDepositPct: 0},
+                         {name: 'Interest Bearing', minLoanAmount: 500, maxLoanAmount: 25000, rpm: 0.790, term: 120, defer: 0, minDepositPct: 0}
+
+                      ];
+                      
+      // ###############################################################################################################################################
+      // ###############################################################################################################################################
+      // ###############################################################################################################################################
+      
+      function doIt() {
+        
+        var cellCount = 0;
+        var trContainer = document.createElement("tr");
+        var container = document.getElementById("products");
+        var tdContainer;
+        var price;
+        var defaultDeposit;
+        var deposit;
+
+        console.log("Doing it");
+        
+        // price = parseFloat(document.forms["inputForm"].elements["price"].value);
+        price = parseFloat(document.forms["input-finance"].elements["9-total_cost"].value);
+        if (isNaN(price)) {
+          price = defaultPrice;
+        };
+        
+        // defaultDeposit = parseFloat(document.forms["inputForm"].elements["deposit"].value);
+        defaultDeposit = parseFloat(document.forms["input-finance"].elements["9-deposit_amount"].value);
+        if (isNaN(defaultDeposit)) {
+          defaultDeposit = 0;
+        };
+        
+        while (container.firstChild) {
+          container.removeChild(container.firstChild);
+        };
+        
+        products.forEach(function(product) {
+        
+          if (cellCount == 4) {
+            container.appendChild(trContainer);
+            trContainer = document.createElement("tr");
+            trContainer.class = "productRows";
+            cellCount = 0;
+          }
+          
+          if (defaultDeposit == 0) {
+            deposit = Math.ceil(price * product.minDepositPct) / 100;
+          } else {
+            deposit = defaultDeposit;
+          }
+          
+          var loanAmount = price - deposit;
+          
+          tdContainer = document.createElement("td");
+          
+          if (product.rpm == 0) {
+            var monthlyPayment = Math.floor(((loanAmount / product.term)) * 100) / 100;
+            var totalInterest = 0;
+            var annualRate = 0;
+            var apr = 0;
+          } else {
+          
+            if (product.defer == 0) {
+              var monthlyPayment = Math.floor((-loanAmount / ((Math.pow(1 + (product.rpm / 100), -product.term) - 1) / ((1 + (product.rpm / 100)) - 1)) + 0.009) * 100) / 100;
+            } else {
+              var monthlyPayment = Math.floor(varIns = (-loanAmount * Math.pow(1 + (product.rpm / 100), product.defer - 1) / ((((Math.pow(1 + (product.rpm / 100), -product.term))) - 1) / ((1 + (product.rpm / 100)) - 1)) + 0.009) * 100) / 100;
+            }
+            var totalInterest = product.term * monthlyPayment - loanAmount;
+            var annualRate = Math.round(1000 * (totalInterest / loanAmount) / ((product.term + product.defer ) / 12)) / 10;
+            var apr = Math.round(1000 * (Math.pow(1 + product.rpm / 100, 12) - 1)) / 10;
+          }
+          
+          if (loanAmount < product.minLoanAmount || loanAmount > product.maxLoanAmount || deposit < product.minDepositPct * price / 100) {
+            var style = "disabled";
+          } else {
+            var style = "enabled";
+          }
+          var result = {name: product.name + " (" + product.term + " Months)", loanAmount: loanAmount, monthlyPayment: monthlyPayment, apr: apr, annualRate: annualRate, term: product.term, totalRepayable: product.term * monthlyPayment + deposit, totalInterest: totalInterest, defer: product.defer, style: style, deposit: deposit}
+        
+          var table = makeTable(result);
+        
+          tdContainer.appendChild(table);
+          trContainer.appendChild(tdContainer);
+          
+          cellCount = cellCount + 1;
+        });
+        
+        container.appendChild(trContainer);
+      
+      }
+      
+      function makeTable(result) {
+      
+        var table = document.createElement("table");
+        table.id = result.style;
+        var trProducts = document.createElement("tr");
+        var thProducts = document.createElement("th");
+        var text = document.createTextNode(result.name);
+        thProducts.appendChild(text);
+        trProducts.appendChild(thProducts);
+        table.appendChild(trProducts);
+        
+        trProducts = document.createElement("tr");
+        var tdProducts = document.createElement("td");
+        var span = document.createElement("span");
+        span.id = "value";
+        text = document.createTextNode("£" + result.loanAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+        span.appendChild(text);
+        tdProducts.appendChild(span);
+        var br = document.createElement("br");
+        tdProducts.appendChild(br);
+        text = document.createTextNode("Loan Amount");
+        tdProducts.appendChild(text);
+        trProducts.appendChild(tdProducts);
+        table.appendChild(trProducts);
+        
+        trProducts = document.createElement("tr");
+        var tdProducts = document.createElement("td");
+        var span = document.createElement("span");
+        span.id = "value";
+        text = document.createTextNode("£" + result.deposit.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+        span.appendChild(text);
+        tdProducts.appendChild(span);
+        var br = document.createElement("br");
+        tdProducts.appendChild(br);
+        text = document.createTextNode("Deposit");
+        tdProducts.appendChild(text);
+        trProducts.appendChild(tdProducts);
+        table.appendChild(trProducts);
+        
+        trProducts = document.createElement("tr");
+        tdProducts = document.createElement("td");
+        span = document.createElement("span");
+        span.id = "value";
+        text = document.createTextNode("£" + result.monthlyPayment.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+        span.appendChild(text);
+        tdProducts.appendChild(span);
+        br = document.createElement("br");
+        tdProducts.appendChild(br);
+        text = document.createTextNode("Monthly Payment");
+        tdProducts.appendChild(text);
+        trProducts.appendChild(tdProducts);
+        table.appendChild(trProducts);
+        
+        trProducts = document.createElement("tr");
+        tdProducts = document.createElement("td");
+        span = document.createElement("span");
+        span.id = "value";
+        text = document.createTextNode(result.term);
+        span.appendChild(text);
+        tdProducts.appendChild(span);
+        br = document.createElement("br");
+        tdProducts.appendChild(br);
+        text = document.createTextNode("Number of Payments");
+        tdProducts.appendChild(text);
+        trProducts.appendChild(tdProducts);
+        table.appendChild(trProducts);
+        
+        trProducts = document.createElement("tr");
+        tdProducts = document.createElement("td");
+        span = document.createElement("span");
+        span.id = "value";
+        text = document.createTextNode(result.apr.toFixed(1) + "%");
+        span.appendChild(text);
+        tdProducts.appendChild(span);
+        br = document.createElement("br");
+        tdProducts.appendChild(br);
+        text = document.createTextNode("Representative APR");
+        tdProducts.appendChild(text);
+        trProducts.appendChild(tdProducts);
+        table.appendChild(trProducts);
+        
+        trProducts = document.createElement("tr");
+        tdProducts = document.createElement("td");
+        text = document.createTextNode("Total amount payable (Incl. Deposit): £" + result.totalRepayable.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+        tdProducts.appendChild(text);
+        trProducts.appendChild(tdProducts);
+        table.appendChild(trProducts);
+        
+        trProducts = document.createElement("tr");
+        tdProducts = document.createElement("td");
+        text = document.createTextNode("Total interest: £" + result.totalInterest.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+        tdProducts.appendChild(text);
+        trProducts.appendChild(tdProducts);
+        table.appendChild(trProducts);
+
+        trProducts = document.createElement("tr");
+        tdProducts = document.createElement("td");
+        text = document.createTextNode("Deferral Period: " + result.defer + " Months");
+        tdProducts.appendChild(text);
+        trProducts.appendChild(tdProducts);
+        table.appendChild(trProducts);
+        
+        return table;
+      
+      }
+
+window.addEventListener("load", function () {
+ doIt();
+});
+
+
+</script>
+
+{% endblock %}
