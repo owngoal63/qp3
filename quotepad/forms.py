@@ -827,7 +827,11 @@ class FormStepFive_yh(forms.Form):
 	# within double curly braces...
 	# form_data.4.field_name e.g. form_data.4.new_fuel_type
 	def __init__(self, *args, **kwargs):
+		# Get the user to seed the filter on the boiler_manufacturer drop down.
+		self.user = kwargs.pop('user')
 		super(FormStepFive_yh, self).__init__(*args, **kwargs)
+		self.fields['boiler_manufacturer'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user).order_by('brand').values_list('brand', flat=True).distinct(), to_field_name='brand',empty_label = 'Select Boiler Brand for quote')
+		self.fields['alt_boiler_manufacturer'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user).order_by('brand').values_list('brand', flat=True).distinct(), to_field_name='brand',empty_label = 'Select Alternative Boiler Brand for quote')
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
 	new_fuel_type = forms.ChoiceField(choices=NEW_FUEL_TYPE_DROPDOWN)
@@ -852,7 +856,13 @@ class FormStepSix_yh(forms.Form):
 	# within double curly braces...
 	# form_data.5.field_name e.g. form_data.5.new_fuel_type
 	def __init__(self, *args, **kwargs):
+		# Get the user to seed the filter on the drop down.
+		self.user = kwargs.pop('user')
+		self.manuf = kwargs.pop('manufacturer')
+		self.alt_manuf = kwargs.pop('alt_manufacturer')
 		super(FormStepSix_yh, self).__init__(*args, **kwargs)
+		self.fields['product_choice'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user, brand = self.manuf), empty_label = 'Select Product for quote')
+		self.fields['alt_product_choice'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user, brand = self.alt_manuf), empty_label = 'Select Alternative Product for quote')
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
 	chemical_system_treatment = forms.ChoiceField(choices=CHEMICAL_SYSTEM_TREATMENT_DROPDOWN)
@@ -870,12 +880,13 @@ class FormStepSeven_yh(forms.Form):
 	#boiler_manufacturer = forms.ChoiceField(choices=BOILER_MANUFACTURER_DROPDOWN)
 	def __init__(self, *args, **kwargs):
 		# Get the user to seed the filter on the boiler_manufacturer drop down.
-		self.user = kwargs.pop('user')
+		#self.user = kwargs.pop('user')
 		super(FormStepSeven_yh, self).__init__(*args, **kwargs)
-		self.fields['boiler_manufacturer'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user).order_by('brand').values_list('brand', flat=True).distinct(), to_field_name='brand',empty_label = 'Select Boiler Brand for quote')
+		#self.fields['boiler_manufacturer'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user).order_by('brand').values_list('brand', flat=True).distinct(), to_field_name='brand',empty_label = 'Select Boiler Brand for quote')
+		#self.fields['alt_boiler_manufacturer'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user).order_by('brand').values_list('brand', flat=True).distinct(), to_field_name='brand',empty_label = 'Select Alternative Boiler Brand for quote')
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
-	manufacturer_guarantee = forms.ChoiceField(choices=MANUFACTURER_GUARANTEE_DROPDOWN)
+	#manufacturer_guarantee = forms.ChoiceField(choices=MANUFACTURER_GUARANTEE_DROPDOWN)
 	flue_components = forms.ChoiceField(choices=FLUE_COMPONENTS_DROPDOWN)
 	programmer_thermostat = forms.ChoiceField(choices=PROGRAMMER_THERMOSTAT_DROPDOWN)
 	central_heating_system_filter = forms.ChoiceField(choices=CENTRAL_HEATING_SYSTEM_FILTER_DROPDOWN)
@@ -900,22 +911,23 @@ class FormStepNine_yh(forms.Form):
 	# form_data.8.field_name e.g. form_data.8.estimated_duration
 	def __init__(self, *args, **kwargs):
 		# Get the user to seed the filter on the drop down.
-		self.user = kwargs.pop('user')
-		self.manuf = kwargs.pop('manufacturer')
+		#self.user = kwargs.pop('user')
+		#self.manuf = kwargs.pop('manufacturer')
+		#self.alt_manuf = kwargs.pop('alt_manufacturer')
 		super(FormStepNine_yh, self).__init__(*args, **kwargs)
-		self.fields['product_choice'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user, brand = self.manuf), empty_label = 'Select Product for quote')
+		#self.fields['product_choice'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user, brand = self.manuf), empty_label = 'Select Product for quote')
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
-		self.fields['alt_product_choice'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user, brand = self.manuf), empty_label = 'Select Alternative Product for quote')
-		for field in self: 
-			field.field.widget.attrs['class'] = 'form-control'	
+		#self.fields['alt_product_choice'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user, brand = self.alt_manuf), empty_label = 'Select Alternative Product for quote')
+		# for field in self: 
+		# 	field.field.widget.attrs['class'] = 'form-control'	
 	estimated_duration = forms.ChoiceField(choices=ESTIMATED_DURATION_DROPDOWN)
 	description_of_works = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'rows':5, 'cols':30}))
 
 class FinanceForm_yh(forms.Form):
 	total_cost = forms.FloatField()
 	deposit_amount = forms.FloatField()
-	
+
 	def __init__(self, *args, **kwargs):
 		self.product_price = kwargs.pop('product_price')
 		super(FinanceForm_yh, self).__init__(*args, **kwargs)

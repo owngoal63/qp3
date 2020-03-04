@@ -54,6 +54,12 @@ a:hover {
     text-align: center;
     font-size: 2rem;
   }
+
+  h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    color:rgb(80,80,80);
+  }
   
   .social-list {
     list-style: none;
@@ -174,6 +180,7 @@ a:hover {
   text-align: right;
   background-color :rgb(246, 245, 242);
 }
+
 
   
   /* 
@@ -458,4 +465,3 @@ a:hover {
     color: #4D4D4D;
   }
 
-  

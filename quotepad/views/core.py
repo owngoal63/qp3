@@ -109,7 +109,12 @@ def home(request):
 	else:
 		print("{} The user specific PDF template file does not exist".format(usr_pdf_template_file))
 		print("Using the generic PDF template file.")
-	return render(request, 'home.html')
+	#if 'yourheat' in request.user.groups.all():
+	if request.user.groups.filter(name__in=['yourheat']).exists():
+		return render(request, 'yourheat/pages/home.html')
+	else:
+		return render(request, 'home.html')
+
 
 
 def register(request):

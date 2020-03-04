@@ -11,7 +11,7 @@ from formtools.wizard.views import SessionWizardView
 
 # imports associated with xhtml2pdf
 from django.http import HttpResponseRedirect, HttpResponse, FileResponse
-from quotepad.utils import pdf_generation, convertHtmlToPdf, convertHtmlToPdf2
+from quotepad.utils import pdf_generation, pdf_generation_to_file, convertHtmlToPdf, convertHtmlToPdf2
 import datetime
 from pathlib import Path, PureWindowsPath
 import os, os.path, errno
@@ -83,16 +83,18 @@ class BoilerFormWizardView_yh(SessionWizardView):
 	# Below method is to pass the logged in user to the
 	# appropriate form to filter the drop down product listing
 	def get_form_kwargs(self, step):
-		if step == '8':
-			seventh_step_data = self.storage.get_step_data('6')
-			manuf = seventh_step_data.get('6-boiler_manufacturer','')
+		print(step)
+		if step == '5':
+			manuf_step_data = self.storage.get_step_data('4')
+			manuf = manuf_step_data.get('4-boiler_manufacturer','')
+			alt_manuf = manuf_step_data.get('4-alt_boiler_manufacturer','')
 			print(manuf)
-			return {'user': self.request.user, 'manufacturer': manuf}
-		elif step == '6':
+			return {'user': self.request.user, 'manufacturer': manuf, 'alt_manufacturer': alt_manuf }
+		elif step == '4':
 			return {'user': self.request.user}
 		elif step == '9':
-			product_step_data = self.storage.get_step_data('8')
-			productx = product_step_data.get('8-product_choice','')
+			product_step_data = self.storage.get_step_data('5')
+			productx = product_step_data.get('5-product_choice','')
 			#Object.objects.get(pk=1)
 			#field_value = field_object.value_from_object(obj)
 			# print("--------------")
@@ -118,16 +120,18 @@ class BoilerFormWizardView_yh(SessionWizardView):
 		# Get the data for the Installer from Installer table to populate email(id) and pdf(idx)
 		idx = Profile.objects.get(user = self.request.user)
 
-		product_id = ([form.cleaned_data for form in form_list][8].get('product_choice').id)
-		alt_product_id= ([form.cleaned_data for form in form_list][8].get('alt_product_choice').id)
+		product_id = ([form.cleaned_data for form in form_list][5].get('product_choice').id)
+		alt_product_id= ([form.cleaned_data for form in form_list][5].get('alt_product_choice').id)
 
 		# Get the record of the product that was selected
 		product_record = ProductPrice.objects.get(pk = product_id)
+		alt_product_record = ProductPrice.objects.get(pk = alt_product_id)
 
 		# Get the record of the Product Image that was selected and handle exception
 		# if no image exists.
 		try:
 			img_record = Document.objects.get(id = product_record.product_image.id)
+			alt_img_record = Document.objects.get(id = alt_product_record.product_image.id)
 		except Exception as e:
 			img_record = None
 			print(type(e)) 
@@ -151,8 +155,8 @@ class BoilerFormWizardView_yh(SessionWizardView):
 		current_quote_form_filename =  Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/current_quote.txt".format(self.request.user.username))
 		file = open(current_quote_form_filename, 'w') #write to file
 		for index, line in enumerate([form.cleaned_data for form in form_list]):
-			if index == 8:
-				# This code replaces the <object reference> in the form array[8] with the product_id
+			if index == 5:
+				# This code replaces the <object reference> in the form array[5] with the product_id
 				string = str(line)
 				firstDelPos=string.find("<") # get the position of <
 				secondDelPos=string.find(">") # get the position of >
@@ -172,12 +176,14 @@ class BoilerFormWizardView_yh(SessionWizardView):
 
 
 		# Generate the PDF and write to disk
-		convertHtmlToPdf2(sourceHtml, outputFilename, {
+		pdf_generation_to_file(sourceHtml, outputFilename, {
 			'form_data': [form.cleaned_data for form in form_list],
 			'idx':idx,
 			'frecords': frecords,
 			'product_record': product_record,
+			'alt_product_record': alt_product_record,
 			'img_record': img_record,
+			'alt_img_record': alt_img_record,
 			'workload_cost': workload_cost,
 			'total_quote_price': total_quote_price})
 
@@ -216,8 +222,8 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			file_form_datax.append(eval(line))
 		
 	file_form_data = file_form_datax
-	product_id = file_form_data[8].get('product_choice')
-	alt_product_id = file_form_data[8].get('alt_product_choice')
+	product_id = file_form_data[5].get('product_choice')
+	alt_product_id = file_form_data[5].get('alt_product_choice')
 
 	idx = Profile.objects.get(user = request.user)
 

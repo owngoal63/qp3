@@ -98,12 +98,6 @@ def render_to_pdf2(template_src, context_dict={}):
 	return response
 
 def pdf_generation(template_src, context_dict={}):
-	#stud = Student.objects.get(some_slug=some_slug)
-	#studid = stud.some_slug
-	#context = {'studid':studid}
-	# print("------------------------")
-	# print(request.build_absolute_uri())
-	# print("------------------------")
 	print("WeasyPrint...waaaayyyy")
 	html_string = render_to_string(template_src, context_dict)
 	html = HTML(string=html_string, base_url="http://127.0.0.1:8000/media")
@@ -115,4 +109,19 @@ def pdf_generation(template_src, context_dict={}):
 	response['Content-Disposition'] = 'inline; filename="mypdf.pdf"'
 	return response    
 
+def pdf_generation_to_file(template_src, outputFilename, context_dict={}):
+	print("WeasyPrint...waaaayyyy")
+	html_string = render_to_string(template_src, context_dict)
+	html = HTML(string=html_string, base_url="http://127.0.0.1:8000/media")
+	#html = HTML(string=html_string, base_url=os.path.join(settings.BASE_DIR, "media"))
+	#pdf = html.write_pdf();
+	pdf = html.write_pdf(stylesheets=[CSS(settings.BASE_DIR +  '/static/css/yh.css')])
+	resultFile = open(outputFilename, "w+b")
+	resultFile.write(pdf)
+	
+	resultFile.close() 
+	response = HttpResponse(pdf, content_type='application/pdf')
+	response['Content-Disposition'] = 'attachment; filename=outputFilename'
+
+	return response    
 

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load staticfiles%}
+{% load quotepad_extras %}
+
+{% block content %}
+
+
+<h2 class="container">
+  {% if request.user|has_group:"yourheat" %}
+    <img src="{% static 'images/YourHeatLogo-Transparent.png' %}" width="180px">
+  {% endif %}  
+</h1>
+
+<div class="container dashboard-container">
+
+
+  <div class="row">
+
+    <div class="col-sm-12 col-md-6">
+
+      {% if request.session.Profile_updated %}
+      <div class="card card-1-complete">
+      {% else %}
+      <div class="card card-1">
+      {% endif %}
+        <h3 class="card-headings">1. Edit Your Profile</h3>
+        <p class="card-text">The first step to success. Please provide key information about you and your business which will be used within your quotations. We advise you to complete this stage first and ensure all the information is kept up to date.</p>
+        <a class="stretched-link" href="/editprofiledetails"></a>
+      </div>
+
+    </div>
+
+    <div class="col-sm-12 col-md-6">
+        {% if request.session.Image_loaded %}
+        <div class="card card-2-complete">
+            {% else %}
+        <div class="card card-2">
+            {% endif %}
+            <h3 class="card-headings">2. Upload Images</h3>
+            <p class="card-text">Use this page to upload the logo which will go on your quote, please upload this first. Then you can upload an image of the product(s) you sell. At the next stage you will be able to select which image to put on your quotes.</p>
+            <a class="stretched-link" href="/fileupload"></a>
+          </div>
+      
+    </div>
+
+    <div class="row">
+
+    <div class=" col-sm-12 col-md-6">
+        {% if request.session.ProductPrice_record %}
+        <div class="card card-3-complete">
+            {% else %}
+        <div class="card card-3">
+            {% endif %}
+            <h3 class="card-headings">3. Add Your Products</h3>
+            <p class="card-text">On this page, you can use the uploaded images to create products. Products have a price, a brand, a product code and an associated image. Once you have products you will be able to generate quotations for these products. </p>
+            <a class="stretched-link" href="/productpricelist"></a>
+          </div>
+    </div>
+
+    
+      <div class=" col-sm-12 col-md-6">
+          {% if request.session.created_quote %}
+            <div class="card card-6-complete">
+          {% else %}    
+            <div class="card card-6">
+          {% endif %}
+              <h3 class="card-headings">4. Complete A Quote</h3>
+              <p class="card-text">You are now ready to complete a quote, follow the easy to use form to create a bespoke quotation, delivered to your customer's email. Get ready to win more business!</p>
+              {% if request.session.User_subscribed %}
+                {% if request.user|has_group:"yourheat" %}
+                  <a class="stretched-link" href="/boilerform_yh"></a>
+                {% else %}
+                  <a class="stretched-link" href="/boilerform"></a>
+                {% endif %}
+              {% else %}
+              <a class="stretched-link" href="/quotenotpossible"></a>
+              {% endif %}
+            </div>
+      </div>
+    
+    </div>
+</div>
+
+
+{% endblock %}
