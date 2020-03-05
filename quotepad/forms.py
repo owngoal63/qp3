@@ -18,6 +18,7 @@ PROPERTY_TYPE_DROPDOWN = (
 	('Detached','Detached'),
 	('Semi Detached','Semi Detached'),
 	('Terraced','Terraced'),
+	('End of Terrace','End of Terrace'),
 	('Bungalow','Bungalow'),
 	('Flat','Flat'),
 )
@@ -27,16 +28,18 @@ CURRENT_FUEL_TYPE_DROPDOWN = (
 	('LPG','LPG'),
 	('Oil','Oil'),
 	('Electric','Electric'),
-	('None','None'),
+	('N/A','N/A'),
 )
 
 CURRENT_BOILER_TYPE_DROPDOWN = (
-	('Floor Standing - Conventional','Floor Standing - Conventional'),
-	('Floor Standing - Combi','Floor Standing - Combi'),
-	('Floor Standing - System','Floor Standing - System'),
-	('Wall Hung - Conventional','Wall Hung - Conventional'),
-	('Wall Hung - Combi','Wall Hung - Combi'),
-	('Wall Hung - System','Wall Hung - System'),
+	('Combi','Combi'),
+	('Conventional Wall Hung','Conventional Wall Hung'),
+	('Conventional Flor Standing','Conventional Flor Standing'),
+	('System','System'),
+	('Back Boiler','Back Boiler'),
+	('Water Heater','Water Heater'),
+	('No Existing System','No Existing System'),
+	('N/A','N/A'),
 )
 
 CURRENT_BOILER_LOCATION_DROPDOWN = (
@@ -46,16 +49,22 @@ CURRENT_BOILER_LOCATION_DROPDOWN = (
 	('Utility','Utility'),
 	('Airing Cupboard','Airing Cupboard'),
 	('Lounge','Lounge'),
+	('Utility Room','Utility Room'),
+	('WC','WC'),
+	('Pantry','Pantry'),
+	('Basement','Basement'),
 	('Loft','Loft'),
 	('Garage','Garage'),
+	('Outdoor Room','Outdoor Room'),
 	('Other','Other'),
 )
 
 CURRENT_FLUE_SYSTEM_DROPDOWN = (
-	('Vertical - Open Flue','Vertical - Open Flue'),
-	('Vertical - Fan assisted','Vertical - Fan assisted'),
-	('Horizontal','Balanced Flue'),
-	('Horizontal','Fan Flue'),
+	('Horizontal Flue','Horizontal Flue'),
+	('Vertical Flue','Vertical Flue'),
+	('Rear Flue','Rear Flue'),
+	('No Existing Flue','No Existing Flue'),
+	('N/A','N/A'),
 )
 
 CURRENT_FLUE_LOCATION_DROPDOWN = (
@@ -65,42 +74,42 @@ CURRENT_FLUE_LOCATION_DROPDOWN = (
 	('Third Floor','Third Floor'),
 	('Fourth Floor','Fourth Floor'),
 	('Fifth Floor','Fifth Floor'),
+	('Above Fifth Floor','Above Fifth Floor'),
+	('N/A','N/A'),
 )
 
 CURRENT_CONTROLS_DROPDOWN = (
-	('Wired - Programmer','Wired - Programmer'),
-	('Wired - Room Thermostat','Wired - Room Thermostat'),
-	('Wired - Cylinder Thermostat','Wired - Cylinder Thermostat'),
-	('Wireless-Room Thermostat','Wireless-Room Thermostat'),
-	('Wireless-Programmable Thermostat','Wireless-Programmable Thermostat'),
-	('Smart Thermostat','Smart Thermostat'),
-	('None','None'),
+	('No Controls Installed','No Controls Installed'),
+	('Wired Programmer','Wired Programmer'),
+	('Wired Thermostat','Wired Thermostat'),
+	('Wireless Programmer','Wireless Programmer'),
+	('Wireless Thermostat','Wireless Thermostat'),
+	('Internet Connected Thermostat','Internet Connected Thermostat'),
 )
 
 REMOVALS_CHOICES = (
-	('Boiler','Boiler'),
+	('Old Boiler','Old Boiler'),
 	('Hot Water Cylinder','Hot Water Cylinder'),
-	('Cold Water Storage Tank','Cold Water Storage Tank'),
+	('Cold Water Tank','Cold Water Tank'),
 	('Feed and Expansion Tank','Feed and Expansion Tank'),
-	('Rubbish','Rubbish'),
-	('Nothing To Remove','Nothing To Remove'),
+	('Gas Back Boiler + Fire','Gas Back Boiler + Fire'),
+	('Solid Fuel Back Boiler + Fire','Solid Fuel Back Boiler + Fire'),
+	('Warm Air Unit','Warm Air Unit'),
+	('Fireplace','Fireplace'),
+	('Multipoint Water Heater','Multipoint Water Heater'),
+	('Shower Pump','Shower Pump'),
 )
 
 NEW_FUEL_TYPE_DROPDOWN = (
 	('Gas','Gas'),
 	('LPG','LPG'),
 	('Oil','Oil'),
-	('Electric','Electric'),
-	('None','None'),
 )
 
 NEW_BOILER_TYPE_DROPDOWN = (
-	('Floor Standing - Conventional','Floor Standing - Conventional'),
-	('Floor Standing - Combi','Floor Standing - Combi'),
-	('Floor Standing - System','Floor Standing - System'),
-	('Wall Hung - Conventional','Wall Hung - Conventional'),
-	('Wall Hung - Combi','Wall Hung - Combi'),
-	('Wall Hung - System','Wall Hung - System'),
+	('Combi','Combi'),
+	('Conventional','Conventional'),
+	('System','System'),
 )
 
 NEW_BOILER_LOCATION_DROPDOWN = (
@@ -110,16 +119,20 @@ NEW_BOILER_LOCATION_DROPDOWN = (
 	('Utility','Utility'),
 	('Airing Cupboard','Airing Cupboard'),
 	('Lounge','Lounge'),
+	('Utility Room','Utility Room'),
+	('WC','WC'),
+	('Pantry','Pantry'),
+	('Basement','Basement'),
 	('Loft','Loft'),
 	('Garage','Garage'),
+	('Outdoor Room','Outdoor Room'),
 	('Other','Other'),
 )
 
 NEW_FLUE_SYSTEM_DROPDOWN = (
-	('Vertical - Open Flue','Vertical - Open Flue'),
-	('Vertical - Fan assisted','Vertical - Fan assisted'),
-	('Horizontal','Balanced Flue'),
-	('Horizontal','Fan Flue'),
+	('Horizontal','Horizontal'),
+	('Vertical','Vertical'),
+	('Rear Flue','Rear Flue'),
 )
 
 NEW_FLUE_LOCATION_DROPDOWN = (
@@ -129,36 +142,40 @@ NEW_FLUE_LOCATION_DROPDOWN = (
 	('Third Floor','Third Floor'),
 	('Fourth Floor','Fourth Floor'),
 	('Fifth Floor','Fifth Floor'),
+	('Above Fifth Floor','Above Fifth Floor'),
+	('N/A','N/A'),
 )
 
 NEW_FLUE_DIAMETER_DROPDOWN = (
 	('100mm','100mm'),
 	('125mm','125mm'),
-	('150mm','150mm'),
 )
 
 PLUME_MANAGEMENT_KIT_DROPDOWN = (
-	('Not Required','Not Required'),
 	('Required','Required'),
+	('Not Required','Not Required'),
 )
 
 CONDENSATE_TERMINATION_DROPDOWN = (
 	('Drain','Drain'),
-	('Soak Away','Soak Away'),
+	('Sink','Sink'),
+	('Soil Vent Pipe','Soil Vent Pipe'),
+	('External Gully','External Gully'),
 	('Pumped','Pumped'),
+	('Soakaway Trap','Soakaway Trap'),
+	('Internal Waste Point','Internal Waste Point'),
 )
 NEW_CONTROLS_DROPDOWN = (
-	('Wired - Programmer','Wired - Programmer'),
-	('Wired - Room Thermostat','Wired - Room Thermostat'),
-	('Wired - Cylinder Thermostat','Wired - Cylinder Thermostat'),
-	('Wireless - Room Thermostat','Wireless - Room Thermostat'),
-	('Wireless-Programmable Thermostat','Wireless-Programmable Thermostat'),
-	('Smart Controls-Nest','Smart Controls - Nest'),
-	('Smart Controls-ESI','Smart Controls - ESI'),
-	('Use Existing','Use Existing'),
+	('Connect on to Existing','Connect on to Existing'),
+	('New Programmer Only','New Programmer Only'),
+	('New Thermostat Only','New Thermostat Only'),
+	('New Programmer + Thermostat','New Programmer + Thermostat'),
 )
 
 CWS_FLOW_RATE_DROPDOWN = (
+	('1','1'),
+	('2','2'),
+	('3','4'),
 	('4','4'),
 	('5','5'),
 	('6','6'),
@@ -198,26 +215,41 @@ SYSTEM_TREATMENT_DROPDOWN = (
 )
 
 GAS_SUPPLY_DROPDOWN = (
-	('Use existing supply','Use existing supply'),
-	('New internal supply required','New internal supply required'),
-	('New external supply required','New external supply required'),
+	('Current Gas supply deemed satisfactory','Current Gas supply deemed satisfactory'),
+	('Adaptation to existing gas supply required','Adaptation to existing gas supply required'),
+	('New external gas supply required','New external gas supply required'),
+	('New internal gas supply required','New internal gas supply required'),
 )
 
 GAS_SUPPLY_LENGTH_DROPDOWN = (
 	('N/A','N/A'),
-	('3-9m','3-9m'),
-	('9-15m','9-15m'),
-	('15-21m','15-21m'),
-	('21-27m','21-27m'),
-	('27m+','27m+'),
+	('3m','3m'),
+	('6m','6m'),
+	('9m','9m'),
+	('12m','12m'),
+	('15m','15m'),
+	('18m','18m'),
+	('21m','21m'),
+	('24m','24m'),
+	('27m','27m'),
+	('30m','30m'),
 )
 
 ASBESTOS_CONTAINING_MATERIALS_IDENTIFIED_DROPDOWN = (
 	('No Asbestos Identified','No Asbestos Identified'),
-	('Boiler','Boiler'),
-	('Flue','Flue'),
-	('CWS Tank','CWS Tank'),
-	('Other ACM Identifed','Other ACM Identifed'),
+	('Potential Asbestos Containing Material Identified','Potential Asbestos Containing Material Identified'),
+)
+
+ASBESTOS_REMOVAL_PROCEDURE_DROPDOWN = (
+	('N/A','N/A'),
+	('Your Heat to remove during installation','Your Heat to remove during installation'),
+	('Client to arrange removal prior to installation','Client to arrange removal prior to installation'),
+	('No disruption necessary','No disruption necessary'),
+)
+
+POTENTIAL_CONTRACTOR_ATTENDANCE_REQUIRED_DROPDOWN = (
+	('No','No'),
+	('Yes','Yes'),
 )
 
 ELECTRICAL_WORK_REQUIRED_DROPDOWN = (
@@ -321,9 +353,13 @@ OWNER_TENANT_OR_LANDLORD_DROPDOWN = (
 CURRENT_RADIATORS_WORKING_CORRECTLY_DROPDOWN = (
 	('Yes', 'Yes'),
 	('No', 'No'),
+	('Boiler Non-Operational', 'Boiler Non-Operational'),
 )
 
 INCOMING_FLOW_RATE_DROPDOWN = (
+	('1','1'),
+	('2','2'),
+	('3','3'),
 	('4','4'),
 	('5','5'),
 	('6','6'),
@@ -338,7 +374,19 @@ INCOMING_FLOW_RATE_DROPDOWN = (
 	('15','15'),
 	('16','16'),
 	('17','17'),
-	('18+','18+'),
+	('18','18'),
+	('19','19'),
+	('20','20'),
+	('21','21'),
+	('22','22'),
+	('23','23'),
+	('24','24'),
+	('25','25'),
+	('26','26'),
+	('27','27'),
+	('28','28'),
+	('29','29'),
+	('30','30'),
 )
 
 WILL_BOILER_BE_HOUSED_IN_CUPBOARD_DROPDOWN = (
@@ -348,13 +396,18 @@ WILL_BOILER_BE_HOUSED_IN_CUPBOARD_DROPDOWN = (
 
 CHEMICAL_SYSTEM_TREATMENT_DROPDOWN = (
 	('Chemical Flush & Inhibitor','Chemical Flush & Inhibitor'),
-	('Magna Pro Flush & Inhibitor','Magna Pro Flush & Inhibitor'),
-	('Power Flush & Inhibitor','Power Flush & Inhibitor'),
+	#('Magna Pro Flush & Inhibitor','Magna Pro Flush & Inhibitor'),
+	('Chemical Powerflush & Inhibitor','Chemical Powerflush & Inhibitor'),
 )
 
 SCAFFOLDING_REQUIRED_DROPDOWN = (
 	('No Scaffolding Required', 'No Scaffolding Required'),	
-	('Yes', 'Yes'),
+	('One Storey Scaffold Required', 'One Storey Scaffold Required'),
+	('Two Storey Scaffold Required', 'Two Storey Scaffold Required'),
+	('Three Storey Scaffold Required', 'Three Storey Scaffold Required'),
+	('Four Storey Scaffold Required', 'Four Storey Scaffold Required'),
+	('Five Storey Scaffold Required', 'Five Storey Scaffold Required'),
+	('Five+ Storey Scaffold Required', 'Five+ Storey Scaffold Required'),
 )
 
 ''' Section for defining the multiple forms that will be used for the boiler quote (FormWizard library) '''
@@ -867,23 +920,22 @@ class FormStepSix_yh(forms.Form):
 			field.field.widget.attrs['class'] = 'form-control'
 	chemical_system_treatment = forms.ChoiceField(choices=CHEMICAL_SYSTEM_TREATMENT_DROPDOWN)
 	gas_supply_requirements = forms.ChoiceField(choices=GAS_SUPPLY_DROPDOWN)
+	gas_supply_length = forms.ChoiceField(choices=GAS_SUPPLY_LENGTH_DROPDOWN)
 	scaffolding_required = forms.ChoiceField(choices=SCAFFOLDING_REQUIRED_DROPDOWN)
-	#gas_supply_length = forms.ChoiceField(choices=GAS_SUPPLY_LENGTH_DROPDOWN)
 	asbestos_containing_materials_identified = forms.ChoiceField(choices=ASBESTOS_CONTAINING_MATERIALS_IDENTIFIED_DROPDOWN)
+	asbestos_removal_procedure = forms.ChoiceField(choices=ASBESTOS_REMOVAL_PROCEDURE_DROPDOWN)
 	electrical_work_required = forms.ChoiceField(choices=ELECTRICAL_WORK_REQUIRED_DROPDOWN)
+	potential_contractor_attendance_required = forms.ChoiceField(choices=POTENTIAL_CONTRACTOR_ATTENDANCE_REQUIRED_DROPDOWN)
+	details_on_potential_contractor_requirements = forms.CharField(max_length=2000, required = False, widget=forms.Textarea(attrs={'rows':3, 'cols':30, 'placeholder': 'if applicable, please be detailed'}))
+	parking_requirements = forms.CharField(max_length=2000, required = False, widget=forms.Textarea(attrs={'rows':3, 'cols':30, 'placeholder': 'if applicable, please be detailed'}))
 
 class FormStepSeven_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
 	# within double curly braces...
 	# form_data.6.field_name e.g. form_data.6.boiler_manufactureruel_type
 
-	#boiler_manufacturer = forms.ChoiceField(choices=BOILER_MANUFACTURER_DROPDOWN)
 	def __init__(self, *args, **kwargs):
-		# Get the user to seed the filter on the boiler_manufacturer drop down.
-		#self.user = kwargs.pop('user')
 		super(FormStepSeven_yh, self).__init__(*args, **kwargs)
-		#self.fields['boiler_manufacturer'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user).order_by('brand').values_list('brand', flat=True).distinct(), to_field_name='brand',empty_label = 'Select Boiler Brand for quote')
-		#self.fields['alt_boiler_manufacturer'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user).order_by('brand').values_list('brand', flat=True).distinct(), to_field_name='brand',empty_label = 'Select Alternative Boiler Brand for quote')
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
 	#manufacturer_guarantee = forms.ChoiceField(choices=MANUFACTURER_GUARANTEE_DROPDOWN)
