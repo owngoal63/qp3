@@ -14,6 +14,7 @@ from django.contrib.auth.decorators import login_required
 
 from quotepad.views import edit_profile_details, show_uploaded_files, quote_generated, test_quote_generated, quote_emailed, quote_not_possible, quotepad_template_help
 from quotepad.views import ProductPriceList, ProductPriceCreate, ProductPriceUpdate, ProductPriceDelete
+from quotepad.views import ProductComponentList, ProductComponentCreate, ProductComponentUpdate, ProductComponentDelete
 from quotepad.views import generate_quote_from_file, edit_quote_template, list_quote_archive, pdf_view
 
 # Imports for Westchem
@@ -68,6 +69,11 @@ urlpatterns = [
 	path('productpriceupdate/<int:product_id>/', ProductPriceUpdate, name = 'productpriceupdate'),
 	path('productpricedelete/<int:pk>/', login_required(ProductPriceDelete.as_view()), name = 'productpricedelete'),
 
+    path('productcomponentlist/', login_required(ProductComponentList.as_view()), name = 'productcomponentlist'),
+    path('productcomponentcreate/', ProductComponentCreate, name = 'productcomponentcreate'),
+	path('productcomponentupdate/<int:component_id>/', ProductComponentUpdate, name = 'productcomponentupdate'),
+	path('productcomponentdelete/<int:pk>/', login_required(ProductComponentDelete.as_view()), name = 'productcomponentdelete'),
+
     path('quotepadtemplatehelp/', quotepad_template_help, name = 'quotepad_template_help'),
 
     # Patterns in views/WestChem.py
@@ -86,6 +92,7 @@ urlpatterns = [
     #path('financeform/', FinanceFormWizardView_yh.as_view([FinanceForm_yh]), name = 'finance_form'),
     path('quotegenerated_yh/', quote_generated_yh, name = 'quote_generated_yh'),
     path('listquotearchive_yh/', list_quote_archive_yh, name = 'listquotearchive_yh'),
+
 
 	path('', include('payments.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

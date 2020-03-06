@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+
+<div class="container component-details-container">
+    <div class="row">
+        <div class="col-12">
+            <h2>List of Components</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-4">
+        </div>
+    </div>
+
+    <div class="row price-list-headings">
+        <div class="col-2">
+            <h4>Brand</h4>
+        </div>
+        <div class="col-2">
+            <h4>Type</h4>
+        </div>
+        <div class="col-6">
+            <h4>Component</h4>
+        </div>
+        <div class="col-2">
+            <h4>Action</h4>
+        </div>
+    </div>
+
+    {% for comp in components_by_user %}
+    <div class="row {% if comp.component_type == 'Plume Component' %}plume-row{% else %}gas-flue-row{% endif %}">
+        <div class="col-2">
+            {{ comp.brand }}
+            
+        </div>
+
+        <div class="col-2">
+            {{ comp.component_type|slice:":-9" }}
+        </div>
+        <div class="col-6">
+            {{ comp.component_name}}
+        </div>
+
+        <div class="col-2">
+            <a href="{% url 'productcomponentupdate' comp.pk %}" class="btn btn-primary btn-sm" role="button">Edit</a>
+            <a href="{% url 'productcomponentdelete' comp.pk  %}" class="btn btn-secondary btn-sm" role="button">Del</a>
+        </div>
+
+    </div>
+
+    {% empty %}
+        <div class="row">
+
+        <p class="text-muted product-list-sub-text">You have no products registered.</p>
+
+        {% endfor %}
+    </div>
+
+    <a href="{% url 'productcomponentcreate' %}" class="btn btn-primary" role="button">Add</a>
+</div>
+
+{% endblock content %}

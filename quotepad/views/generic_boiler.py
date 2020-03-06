@@ -23,8 +23,8 @@ from django.dispatch import receiver
 from django.contrib.auth.signals import user_logged_in
 from django.contrib.auth.models import User, Group
 
-from quotepad.models import Profile, ProductPrice, Document
-from quotepad.forms import ProfileForm, UserProfileForm, ProductPriceForm, EditQuoteTemplateForm
+from quotepad.models import Profile, ProductPrice, Document, ProductComponent
+from quotepad.forms import ProfileForm, UserProfileForm, ProductPriceForm, EditQuoteTemplateForm, ProductComponentForm
 
 @login_required
 def quote_generated(request):
@@ -328,4 +328,57 @@ class ProductPriceDelete(DeleteView):
 	model = ProductPrice
 	success_url='/productpricelist/'
 
+''' -------------------- Product Component Views --------------------'''
+
+class ProductComponentList(ListView):
+	''' Invoke the django Generic Model form capability to display the ProductComponent information in a list ''' 
+	context_object_name = 'components_by_user'
+
+	def get_queryset(self):
+		return ProductComponent.objects.filter(user=self.request.user).order_by('brand','component_type','id')
+
+@login_required
+def ProductComponentCreate(request):
+	''' Function to allow users to create a new component '''
+	if request.method == "POST":
+		form = ProductComponentForm(request.POST,  user = request.user)
+		if form.is_valid():
+			component = form.save(commit=False)
+			component.user = request.user
+			component.save()
+			messages.success(request, 'The component details were successfully updated.')
+			#request.session['ProductPrice_record'] = True
+			return redirect('/productcomponentlist/')
+	else:
+		form = ProductComponentForm(user = request.user)
+	context = {
+		'form': form,
+		'form_instructions': 'Add New Component'
+	}
+	return render(request,'quotepad/productcomponent_form.html',context)
+
+@login_required
+def ProductComponentUpdate(request, component_id):
+	''' Function to allow users to update a component '''
+	component = ProductComponent.objects.get(pk = component_id)
+	if request.method == "POST":
+		form = ProductComponentForm(request.POST, instance=component, user = request.user)
+		if form.is_valid():
+			component = form.save()
+			messages.success(request, 'The component details were successfully updated.')
+			#request.session['ProductPrice_record'] = True
+			return redirect('/productcomponentlist/')
+	else:
+		form = ProductComponentForm(instance=component, user = request.user)
+	context = {
+		'form': form,
+		'component': component,
+		'form_instructions': 'Edit Component Details'
+	}
+	return render(request,'quotepad/productcomponent_form.html',context)
+
+class ProductComponentDelete(DeleteView):
+	''' Invoke the django generic model form capability to delete a component  '''
+	model = ProductComponent
+	success_url='/productcomponentlist/'	
 

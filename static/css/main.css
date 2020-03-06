@@ -140,6 +140,12 @@ a:hover {
     margin-top: 20px;
     margin-bottom: 20px;
   }
+
+  .component-details-container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 0px;
+  }
   
   .fa-image {
     font-size: 30px;
@@ -151,6 +157,16 @@ a:hover {
   
   .product-list-sub-text {
     margin-left: 15px;
+  }
+
+  .plume-row {
+    color:red;
+    font-weight:1.3rem;
+    padding:1px; 
+  }
+
+  .gas-flue-row {
+    padding:1px; 
   }
   
   .edit-product-container {

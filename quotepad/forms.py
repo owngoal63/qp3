@@ -624,6 +624,24 @@ class ProductPriceForm(forms.ModelForm):
 		super(ProductPriceForm, self).__init__(*args, **kwargs)
 		self.fields['product_image'].queryset=Document.objects.filter(user = self.user)
 
+''' Form for capturing the product components for the quote '''
+class ProductComponentForm(forms.ModelForm):
+	
+	class Meta:
+		model = ProductComponent
+		fields = ['brand', 'component_type', 'component_name']
+
+		widgets = {
+			'brand': forms.Select(attrs={'class': 'form-control',  'autofocus': ''}),
+			'component_type': forms.Select(attrs={'class': 'form-control'}),
+			'component_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter the Component Name'}),
+		}
+
+	def __init__(self, *args, **kwargs):
+		self.user = kwargs.pop('user')
+		super(ProductComponentForm, self).__init__(*args, **kwargs)
+	#	self.fields['product_image'].queryset=Document.objects.filter(user = self.user)		
+
 
 ''' Form for creating the capability for users to edit their own pdf layout for quote (not implemented in this release) '''
 class EditQuoteTemplateForm(forms.Form):
