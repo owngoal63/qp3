@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from quotepad.models import Document, Profile, ProductPrice
+from quotepad.models import Document, Profile, ProductPrice, ProductComponent
 from django.forms import ModelMultipleChoiceField
 
 # For Editing the template
@@ -935,11 +935,15 @@ class FormStepSeven_yh(forms.Form):
 	# form_data.6.field_name e.g. form_data.6.boiler_manufactureruel_type
 
 	def __init__(self, *args, **kwargs):
+		self.user = kwargs.pop('user')
+		self.manuf = kwargs.pop('manufacturer')
 		super(FormStepSeven_yh, self).__init__(*args, **kwargs)
+		self.fields['gas_flue_components'] = forms.ModelMultipleChoiceField(queryset=ProductComponent.objects.filter(user = self.user, brand = self.manuf, component_type = 'Gas Flue Component').only('component_name'))
+		self.fields['plume_components'] = forms.ModelMultipleChoiceField(queryset=ProductComponent.objects.filter(user = self.user, brand = self.manuf, component_type = 'Plume Component').only('component_name'))
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
 	#manufacturer_guarantee = forms.ChoiceField(choices=MANUFACTURER_GUARANTEE_DROPDOWN)
-	flue_components = forms.ChoiceField(choices=FLUE_COMPONENTS_DROPDOWN)
+	#flue_components = forms.ChoiceField(choices=FLUE_COMPONENTS_DROPDOWN)
 	programmer_thermostat = forms.ChoiceField(choices=PROGRAMMER_THERMOSTAT_DROPDOWN)
 	central_heating_system_filter = forms.ChoiceField(choices=CENTRAL_HEATING_SYSTEM_FILTER_DROPDOWN)
 	scale_reducer = forms.ChoiceField(choices=SCALE_REDUCER_DROPDOWN)

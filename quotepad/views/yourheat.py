@@ -83,13 +83,18 @@ class BoilerFormWizardView_yh(SessionWizardView):
 	# Below method is to pass the logged in user to the
 	# appropriate form to filter the drop down product listing
 	def get_form_kwargs(self, step):
-		print(step)
+		#print(step)
 		if step == '5':
 			manuf_step_data = self.storage.get_step_data('4')
 			manuf = manuf_step_data.get('4-boiler_manufacturer','')
 			alt_manuf = manuf_step_data.get('4-alt_boiler_manufacturer','')
-			print(manuf)
+			#print(manuf)
 			return {'user': self.request.user, 'manufacturer': manuf, 'alt_manufacturer': alt_manuf }
+		elif step == '6':
+			manuf_step_data = self.storage.get_step_data('4')
+			manuf = manuf_step_data.get('4-boiler_manufacturer','')
+			print(manuf)
+			return {'user': self.request.user, 'manufacturer': manuf }
 		elif step == '4':
 			return {'user': self.request.user}
 		elif step == '9':
@@ -122,6 +127,11 @@ class BoilerFormWizardView_yh(SessionWizardView):
 
 		product_id = ([form.cleaned_data for form in form_list][5].get('product_choice').id)
 		alt_product_id= ([form.cleaned_data for form in form_list][5].get('alt_product_choice').id)
+		gas_flue_components_obj = ([form.cleaned_data for form in form_list][6].get('gas_flue_components'))
+		plume_components_obj = ([form.cleaned_data for form in form_list][6].get('plume_components'))
+
+		gas_flue_components = list(gas_flue_components_obj.values_list('component_name', flat=True))
+		plume_components = list(plume_components_obj.values_list('component_name', flat=True))
 
 		# Get the record of the product that was selected
 		product_record = ProductPrice.objects.get(pk = product_id)
@@ -162,13 +172,23 @@ class BoilerFormWizardView_yh(SessionWizardView):
 				secondDelPos=string.find(">") # get the position of >
 				stringAfterFirstReplace = string.replace(string[firstDelPos:secondDelPos+1], "'" + str(product_id) + "'")
 				#file.write(str(stringAfterFirstReplace) + "\n")
-				print(stringAfterFirstReplace)
+				#print(stringAfterFirstReplace)
 				# Repeat for Alternative product Code
 				string = stringAfterFirstReplace
 				firstDelPos=string.find("<") # get the position of <
 				secondDelPos=string.find(">") # get the position of >
 				stringAfterReplace = string.replace(string[firstDelPos:secondDelPos+1], "'" + str(alt_product_id) + "'")
 
+				file.write(str(stringAfterReplace) + "\n")
+			elif index == 6:
+				string = str(line)
+				firstDelPos=string.find("<QuerySet [<ProductComponent:") # get the position of the string
+				secondDelPos=string.find(">]>") # get the position of the string
+				stringAfterFirstReplace = string.replace(string[firstDelPos:secondDelPos+3], str(gas_flue_components).replace('"',''))
+				string = stringAfterFirstReplace
+				firstDelPos=string.find("<QuerySet [<ProductComponent:") # get the position of <
+				secondDelPos=string.find(">]>") # get the position of >
+				stringAfterReplace = string.replace(string[firstDelPos:secondDelPos+3], str(plume_components).replace('"',''))
 				file.write(str(stringAfterReplace) + "\n")
 			else:	
 				file.write(str(line) + "\n")

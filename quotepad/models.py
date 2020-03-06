@@ -8,6 +8,21 @@ PRODUCT_GUARANTEE_DROPDOWN = (
 	('6 Year Parts & Labour Guarantee','6 Year Parts & Labour Guarantee'),
 )
 
+COMPONENT_BRAND_DROPDOWN = (
+	('Worcester Bosch','Worcester Bosch'),
+	('Worcester Bosch 2000','Worcester Bosch 2000'),
+	('Worcester Bosch Lifestyle','Worcester Bosch Lifestyle'),
+	('Vaillant','Vaillant'),
+	('Ideal','Ideal'),
+	('Glow Worm','Glow Worm'),
+	('Baxi','Baxi'),
+)
+
+COMPONENT_TYPE_DROPDOWN = (
+	('Gas Flue Component','Gas Flue Component'),
+	('Plume Component','Plume Component'),
+)
+
 ''' Function to save uploaded files in the specific user path location (under the Media folder)'''
 def user_directory_path(instance, filename):
 	# file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
@@ -50,4 +65,15 @@ class ProductPrice(models.Model):
 
 
 	def __str__(self):
-		return "%s / %s - £%s" % (self.model_name, self.product_code, self.price)     
+		return "%s / %s - £%s" % (self.model_name, self.product_code, self.price)  
+
+''' Model for storing details on the product components that will be used in the quote '''
+class ProductComponent(models.Model):
+	user            =   models.ForeignKey(User, on_delete=models.CASCADE)
+	brand           =   models.CharField(max_length=50, choices=COMPONENT_BRAND_DROPDOWN)
+	component_type  =   models.CharField(max_length=30, choices=COMPONENT_TYPE_DROPDOWN)
+	component_name  =   models.CharField(max_length=200)
+
+	def __str__(self):
+		#return "%s / %s / %s" % (self.brand, self.component_type, self.component_name)
+		return self.component_name
