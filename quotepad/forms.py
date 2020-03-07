@@ -301,22 +301,21 @@ PROGRAMMER_THERMOSTAT_DROPDOWN = (
 )
 
 CENTRAL_HEATING_SYSTEM_FILTER_DROPDOWN = (
-	('Worcester Bosch 22mm System Filter','Worcester Bosch 22mm System Filter'),
-	('Worcester Bosch 28mm System Filter','Worcester Bosch 28mm System Filter'),
-	('MagnaClean 22mm System Filter','MagnaClean 22mm System Filter'),
-	('MagnaClean 28mm System Filter','MagnaClean 28mm System Filter'),
-	('SpiroVent 22mm System Filter','SpiroVent 22mm System Filter'),
-	('SpiroVent 28mm System Filter','SpiroVent 28mm System Filter'),
-	('Valiant (Boiler Protection Pack)','Valiant (Boiler Protection Pack)'),
-	('None Required','None Required'),
+	("Unable to Install - None Required","Unable to Install - None Required"),
+    ("Use Existing","Use Existing"),
+    ("(1x) Magnaclean Atom (22mm)","(1x) Magnaclean Atom (22mm)"),
+    ("(1x) Magnaclean Pro2 (22mm)","(1x) Magnaclean Pro2 (22mm)"),
+    ("(1x) Magnaclean Pro2 (28mm)","(1x) Magnaclean Pro2 (28mm)"),
+    ("(1x) Magnaclean Pro3 Sense (22mm)","(1x) Magnaclean Pro3 Sense (22mm)"),
+    ("(1x) Greenstar System Filter 22mm 7733600236","(1x) Greenstar System Filter 22mm 7733600236"),
+    ("(1x) Greenstar System Filter 28mm 7733600237","(1x) Greenstar System Filter 28mm 7733600237"),
 )
 
 SCALE_REDUCER_DROPDOWN = (
-	('15mm in line scale reducer','15mm in line scale reducer'),
-	('22mm in line scale reducer','22mm in line scale reducer'),
-	('28mm in line scale reducer','28mm in line scale reducer'),
-	('22mm water softener','22mm water softener'),
-	('None Required','None Required'),
+	('No Scale Reducer Required','No Scale Reducer Required'),
+	('(1x) 22mm Inline Scale Reducer','(1x) 22mm Inline Scale Reducer'),
+	('(1x) 15mm Inline Scale Reducer','(1x) 15mm Inline Scale Reducer'),
+	('(1x) 28mm Inline Scale Reducer','(1x) 28mm Inline Scale Reducer'),
 )
 
 RADIATOR_REQUIREMENTS_DROPDOWN = (
@@ -409,6 +408,165 @@ SCAFFOLDING_REQUIRED_DROPDOWN = (
 	('Five Storey Scaffold Required', 'Five Storey Scaffold Required'),
 	('Five+ Storey Scaffold Required', 'Five+ Storey Scaffold Required'),
 )
+
+PROGRAMMER_THERMOSTAT_DROPDOWN = (
+	("(1x) Controller Included With Boiler (Worcester 2000)","(1x) Controller Included With Boiler (Worcester 2000)"),
+    ("(1x) Worcester Comfort Plug In 7733600003","(1x) Worcester Comfort Plug In 7733600003"),
+    ("(1x) Worcester Comfort 1 RF 7733600001","(1x) Worcester Comfort 1 RF 7733600001"),
+    ("(1x) Worcester Comfort 2 RF 7733600002","(1x) Worcester Comfort 2 RF 7733600002"),
+    ("(1x) NEST 3rd GEN Thermostat","(1x) NEST 3rd GEN Thermostat"),
+    ("(1x) NEST Cradle Stand","(1x) NEST Cradle Stand"),
+    ("(1x) Neomitis RT7RF Plus Wireless 7 Day Programmable Stat","(1x) Neomitis RT7RF Plus Wireless 7 Day Programmable Stat"),
+    ("(1x) Honeywell DT92 Wireless stat","(1x) Honeywell DT92 Wireless stat"),
+    ("(1x) Honeywell 7-day Single Channel ST9100C","(1x) Honeywell 7-day Single Channel ST9100C"),
+    ("(1x) Honeywell ST9400C Two Channel Programmer","(1x) Honeywell ST9400C Two Channel Programmer"),
+    ("(1x) Honeywell ST9500C Two Zone","(1x) Honeywell ST9500C Two Zone"),
+    ("(1x) Honeywell DT90E Room Thermostat  [Wired]","(1x) Honeywell DT90E Room Thermostat [Wired]"),
+    ("(1x) Honeywell T6360B1028 Room Thermostat Standard","(1x) Honeywell T6360B1028 Room Thermostat Standard"),
+    ("(1x) Honeywell T4360 Frost Thermostat","(1x) Honeywell T4360 Frost Thermostat"),
+    ("(1x) Honeywell ST9420C Wireless Programmer","(1x) Honeywell ST9420C Wireless Programmer"),
+    ("(1x) Honeywell DT92E Wireless Room Thermostat","(1x) Honeywell DT92E Wireless Room Thermostat"),
+    ("(1x) Hive Internet Connected Thermostat","(1x) Hive Internet Connected Thermostat"),
+    ("(1x) See description of works for controls","(1x) See description of works for controls"),
+)
+
+ADDITIONAL_CENTRAL_HEATING_COMPONENTS_DROPDOWN = (
+	("No Additional Central Heating Components","No Additional Central Heating Components"),
+    ("(1x) Grundfos UPS2 15-50/60 22mm Complete Pump (With Valves)","(1x) Grundfos UPS2 15-50/60 22mm Complete Pump (With Valves)"),
+    ("(1x) Grundfos UPS2 15-50/60 28mm Complete Pump (With Valves)","(1x) Grundfos UPS2 15-50/60 28mm Complete Pump (With Valves)"),
+    ("(1x) Grundfos UPS2 25-80 Complete Pump","(1x) Grundfos UPS2 25-80 Complete Pump"),
+    ("(1x) Honeywell 2 Port (22mm)","(1x) Honeywell 2 Port (22mm)"),
+    ("(2x) Honeywell 2 Port (22mm)","(2x) Honeywell 2 Port (22mm)"),
+    ("(1x) Honeywell 2 Port (28mm)","(1x) Honeywell 2 Port (28mm)"),
+    ("(2x) Honeywell 2 Port (28mm)","(2x) Honeywell 2 Port (28mm)"),
+    ("(1x) Honeywell 3 Port (22mm)","(1x) Honeywell 3 Port (22mm)"),
+    ("(1x) Honeywell 3 Port (28mm)","(1x) Honeywell 3 Port (28mm)"),
+    ("(1x) Cylinder Stat Wireless","(1x) Cylinder Stat Wireless"),
+    ("(1x) Honeywell L641A Cylinder Thermostat","(1x) Honeywell L641A Cylinder Thermostat"),
+    ("(1x) Honeywell CS92A Wireless Cylinder Thermostat","(1x) Honeywell CS92A Wireless Cylinder Thermostat"),
+    ("(1x) Drayton 2 Port (22mm)","(1x) Drayton 2 Port (22mm)"),
+    ("(2x) Drayton 2 Port (22mm)","(2x) Drayton 2 Port (22mm)"),
+    ("(1x) Drayton 2 Port (28mm)","(1x) Drayton 2 Port (28mm)"),
+    ("(2x) Drayton 2 Port (28mm)","(2x) Drayton 2 Port (28mm)"),
+    ("(1x) Drayton 3 Port (22mm)","(1x) Drayton 3 Port (22mm)"),
+    ("(1x) Drayton 3 Port (28mm)","(1x) Drayton 3 Port (28mm)"),
+    ("(1) x Auto Bypass (15mm)","(1) x Auto Bypass (15mm)"),
+    ("(1) x Auto Bypass (22mm)","(1) x Auto Bypass (22mm)"),
+    ("(1x) x 11&quot; Immersion","(1x) x 11&quot Immersion"),
+    ("(1x) x 14&quot; Immersion","(1x) x 14&quot Immersion"),
+    ("(1x) x 27&quot; Immersion","(1x) x 27&quot Immersion"),
+)
+
+CONDENSATE_COMPONENTS_DROPDOWN = (	
+    ("No Additional Condensate Components","No Additional Condensate Components"),
+    ("(1x) Inline Condensate Neutraliser","(1x) Inline Condensate Neutraliser"),
+    ("(1x) Grundfos Conlift 1 LS Pump","(1x) Grundfos Conlift 1 LS Pump"),
+    ("(1x) Soakaway and Lime Stone Chippings","(1x) Soakaway and Lime Stone Chippings"),
+    ("(1x) McAlpine Clamp 1GR","(1x) McAlpine Clamp 1GR"),
+    ("(1x) McAlpine Mechanical Boss Connector 40mm","(1x) McAlpine Mechanical Boss Connector 40mm"),
+    ("(1x) 110mm Strap Boss","(1x) 110mm Strap Boss"),
+    ("(1x) HOTun","(1x) HOTun"),
+    ("(1x) Length 32mm Waste pipe","(1x) Length 32mm Waste pipe"),
+    ("(2x) Length 32mm Waste pipe","(2x) Length 32mm Waste pipe"),
+    ("(3x) Length 32mm Waste pipe","(3x) Length 32mm Waste pipe"),
+    ("(4x) Length 32mm Waste pipe","(4x) Length 32mm Waste pipe"),
+    ("(3x) 32mm Waste Clips","(3x) 32mm Waste Clips"),
+    ("(6x) 32mm Waste Clips","(6x) 32mm Waste Clips"),
+    ("(9x) 32mm Waste Clips","(9x) 32mm Waste Clips"),
+    ("(12x) 32mm Waste Clips","(12x) 32mm Waste Clips"),
+    ("(2x) 32mm Waste Elbows","(2x) 32mm Waste Elbows"),
+    ("(4x) 32mm Waste Elbows","(4x) 32mm Waste Elbows"),
+    ("(6x) 32mm Waste Elbows","(6x) 32mm Waste Elbows"),
+    ("(8x) 32mm Waste Elbows","(8x) 32mm Waste Elbows"),
+    ("(1x) 32mm Waste Coupling","(1x) 32mm Waste Coupling"),
+    ("(2x) 32mm Waste Coupling","(2x) 32mm Waste Coupling"),
+    ("(3x) 32mm Waste Coupling","(3x) 32mm Waste Coupling"),
+    ("(4x) 32mm Waste Coupling","(4x) 32mm Waste Coupling"),
+)
+
+ADDITIONAL_COPPER_REQUIRED_DROPDOWN = (
+	("No Additional Copper Required","No Additional Copper Required"),
+    ("(1x) Length 15mm Copper Tube","(1x) Length 15mm Copper Tube"),
+    ("(2x) Length 15mm Copper Tube","(2x) Length 15mm Copper Tube"),
+    ("(3x) Length 15mm Copper Tube","(3x) Length 15mm Copper Tube"),
+    ("(4x) Length 15mm Copper Tube","(4x) Length 15mm Copper Tube"),
+    ("(5x) Length 15mm Copper Tube","(5x) Length 15mm Copper Tube"),
+    ("(6x) Length 15mm Copper Tube","(6x) Length 15mm Copper Tube"),
+    ("(7x) Length 15mm Copper Tube","(7x) Length 15mm Copper Tube"),
+    ("(8x) Length 15mm Copper Tube","(8x) Length 15mm Copper Tube"),
+    ("(9x) Length 15mm Copper Tube","(9x) Length 15mm Copper Tube"),
+    ("(10x) Length 15mm Copper Tube","(10x) Length 15mm Copper Tube"),
+    ("(1x) Length 22mm Copper Tube","(1x) Length 22mm Copper Tube"),
+    ("(2x) Length 22mm Copper Tube","(2x) Length 22mm Copper Tube"),
+    ("(3x) Length 22mm Copper Tube","(3x) Length 22mm Copper Tube"),
+    ("(4x) Length 22mm Copper Tube","(4x) Length 22mm Copper Tube"),
+    ("(5x) Length 22mm Copper Tube","(5x) Length 22mm Copper Tube"),
+    ("(6x) Length 22mm Copper Tube","(6x) Length 22mm Copper Tube"),
+    ("(7x) Length 22mm Copper Tube","(7x) Length 22mm Copper Tube"),
+    ("(8x) Length 22mm Copper Tube","(8x) Length 22mm Copper Tube"),
+    ("(9x) Length 22mm Copper Tube","(9x) Length 22mm Copper Tube"),
+    ("(10x) Length 22mm Copper Tube","(10x) Length 22mm Copper Tube"),
+    ("(1x) Length 28mm Copper Tube","(1x) Length 28mm Copper Tube"),
+    ("(2x) Length 28mm Copper Tube","(2x) Length 28mm Copper Tube"),
+    ("(3x) Length 28mm Copper Tube","(3x) Length 28mm Copper Tube"),
+    ("(4x) Length 28mm Copper Tube","(4x) Length 28mm Copper Tube"),
+    ("(5x) Length 28mm Copper Tube","(5x) Length 28mm Copper Tube"),
+    ("(6x) Length 28mm Copper Tube","(6x) Length 28mm Copper Tube"),
+    ("(7x) Length 28mm Copper Tube","(7x) Length 28mm Copper Tube"),
+    ("(8x) Length 28mm Copper Tube","(8x) Length 28mm Copper Tube"),
+    ("(9x) Length 28mm Copper Tube","(9x) Length 28mm Copper Tube"),
+    ("(10x) Length 28mm Copper Tube","(10x) Length 28mm Copper Tube"),
+    ("(1x) Small Roll 8mm Copper Tube","(1x) Small Roll 8mm Copper Tube"),
+    ("(1x) Large Roll 8mm Copper Tube","(1x) Large Roll 8mm Copper Tube"),
+    ("(1x) Small Roll 10mm Copper Tube","(1x) Small Roll 10mm Copper Tube"),
+    ("(1x) Large Roll 10mm Copper Tube","(1x) Large Roll 10mm Copper Tube"),
+)
+
+FITTINGS_PACKS_DROPDOWN = (
+	("No Pack Required","No Pack Required"),
+    ("Pack 1 Conventional to Conventional (22mm)","Pack 1 Conventional to Conventional (22mm)"),
+    ("Pack 1 Conventional to Conventional (28mm)","Pack 1 Conventional to Conventional (28mm)"),
+    ("Pack 2 Combi to Combi","Pack 2 Combi to Combi"),
+    ("Pack 3 Conventional to Combi","Pack 3 Conventional to Combi"),
+    ("Pack 4 Cylinder Replace","Pack 4 Cylinder Replace"),
+    ("Pack 5 Internal Condense","Pack 5 Internal Condense"),
+    ("Pack 6W External Condense (White)","Pack 6W External Condense (White)"),
+    ("Pack 6B External Condense (Black)","Pack 6B External Condense (Black)"),
+    ("Pack 7 Fully Pumped Update (22mm)","Pack 7 Fully Pumped Update (22mm)"),
+    ("Pack 8 Fully Pumped Update (28mm)","Pack 8 Fully Pumped Update (28mm)"),
+    ("New Full System Pack","New Full System Pack"),
+)
+
+ELECTRICAL_PACK_DROPDOWN = (
+	("Electrical Pack A","Electrical Pack A"),
+	("Electrical Pack B","Electrical Pack B"),
+	("Electrical Pack C","Electrical Pack C"),
+	("Electrical Pack D","Electrical Pack D"),
+)
+
+EARTH_SPIKE_REQUIRED_DROPDOWN = (
+	("Earth Spike Not Required","Earth Spike Not Required"),
+	("Earth Spike Required","Earth Spike Required"),
+)
+
+FILLING_LINK_DROPDOWN = (
+	("No Filling Link","No Filling Link"),
+	("15mm External Filling Loop","15mm External Filling Loop"),
+	("Worcester Filling Link","Worcester Filling Link"),
+	("Worcester Keyless Filling Link","Worcester Keyless Filling Link"),
+	("Worcester Intelligent Automatic Filling System (Lifestyle Series ONLY)","Worcester Intelligent Automatic Filling System (Lifestyle Series ONLY)"),
+)
+
+SPECIAL_LIFT_REQUIREMENTS_DROPDOWN = (
+	('No', 'No'),	
+	('Yes', 'Yes'),
+)
+
+DOUBLE_HANDED_LIFT_REQUIRED_DROPDOWN = (
+	('No', 'No'),
+	('Double Handed Lift Required', 'Double Handed Lift Required'),
+)
+
 
 ''' Section for defining the multiple forms that will be used for the boiler quote (FormWizard library) '''
 
@@ -958,13 +1116,27 @@ class FormStepSeven_yh(forms.Form):
 		super(FormStepSeven_yh, self).__init__(*args, **kwargs)
 		self.fields['gas_flue_components'] = forms.ModelMultipleChoiceField(queryset=ProductComponent.objects.filter(user = self.user, brand = self.manuf, component_type = 'Gas Flue Component').only('component_name'))
 		self.fields['plume_components'] = forms.ModelMultipleChoiceField(queryset=ProductComponent.objects.filter(user = self.user, brand = self.manuf, component_type = 'Plume Component').only('component_name'))
+		self.fields['programmer_thermostat'] = forms.MultipleChoiceField(choices=PROGRAMMER_THERMOSTAT_DROPDOWN)
+		self.fields['additional_central_heating_components'] = forms.MultipleChoiceField(choices=ADDITIONAL_CENTRAL_HEATING_COMPONENTS_DROPDOWN)
+		self.fields['central_heating_system_filter'] = forms.ChoiceField(choices=CENTRAL_HEATING_SYSTEM_FILTER_DROPDOWN)
+		self.fields['scale_reducer'] = forms.ChoiceField(choices=SCALE_REDUCER_DROPDOWN)
+		self.fields['condensate_components'] = forms.MultipleChoiceField(choices=CONDENSATE_COMPONENTS_DROPDOWN)
+		self.fields['additional_copper_required'] = forms.MultipleChoiceField(choices=ADDITIONAL_COPPER_REQUIRED_DROPDOWN)
+		self.fields['fittings_packs'] = forms.MultipleChoiceField(choices=FITTINGS_PACKS_DROPDOWN)
+		self.fields['any_special_parts'] = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'rows':4, 'cols':30, 'placeholder': 'Input if necessary'}))
+		self.fields['electrical_pack'] = forms.ChoiceField(choices=ELECTRICAL_PACK_DROPDOWN)
+		self.fields['earth_spike_required'] = forms.ChoiceField(choices=EARTH_SPIKE_REQUIRED_DROPDOWN)
+		self.fields['filling_link'] = forms.ChoiceField(choices=FILLING_LINK_DROPDOWN)
+		self.fields['special_lift_requirements'] = forms.ChoiceField(choices=SPECIAL_LIFT_REQUIREMENTS_DROPDOWN)
+		self.fields['double_handed_lift_required'] = forms.ChoiceField(choices=DOUBLE_HANDED_LIFT_REQUIRED_DROPDOWN)
+
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
 	#manufacturer_guarantee = forms.ChoiceField(choices=MANUFACTURER_GUARANTEE_DROPDOWN)
 	#flue_components = forms.ChoiceField(choices=FLUE_COMPONENTS_DROPDOWN)
-	programmer_thermostat = forms.ChoiceField(choices=PROGRAMMER_THERMOSTAT_DROPDOWN)
-	central_heating_system_filter = forms.ChoiceField(choices=CENTRAL_HEATING_SYSTEM_FILTER_DROPDOWN)
-	scale_reducer = forms.ChoiceField(choices=SCALE_REDUCER_DROPDOWN)
+	#programmer_thermostat = forms.ChoiceField(choices=PROGRAMMER_THERMOSTAT_DROPDOWN)
+	#central_heating_system_filter = forms.ChoiceField(choices=CENTRAL_HEATING_SYSTEM_FILTER_DROPDOWN)
+	#scale_reducer = forms.ChoiceField(choices=SCALE_REDUCER_DROPDOWN)
 	
 class FormStepEight_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
@@ -978,6 +1150,7 @@ class FormStepEight_yh(forms.Form):
 	thermostatic_radiator_valves_size = forms.CharField(max_length=100, required = False)
 	thermostatic_radiator_valves_type = forms.CharField(max_length=100, required = False)
 	thermostatic_radiator_valves_quantity = forms.CharField(max_length=100, required = False)
+	#programmer_thermostat = forms.MultipleChoiceField(choices=PROGRAMMER_THERMOSTAT_DROPDOWN)
 	
 class FormStepNine_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
