@@ -1183,6 +1183,15 @@ class FormStepNine_yh(forms.Form):
 class FinanceForm_yh(forms.Form):
 	total_cost = forms.FloatField()
 	deposit_amount = forms.FloatField()
+	ib60_loan_amount = forms.CharField(max_length=30)
+	ib60_monthly_payment = forms.CharField(max_length=30)
+	ib60_total_payable = forms.CharField(max_length=30)
+	ib120_loan_amount = forms.CharField(max_length=30)
+	ib120_monthly_payment = forms.CharField(max_length=30)
+	ib120_total_payable = forms.CharField(max_length=30)
+
+	interest_free_12m_monthly_payment = forms.CharField(max_length=30)
+	interest_free_12m_loan_amount = forms.CharField(max_length=30)
 
 	def __init__(self, *args, **kwargs):
 		self.product_price = kwargs.pop('product_price')
