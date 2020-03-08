@@ -567,6 +567,13 @@ DOUBLE_HANDED_LIFT_REQUIRED_DROPDOWN = (
 	('Double Handed Lift Required', 'Double Handed Lift Required'),
 )
 
+RADIATOR_SPECIFICATION_CHOICES = (
+	('No Radiators Required','No Radiators Required'),
+	('Radiator(s) Required','Radiator(s) Required'),
+	('Thermoststic Radiator Valves Only','Thermoststic Radiator Valves Only'),
+	('Towel Rail(s) Required','Towel Rail(s) Required'),
+	('Customer to Provide Radiators','Customer to Provide Radiators'),
+)
 
 ''' Section for defining the multiple forms that will be used for the boiler quote (FormWizard library) '''
 
@@ -1123,7 +1130,7 @@ class FormStepSeven_yh(forms.Form):
 		self.fields['condensate_components'] = forms.MultipleChoiceField(choices=CONDENSATE_COMPONENTS_DROPDOWN)
 		self.fields['additional_copper_required'] = forms.MultipleChoiceField(choices=ADDITIONAL_COPPER_REQUIRED_DROPDOWN)
 		self.fields['fittings_packs'] = forms.MultipleChoiceField(choices=FITTINGS_PACKS_DROPDOWN)
-		self.fields['any_special_parts'] = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'rows':4, 'cols':30, 'placeholder': 'Input if necessary'}))
+		self.fields['any_special_parts'] = forms.CharField(max_length=2000, required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30, 'placeholder': 'Input if necessary'}))
 		self.fields['electrical_pack'] = forms.ChoiceField(choices=ELECTRICAL_PACK_DROPDOWN)
 		self.fields['earth_spike_required'] = forms.ChoiceField(choices=EARTH_SPIKE_REQUIRED_DROPDOWN)
 		self.fields['filling_link'] = forms.ChoiceField(choices=FILLING_LINK_DROPDOWN)
@@ -1142,14 +1149,16 @@ class FormStepEight_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
 	# within double curly braces...
 	# form_data.7.field_name e.g. form_data.7.radiator_requirements
-	def __init__(self, *args, **kwargs):
-		super(FormStepEight_yh, self).__init__(*args, **kwargs)
-		for field in self: 
-			field.field.widget.attrs['class'] = 'form-control'
-	radiator_requirements = forms.ChoiceField(choices=RADIATOR_REQUIREMENTS_DROPDOWN)
-	thermostatic_radiator_valves_size = forms.CharField(max_length=100, required = False)
-	thermostatic_radiator_valves_type = forms.CharField(max_length=100, required = False)
-	thermostatic_radiator_valves_quantity = forms.CharField(max_length=100, required = False)
+	#def __init__(self, *args, **kwargs):
+	#	super(FormStepEight_yh, self).__init__(*args, **kwargs)
+	#	for field in self: 
+	#		field.field.widget.attrs['class'] = 'form-control'
+	radiator_specification = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
+											 choices=RADIATOR_SPECIFICATION_CHOICES)		
+	#radiator_requirements = forms.ChoiceField(choices=RADIATOR_REQUIREMENTS_DROPDOWN)
+	#thermostatic_radiator_valves_size = forms.CharField(max_length=100, required = False)
+	#thermostatic_radiator_valves_type = forms.CharField(max_length=100, required = False)
+	#thermostatic_radiator_valves_quantity = forms.CharField(max_length=100, required = False)
 	#programmer_thermostat = forms.MultipleChoiceField(choices=PROGRAMMER_THERMOSTAT_DROPDOWN)
 	
 class FormStepNine_yh(forms.Form):
