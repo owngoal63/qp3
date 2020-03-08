@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'formtools',
     'payments.apps.PaymentsConfig',
+    'import_export',
     #'rest_framework',
     #'Rest',
     #'corsheaders'
