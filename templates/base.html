@@ -40,6 +40,9 @@
         <li class="nav-item">
           <a class="nav-link" href="/home">Dashboard<span class="sr-only">(current)</span></a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/productcomponentlist">Components<span class="sr-only">(current)</span></a>
+        </li>
         {% if request.session.created_quote %}
           {% if request.user|has_group:"WESTCHEM" %}
             <li class="nav-item">
