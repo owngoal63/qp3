@@ -15,6 +15,7 @@ OWNER_OR_TENANT_DROPDOWN = (
 )
 
 PROPERTY_TYPE_DROPDOWN = (
+	('','Select One'),
 	('Detached','Detached'),
 	('Semi Detached','Semi Detached'),
 	('Terraced','Terraced'),
@@ -24,6 +25,7 @@ PROPERTY_TYPE_DROPDOWN = (
 )
 
 CURRENT_FUEL_TYPE_DROPDOWN = (
+	('','Select One'),
 	('Gas','Gas'),
 	('LPG','LPG'),
 	('Oil','Oil'),
@@ -32,6 +34,7 @@ CURRENT_FUEL_TYPE_DROPDOWN = (
 )
 
 CURRENT_BOILER_TYPE_DROPDOWN = (
+	('','Select One'),
 	('Combi','Combi'),
 	('Conventional Wall Hung','Conventional Wall Hung'),
 	('Conventional Flor Standing','Conventional Flor Standing'),
@@ -43,6 +46,7 @@ CURRENT_BOILER_TYPE_DROPDOWN = (
 )
 
 CURRENT_BOILER_LOCATION_DROPDOWN = (
+	('','Select One'),
 	('Kitchen','Kitchen'),
 	('Bathroom','Bathroom'),
 	('Bedroom','Bedroom'),
@@ -60,6 +64,7 @@ CURRENT_BOILER_LOCATION_DROPDOWN = (
 )
 
 CURRENT_FLUE_SYSTEM_DROPDOWN = (
+	('','Select One'),
 	('Horizontal Flue','Horizontal Flue'),
 	('Vertical Flue','Vertical Flue'),
 	('Rear Flue','Rear Flue'),
@@ -68,6 +73,7 @@ CURRENT_FLUE_SYSTEM_DROPDOWN = (
 )
 
 CURRENT_FLUE_LOCATION_DROPDOWN = (
+	('','Select One'),
 	('Ground Floor','Ground Floor'),
 	('First Floor','First Floor'),
 	('Second Floor','Second Floor'),
@@ -101,18 +107,21 @@ REMOVALS_CHOICES = (
 )
 
 NEW_FUEL_TYPE_DROPDOWN = (
+	('','Select One'),
 	('Gas','Gas'),
 	('LPG','LPG'),
 	('Oil','Oil'),
 )
 
 NEW_BOILER_TYPE_DROPDOWN = (
+	('','Select One'),
 	('Combi','Combi'),
 	('Conventional','Conventional'),
 	('System','System'),
 )
 
 NEW_BOILER_LOCATION_DROPDOWN = (
+	('','Select One'),
 	('Kitchen','Kitchen'),
 	('Bathroom','Bathroom'),
 	('Bedroom','Bedroom'),
@@ -130,12 +139,14 @@ NEW_BOILER_LOCATION_DROPDOWN = (
 )
 
 NEW_FLUE_SYSTEM_DROPDOWN = (
+	('','Select One'),
 	('Horizontal','Horizontal'),
 	('Vertical','Vertical'),
 	('Rear Flue','Rear Flue'),
 )
 
 NEW_FLUE_LOCATION_DROPDOWN = (
+	('','Select One'),
 	('Ground Floor','Ground Floor'),
 	('First Floor','First Floor'),
 	('Second Floor','Second Floor'),
@@ -147,16 +158,19 @@ NEW_FLUE_LOCATION_DROPDOWN = (
 )
 
 NEW_FLUE_DIAMETER_DROPDOWN = (
+	('','Select One'),
 	('100mm','100mm'),
 	('125mm','125mm'),
 )
 
 PLUME_MANAGEMENT_KIT_DROPDOWN = (
+	('','Select One'),
 	('Required','Required'),
 	('Not Required','Not Required'),
 )
 
 CONDENSATE_TERMINATION_DROPDOWN = (
+	('','Select One'),
 	('Drain','Drain'),
 	('Sink','Sink'),
 	('Soil Vent Pipe','Soil Vent Pipe'),
@@ -215,6 +229,7 @@ SYSTEM_TREATMENT_DROPDOWN = (
 )
 
 GAS_SUPPLY_DROPDOWN = (
+	('','Select One'),
 	('Current Gas supply deemed satisfactory','Current Gas supply deemed satisfactory'),
 	('Adaptation to existing gas supply required','Adaptation to existing gas supply required'),
 	('New external gas supply required','New external gas supply required'),
@@ -222,6 +237,7 @@ GAS_SUPPLY_DROPDOWN = (
 )
 
 GAS_SUPPLY_LENGTH_DROPDOWN = (
+	('','Select One'),
 	('N/A','N/A'),
 	('3m','3m'),
 	('6m','6m'),
@@ -236,11 +252,13 @@ GAS_SUPPLY_LENGTH_DROPDOWN = (
 )
 
 ASBESTOS_CONTAINING_MATERIALS_IDENTIFIED_DROPDOWN = (
+	('','Select One'),
 	('No Asbestos Identified','No Asbestos Identified'),
 	('Potential Asbestos Containing Material Identified','Potential Asbestos Containing Material Identified'),
 )
 
 ASBESTOS_REMOVAL_PROCEDURE_DROPDOWN = (
+	('','Select One'),
 	('N/A','N/A'),
 	('Your Heat to remove during installation','Your Heat to remove during installation'),
 	('Client to arrange removal prior to installation','Client to arrange removal prior to installation'),
@@ -248,11 +266,13 @@ ASBESTOS_REMOVAL_PROCEDURE_DROPDOWN = (
 )
 
 POTENTIAL_CONTRACTOR_ATTENDANCE_REQUIRED_DROPDOWN = (
+	('','Select One'),
 	('No','No'),
 	('Yes','Yes'),
 )
 
 ELECTRICAL_WORK_REQUIRED_DROPDOWN = (
+	('','Select One'),
 	('Connect to existing wiring','Connect to existing wiring'),
 	('New wiring to fuse spur','New wiring to fuse spur'),
 	('New wiring S plan','New wiring S plan'),
@@ -301,6 +321,7 @@ PROGRAMMER_THERMOSTAT_DROPDOWN = (
 )
 
 CENTRAL_HEATING_SYSTEM_FILTER_DROPDOWN = (
+	('','Select One'),
 	("Unable to Install - None Required","Unable to Install - None Required"),
     ("Use Existing","Use Existing"),
     ("(1x) Magnaclean Atom (22mm)","(1x) Magnaclean Atom (22mm)"),
@@ -312,6 +333,7 @@ CENTRAL_HEATING_SYSTEM_FILTER_DROPDOWN = (
 )
 
 SCALE_REDUCER_DROPDOWN = (
+	('','Select One'),
 	('No Scale Reducer Required','No Scale Reducer Required'),
 	('(1x) 22mm Inline Scale Reducer','(1x) 22mm Inline Scale Reducer'),
 	('(1x) 15mm Inline Scale Reducer','(1x) 15mm Inline Scale Reducer'),
@@ -326,11 +348,16 @@ RADIATOR_REQUIREMENTS_DROPDOWN = (
 )
 
 ESTIMATED_DURATION_DROPDOWN = (
-	('1 Day','1 Day'),
-	('2 Days','2 Days'),
-	('3 Days','3 Days'),
-	('4 Days','4 Days'),
-	('5 Days','5 Days'),
+	('1 day','1 day'),
+	('2 days','2 days'),
+	('3 days','3 days'),
+	('4 days','4 days'),
+	('5 days','5 days'),
+	('6 days','6 days'),
+	('7 days','7 days'),
+	('8 days','8 days'),
+	('9 days','9 days'),
+	('10 days','10 days'),
 )
 
 ''' Dropdowns for Yourheat forms '''
@@ -344,18 +371,22 @@ CUSTOMER_TITLE_DROPDOWN = (
 )
 
 OWNER_TENANT_OR_LANDLORD_DROPDOWN = (
+	('','Select One'),
 	('Owner','Owner'),
 	('Tenant','Tenant'),
 	('Landlord','Landlord'),
 )
 
 CURRENT_RADIATORS_WORKING_CORRECTLY_DROPDOWN = (
+	('','Select One'),
 	('Yes', 'Yes'),
 	('No', 'No'),
 	('Boiler Non-Operational', 'Boiler Non-Operational'),
 )
 
 INCOMING_FLOW_RATE_DROPDOWN = (
+	('','Select One'),
+	('N/A','N/A'),
 	('1','1'),
 	('2','2'),
 	('3','3'),
@@ -389,17 +420,20 @@ INCOMING_FLOW_RATE_DROPDOWN = (
 )
 
 WILL_BOILER_BE_HOUSED_IN_CUPBOARD_DROPDOWN = (
+	('','Select One'),
 	('Yes', 'Yes'),
 	('No', 'No'),	
 )
 
 CHEMICAL_SYSTEM_TREATMENT_DROPDOWN = (
+	('','Select One'),
 	('Chemical Flush & Inhibitor','Chemical Flush & Inhibitor'),
 	#('Magna Pro Flush & Inhibitor','Magna Pro Flush & Inhibitor'),
 	('Chemical Powerflush & Inhibitor','Chemical Powerflush & Inhibitor'),
 )
 
 SCAFFOLDING_REQUIRED_DROPDOWN = (
+	('','Select One'),
 	('No Scaffolding Required', 'No Scaffolding Required'),	
 	('One Storey Scaffold Required', 'One Storey Scaffold Required'),
 	('Two Storey Scaffold Required', 'Two Storey Scaffold Required'),
@@ -538,6 +572,7 @@ FITTINGS_PACKS_DROPDOWN = (
 )
 
 ELECTRICAL_PACK_DROPDOWN = (
+	('','Select One'),
 	("Electrical Pack A","Electrical Pack A"),
 	("Electrical Pack B","Electrical Pack B"),
 	("Electrical Pack C","Electrical Pack C"),
@@ -545,11 +580,13 @@ ELECTRICAL_PACK_DROPDOWN = (
 )
 
 EARTH_SPIKE_REQUIRED_DROPDOWN = (
+	('','Select One'),
 	("Earth Spike Not Required","Earth Spike Not Required"),
 	("Earth Spike Required","Earth Spike Required"),
 )
 
 FILLING_LINK_DROPDOWN = (
+	('','Select One'),
 	("No Filling Link","No Filling Link"),
 	("15mm External Filling Loop","15mm External Filling Loop"),
 	("Worcester Filling Link","Worcester Filling Link"),
@@ -558,11 +595,13 @@ FILLING_LINK_DROPDOWN = (
 )
 
 SPECIAL_LIFT_REQUIREMENTS_DROPDOWN = (
+	('','Select One'),
 	('No', 'No'),	
 	('Yes', 'Yes'),
 )
 
 DOUBLE_HANDED_LIFT_REQUIRED_DROPDOWN = (
+	('','Select One'),
 	('No', 'No'),
 	('Double Handed Lift Required', 'Double Handed Lift Required'),
 )
@@ -1002,10 +1041,10 @@ class FormStepOne_yh(forms.Form):
 	customer_title = forms.ChoiceField(choices=CUSTOMER_TITLE_DROPDOWN)
 	customer_first_name = forms.CharField(max_length=100)
 	customer_last_name = forms.CharField(max_length=100)
-	customer_home_phone = forms.CharField(max_length=100, required = False)
-	customer_mobile_phone = forms.CharField(max_length=100, required = False)
+	customer_primary_phone = forms.CharField(max_length=100)
+	customer_secondary_phone = forms.CharField(max_length=100, required = False)
 	customer_email = forms.EmailField()
-	owner_tenant_or_landlord = forms.ChoiceField(choices=OWNER_TENANT_OR_LANDLORD_DROPDOWN)
+	owner_tenant_or_landlord = forms.ChoiceField(choices=OWNER_TENANT_OR_LANDLORD_DROPDOWN) 
 	
 
 # class FormStepTwo_yh(forms.Form):
@@ -1031,7 +1070,7 @@ class FormStepTwo_yh(forms.Form):
 		super(FormStepTwo_yh, self).__init__(*args, **kwargs)
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
-	installation_address = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'rows':5, 'cols':30}))
+	installation_address = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'rows':5, 'cols':30, 'placeholder': 'Please ensure entry of the full address'}))
 	billing_address = forms.CharField(max_length=2000, required = False,  widget=forms.Textarea(attrs={'rows':5, 'cols':30, 'placeholder': 'Leave blank for Billing address same as Installation address'},))
 	property_type = forms.ChoiceField(choices=PROPERTY_TYPE_DROPDOWN)	
 
@@ -1067,7 +1106,7 @@ class FormStepFive_yh(forms.Form):
 		self.user = kwargs.pop('user')
 		super(FormStepFive_yh, self).__init__(*args, **kwargs)
 		self.fields['boiler_manufacturer'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user).order_by('brand').values_list('brand', flat=True).distinct(), to_field_name='brand',empty_label = 'Select Boiler Brand for quote')
-		self.fields['alt_boiler_manufacturer'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user).order_by('brand').values_list('brand', flat=True).distinct(), to_field_name='brand',empty_label = 'Select Alternative Boiler Brand for quote')
+		self.fields['alt_boiler_manufacturer'] = forms.ModelChoiceField(required=False, queryset=ProductPrice.objects.filter(user = self.user).order_by('brand').values_list('brand', flat=True).distinct(), to_field_name='brand',empty_label = 'Select Alternative Boiler Brand if required')
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
 	new_fuel_type = forms.ChoiceField(choices=NEW_FUEL_TYPE_DROPDOWN)
@@ -1083,9 +1122,9 @@ class FormStepFive_yh(forms.Form):
 	incoming_flow_rate = forms.ChoiceField(choices=INCOMING_FLOW_RATE_DROPDOWN)
 	will_boiler_be_housed_in_cupboard = forms.ChoiceField(choices=WILL_BOILER_BE_HOUSED_IN_CUPBOARD_DROPDOWN)
 	#new_flue_metres = forms.ChoiceField(choices=NEW_FLUE_METRES_DROPDOWN)
-	cupboard_height = forms.IntegerField(required=False)
-	cupboard_width = forms.IntegerField(required=False)
-	cupboard_depth = forms.IntegerField(required=False)
+	cupboard_height = forms.IntegerField(required=False,  widget=forms.TextInput(attrs={ 'placeholder': 'If appropriate'}))
+	cupboard_width = forms.IntegerField(required=False,  widget=forms.TextInput(attrs={ 'placeholder': 'If appropriate'}))
+	cupboard_depth = forms.IntegerField(required=False,  widget=forms.TextInput(attrs={ 'placeholder': 'If appropriate'}))
 	
 class FormStepSix_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
@@ -1098,7 +1137,7 @@ class FormStepSix_yh(forms.Form):
 		self.alt_manuf = kwargs.pop('alt_manufacturer')
 		super(FormStepSix_yh, self).__init__(*args, **kwargs)
 		self.fields['product_choice'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user, brand = self.manuf), empty_label = 'Select Product for quote')
-		self.fields['alt_product_choice'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user, brand = self.alt_manuf), empty_label = 'Select Alternative Product for quote')
+		self.fields['alt_product_choice'] = forms.ModelChoiceField(required=False, queryset=ProductPrice.objects.filter(user = self.user, brand = self.alt_manuf), empty_label = 'Select Alternative Product for quote')
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
 	chemical_system_treatment = forms.ChoiceField(choices=CHEMICAL_SYSTEM_TREATMENT_DROPDOWN)
@@ -1178,26 +1217,38 @@ class FormStepNine_yh(forms.Form):
 		# for field in self: 
 		# 	field.field.widget.attrs['class'] = 'form-control'	
 	estimated_duration = forms.ChoiceField(choices=ESTIMATED_DURATION_DROPDOWN)
-	description_of_works = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'rows':5, 'cols':30}))
+	description_of_works = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'rows':15, 'cols':60}))
 
 class FinanceForm_yh(forms.Form):
 	total_cost = forms.FloatField()
 	deposit_amount = forms.FloatField()
+	ib36_loan_amount = forms.CharField(max_length=30)
+	ib36_monthly_payment = forms.CharField(max_length=30)
+	ib36_total_payable = forms.CharField(max_length=30)
+	ib48_loan_amount = forms.CharField(max_length=30)
+	ib48_monthly_payment = forms.CharField(max_length=30)
+	ib48_total_payable = forms.CharField(max_length=30)
 	ib60_loan_amount = forms.CharField(max_length=30)
 	ib60_monthly_payment = forms.CharField(max_length=30)
 	ib60_total_payable = forms.CharField(max_length=30)
+	ib96_loan_amount = forms.CharField(max_length=30)
+	ib96_monthly_payment = forms.CharField(max_length=30)
+	ib96_total_payable = forms.CharField(max_length=30)
 	ib120_loan_amount = forms.CharField(max_length=30)
 	ib120_monthly_payment = forms.CharField(max_length=30)
 	ib120_total_payable = forms.CharField(max_length=30)
 
+	interest_free_12m_deposit_amount = forms.CharField(max_length=30)
 	interest_free_12m_monthly_payment = forms.CharField(max_length=30)
 	interest_free_12m_loan_amount = forms.CharField(max_length=30)
+	interest_free_12m_total_payable = forms.CharField(max_length=30)
 
 	def __init__(self, *args, **kwargs):
 		self.product_price = kwargs.pop('product_price')
 		super(FinanceForm_yh, self).__init__(*args, **kwargs)
-		self.fields['total_cost'].disabled = True
+		#self.fields['total_cost'].disabled = True
 		self.fields['total_cost'].initial = self.product_price
+		self.fields['interest_free_12m_deposit_amount'].initial = (float(self.product_price) * 30) / 100
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
 

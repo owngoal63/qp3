@@ -47,9 +47,9 @@
     {% else %}
             {% for field in wizard.form %} 
                 {% if forloop.counter == 1 or forloop.counter == 3 or forloop.counter == 5 or forloop.counter == 7 or forloop.counter == 9  or forloop.counter == 11 or forloop.counter == 13 or forloop.counter == 15 or forloop.counter == 17 %}
-                {% if field.label != 'Cupboard height' and field.label != "Cupboard width" and field.label != "Cupboard depth" %}
-                <div class = "row">
-                {% endif %}
+                    {% if field.label != 'Cupboard height' and field.label != "Cupboard width" and field.label != "Cupboard depth" %}
+                        <div class = "row">
+                    {% endif %}
                 {% endif %}
                 {% if field.label == 'Cupboard height' or field.label == "Cupboard width" or field.label == "Cupboard depth" %}
                     <div class = "col-2">    

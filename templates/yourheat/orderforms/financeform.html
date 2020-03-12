@@ -31,13 +31,24 @@
                     <label>{{ wizard.form.deposit_amount.label }} *</label>
                     {{ wizard.form.deposit_amount }}
                     <!-- Hidden fields to capture calculations from the Hitachi Finance JS -->
+                    {{ wizard.form.ib36_loan_amount.as_hidden }}
+                    {{ wizard.form.ib36_monthly_payment.as_hidden }}
+                    {{ wizard.form.ib36_total_payable.as_hidden }}
+                    {{ wizard.form.ib48_loan_amount.as_hidden }}
+                    {{ wizard.form.ib48_monthly_payment.as_hidden }}
+                    {{ wizard.form.ib48_total_payable.as_hidden }}
                     {{ wizard.form.ib60_loan_amount.as_hidden }}
                     {{ wizard.form.ib60_monthly_payment.as_hidden }}
                     {{ wizard.form.ib60_total_payable.as_hidden }}
+                    {{ wizard.form.ib96_loan_amount.as_hidden }}
+                    {{ wizard.form.ib96_monthly_payment.as_hidden }}
+                    {{ wizard.form.ib96_total_payable.as_hidden }}
                     {{ wizard.form.ib120_loan_amount.as_hidden }}
                     {{ wizard.form.ib120_monthly_payment.as_hidden }}
                     {{ wizard.form.ib120_total_payable.as_hidden }}
+                    {{ wizard.form.interest_free_12m_deposit_amount.as_hidden }}
                     {{ wizard.form.interest_free_12m_loan_amount.as_hidden }}
+                    {{ wizard.form.interest_free_12m_total_payable.as_hidden }}
                     {{ wizard.form.interest_free_12m_monthly_payment.as_hidden }}
                 </div>
                 
@@ -177,16 +188,19 @@ var defaultPrice = 500;
             deposit = defaultDeposit;
           }
           
+          // Added By GL
           var loanAmount = price - deposit;
+          var interest_free_deposit = (price * 30) / 100;
+          var interest_free_loanAmount = price - interest_free_deposit;
+          document.getElementById("id_9-interest_free_12m_deposit_amount").value = interest_free_deposit.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+          interestfreemonthlyPayment = Math.floor(((interest_free_loanAmount / 12)) * 100) / 100;
+          document.getElementById("id_9-interest_free_12m_monthly_payment").value = interestfreemonthlyPayment.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+          document.getElementById("id_9-interest_free_12m_loan_amount").value = interest_free_loanAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+          document.getElementById("id_9-interest_free_12m_total_payable").value = price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+          // -----------
           
           tdContainer = document.createElement("td");
 
-          // Added By GL
-          interestfreemonthlyPayment = Math.floor(((loanAmount / 12)) * 100) / 100;
-          //console.log(interestfreemonthlyPayment);
-          document.getElementById("id_9-interest_free_12m_monthly_payment").value = interestfreemonthlyPayment.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-          document.getElementById("id_9-interest_free_12m_loan_amount").value = loanAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-          // -----------
           
           if (product.rpm == 0) {
             var monthlyPayment = Math.floor(((loanAmount / product.term)) * 100) / 100;
@@ -240,8 +254,17 @@ var defaultPrice = 500;
         var span = document.createElement("span");
         span.id = "value";
         text = document.createTextNode("£" + result.loanAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+        if(result.term == '36') {
+          document.getElementById("id_9-ib36_loan_amount").value = result.loanAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        }
+        if(result.term == '48') {
+          document.getElementById("id_9-ib48_loan_amount").value = result.loanAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        }
         if(result.term == '60') {
           document.getElementById("id_9-ib60_loan_amount").value = result.loanAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        }
+        if(result.term == '96') {
+          document.getElementById("id_9-ib96_loan_amount").value = result.loanAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         }
         if(result.term == '120') {
           document.getElementById("id_9-ib120_loan_amount").value = result.loanAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
@@ -274,8 +297,17 @@ var defaultPrice = 500;
         span = document.createElement("span");
         span.id = "value";
         text = document.createTextNode("£" + result.monthlyPayment.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+        if(result.term == '36') {
+          document.getElementById("id_9-ib36_monthly_payment").value = result.monthlyPayment.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        }
+        if(result.term == '48') {
+          document.getElementById("id_9-ib48_monthly_payment").value = result.monthlyPayment.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        }
         if(result.term == '60') {
           document.getElementById("id_9-ib60_monthly_payment").value = result.monthlyPayment.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        }
+        if(result.term == '96') {
+          document.getElementById("id_9-ib96_monthly_payment").value = result.monthlyPayment.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         }
         if(result.term == '120') {
           document.getElementById("id_9-ib120_monthly_payment").value = result.monthlyPayment.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
@@ -320,8 +352,17 @@ var defaultPrice = 500;
         trProducts = document.createElement("tr");
         tdProducts = document.createElement("td");
         text = document.createTextNode("Total amount payable (Incl. Deposit): £" + result.totalRepayable.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+        if(result.term == '36') {
+          document.getElementById("id_9-ib36_total_payable").value = result.totalRepayable.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        }
+        if(result.term == '48') {
+          document.getElementById("id_9-ib48_total_payable").value = result.totalRepayable.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        }
         if(result.term == '60') {
           document.getElementById("id_9-ib60_total_payable").value = result.totalRepayable.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        }
+        if(result.term == '96') {
+          document.getElementById("id_9-ib96_total_payable").value = result.totalRepayable.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         }
         if(result.term == '120') {
           document.getElementById("id_9-ib120_total_payable").value = result.totalRepayable.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');

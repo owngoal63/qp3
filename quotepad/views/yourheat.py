@@ -126,7 +126,12 @@ class BoilerFormWizardView_yh(SessionWizardView):
 		idx = Profile.objects.get(user = self.request.user)
 
 		product_id = ([form.cleaned_data for form in form_list][5].get('product_choice').id)
-		alt_product_id= ([form.cleaned_data for form in form_list][5].get('alt_product_choice').id)
+		
+		if ([form.cleaned_data for form in form_list][5].get('alt_product_choice')) != None:
+			alt_product_id = ([form.cleaned_data for form in form_list][5].get('alt_product_choice').id)
+			alt_product_exists = True;	
+		else:
+			alt_product_exists = False;	
 		gas_flue_components_obj = ([form.cleaned_data for form in form_list][6].get('gas_flue_components'))
 		plume_components_obj = ([form.cleaned_data for form in form_list][6].get('plume_components'))
 
@@ -135,13 +140,20 @@ class BoilerFormWizardView_yh(SessionWizardView):
 
 		# Get the record of the product that was selected
 		product_record = ProductPrice.objects.get(pk = product_id)
-		alt_product_record = ProductPrice.objects.get(pk = alt_product_id)
+		if alt_product_exists: 
+			alt_product_record = ProductPrice.objects.get(pk = alt_product_id)
+		else:
+			alt_product_record = ProductPrice.objects.none()
+
 
 		# Get the record of the Product Image that was selected and handle exception
 		# if no image exists.
 		try:
 			img_record = Document.objects.get(id = product_record.product_image.id)
-			alt_img_record = Document.objects.get(id = alt_product_record.product_image.id)
+			if alt_product_exists:
+				alt_img_record = Document.objects.get(id = alt_product_record.product_image.id)
+			else:
+				alt_img_record = Document.objects.none()
 		except Exception as e:
 			img_record = None
 			print(type(e)) 
@@ -168,16 +180,22 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			if index == 5:
 				# This code replaces the <object reference> in the form array[5] with the product_id
 				string = str(line)
+				print(string)
 				firstDelPos=string.find("<") # get the position of <
 				secondDelPos=string.find(">") # get the position of >
 				stringAfterFirstReplace = string.replace(string[firstDelPos:secondDelPos+1], "'" + str(product_id) + "'")
 				#file.write(str(stringAfterFirstReplace) + "\n")
 				#print(stringAfterFirstReplace)
 				# Repeat for Alternative product Code
-				string = stringAfterFirstReplace
-				firstDelPos=string.find("<") # get the position of <
-				secondDelPos=string.find(">") # get the position of >
-				stringAfterReplace = string.replace(string[firstDelPos:secondDelPos+1], "'" + str(alt_product_id) + "'")
+				print(stringAfterFirstReplace)
+				if alt_product_exists:
+					string = stringAfterFirstReplace
+					firstDelPos=string.find("<") # get the position of <
+					secondDelPos=string.find(">") # get the position of >
+					stringAfterReplace = string.replace(string[firstDelPos:secondDelPos+1], "'" + str(alt_product_id) + "'")
+				else:
+					stringAfterReplace = stringAfterFirstReplace
+				print(stringAfterReplace)
 
 				file.write(str(stringAfterReplace) + "\n")
 			elif index == 6:
@@ -194,7 +212,8 @@ class BoilerFormWizardView_yh(SessionWizardView):
 				file.write(str(line) + "\n")
 		file.close() #close file
 
-
+		print(product_record)
+		print(alt_product_record)
 		# Generate the PDF and write to disk
 		pdf_generation_to_file(sourceHtml, outputFilename, {
 			'form_data': [form.cleaned_data for form in form_list],
@@ -244,6 +263,10 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 	file_form_data = file_form_datax
 	product_id = file_form_data[5].get('product_choice')
 	alt_product_id = file_form_data[5].get('alt_product_choice')
+	if alt_product_id != None:
+		alt_product_exists = True
+	else:
+		alt_product_exists = False
 
 	idx = Profile.objects.get(user = request.user)
 
@@ -255,7 +278,10 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			product_record = ProductPrice.objects.first()			
 	else:	# retrieve the user selected product record(s) from the quote form
 		product_record = ProductPrice.objects.get(pk = int(product_id))
-		alt_product_record = ProductPrice.objects.get(pk = int(alt_product_id))
+		if alt_product_exists:
+			alt_product_record = ProductPrice.objects.get(pk = int(alt_product_id))
+		else:
+			alt_product_record = ProductPrice.objects.none()
 
 	frecords = Document.objects.filter(user=request.user.username).order_by('uploaded_at')
 
@@ -263,11 +289,14 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 		img_record = Document.objects.get(id = product_record.product_image.id )
 	except: # if not then continue with empty object
 		img_record = ""
-	try:	# test to see if image is associated with alternate product
-		alt_img_record = Document.objects.get(id = alt_product_record.product_image.id )
-	except: # if not then continue with empty object
-		alt_img_record = ""	
-		
+	if alt_product_exists:	
+		try:	# test to see if image is associated with alternate product
+			alt_img_record = Document.objects.get(id = alt_product_record.product_image.id )
+		except: # if not then continue with empty object
+			alt_img_record = ""
+	else:
+		alt_img_record = Document.objects.none()
+
 
 	# Calculate the daily_work_rate multiplied by the estimated_duration
 	workload_cost = idx.daily_work_rate * int(file_form_data[8].get('estimated_duration')[0])

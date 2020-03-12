@@ -3,6 +3,7 @@ from django.views.generic import View, ListView, CreateView, UpdateView, DeleteV
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib import messages
+from django.core.paginator import Paginator
 
 # Form wizard imports
 from quotepad.forms import FormStepOne, FormStepTwo, FormStepThree, FormStepFour, FormStepFive, FormStepSix, FormStepSeven, FormStepEight, FormStepNine
@@ -333,6 +334,7 @@ class ProductPriceDelete(DeleteView):
 class ProductComponentList(ListView):
 	''' Invoke the django Generic Model form capability to display the ProductComponent information in a list ''' 
 	context_object_name = 'components_by_user'
+	paginate_by = 10
 
 	def get_queryset(self):
 		return ProductComponent.objects.filter(user=self.request.user).order_by('brand','component_type','id')

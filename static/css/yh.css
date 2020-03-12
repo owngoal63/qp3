@@ -93,7 +93,7 @@ div.break {
 
 .page1-lower{
     position:absolute;
-    top: 600px;
+    top: 550px;
     width:100%;
     /* background-color: yellow; */
     text-align: center;
@@ -101,7 +101,7 @@ div.break {
 
 .page1-lower p {
     text-align: center;
-    margin-top:10px;
+    margin-top:5px;
     padding-left:40px;
     padding-right:40px;
     font-size: 0.9rem;
@@ -200,7 +200,8 @@ div.break {
     background-color: white;
     border:5px solid orange;
     border-radius: 25px 0px 25px 0px;
-    text-align: center;    
+    text-align: center;
+    padding-top:5px;    
 
 }  
 
@@ -320,6 +321,16 @@ div.break {
       padding:0;
   }
 
+  .product-details-no-alt-product_details {
+    width:640px;
+    float: center;
+    /* display: inline-block; */
+    text-align: left;
+    margin:0;
+    padding-left:150px;
+
+  }
+
   .product-image {
     position: relative;
     top: 10px;
@@ -394,4 +405,9 @@ div.break {
 .tech-value {
     background-color: #f5f5f5;
     vertical-align: top;
+}
+
+.optional-extras {
+    width:100%;
+    border: 1px solid black;
 }
