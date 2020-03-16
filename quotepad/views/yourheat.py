@@ -74,9 +74,11 @@ class BoilerFormWizardView_yh(SessionWizardView):
 	#template_name = "yourheat/orderforms/boilerform.html"
 
 	def get_template_names(self):
-		print(self.steps.current)
+		#print(self.steps.current)
 		if self.steps.current == '9':
 			return "yourheat/orderforms/financeform.html"
+		elif self.steps.current == '7':
+			return "yourheat/orderforms/radiatorform.html"
 		else:
 			return "yourheat/orderforms/boilerform.html"
 
@@ -93,7 +95,7 @@ class BoilerFormWizardView_yh(SessionWizardView):
 		elif step == '6':
 			manuf_step_data = self.storage.get_step_data('4')
 			manuf = manuf_step_data.get('4-boiler_manufacturer','')
-			print(manuf)
+			#print(manuf)
 			return {'user': self.request.user, 'manufacturer': manuf }
 		elif step == '4':
 			return {'user': self.request.user}

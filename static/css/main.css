@@ -65,6 +65,11 @@ a:hover {
     list-style: none;
   }
 
+  ul#id_7-radiator_specification li {
+    display:inline;
+    padding-left:10px;
+  }
+
   
   /* Landing Page - These classes are used to style the landing page - designed to entice users to sign up to Quotepad */
   .heading-section-landing {
@@ -179,6 +184,26 @@ a:hover {
     color: rgb(255, 255, 255);
     padding-bottom: 50px;
   }
+
+.form-rad-group {
+  background-color: rgb(228, 228, 228);
+  visibility: hidden;
+}
+
+.form-rad-valve-group {
+  background-color: rgb(228, 228, 228);
+  visibility: hidden;
+}
+
+.form-towel-group {
+  background-color: rgb(228, 228, 228);
+  visibility: hidden;
+}
+
+.radiator-section-headings {
+  padding-bottom: 0px;  
+  margin:0px;
+}
 
 
 .input-disabled {

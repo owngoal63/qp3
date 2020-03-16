@@ -609,10 +609,155 @@ DOUBLE_HANDED_LIFT_REQUIRED_DROPDOWN = (
 RADIATOR_SPECIFICATION_CHOICES = (
 	('No Radiators Required','No Radiators Required'),
 	('Radiator(s) Required','Radiator(s) Required'),
-	('Thermoststic Radiator Valves Only','Thermoststic Radiator Valves Only'),
+	('Thermostatic Radiator Valves Only','Thermostatic Radiator Valves Only'),
 	('Towel Rail(s) Required','Towel Rail(s) Required'),
 	('Customer to Provide Radiators','Customer to Provide Radiators'),
 )
+
+RADIATOR_LOCATION_DROPDOWN = (
+	('','-----------'),
+	("Bedroom 1","Bedroom 1"),
+    ("Bedroom 2","Bedroom 2"),
+    ("Bedroom 3","Bedroom 3"),
+    ("Bedroom 4","Bedroom 4"),
+    ("Bedroom 5","Bedroom 5"),
+    ("Dining Room","Dining Room"),
+    ("Lounge","Lounge"),
+    ("Downstairs Hallway","Downstairs Hallway"),
+    ("Downstairs WC","Downstairs WC"),
+    ("Kitchen","Kitchen"),
+    ("Conservatory","Conservatory"),
+    ("Landing","Landing"),
+    ("Bathroom 1","Bathroom 1"),
+    ("Bathroom 2","Bathroom 2"),
+    ("Ensuite 1","Ensuite 1"),
+    ("Ensuite 2","Ensuite 2"),
+    ("Ensuite 3","Ensuite 3"),
+    ("Wardrobe","Wardrobe"),
+    ("Study","Study"),
+    ("Utility Room","Utility Room"),
+    ("Games Room","Games Room"),
+)
+
+RADIATOR_HEIGHT_DROPDOWN = (
+	('','-----'),
+	('300','300'),
+	('350','350'),
+	('400','400'),
+	('450','450'),
+	('500','500'),
+	('550','550'),
+	('600','600'),
+	('650','650'),
+	('700','700'),	
+)
+
+RADIATOR_WIDTH_DROPDOWN = (
+	('','----'),
+	("400","400"),
+    ("500","500"),
+    ("600","600"),
+    ("700","700"),
+    ("800","800"),
+    ("900","900"),
+    ("1000","1000"),
+    ("1100","1100"),
+    ("1200","1200"),
+    ("1400","1400"),
+    ("1600","1600"),
+    ("1800","1800"),
+    ("2000","2000"),
+    ("2600","2600"),
+    ("2800","2800"),
+)
+
+RADIATOR_TYPE_DROPDOWN = (
+	('','---'),
+	("P+","P+"),
+    ("K1","K1"),
+    ("K2","K2"),
+)
+
+RADIATOR_VALVES_DROPDOWN = (
+	('','-----'),
+	("8mm","8mm"),
+	("10mm","10mm"),
+	("15mm","15mm"),
+	("22mm","22mm"),
+)
+
+RADIATOR_VALVE_TYPE_DROPDOWN = (
+	('','-----------'),
+	("Straight TRV","Straight TRV"),
+	("Angled TRV","Angled TRV"),
+	("Straight TRV / Lockshield","Straight TRV / Lockshield"),
+	("Angled TRV / Lockshield","Angled TRV / Lockshield"),
+	("Straight Lockshield Only","Straight Lockshield Only"),
+	("Angled Lockshield Only","Angled Lockshield Only"),
+)
+
+RADIATOR_VALVE_QTY_DROPDOWN = (
+	('','----'),
+	("1","1"),("2","2"),("3","3"),("4","4"),
+	("5","5"),("6","6"),("7","7"),("8","8"),
+	("9","9"),("10","10"),("11","11"),("12","12"),
+	("13","13"),("14","14"),("15","15"),("16","16"),
+	("17","17"),("18","18"),("19","19"),("20","20"),
+	("21","21"),("22","22"),("23","23"),("24","24"),
+	("25","25"),("26","26"),("27","27"),("28","28"),
+	("29","29"),("30","30"),("31","31"),("32","32"),
+	("33","33"),("34","34"),("35","35"),("36","36"),
+	("37","37"),("38","38"),("39","39"),("40","40"),
+
+)
+
+TOWEL_RAIL_LOCATION_DROPDOWN = (
+	('','-----------'),
+	("Upstairs Bathroom","Upstairs Bathroom"),	
+	("Downstairs Bathroom","Downstairs Bathroom"),	
+)
+
+TOWEL_RAIL_HEIGHT = (
+	('','-----'),
+	("400","400"),
+	("500","500"),
+	("600","600"),
+	("700","700"),
+	("800","800"),
+	("900","900"),
+	("1000","1000"),
+	("1100","1100"),
+	("1200","1200"),
+	("1300","1300"),
+	("1400","1400"),
+	("1500","1500"),
+	("1600","1600"),
+	("1700","1700"),
+	("1800","1800"),
+	("1900","1900"),
+	("2000","2000"),
+
+)
+
+TOWEL_RAIL_WIDTH = (
+	('','----'),
+	("300","300"),
+	("350","350"),
+	("400","400"),
+	("450","450"),
+	("500","500"),
+	("550","550"),
+	("600","600"),
+	("650","650"),
+	("700","700"),
+)
+
+TOWEL_RAIL_COLOUR = (
+	('','-----'),
+	("Chrome","Chrome"),
+	("White","White"),
+)
+
 
 ''' Section for defining the multiple forms that will be used for the boiler quote (FormWizard library) '''
 
@@ -1192,13 +1337,130 @@ class FormStepEight_yh(forms.Form):
 	#	super(FormStepEight_yh, self).__init__(*args, **kwargs)
 	#	for field in self: 
 	#		field.field.widget.attrs['class'] = 'form-control'
-	radiator_specification = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
-											 choices=RADIATOR_SPECIFICATION_CHOICES)		
-	#radiator_requirements = forms.ChoiceField(choices=RADIATOR_REQUIREMENTS_DROPDOWN)
-	#thermostatic_radiator_valves_size = forms.CharField(max_length=100, required = False)
-	#thermostatic_radiator_valves_type = forms.CharField(max_length=100, required = False)
-	#thermostatic_radiator_valves_quantity = forms.CharField(max_length=100, required = False)
-	#programmer_thermostat = forms.MultipleChoiceField(choices=PROGRAMMER_THERMOSTAT_DROPDOWN)
+	radiator_specification = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(attrs = {'onchange' : "radiator_handler();"}),
+											 choices=RADIATOR_SPECIFICATION_CHOICES)
+	#radiator_specification = forms.ChoiceField(choices=RADIATOR_SPECIFICATION_CHOICES)
+											 #,  widget = forms.Select(attrs = {'onchange' : "add_field('TextBox');"})		
+	def __init__(self, *args, **kwargs):
+		super(FormStepEight_yh, self).__init__(*args, **kwargs)
+		self.fields['location_1'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
+		self.fields['location_2'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
+		self.fields['location_3'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
+		self.fields['location_4'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
+		self.fields['location_5'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
+		self.fields['location_6'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
+		self.fields['location_7'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
+		self.fields['location_8'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
+		self.fields['location_9'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
+		self.fields['location_10'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
+		self.fields['location_11'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
+		self.fields['location_12'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
+
+		self.fields['radiator_height_1'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
+		self.fields['radiator_height_2'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
+		self.fields['radiator_height_3'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
+		self.fields['radiator_height_4'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
+		self.fields['radiator_height_5'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
+		self.fields['radiator_height_6'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
+		self.fields['radiator_height_7'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
+		self.fields['radiator_height_8'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
+		self.fields['radiator_height_9'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
+		self.fields['radiator_height_10'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
+		self.fields['radiator_height_11'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
+		self.fields['radiator_height_12'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
+
+		self.fields['radiator_width_1'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
+		self.fields['radiator_width_2'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
+		self.fields['radiator_width_3'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
+		self.fields['radiator_width_4'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
+		self.fields['radiator_width_5'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
+		self.fields['radiator_width_6'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
+		self.fields['radiator_width_7'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
+		self.fields['radiator_width_8'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
+		self.fields['radiator_width_9'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
+		self.fields['radiator_width_10'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
+		self.fields['radiator_width_11'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
+		self.fields['radiator_width_12'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
+		
+
+		self.fields['radiator_type_1'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
+		self.fields['radiator_type_2'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
+		self.fields['radiator_type_3'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
+		self.fields['radiator_type_4'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
+		self.fields['radiator_type_5'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
+		self.fields['radiator_type_6'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
+		self.fields['radiator_type_7'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
+		self.fields['radiator_type_8'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
+		self.fields['radiator_type_9'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
+		self.fields['radiator_type_10'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
+		self.fields['radiator_type_11'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
+		self.fields['radiator_type_12'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
+
+		self.fields['radiator_valve_size_1'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
+		self.fields['radiator_valve_size_2'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
+		self.fields['radiator_valve_size_3'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
+		self.fields['radiator_valve_size_4'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
+		self.fields['radiator_valve_size_5'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
+		self.fields['radiator_valve_size_6'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
+		self.fields['radiator_valve_size_7'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
+		self.fields['radiator_valve_size_8'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
+		self.fields['radiator_valve_size_9'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
+		self.fields['radiator_valve_size_10'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
+		self.fields['radiator_valve_size_11'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
+		self.fields['radiator_valve_size_12'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
+
+		self.fields['radiator_valve_type_1'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
+		self.fields['radiator_valve_type_2'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
+		self.fields['radiator_valve_type_3'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
+		self.fields['radiator_valve_type_4'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
+		self.fields['radiator_valve_type_5'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
+		self.fields['radiator_valve_type_6'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
+		self.fields['radiator_valve_type_7'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
+		self.fields['radiator_valve_type_8'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
+		self.fields['radiator_valve_type_9'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
+		self.fields['radiator_valve_type_10'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
+		self.fields['radiator_valve_type_11'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
+		self.fields['radiator_valve_type_12'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
+
+		self.fields['radiator_valve_quantity_1'] = forms.ChoiceField(required=False, choices=RADIATOR_VALVE_QTY_DROPDOWN)
+		self.fields['radiator_valve_quantity_2'] = forms.ChoiceField(required=False, choices=RADIATOR_VALVE_QTY_DROPDOWN)
+		self.fields['radiator_valve_quantity_3'] = forms.ChoiceField(required=False, choices=RADIATOR_VALVE_QTY_DROPDOWN)
+		self.fields['radiator_valve_quantity_4'] = forms.ChoiceField(required=False, choices=RADIATOR_VALVE_QTY_DROPDOWN)
+		self.fields['radiator_valve_quantity_5'] = forms.ChoiceField(required=False, choices=RADIATOR_VALVE_QTY_DROPDOWN)
+		self.fields['radiator_valve_quantity_6'] = forms.ChoiceField(required=False, choices=RADIATOR_VALVE_QTY_DROPDOWN)
+		self.fields['radiator_valve_quantity_7'] = forms.ChoiceField(required=False, choices=RADIATOR_VALVE_QTY_DROPDOWN)
+		self.fields['radiator_valve_quantity_8'] = forms.ChoiceField(required=False, choices=RADIATOR_VALVE_QTY_DROPDOWN)
+		self.fields['radiator_valve_quantity_9'] = forms.ChoiceField(required=False, choices=RADIATOR_VALVE_QTY_DROPDOWN)
+		self.fields['radiator_valve_quantity_10'] = forms.ChoiceField(required=False, choices=RADIATOR_VALVE_QTY_DROPDOWN)
+		self.fields['radiator_valve_quantity_11'] = forms.ChoiceField(required=False, choices=RADIATOR_VALVE_QTY_DROPDOWN)
+		self.fields['radiator_valve_quantity_12'] = forms.ChoiceField(required=False, choices=RADIATOR_VALVE_QTY_DROPDOWN)
+		
+
+		self.fields['towel_rail_location_1'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_LOCATION_DROPDOWN)
+		self.fields['towel_rail_location_2'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_LOCATION_DROPDOWN)
+		self.fields['towel_rail_location_3'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_LOCATION_DROPDOWN)
+		self.fields['towel_rail_location_4'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_LOCATION_DROPDOWN)
+
+		self.fields['towel_rail_height_1'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_HEIGHT)
+		self.fields['towel_rail_height_2'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_HEIGHT)
+		self.fields['towel_rail_height_3'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_HEIGHT)
+		self.fields['towel_rail_height_4'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_HEIGHT)
+
+		self.fields['towel_rail_width_1'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_WIDTH)
+		self.fields['towel_rail_width_2'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_WIDTH)
+		self.fields['towel_rail_width_3'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_WIDTH)
+		self.fields['towel_rail_width_4'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_WIDTH)
+
+		self.fields['towel_rail_colour_1'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_COLOUR)
+		self.fields['towel_rail_colour_2'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_COLOUR)
+		self.fields['towel_rail_colour_3'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_COLOUR)
+		self.fields['towel_rail_colour_4'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_COLOUR)
+		
+
+		# self.fields['location_1'].hidden = True
+
+		# for field in self: 
+		# 	field.field.widget.attrs['class'] = 'form-control'											 
 	
 class FormStepNine_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
