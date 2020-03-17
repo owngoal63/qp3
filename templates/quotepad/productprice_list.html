@@ -17,23 +17,23 @@
     </div>
 
     <div class="row price-list-headings">
-        <div class="col-4">
+        <div class="col-6">
             <h4>Product</h4>
         </div>
         <div class="col-2">
             <h4>Price</h4>
         </div>
-        <div class="col-2">
+        <div class="col-1">
             <h4>Image</h4>
         </div>
-        <div class="col-4">
+        <div class="col-3">
             <h4>Action</h4>
         </div>
     </div>
 
     <div class="row">
         {% for prod in products_by_user %}
-        <div class="col-4">
+        <div class="col-6">
             {{ prod.brand }}
             {{ prod.model_name }}
         </div>
@@ -41,13 +41,13 @@
         <div class="col-2">
             £{{ prod.price }}
         </div>
-        <div class="col-2">
+        <div class="col-1">
             {% if prod.product_image != null %}
                 <i class="fas fa-image text-primary"></i>
             {% endif %}
         </div>
 
-        <div class="col-4">
+        <div class="col-3">
             <a href="{% url 'productpriceupdate' prod.pk  %}" class="btn btn-primary btn-sm" role="button">Edit</a>
             <a href="{% url 'productpricedelete' prod.pk  %}" class="btn btn-secondary btn-sm" role="button">Del</a>
         </div>
@@ -63,6 +63,32 @@
     </div>
 
     <a href="{% url 'productpricecreate' %}" class="btn btn-primary" role="button">Add</a>
+
+    {% if is_paginated %}
+    <div class="row">
+        <div class="col-12">
+
+            <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="page-item"><span class="page-link">&laquo;</span></li>
+            {% endif %}
+            {% for i in paginator.page_range %}
+                
+                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="page-item"><span class="page-link">&raquo;</span></li>
+            {% endif %}
+            </ul>
+        </div>
+    </div>
+{% endif %}
+
 </div>
 
 {% endblock content %}
