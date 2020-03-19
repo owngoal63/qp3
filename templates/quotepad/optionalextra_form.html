@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container edit-product-container">
+
+    <h2>{{ form_instructions }}</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="form-group">
+            {{ form.product_name.label}} *<br>
+            {{ form.product_name }}
+        </div>
+
+        <div class="form-group">
+            {{ form.price.label}} (£) *<br>
+            {{ form.price }}
+        </div>
+
+        <button class="btn btn-primary" type="submit">Save</button>
+        <a href="/optionalextralist/" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock content %}

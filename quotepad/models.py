@@ -75,5 +75,14 @@ class ProductComponent(models.Model):
 	component_name  =   models.CharField(max_length=200)
 
 	def __str__(self):
-		#return "%s / %s / %s" % (self.brand, self.component_type, self.component_name)
 		return self.component_name
+
+''' Model for storing details on the product optional extras that will be used in the quote '''
+class OptionalExtra(models.Model):
+	user			=   models.ForeignKey(User, on_delete=models.CASCADE)
+	product_name  	=   models.CharField(max_length=200)
+	price           =   models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+	def __str__(self):
+		#return "%s - £%s" % (self.product_name,  self.price)
+		return self.product_name  

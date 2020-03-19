@@ -24,7 +24,7 @@ from django.dispatch import receiver
 from django.contrib.auth.signals import user_logged_in
 from django.contrib.auth.models import User, Group
 
-from quotepad.models import Profile, ProductPrice, Document
+from quotepad.models import Profile, ProductPrice, Document, OptionalExtra
 from quotepad.forms import ProfileForm, UserProfileForm, ProductPriceForm, EditQuoteTemplateForm
 
 @login_required
@@ -79,6 +79,8 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			return "yourheat/orderforms/financeform.html"
 		elif self.steps.current == '7':
 			return "yourheat/orderforms/radiatorform.html"
+		elif self.steps.current == '8':
+			return "yourheat/orderforms/workloadandextrasform.html"	
 		else:
 			return "yourheat/orderforms/boilerform.html"
 
@@ -95,11 +97,15 @@ class BoilerFormWizardView_yh(SessionWizardView):
 		elif step == '6':
 			manuf_step_data = self.storage.get_step_data('4')
 			manuf = manuf_step_data.get('4-boiler_manufacturer','')
-			#print(manuf)
+			print(manuf)
 			return {'user': self.request.user, 'manufacturer': manuf }
 		elif step == '4':
 			return {'user': self.request.user}
+		elif step == '8':
+			return {'user': self.request.user}	
 		elif step == '9':
+			print(self.storage.get_step_data('6'))
+			print(self.storage.get_step_data('8'))
 			product_step_data = self.storage.get_step_data('5')
 			productx = product_step_data.get('5-product_choice','')
 			#Object.objects.get(pk=1)
@@ -161,6 +167,8 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			print(type(e)) 
 			print("Error: No Image exists for the Product")
 
+		
+
 		# Calculate the daily_work_rate multiplied by the estimated_duration
 		workload_cost = idx.daily_work_rate * int([form.cleaned_data for form in form_list][8].get('estimated_duration')[0])
 		# Calculate the total quote price for the quote
@@ -210,10 +218,48 @@ class BoilerFormWizardView_yh(SessionWizardView):
 				secondDelPos=string.find(">]>") # get the position of >
 				stringAfterReplace = string.replace(string[firstDelPos:secondDelPos+3], str(plume_components).replace('"',''))
 				file.write(str(stringAfterReplace) + "\n")
+			elif index == 8:
+				string = str(line)
+				file.write(string.replace("<OptionalExtra: ","'").replace(">, '","', '") + "\n")
+				#file.write(str(stringAfterReplace) + "\n")	
 			else:	
 				file.write(str(line) + "\n")
 		file.close() #close file
 
+		# Optional Extras Extended Price - build list
+		optional_extra_extended_prices = []
+		#[form.cleaned_data for form in form_list][8].get('extra_1')
+		if [form.cleaned_data for form in form_list][8].get('extra_1') != None:
+			optional_extra_ext_price = OptionalExtra.objects.get(product_name = [form.cleaned_data for form in form_list][8].get('extra_1')).price * int([form.cleaned_data for form in form_list][8].get('extra_qty_1'))
+			optional_extra_extended_prices.append(optional_extra_ext_price)
+		if [form.cleaned_data for form in form_list][8].get('extra_2') != None:
+			optional_extra_ext_price = OptionalExtra.objects.get(product_name = [form.cleaned_data for form in form_list][8].get('extra_2')).price * int([form.cleaned_data for form in form_list][8].get('extra_qty_2'))
+			optional_extra_extended_prices.append(optional_extra_ext_price)	
+		if [form.cleaned_data for form in form_list][8].get('extra_3') != None:
+			optional_extra_ext_price = OptionalExtra.objects.get(product_name = [form.cleaned_data for form in form_list][8].get('extra_3')).price * int([form.cleaned_data for form in form_list][8].get('extra_qty_3'))
+			optional_extra_extended_prices.append(optional_extra_ext_price)	
+		if [form.cleaned_data for form in form_list][8].get('extra_4') != None:
+			optional_extra_ext_price = OptionalExtra.objects.get(product_name = [form.cleaned_data for form in form_list][8].get('extra_4')).price * int([form.cleaned_data for form in form_list][8].get('extra_qty_4'))
+			optional_extra_extended_prices.append(optional_extra_ext_price)			
+		if [form.cleaned_data for form in form_list][8].get('extra_5') != None:
+			optional_extra_ext_price = OptionalExtra.objects.get(product_name = [form.cleaned_data for form in form_list][8].get('extra_5')).price * int([form.cleaned_data for form in form_list][8].get('extra_qty_5'))
+			optional_extra_extended_prices.append(optional_extra_ext_price)
+		if [form.cleaned_data for form in form_list][8].get('extra_6') != None:
+			optional_extra_ext_price = OptionalExtra.objects.get(product_name = [form.cleaned_data for form in form_list][8].get('extra_6')).price * int([form.cleaned_data for form in form_list][8].get('extra_qty_6'))
+			optional_extra_extended_prices.append(optional_extra_ext_price)	
+		if [form.cleaned_data for form in form_list][8].get('extra_7') != None:
+			optional_extra_ext_price = OptionalExtra.objects.get(product_name = [form.cleaned_data for form in form_list][8].get('extra_7')).price * int([form.cleaned_data for form in form_list][8].get('extra_qty_7'))
+			optional_extra_extended_prices.append(optional_extra_ext_price)	
+		if [form.cleaned_data for form in form_list][8].get('extra_8') != None:
+			optional_extra_ext_price = OptionalExtra.objects.get(product_name = [form.cleaned_data for form in form_list][8].get('extra_8')).price * int([form.cleaned_data for form in form_list][8].get('extra_qty_8'))
+			optional_extra_extended_prices.append(optional_extra_ext_price)
+		if [form.cleaned_data for form in form_list][8].get('extra_9') != None:
+			optional_extra_ext_price = OptionalExtra.objects.get(product_name = [form.cleaned_data for form in form_list][8].get('extra_9')).price * int([form.cleaned_data for form in form_list][8].get('extra_qty_9'))
+			optional_extra_extended_prices.append(optional_extra_ext_price)	
+		if [form.cleaned_data for form in form_list][8].get('extra_10') != None:
+			optional_extra_ext_price = OptionalExtra.objects.get(product_name = [form.cleaned_data for form in form_list][8].get('extra_10')).price * int([form.cleaned_data for form in form_list][8].get('extra_qty_10'))
+			optional_extra_extended_prices.append(optional_extra_ext_price)					
+		
 		print(product_record)
 		print(alt_product_record)
 		# Generate the PDF and write to disk
@@ -226,7 +272,8 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			'img_record': img_record,
 			'alt_img_record': alt_img_record,
 			'workload_cost': workload_cost,
-			'total_quote_price': total_quote_price})
+			'total_quote_price': total_quote_price,
+			'optional_extra_extended_prices': optional_extra_extended_prices})
 
 		# Increment the Profile.current_quote_number by 1
 		idx.current_quote_number = idx.current_quote_number + 1
@@ -260,6 +307,7 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 	with open(quote_form_filename) as file:
 		file_form_datax = []
 		for line in file:
+			print(line)
 			file_form_datax.append(eval(line))
 		
 	file_form_data = file_form_datax
@@ -299,6 +347,39 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 	else:
 		alt_img_record = Document.objects.none()
 
+	# Optional Extras Extended Price - build list
+	optional_extra_extended_prices = []
+	if file_form_data[8].get('extra_1') != None:
+		optional_extra_ext_price = OptionalExtra.objects.get(product_name = file_form_data[8].get('extra_1')).price * int(file_form_data[8].get('extra_qty_1'))
+		optional_extra_extended_prices.append(optional_extra_ext_price)
+	if file_form_data[8].get('extra_2') != None:
+		optional_extra_ext_price = OptionalExtra.objects.get(product_name = file_form_data[8].get('extra_2')).price * int(file_form_data[8].get('extra_qty_2'))
+		optional_extra_extended_prices.append(optional_extra_ext_price)
+	if file_form_data[8].get('extra_3') != None:
+		optional_extra_ext_price = OptionalExtra.objects.get(product_name = file_form_data[8].get('extra_3')).price * int(file_form_data[8].get('extra_qty_3'))
+		optional_extra_extended_prices.append(optional_extra_ext_price)
+	if file_form_data[8].get('extra_4') != None:
+		optional_extra_ext_price = OptionalExtra.objects.get(product_name = file_form_data[8].get('extra_4')).price * int(file_form_data[8].get('extra_qty_4'))
+		optional_extra_extended_prices.append(optional_extra_ext_price)
+	if file_form_data[8].get('extra_5') != None:
+		optional_extra_ext_price = OptionalExtra.objects.get(product_name = file_form_data[8].get('extra_5')).price * int(file_form_data[8].get('extra_qty_5'))
+		optional_extra_extended_prices.append(optional_extra_ext_price)
+	if file_form_data[8].get('extra_6') != None:
+		optional_extra_ext_price = OptionalExtra.objects.get(product_name = file_form_data[8].get('extra_6')).price * int(file_form_data[8].get('extra_qty_6'))
+		optional_extra_extended_prices.append(optional_extra_ext_price)
+	if file_form_data[8].get('extra_7') != None:
+		optional_extra_ext_price = OptionalExtra.objects.get(product_name = file_form_data[8].get('extra_7')).price * int(file_form_data[8].get('extra_qty_7'))
+		optional_extra_extended_prices.append(optional_extra_ext_price)
+	if file_form_data[8].get('extra_8') != None:
+		optional_extra_ext_price = OptionalExtra.objects.get(product_name = file_form_data[8].get('extra_8')).price * int(file_form_data[8].get('extra_qty_8'))
+		optional_extra_extended_prices.append(optional_extra_ext_price)
+	if file_form_data[8].get('extra_9') != None:
+		optional_extra_ext_price = OptionalExtra.objects.get(product_name = file_form_data[8].get('extra_9')).price * int(file_form_data[8].get('extra_qty_9'))
+		optional_extra_extended_prices.append(optional_extra_ext_price)
+	if file_form_data[8].get('extra_10') != None:
+		optional_extra_ext_price = OptionalExtra.objects.get(product_name = file_form_data[8].get('extra_10')).price * int(file_form_data[8].get('extra_qty_10'))
+		optional_extra_extended_prices.append(optional_extra_ext_price)				
+
 
 	# Calculate the daily_work_rate multiplied by the estimated_duration
 	workload_cost = idx.daily_work_rate * int(file_form_data[8].get('estimated_duration')[0])
@@ -319,7 +400,8 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			'img_record': img_record,
 			'alt_img_record': alt_img_record,
 			'workload_cost': workload_cost,
-			'total_quote_price': total_quote_price}) 
+			'total_quote_price': total_quote_price,
+			'optional_extra_extended_prices': optional_extra_extended_prices}) 
 		return HttpResponse(pdf, content_type='application/pdf')
 
 	elif outputformat == "EmailOutput":
@@ -337,7 +419,8 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			'img_record': img_record,
 			'alt_img_record': alt_img_record,
 			'workload_cost': workload_cost,
-			'total_quote_price': total_quote_price})
+			'total_quote_price': total_quote_price,
+			'optional_extra_extended_prices': optional_extra_extended_prices})
 		# Generate the email, attach the pdf and send out
 		fd = file_form_data
 		msg=""

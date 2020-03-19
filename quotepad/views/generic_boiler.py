@@ -24,8 +24,8 @@ from django.dispatch import receiver
 from django.contrib.auth.signals import user_logged_in
 from django.contrib.auth.models import User, Group
 
-from quotepad.models import Profile, ProductPrice, Document, ProductComponent
-from quotepad.forms import ProfileForm, UserProfileForm, ProductPriceForm, EditQuoteTemplateForm, ProductComponentForm
+from quotepad.models import Profile, ProductPrice, Document, ProductComponent, OptionalExtra
+from quotepad.forms import ProfileForm, UserProfileForm, ProductPriceForm, EditQuoteTemplateForm, ProductComponentForm, OptionalExtraForm
 
 @login_required
 def quote_generated(request):
@@ -384,4 +384,57 @@ class ProductComponentDelete(DeleteView):
 	''' Invoke the django generic model form capability to delete a component  '''
 	model = ProductComponent
 	success_url='/productcomponentlist/'	
+
+''' -------------------- Optional Extra Views --------------------'''
+
+class OptionalExtraList(ListView):
+	''' Invoke the django Generic Model form capability to display the ProductComponent information in a list ''' 
+	context_object_name = 'optional_extra_by_user'
+	paginate_by = 10
+
+	def get_queryset(self):
+		return OptionalExtra.objects.filter(user=self.request.user).order_by('id')
+
+@login_required
+def OptionalExtraCreate(request):
+	''' Function to allow users to create a new optional extra '''
+	if request.method == "POST":
+		form = OptionalExtraForm(request.POST,  user = request.user)
+		if form.is_valid():
+			component = form.save(commit=False)
+			component.user = request.user
+			component.save()
+			messages.success(request, 'The optional extra details were successfully updated.')
+			return redirect('/optionalextralist/')
+	else:
+		form = OptionalExtraForm(user = request.user)
+	context = {
+		'form': form,
+		'form_instructions': 'Add New Optional Extra'
+	}
+	return render(request,'quotepad/optionalextra_form.html',context)
+
+@login_required
+def OptionalExtraUpdate(request, optional_extra_id):
+	''' Function to allow users to update a optional extra '''
+	optionalextra = OptionalExtra.objects.get(pk = optional_extra_id)
+	if request.method == "POST":
+		form = OptionalExtraForm(request.POST, instance=optionalextra, user = request.user)
+		if form.is_valid():
+			component = form.save()
+			messages.success(request, 'The optional extra details were successfully updated.')
+			return redirect('/optionalextralist/')
+	else:
+		form = OptionalExtraForm(instance=optionalextra, user = request.user)
+	context = {
+		'form': form,
+		'component': optionalextra,
+		'form_instructions': 'Edit Optional Extra Details'
+	}
+	return render(request,'quotepad/optionalextra_form.html',context)
+
+class OptionalExtraDelete(DeleteView):
+	''' Invoke the django generic model form capability to delete an optional extra  '''
+	model = OptionalExtra
+	success_url='/optionalextralist/'		
 

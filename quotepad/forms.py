@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from quotepad.models import Document, Profile, ProductPrice, ProductComponent
-from django.forms import ModelMultipleChoiceField
+from quotepad.models import Document, Profile, ProductPrice, ProductComponent, OptionalExtra
+from django.forms import ModelMultipleChoiceField, ModelChoiceField
 
 # For Editing the template
 from django.conf import settings
@@ -323,13 +323,13 @@ PROGRAMMER_THERMOSTAT_DROPDOWN = (
 CENTRAL_HEATING_SYSTEM_FILTER_DROPDOWN = (
 	('','Select One'),
 	("Unable to Install - None Required","Unable to Install - None Required"),
-    ("Use Existing","Use Existing"),
-    ("(1x) Magnaclean Atom (22mm)","(1x) Magnaclean Atom (22mm)"),
-    ("(1x) Magnaclean Pro2 (22mm)","(1x) Magnaclean Pro2 (22mm)"),
-    ("(1x) Magnaclean Pro2 (28mm)","(1x) Magnaclean Pro2 (28mm)"),
-    ("(1x) Magnaclean Pro3 Sense (22mm)","(1x) Magnaclean Pro3 Sense (22mm)"),
-    ("(1x) Greenstar System Filter 22mm 7733600236","(1x) Greenstar System Filter 22mm 7733600236"),
-    ("(1x) Greenstar System Filter 28mm 7733600237","(1x) Greenstar System Filter 28mm 7733600237"),
+	("Use Existing","Use Existing"),
+	("(1x) Magnaclean Atom (22mm)","(1x) Magnaclean Atom (22mm)"),
+	("(1x) Magnaclean Pro2 (22mm)","(1x) Magnaclean Pro2 (22mm)"),
+	("(1x) Magnaclean Pro2 (28mm)","(1x) Magnaclean Pro2 (28mm)"),
+	("(1x) Magnaclean Pro3 Sense (22mm)","(1x) Magnaclean Pro3 Sense (22mm)"),
+	("(1x) Greenstar System Filter 22mm 7733600236","(1x) Greenstar System Filter 22mm 7733600236"),
+	("(1x) Greenstar System Filter 28mm 7733600237","(1x) Greenstar System Filter 28mm 7733600237"),
 )
 
 SCALE_REDUCER_DROPDOWN = (
@@ -445,130 +445,130 @@ SCAFFOLDING_REQUIRED_DROPDOWN = (
 
 PROGRAMMER_THERMOSTAT_DROPDOWN = (
 	("(1x) Controller Included With Boiler (Worcester 2000)","(1x) Controller Included With Boiler (Worcester 2000)"),
-    ("(1x) Worcester Comfort Plug In 7733600003","(1x) Worcester Comfort Plug In 7733600003"),
-    ("(1x) Worcester Comfort 1 RF 7733600001","(1x) Worcester Comfort 1 RF 7733600001"),
-    ("(1x) Worcester Comfort 2 RF 7733600002","(1x) Worcester Comfort 2 RF 7733600002"),
-    ("(1x) NEST 3rd GEN Thermostat","(1x) NEST 3rd GEN Thermostat"),
-    ("(1x) NEST Cradle Stand","(1x) NEST Cradle Stand"),
-    ("(1x) Neomitis RT7RF Plus Wireless 7 Day Programmable Stat","(1x) Neomitis RT7RF Plus Wireless 7 Day Programmable Stat"),
-    ("(1x) Honeywell DT92 Wireless stat","(1x) Honeywell DT92 Wireless stat"),
-    ("(1x) Honeywell 7-day Single Channel ST9100C","(1x) Honeywell 7-day Single Channel ST9100C"),
-    ("(1x) Honeywell ST9400C Two Channel Programmer","(1x) Honeywell ST9400C Two Channel Programmer"),
-    ("(1x) Honeywell ST9500C Two Zone","(1x) Honeywell ST9500C Two Zone"),
-    ("(1x) Honeywell DT90E Room Thermostat  [Wired]","(1x) Honeywell DT90E Room Thermostat [Wired]"),
-    ("(1x) Honeywell T6360B1028 Room Thermostat Standard","(1x) Honeywell T6360B1028 Room Thermostat Standard"),
-    ("(1x) Honeywell T4360 Frost Thermostat","(1x) Honeywell T4360 Frost Thermostat"),
-    ("(1x) Honeywell ST9420C Wireless Programmer","(1x) Honeywell ST9420C Wireless Programmer"),
-    ("(1x) Honeywell DT92E Wireless Room Thermostat","(1x) Honeywell DT92E Wireless Room Thermostat"),
-    ("(1x) Hive Internet Connected Thermostat","(1x) Hive Internet Connected Thermostat"),
-    ("(1x) See description of works for controls","(1x) See description of works for controls"),
+	("(1x) Worcester Comfort Plug In 7733600003","(1x) Worcester Comfort Plug In 7733600003"),
+	("(1x) Worcester Comfort 1 RF 7733600001","(1x) Worcester Comfort 1 RF 7733600001"),
+	("(1x) Worcester Comfort 2 RF 7733600002","(1x) Worcester Comfort 2 RF 7733600002"),
+	("(1x) NEST 3rd GEN Thermostat","(1x) NEST 3rd GEN Thermostat"),
+	("(1x) NEST Cradle Stand","(1x) NEST Cradle Stand"),
+	("(1x) Neomitis RT7RF Plus Wireless 7 Day Programmable Stat","(1x) Neomitis RT7RF Plus Wireless 7 Day Programmable Stat"),
+	("(1x) Honeywell DT92 Wireless stat","(1x) Honeywell DT92 Wireless stat"),
+	("(1x) Honeywell 7-day Single Channel ST9100C","(1x) Honeywell 7-day Single Channel ST9100C"),
+	("(1x) Honeywell ST9400C Two Channel Programmer","(1x) Honeywell ST9400C Two Channel Programmer"),
+	("(1x) Honeywell ST9500C Two Zone","(1x) Honeywell ST9500C Two Zone"),
+	("(1x) Honeywell DT90E Room Thermostat  [Wired]","(1x) Honeywell DT90E Room Thermostat [Wired]"),
+	("(1x) Honeywell T6360B1028 Room Thermostat Standard","(1x) Honeywell T6360B1028 Room Thermostat Standard"),
+	("(1x) Honeywell T4360 Frost Thermostat","(1x) Honeywell T4360 Frost Thermostat"),
+	("(1x) Honeywell ST9420C Wireless Programmer","(1x) Honeywell ST9420C Wireless Programmer"),
+	("(1x) Honeywell DT92E Wireless Room Thermostat","(1x) Honeywell DT92E Wireless Room Thermostat"),
+	("(1x) Hive Internet Connected Thermostat","(1x) Hive Internet Connected Thermostat"),
+	("(1x) See description of works for controls","(1x) See description of works for controls"),
 )
 
 ADDITIONAL_CENTRAL_HEATING_COMPONENTS_DROPDOWN = (
 	("No Additional Central Heating Components","No Additional Central Heating Components"),
-    ("(1x) Grundfos UPS2 15-50/60 22mm Complete Pump (With Valves)","(1x) Grundfos UPS2 15-50/60 22mm Complete Pump (With Valves)"),
-    ("(1x) Grundfos UPS2 15-50/60 28mm Complete Pump (With Valves)","(1x) Grundfos UPS2 15-50/60 28mm Complete Pump (With Valves)"),
-    ("(1x) Grundfos UPS2 25-80 Complete Pump","(1x) Grundfos UPS2 25-80 Complete Pump"),
-    ("(1x) Honeywell 2 Port (22mm)","(1x) Honeywell 2 Port (22mm)"),
-    ("(2x) Honeywell 2 Port (22mm)","(2x) Honeywell 2 Port (22mm)"),
-    ("(1x) Honeywell 2 Port (28mm)","(1x) Honeywell 2 Port (28mm)"),
-    ("(2x) Honeywell 2 Port (28mm)","(2x) Honeywell 2 Port (28mm)"),
-    ("(1x) Honeywell 3 Port (22mm)","(1x) Honeywell 3 Port (22mm)"),
-    ("(1x) Honeywell 3 Port (28mm)","(1x) Honeywell 3 Port (28mm)"),
-    ("(1x) Cylinder Stat Wireless","(1x) Cylinder Stat Wireless"),
-    ("(1x) Honeywell L641A Cylinder Thermostat","(1x) Honeywell L641A Cylinder Thermostat"),
-    ("(1x) Honeywell CS92A Wireless Cylinder Thermostat","(1x) Honeywell CS92A Wireless Cylinder Thermostat"),
-    ("(1x) Drayton 2 Port (22mm)","(1x) Drayton 2 Port (22mm)"),
-    ("(2x) Drayton 2 Port (22mm)","(2x) Drayton 2 Port (22mm)"),
-    ("(1x) Drayton 2 Port (28mm)","(1x) Drayton 2 Port (28mm)"),
-    ("(2x) Drayton 2 Port (28mm)","(2x) Drayton 2 Port (28mm)"),
-    ("(1x) Drayton 3 Port (22mm)","(1x) Drayton 3 Port (22mm)"),
-    ("(1x) Drayton 3 Port (28mm)","(1x) Drayton 3 Port (28mm)"),
-    ("(1) x Auto Bypass (15mm)","(1) x Auto Bypass (15mm)"),
-    ("(1) x Auto Bypass (22mm)","(1) x Auto Bypass (22mm)"),
-    ("(1x) x 11&quot; Immersion","(1x) x 11&quot Immersion"),
-    ("(1x) x 14&quot; Immersion","(1x) x 14&quot Immersion"),
-    ("(1x) x 27&quot; Immersion","(1x) x 27&quot Immersion"),
+	("(1x) Grundfos UPS2 15-50/60 22mm Complete Pump (With Valves)","(1x) Grundfos UPS2 15-50/60 22mm Complete Pump (With Valves)"),
+	("(1x) Grundfos UPS2 15-50/60 28mm Complete Pump (With Valves)","(1x) Grundfos UPS2 15-50/60 28mm Complete Pump (With Valves)"),
+	("(1x) Grundfos UPS2 25-80 Complete Pump","(1x) Grundfos UPS2 25-80 Complete Pump"),
+	("(1x) Honeywell 2 Port (22mm)","(1x) Honeywell 2 Port (22mm)"),
+	("(2x) Honeywell 2 Port (22mm)","(2x) Honeywell 2 Port (22mm)"),
+	("(1x) Honeywell 2 Port (28mm)","(1x) Honeywell 2 Port (28mm)"),
+	("(2x) Honeywell 2 Port (28mm)","(2x) Honeywell 2 Port (28mm)"),
+	("(1x) Honeywell 3 Port (22mm)","(1x) Honeywell 3 Port (22mm)"),
+	("(1x) Honeywell 3 Port (28mm)","(1x) Honeywell 3 Port (28mm)"),
+	("(1x) Cylinder Stat Wireless","(1x) Cylinder Stat Wireless"),
+	("(1x) Honeywell L641A Cylinder Thermostat","(1x) Honeywell L641A Cylinder Thermostat"),
+	("(1x) Honeywell CS92A Wireless Cylinder Thermostat","(1x) Honeywell CS92A Wireless Cylinder Thermostat"),
+	("(1x) Drayton 2 Port (22mm)","(1x) Drayton 2 Port (22mm)"),
+	("(2x) Drayton 2 Port (22mm)","(2x) Drayton 2 Port (22mm)"),
+	("(1x) Drayton 2 Port (28mm)","(1x) Drayton 2 Port (28mm)"),
+	("(2x) Drayton 2 Port (28mm)","(2x) Drayton 2 Port (28mm)"),
+	("(1x) Drayton 3 Port (22mm)","(1x) Drayton 3 Port (22mm)"),
+	("(1x) Drayton 3 Port (28mm)","(1x) Drayton 3 Port (28mm)"),
+	("(1) x Auto Bypass (15mm)","(1) x Auto Bypass (15mm)"),
+	("(1) x Auto Bypass (22mm)","(1) x Auto Bypass (22mm)"),
+	("(1x) x 11&quot; Immersion","(1x) x 11&quot Immersion"),
+	("(1x) x 14&quot; Immersion","(1x) x 14&quot Immersion"),
+	("(1x) x 27&quot; Immersion","(1x) x 27&quot Immersion"),
 )
 
 CONDENSATE_COMPONENTS_DROPDOWN = (	
-    ("No Additional Condensate Components","No Additional Condensate Components"),
-    ("(1x) Inline Condensate Neutraliser","(1x) Inline Condensate Neutraliser"),
-    ("(1x) Grundfos Conlift 1 LS Pump","(1x) Grundfos Conlift 1 LS Pump"),
-    ("(1x) Soakaway and Lime Stone Chippings","(1x) Soakaway and Lime Stone Chippings"),
-    ("(1x) McAlpine Clamp 1GR","(1x) McAlpine Clamp 1GR"),
-    ("(1x) McAlpine Mechanical Boss Connector 40mm","(1x) McAlpine Mechanical Boss Connector 40mm"),
-    ("(1x) 110mm Strap Boss","(1x) 110mm Strap Boss"),
-    ("(1x) HOTun","(1x) HOTun"),
-    ("(1x) Length 32mm Waste pipe","(1x) Length 32mm Waste pipe"),
-    ("(2x) Length 32mm Waste pipe","(2x) Length 32mm Waste pipe"),
-    ("(3x) Length 32mm Waste pipe","(3x) Length 32mm Waste pipe"),
-    ("(4x) Length 32mm Waste pipe","(4x) Length 32mm Waste pipe"),
-    ("(3x) 32mm Waste Clips","(3x) 32mm Waste Clips"),
-    ("(6x) 32mm Waste Clips","(6x) 32mm Waste Clips"),
-    ("(9x) 32mm Waste Clips","(9x) 32mm Waste Clips"),
-    ("(12x) 32mm Waste Clips","(12x) 32mm Waste Clips"),
-    ("(2x) 32mm Waste Elbows","(2x) 32mm Waste Elbows"),
-    ("(4x) 32mm Waste Elbows","(4x) 32mm Waste Elbows"),
-    ("(6x) 32mm Waste Elbows","(6x) 32mm Waste Elbows"),
-    ("(8x) 32mm Waste Elbows","(8x) 32mm Waste Elbows"),
-    ("(1x) 32mm Waste Coupling","(1x) 32mm Waste Coupling"),
-    ("(2x) 32mm Waste Coupling","(2x) 32mm Waste Coupling"),
-    ("(3x) 32mm Waste Coupling","(3x) 32mm Waste Coupling"),
-    ("(4x) 32mm Waste Coupling","(4x) 32mm Waste Coupling"),
+	("No Additional Condensate Components","No Additional Condensate Components"),
+	("(1x) Inline Condensate Neutraliser","(1x) Inline Condensate Neutraliser"),
+	("(1x) Grundfos Conlift 1 LS Pump","(1x) Grundfos Conlift 1 LS Pump"),
+	("(1x) Soakaway and Lime Stone Chippings","(1x) Soakaway and Lime Stone Chippings"),
+	("(1x) McAlpine Clamp 1GR","(1x) McAlpine Clamp 1GR"),
+	("(1x) McAlpine Mechanical Boss Connector 40mm","(1x) McAlpine Mechanical Boss Connector 40mm"),
+	("(1x) 110mm Strap Boss","(1x) 110mm Strap Boss"),
+	("(1x) HOTun","(1x) HOTun"),
+	("(1x) Length 32mm Waste pipe","(1x) Length 32mm Waste pipe"),
+	("(2x) Length 32mm Waste pipe","(2x) Length 32mm Waste pipe"),
+	("(3x) Length 32mm Waste pipe","(3x) Length 32mm Waste pipe"),
+	("(4x) Length 32mm Waste pipe","(4x) Length 32mm Waste pipe"),
+	("(3x) 32mm Waste Clips","(3x) 32mm Waste Clips"),
+	("(6x) 32mm Waste Clips","(6x) 32mm Waste Clips"),
+	("(9x) 32mm Waste Clips","(9x) 32mm Waste Clips"),
+	("(12x) 32mm Waste Clips","(12x) 32mm Waste Clips"),
+	("(2x) 32mm Waste Elbows","(2x) 32mm Waste Elbows"),
+	("(4x) 32mm Waste Elbows","(4x) 32mm Waste Elbows"),
+	("(6x) 32mm Waste Elbows","(6x) 32mm Waste Elbows"),
+	("(8x) 32mm Waste Elbows","(8x) 32mm Waste Elbows"),
+	("(1x) 32mm Waste Coupling","(1x) 32mm Waste Coupling"),
+	("(2x) 32mm Waste Coupling","(2x) 32mm Waste Coupling"),
+	("(3x) 32mm Waste Coupling","(3x) 32mm Waste Coupling"),
+	("(4x) 32mm Waste Coupling","(4x) 32mm Waste Coupling"),
 )
 
 ADDITIONAL_COPPER_REQUIRED_DROPDOWN = (
 	("No Additional Copper Required","No Additional Copper Required"),
-    ("(1x) Length 15mm Copper Tube","(1x) Length 15mm Copper Tube"),
-    ("(2x) Length 15mm Copper Tube","(2x) Length 15mm Copper Tube"),
-    ("(3x) Length 15mm Copper Tube","(3x) Length 15mm Copper Tube"),
-    ("(4x) Length 15mm Copper Tube","(4x) Length 15mm Copper Tube"),
-    ("(5x) Length 15mm Copper Tube","(5x) Length 15mm Copper Tube"),
-    ("(6x) Length 15mm Copper Tube","(6x) Length 15mm Copper Tube"),
-    ("(7x) Length 15mm Copper Tube","(7x) Length 15mm Copper Tube"),
-    ("(8x) Length 15mm Copper Tube","(8x) Length 15mm Copper Tube"),
-    ("(9x) Length 15mm Copper Tube","(9x) Length 15mm Copper Tube"),
-    ("(10x) Length 15mm Copper Tube","(10x) Length 15mm Copper Tube"),
-    ("(1x) Length 22mm Copper Tube","(1x) Length 22mm Copper Tube"),
-    ("(2x) Length 22mm Copper Tube","(2x) Length 22mm Copper Tube"),
-    ("(3x) Length 22mm Copper Tube","(3x) Length 22mm Copper Tube"),
-    ("(4x) Length 22mm Copper Tube","(4x) Length 22mm Copper Tube"),
-    ("(5x) Length 22mm Copper Tube","(5x) Length 22mm Copper Tube"),
-    ("(6x) Length 22mm Copper Tube","(6x) Length 22mm Copper Tube"),
-    ("(7x) Length 22mm Copper Tube","(7x) Length 22mm Copper Tube"),
-    ("(8x) Length 22mm Copper Tube","(8x) Length 22mm Copper Tube"),
-    ("(9x) Length 22mm Copper Tube","(9x) Length 22mm Copper Tube"),
-    ("(10x) Length 22mm Copper Tube","(10x) Length 22mm Copper Tube"),
-    ("(1x) Length 28mm Copper Tube","(1x) Length 28mm Copper Tube"),
-    ("(2x) Length 28mm Copper Tube","(2x) Length 28mm Copper Tube"),
-    ("(3x) Length 28mm Copper Tube","(3x) Length 28mm Copper Tube"),
-    ("(4x) Length 28mm Copper Tube","(4x) Length 28mm Copper Tube"),
-    ("(5x) Length 28mm Copper Tube","(5x) Length 28mm Copper Tube"),
-    ("(6x) Length 28mm Copper Tube","(6x) Length 28mm Copper Tube"),
-    ("(7x) Length 28mm Copper Tube","(7x) Length 28mm Copper Tube"),
-    ("(8x) Length 28mm Copper Tube","(8x) Length 28mm Copper Tube"),
-    ("(9x) Length 28mm Copper Tube","(9x) Length 28mm Copper Tube"),
-    ("(10x) Length 28mm Copper Tube","(10x) Length 28mm Copper Tube"),
-    ("(1x) Small Roll 8mm Copper Tube","(1x) Small Roll 8mm Copper Tube"),
-    ("(1x) Large Roll 8mm Copper Tube","(1x) Large Roll 8mm Copper Tube"),
-    ("(1x) Small Roll 10mm Copper Tube","(1x) Small Roll 10mm Copper Tube"),
-    ("(1x) Large Roll 10mm Copper Tube","(1x) Large Roll 10mm Copper Tube"),
+	("(1x) Length 15mm Copper Tube","(1x) Length 15mm Copper Tube"),
+	("(2x) Length 15mm Copper Tube","(2x) Length 15mm Copper Tube"),
+	("(3x) Length 15mm Copper Tube","(3x) Length 15mm Copper Tube"),
+	("(4x) Length 15mm Copper Tube","(4x) Length 15mm Copper Tube"),
+	("(5x) Length 15mm Copper Tube","(5x) Length 15mm Copper Tube"),
+	("(6x) Length 15mm Copper Tube","(6x) Length 15mm Copper Tube"),
+	("(7x) Length 15mm Copper Tube","(7x) Length 15mm Copper Tube"),
+	("(8x) Length 15mm Copper Tube","(8x) Length 15mm Copper Tube"),
+	("(9x) Length 15mm Copper Tube","(9x) Length 15mm Copper Tube"),
+	("(10x) Length 15mm Copper Tube","(10x) Length 15mm Copper Tube"),
+	("(1x) Length 22mm Copper Tube","(1x) Length 22mm Copper Tube"),
+	("(2x) Length 22mm Copper Tube","(2x) Length 22mm Copper Tube"),
+	("(3x) Length 22mm Copper Tube","(3x) Length 22mm Copper Tube"),
+	("(4x) Length 22mm Copper Tube","(4x) Length 22mm Copper Tube"),
+	("(5x) Length 22mm Copper Tube","(5x) Length 22mm Copper Tube"),
+	("(6x) Length 22mm Copper Tube","(6x) Length 22mm Copper Tube"),
+	("(7x) Length 22mm Copper Tube","(7x) Length 22mm Copper Tube"),
+	("(8x) Length 22mm Copper Tube","(8x) Length 22mm Copper Tube"),
+	("(9x) Length 22mm Copper Tube","(9x) Length 22mm Copper Tube"),
+	("(10x) Length 22mm Copper Tube","(10x) Length 22mm Copper Tube"),
+	("(1x) Length 28mm Copper Tube","(1x) Length 28mm Copper Tube"),
+	("(2x) Length 28mm Copper Tube","(2x) Length 28mm Copper Tube"),
+	("(3x) Length 28mm Copper Tube","(3x) Length 28mm Copper Tube"),
+	("(4x) Length 28mm Copper Tube","(4x) Length 28mm Copper Tube"),
+	("(5x) Length 28mm Copper Tube","(5x) Length 28mm Copper Tube"),
+	("(6x) Length 28mm Copper Tube","(6x) Length 28mm Copper Tube"),
+	("(7x) Length 28mm Copper Tube","(7x) Length 28mm Copper Tube"),
+	("(8x) Length 28mm Copper Tube","(8x) Length 28mm Copper Tube"),
+	("(9x) Length 28mm Copper Tube","(9x) Length 28mm Copper Tube"),
+	("(10x) Length 28mm Copper Tube","(10x) Length 28mm Copper Tube"),
+	("(1x) Small Roll 8mm Copper Tube","(1x) Small Roll 8mm Copper Tube"),
+	("(1x) Large Roll 8mm Copper Tube","(1x) Large Roll 8mm Copper Tube"),
+	("(1x) Small Roll 10mm Copper Tube","(1x) Small Roll 10mm Copper Tube"),
+	("(1x) Large Roll 10mm Copper Tube","(1x) Large Roll 10mm Copper Tube"),
 )
 
 FITTINGS_PACKS_DROPDOWN = (
 	("No Pack Required","No Pack Required"),
-    ("Pack 1 Conventional to Conventional (22mm)","Pack 1 Conventional to Conventional (22mm)"),
-    ("Pack 1 Conventional to Conventional (28mm)","Pack 1 Conventional to Conventional (28mm)"),
-    ("Pack 2 Combi to Combi","Pack 2 Combi to Combi"),
-    ("Pack 3 Conventional to Combi","Pack 3 Conventional to Combi"),
-    ("Pack 4 Cylinder Replace","Pack 4 Cylinder Replace"),
-    ("Pack 5 Internal Condense","Pack 5 Internal Condense"),
-    ("Pack 6W External Condense (White)","Pack 6W External Condense (White)"),
-    ("Pack 6B External Condense (Black)","Pack 6B External Condense (Black)"),
-    ("Pack 7 Fully Pumped Update (22mm)","Pack 7 Fully Pumped Update (22mm)"),
-    ("Pack 8 Fully Pumped Update (28mm)","Pack 8 Fully Pumped Update (28mm)"),
-    ("New Full System Pack","New Full System Pack"),
+	("Pack 1 Conventional to Conventional (22mm)","Pack 1 Conventional to Conventional (22mm)"),
+	("Pack 1 Conventional to Conventional (28mm)","Pack 1 Conventional to Conventional (28mm)"),
+	("Pack 2 Combi to Combi","Pack 2 Combi to Combi"),
+	("Pack 3 Conventional to Combi","Pack 3 Conventional to Combi"),
+	("Pack 4 Cylinder Replace","Pack 4 Cylinder Replace"),
+	("Pack 5 Internal Condense","Pack 5 Internal Condense"),
+	("Pack 6W External Condense (White)","Pack 6W External Condense (White)"),
+	("Pack 6B External Condense (Black)","Pack 6B External Condense (Black)"),
+	("Pack 7 Fully Pumped Update (22mm)","Pack 7 Fully Pumped Update (22mm)"),
+	("Pack 8 Fully Pumped Update (28mm)","Pack 8 Fully Pumped Update (28mm)"),
+	("New Full System Pack","New Full System Pack"),
 )
 
 ELECTRICAL_PACK_DROPDOWN = (
@@ -617,26 +617,26 @@ RADIATOR_SPECIFICATION_CHOICES = (
 RADIATOR_LOCATION_DROPDOWN = (
 	('','-----------'),
 	("Bedroom 1","Bedroom 1"),
-    ("Bedroom 2","Bedroom 2"),
-    ("Bedroom 3","Bedroom 3"),
-    ("Bedroom 4","Bedroom 4"),
-    ("Bedroom 5","Bedroom 5"),
-    ("Dining Room","Dining Room"),
-    ("Lounge","Lounge"),
-    ("Downstairs Hallway","Downstairs Hallway"),
-    ("Downstairs WC","Downstairs WC"),
-    ("Kitchen","Kitchen"),
-    ("Conservatory","Conservatory"),
-    ("Landing","Landing"),
-    ("Bathroom 1","Bathroom 1"),
-    ("Bathroom 2","Bathroom 2"),
-    ("Ensuite 1","Ensuite 1"),
-    ("Ensuite 2","Ensuite 2"),
-    ("Ensuite 3","Ensuite 3"),
-    ("Wardrobe","Wardrobe"),
-    ("Study","Study"),
-    ("Utility Room","Utility Room"),
-    ("Games Room","Games Room"),
+	("Bedroom 2","Bedroom 2"),
+	("Bedroom 3","Bedroom 3"),
+	("Bedroom 4","Bedroom 4"),
+	("Bedroom 5","Bedroom 5"),
+	("Dining Room","Dining Room"),
+	("Lounge","Lounge"),
+	("Downstairs Hallway","Downstairs Hallway"),
+	("Downstairs WC","Downstairs WC"),
+	("Kitchen","Kitchen"),
+	("Conservatory","Conservatory"),
+	("Landing","Landing"),
+	("Bathroom 1","Bathroom 1"),
+	("Bathroom 2","Bathroom 2"),
+	("Ensuite 1","Ensuite 1"),
+	("Ensuite 2","Ensuite 2"),
+	("Ensuite 3","Ensuite 3"),
+	("Wardrobe","Wardrobe"),
+	("Study","Study"),
+	("Utility Room","Utility Room"),
+	("Games Room","Games Room"),
 )
 
 RADIATOR_HEIGHT_DROPDOWN = (
@@ -655,27 +655,27 @@ RADIATOR_HEIGHT_DROPDOWN = (
 RADIATOR_WIDTH_DROPDOWN = (
 	('','----'),
 	("400","400"),
-    ("500","500"),
-    ("600","600"),
-    ("700","700"),
-    ("800","800"),
-    ("900","900"),
-    ("1000","1000"),
-    ("1100","1100"),
-    ("1200","1200"),
-    ("1400","1400"),
-    ("1600","1600"),
-    ("1800","1800"),
-    ("2000","2000"),
-    ("2600","2600"),
-    ("2800","2800"),
+	("500","500"),
+	("600","600"),
+	("700","700"),
+	("800","800"),
+	("900","900"),
+	("1000","1000"),
+	("1100","1100"),
+	("1200","1200"),
+	("1400","1400"),
+	("1600","1600"),
+	("1800","1800"),
+	("2000","2000"),
+	("2600","2600"),
+	("2800","2800"),
 )
 
 RADIATOR_TYPE_DROPDOWN = (
 	('','---'),
 	("P+","P+"),
-    ("K1","K1"),
-    ("K2","K2"),
+	("K1","K1"),
+	("K2","K2"),
 )
 
 RADIATOR_VALVES_DROPDOWN = (
@@ -757,6 +757,21 @@ TOWEL_RAIL_COLOUR = (
 	("Chrome","Chrome"),
 	("White","White"),
 )
+
+OPTIONAL_EXTRAS_QTY_DROPDOWN = (
+	('','--'),
+	('1','1'),
+	('2','2'),
+	('3','3'),
+	('4','4'),
+	('5','5'),
+	('6','6'),
+	('7','7'),
+	('8','8'),
+	('9','9'),
+	('10','10'),
+)
+
 
 
 ''' Section for defining the multiple forms that will be used for the boiler quote (FormWizard library) '''
@@ -989,7 +1004,23 @@ class ProductComponentForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user')
 		super(ProductComponentForm, self).__init__(*args, **kwargs)
-	#	self.fields['product_image'].queryset=Document.objects.filter(user = self.user)		
+
+''' Form for capturing the product components for the quote '''
+class OptionalExtraForm(forms.ModelForm):
+	
+	class Meta:
+		model = OptionalExtra
+		fields = ['product_name', 'price']
+
+		widgets = {
+			'product_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter the Optional Extra Product Name'}),
+			'price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter the Price of the Optional Extra'}),
+		}
+
+	def __init__(self, *args, **kwargs):
+		self.user = kwargs.pop('user')
+		super(OptionalExtraForm, self).__init__(*args, **kwargs)		
+		
 
 
 ''' Form for creating the capability for users to edit their own pdf layout for quote (not implemented in this release) '''
@@ -998,12 +1029,9 @@ class EditQuoteTemplateForm(forms.Form):
 	pdf_template_code = forms.CharField(widget=forms.Textarea(attrs={'rows':24, 'cols':100}))
 
 	def __init__(self, user, *args, **kwargs):
-		#self.user = kwargs.pop('user')
 		self.user = user
 		super(EditQuoteTemplateForm, self).__init__(*args, **kwargs)
 		usr_pdf_template_file = Path(settings.BASE_DIR + "/templates/pdf/user_{}/quote_for_pdf.html".format(self.user.username))
-		#usr_pdf_template_file = Path(settings.BASE_DIR + "/templates/pdf/user_test/quote_for_pdf.html")
-		#print(usr_pdf_template_file)
 		template_file = open(usr_pdf_template_file,'r')
 		self.fields['pdf_template_code'].initial = template_file.read
 		alert = None
@@ -1191,22 +1219,6 @@ class FormStepOne_yh(forms.Form):
 	customer_email = forms.EmailField()
 	owner_tenant_or_landlord = forms.ChoiceField(choices=OWNER_TENANT_OR_LANDLORD_DROPDOWN) 
 	
-
-# class FormStepTwo_yh(forms.Form):
-	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
-	# within double curly braces...
-	# form_data.1.field_name e.g. form_data.1.installation_address
-	# def __init__(self, *args, **kwargs):
-	# 	super(FormStepTwo_yh, self).__init__(*args, **kwargs)
-	# 	for field in self: 
-	# 		field.field.widget.attrs['class'] = 'form-control'
-	# house_name_or_number = forms.CharField(max_length=100)
-	# street_address = forms.CharField(max_length=100)
-	# city = forms.CharField(max_length=100)
-	# county = forms.CharField(max_length=100)
-	# postcode = forms.CharField(max_length=100)
-	# property_type = forms.ChoiceField(choices=PROPERTY_TYPE_DROPDOWN)
-
 class FormStepTwo_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
 	# within double curly braces...
@@ -1305,8 +1317,8 @@ class FormStepSeven_yh(forms.Form):
 		self.user = kwargs.pop('user')
 		self.manuf = kwargs.pop('manufacturer')
 		super(FormStepSeven_yh, self).__init__(*args, **kwargs)
-		self.fields['gas_flue_components'] = forms.ModelMultipleChoiceField(queryset=ProductComponent.objects.filter(user = self.user, brand = self.manuf, component_type = 'Gas Flue Component').only('component_name'))
-		self.fields['plume_components'] = forms.ModelMultipleChoiceField(queryset=ProductComponent.objects.filter(user = self.user, brand = self.manuf, component_type = 'Plume Component').only('component_name'))
+		self.fields['gas_flue_components'] = forms.ModelMultipleChoiceField(required=False, queryset=ProductComponent.objects.filter(user = self.user, brand = self.manuf, component_type = 'Gas Flue Component').only('component_name'))
+		self.fields['plume_components'] = forms.ModelMultipleChoiceField(required=False, queryset=ProductComponent.objects.filter(user = self.user, brand = self.manuf, component_type = 'Plume Component').only('component_name'))
 		self.fields['programmer_thermostat'] = forms.MultipleChoiceField(choices=PROGRAMMER_THERMOSTAT_DROPDOWN)
 		self.fields['additional_central_heating_components'] = forms.MultipleChoiceField(choices=ADDITIONAL_CENTRAL_HEATING_COMPONENTS_DROPDOWN)
 		self.fields['central_heating_system_filter'] = forms.ChoiceField(choices=CENTRAL_HEATING_SYSTEM_FILTER_DROPDOWN)
@@ -1323,24 +1335,13 @@ class FormStepSeven_yh(forms.Form):
 
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
-	#manufacturer_guarantee = forms.ChoiceField(choices=MANUFACTURER_GUARANTEE_DROPDOWN)
-	#flue_components = forms.ChoiceField(choices=FLUE_COMPONENTS_DROPDOWN)
-	#programmer_thermostat = forms.ChoiceField(choices=PROGRAMMER_THERMOSTAT_DROPDOWN)
-	#central_heating_system_filter = forms.ChoiceField(choices=CENTRAL_HEATING_SYSTEM_FILTER_DROPDOWN)
-	#scale_reducer = forms.ChoiceField(choices=SCALE_REDUCER_DROPDOWN)
 	
 class FormStepEight_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
 	# within double curly braces...
 	# form_data.7.field_name e.g. form_data.7.radiator_requirements
-	#def __init__(self, *args, **kwargs):
-	#	super(FormStepEight_yh, self).__init__(*args, **kwargs)
-	#	for field in self: 
-	#		field.field.widget.attrs['class'] = 'form-control'
 	radiator_specification = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(attrs = {'onchange' : "radiator_handler();"}),
 											 choices=RADIATOR_SPECIFICATION_CHOICES)
-	#radiator_specification = forms.ChoiceField(choices=RADIATOR_SPECIFICATION_CHOICES)
-											 #,  widget = forms.Select(attrs = {'onchange' : "add_field('TextBox');"})		
 	def __init__(self, *args, **kwargs):
 		super(FormStepEight_yh, self).__init__(*args, **kwargs)
 		self.fields['location_1'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
@@ -1455,31 +1456,48 @@ class FormStepEight_yh(forms.Form):
 		self.fields['towel_rail_colour_2'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_COLOUR)
 		self.fields['towel_rail_colour_3'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_COLOUR)
 		self.fields['towel_rail_colour_4'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_COLOUR)
-		
 
-		# self.fields['location_1'].hidden = True
+class ExtrasModelChoiceField(ModelChoiceField):
+	def label_from_instance(self, obj):
+		#return obj.name
+		return "%s - £%s" % (obj.product_name,  obj.price)	
+		#return obj.price
 
-		# for field in self: 
-		# 	field.field.widget.attrs['class'] = 'form-control'											 
 	
 class FormStepNine_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
 	# within double curly braces...
 	# form_data.8.field_name e.g. form_data.8.estimated_duration
 	def __init__(self, *args, **kwargs):
-		# Get the user to seed the filter on the drop down.
-		#self.user = kwargs.pop('user')
-		#self.manuf = kwargs.pop('manufacturer')
-		#self.alt_manuf = kwargs.pop('alt_manufacturer')
+		self.user = kwargs.pop('user')
 		super(FormStepNine_yh, self).__init__(*args, **kwargs)
-		#self.fields['product_choice'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user, brand = self.manuf), empty_label = 'Select Product for quote')
-		for field in self: 
-			field.field.widget.attrs['class'] = 'form-control'
-		#self.fields['alt_product_choice'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user, brand = self.alt_manuf), empty_label = 'Select Alternative Product for quote')
-		# for field in self: 
-		# 	field.field.widget.attrs['class'] = 'form-control'	
-	estimated_duration = forms.ChoiceField(choices=ESTIMATED_DURATION_DROPDOWN)
-	description_of_works = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'rows':15, 'cols':60}))
+		self.fields['extra_1'] = ExtrasModelChoiceField(required=False, queryset=OptionalExtra.objects.filter(user = self.user))
+		self.fields['extra_2'] = ExtrasModelChoiceField(required=False, queryset=OptionalExtra.objects.filter(user = self.user))
+		self.fields['extra_3'] = ExtrasModelChoiceField(required=False, queryset=OptionalExtra.objects.filter(user = self.user))
+		self.fields['extra_4'] = ExtrasModelChoiceField(required=False, queryset=OptionalExtra.objects.filter(user = self.user))
+		self.fields['extra_5'] = ExtrasModelChoiceField(required=False, queryset=OptionalExtra.objects.filter(user = self.user))
+		self.fields['extra_6'] = ExtrasModelChoiceField(required=False, queryset=OptionalExtra.objects.filter(user = self.user))
+		self.fields['extra_7'] = ExtrasModelChoiceField(required=False, queryset=OptionalExtra.objects.filter(user = self.user))
+		self.fields['extra_8'] = ExtrasModelChoiceField(required=False, queryset=OptionalExtra.objects.filter(user = self.user))
+		self.fields['extra_9'] = ExtrasModelChoiceField(required=False, queryset=OptionalExtra.objects.filter(user = self.user))
+		self.fields['extra_10'] = ExtrasModelChoiceField(required=False, queryset=OptionalExtra.objects.filter(user = self.user))
+
+		self.fields['extra_qty_1'] = forms.ChoiceField(required=False, choices=OPTIONAL_EXTRAS_QTY_DROPDOWN)
+		self.fields['extra_qty_2'] = forms.ChoiceField(required=False, choices=OPTIONAL_EXTRAS_QTY_DROPDOWN)
+		self.fields['extra_qty_3'] = forms.ChoiceField(required=False, choices=OPTIONAL_EXTRAS_QTY_DROPDOWN)
+		self.fields['extra_qty_4'] = forms.ChoiceField(required=False, choices=OPTIONAL_EXTRAS_QTY_DROPDOWN)
+		self.fields['extra_qty_5'] = forms.ChoiceField(required=False, choices=OPTIONAL_EXTRAS_QTY_DROPDOWN)
+		self.fields['extra_qty_6'] = forms.ChoiceField(required=False, choices=OPTIONAL_EXTRAS_QTY_DROPDOWN)
+		self.fields['extra_qty_7'] = forms.ChoiceField(required=False, choices=OPTIONAL_EXTRAS_QTY_DROPDOWN)
+		self.fields['extra_qty_8'] = forms.ChoiceField(required=False, choices=OPTIONAL_EXTRAS_QTY_DROPDOWN)
+		self.fields['extra_qty_9'] = forms.ChoiceField(required=False, choices=OPTIONAL_EXTRAS_QTY_DROPDOWN)
+		self.fields['extra_qty_10'] = forms.ChoiceField(required=False, choices=OPTIONAL_EXTRAS_QTY_DROPDOWN)
+
+	estimated_duration = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}), choices=ESTIMATED_DURATION_DROPDOWN)
+	description_of_works = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':16, 'cols':60}))
+	# add_optional_extras = forms.ChoiceField(widget=forms.CheckboxInput(attrs = {'class': 'form-check-input', 'onchange' : "radiator_handler();"}),
+	# 										 choices=OPTIONAL_EXTRAS_DROPDOWN)
+	optional_extras = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs = {'class': 'form-check-input', 'onchange' : "extras_handler();"}))										 
 
 class FinanceForm_yh(forms.Form):
 	total_cost = forms.FloatField()
@@ -1508,7 +1526,6 @@ class FinanceForm_yh(forms.Form):
 	def __init__(self, *args, **kwargs):
 		self.product_price = kwargs.pop('product_price')
 		super(FinanceForm_yh, self).__init__(*args, **kwargs)
-		#self.fields['total_cost'].disabled = True
 		self.fields['total_cost'].initial = self.product_price
 		self.fields['interest_free_12m_deposit_amount'].initial = (float(self.product_price) * 30) / 100
 		for field in self: 

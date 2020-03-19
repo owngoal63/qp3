@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+    <div class = "container quote-form-container">
+
+    <form action="" method="post">
+    {% csrf_token %}
+
+    <h3>WORKLOAD REQUIREMENTS & OPTIONAL EXTRAS</h3>
+    
+    <h5>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</h5>
+    
+    {{ wizard.management_form }}
+    {% if wizard.form.forms %}
+        {{ wizard.form.management_form }}
+        {% for form in wizard.form.forms %}
+          {{ form }}
+        {% endfor %}
+    {% else %}
+
+    <div class = "row">
+        <div class = "col-6">
+            <div class="form-group">
+                <label>{{ wizard.form.estimated_duration.label }}</label>
+                {{ wizard.form.estimated_duration }}
+            </div>
+            <div class="form-check">
+                <label class="form-check-label">{{ wizard.form.optional_extras.label }}</label>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ wizard.form.optional_extras }}
+                    <div class="form-extras-group"> 
+                        <table>
+                            <tr>
+                                <td>Product and Price</td>
+                                <td>Qty</td>
+                            </tr>
+                            <tr>
+                                <td>{{ wizard.form.extra_1 }}</td>
+                                <td>{{ wizard.form.extra_qty_1 }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ wizard.form.extra_2 }}</td>
+                                <td>{{ wizard.form.extra_qty_2 }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ wizard.form.extra_3 }}</td>
+                                <td>{{ wizard.form.extra_qty_3 }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ wizard.form.extra_4 }}</td>
+                                <td>{{ wizard.form.extra_qty_4 }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ wizard.form.extra_5 }}</td>
+                                <td>{{ wizard.form.extra_qty_5 }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ wizard.form.extra_6 }}</td>
+                                <td>{{ wizard.form.extra_qty_6 }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ wizard.form.extra_7 }}</td>
+                                <td>{{ wizard.form.extra_qty_7 }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ wizard.form.extra_8 }}</td>
+                                <td>{{ wizard.form.extra_qty_8 }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ wizard.form.extra_9 }}</td>
+                                <td>{{ wizard.form.extra_qty_9 }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ wizard.form.extra_10 }}</td>
+                                <td>{{ wizard.form.extra_qty_10 }}</td>
+                            </tr>
+                        </table>
+                        
+                    </div>
+                
+            </div>
+        </div>
+        <div class = "col-6">
+            <div class="form-group">
+                <label>{{ wizard.form.description_of_works.label }}</label>
+                {{ wizard.form.description_of_works }}
+            </div>
+        </div>
+
+    </div>
+
+    
+{% endif %}
+        
+    <div class = "row">
+        <div class="col-12">
+            <div class="boilerformbtns">
+                {% if wizard.steps.prev %}
+                <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.first }}" class="boilerbtn">First step</button>
+                <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.prev }}" class="boilerbtn">Previous step</button>
+                {% endif %}
+                {% if wizard.steps.step1 != 10 %}
+                <input class="btn btn-primary" id="next-step-btn" type="submit" value="Next Step" class="boilerbtn"/>
+                {% else %}
+                <input class="btn btn-primary" type="submit" value="Final Step" class="boilerbtn"/>
+                {% endif %}
+            </div>  
+        </div>
+    </div>
+    </form>
+    <br>
+
+</div> 
+{% endif %} 
+
+<script type="text/javascript">
+    $(function () {
+      $('[data-toggle="popover"]').popover()
+    })
+    
+    $('.popover-dismiss').popover({
+      trigger: 'focus'
+    })
+    
+    function extras_handler() {
+    
+    var extras_checkbox = document.getElementById('id_8-optional_extras');
+     
+    if (extras_checkbox.checked) {
+        document.getElementsByClassName("form-extras-group")[0].style.visibility = "visible";
+    } else {
+        document.getElementsByClassName("form-extras-group")[0].style.visibility = "hidden";
+    }
+    
+    console.log("hello");
+    }
+    </script>
+
+    {% endblock %}

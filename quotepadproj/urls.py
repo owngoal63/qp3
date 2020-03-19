@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 from quotepad.views import edit_profile_details, show_uploaded_files, quote_generated, test_quote_generated, quote_emailed, quote_not_possible, quotepad_template_help
 from quotepad.views import ProductPriceList, ProductPriceCreate, ProductPriceUpdate, ProductPriceDelete
 from quotepad.views import ProductComponentList, ProductComponentCreate, ProductComponentUpdate, ProductComponentDelete
+from quotepad.views import OptionalExtraList, OptionalExtraCreate, OptionalExtraUpdate, OptionalExtraDelete
 from quotepad.views import generate_quote_from_file, edit_quote_template, list_quote_archive, pdf_view
 
 # Imports for Westchem
@@ -73,6 +74,11 @@ urlpatterns = [
     path('productcomponentcreate/', ProductComponentCreate, name = 'productcomponentcreate'),
 	path('productcomponentupdate/<int:component_id>/', ProductComponentUpdate, name = 'productcomponentupdate'),
 	path('productcomponentdelete/<int:pk>/', login_required(ProductComponentDelete.as_view()), name = 'productcomponentdelete'),
+
+    path('optionalextralist/', login_required(OptionalExtraList.as_view()), name = 'optionalextralist'),
+    path('optionalextracreate/', OptionalExtraCreate, name = 'optionalextracreate'),
+	path('optionalextraupdate/<int:optional_extra_id>/', OptionalExtraUpdate, name = 'optionalextraupdate'),
+	path('optionalextradelete/<int:pk>/', login_required(OptionalExtraDelete.as_view()), name = 'optionalextradelete'),
 
     path('quotepadtemplatehelp/', quotepad_template_help, name = 'quotepad_template_help'),
 

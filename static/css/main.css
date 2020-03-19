@@ -205,6 +205,11 @@ a:hover {
   margin:0px;
 }
 
+.form-extras-group {
+  background-color: rgb(228, 228, 228);
+  visibility: hidden;
+}
+
 
 .input-disabled {
   text-align: left;

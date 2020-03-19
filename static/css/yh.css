@@ -414,6 +414,7 @@ div.break {
 
 table.radiator-table {
     border-spacing:0;
+    border: 1px solid black;
     padding:10px;
 }
 
