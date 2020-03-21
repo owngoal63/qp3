@@ -886,8 +886,90 @@
         </table>
 
     </div>
-    <br><br><br><br><br>
-    ... to be continued....
+    <!-- End of Page 5 -->
+
+    <div class="break"></div>
+
+    <!-- Page 6 -->
+
+    <div class="page-start"><br><br><br><br><br></div>
+
+    <div class="tech-details">
+        <table>
+            <tr>
+                <td class="tech-title">Pricing</td>
+            </tr>
+            <tr>
+                <td class="tech-attrib">TOTAL (PRICE INCLUSIVE OF VAT)</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">£{{product_record.price}}</td>
+            </tr>
+            <tr>
+                <td class="tech-attrib">DEPOSIT REQUIRED</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">£{{ form_data.9.deposit_amount|floatformat:2 }}</td>
+            </tr>
+            <tr>
+                <td class="tech-attrib">BALANCE DUE ON COMPLETION</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">£{{ form_data.9.ib120_loan_amount }}</td>
+            </tr>
+            {% if alt_product_record %}
+            <tr>
+                <td class="tech-attrib">ALTERNATIVE BOILER MANUFACTURER</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">{{alt_product_record.brand}}</td>
+            </tr>
+            <tr>
+                <td class="tech-attrib">ALTERNATIVE BOILER MODEL</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">{{alt_product_record.model_name}}</td>
+            </tr>
+            <tr>
+                <td class="tech-attrib">ALTERNATIVE BOILER PRICE</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">£{{alt_product_record.price}}</td>
+            </tr>
+            {% endif %}
+            <br>
+            <tr>    
+                <td class="tech-value">
+                    <table class="account-information">
+                        <tr>
+                            <td>
+                                <p class="account-header">Account Information</p>
+                                <br>
+                                <p class="account-details">If you are paying a deposit to secure an installation, you can do so using the details below.</p>
+                                <br>
+                                <p class="account-details">Account Name: Your Heat LTD</p>
+                                <br>
+                                <p class="account-details">Account Number: 54576261</p>
+                                <br>
+                                <p class="account-details">Sort Code: 60-60-08</p>
+                                <br>
+                                <p class="account-details">All major debit and credit cards accepted - including AMEX</p>
+
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td class="tech-attrib">Boiler 1: {{product_record.guarantee}} 
+                    {% if alt_product_record %}
+                        &nbsp;&nbsp;&nbsp;Boiler 2: {{alt_product_record.guarantee}}
+                    {% endif %}
+                </td>
+            </tr>
+
+        </table>
+    </div>       
 </body>
 
 </html>

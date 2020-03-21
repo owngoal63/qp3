@@ -418,4 +418,18 @@ table.radiator-table {
     padding:10px;
 }
 
-   
+table.account-information {
+    border-spacing:0;
+    border: 1px solid black;
+    padding:10px;
+}
+
+p.account-header {
+    font-size: 1rem;
+    font-weight: 400;
+ }
+
+p.account-details {
+    font-size: 0.9rem;
+    font-weight: 300;
+ }  
