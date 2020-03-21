@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Poppins&display=swap');
 
 * {
-    margin: 0px; 
+    margin: 0px;
     padding: 0px;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-size: 14px;
 
 }
@@ -31,37 +31,37 @@
 
 .gas-safe-number {
     font-size:0.4rem;
-    
+
 }
 
 @page {
 
     size: "A4";
-    
+
     margin: 1.5cm 1.5cm 3.5cm 1.5cm;
 
     @bottom-center {
 
         content:  "Page " counter(page) " / " counter(pages);
-        
+
         }
 
     @bottom-left {
 
         content: "Copyright Yourheat";
-            
+
     }
 
     @bottom-right {
 
         content: "01732 622990";
-            
-    }    
+
+    }
 }
 
 div.break {
     page-break-after:always;
-    }        
+    }
 
 .your-reference {
     margin-right: 20px;
@@ -69,7 +69,7 @@ div.break {
     padding:0;
     color:grey;
     font-size: 0.9rem;
-    font-weight: 300;
+    font-weight: 500;
     text-align: right;
     }
 
@@ -87,7 +87,7 @@ div.break {
     padding:0;
     color:grey;
     font-size: 0.9rem;
-    font-weight: 300;
+    font-weight: 500;
     text-align: left;
 }
 
@@ -135,7 +135,7 @@ div.break {
     background-color: #f1f1f1;
     text-align: center;
     font-size: 0.9rem;
-    font-weight: 200;
+    font-weight: 400;
     padding:3px 6px 3px 6px;
 }
 
@@ -143,14 +143,14 @@ div.break {
     background-color: #4db79c;
     text-align: center;
     font-size: 0.9rem;
-    font-weight: 200;
+    font-weight: 400;
     padding:3px 6px 3px 6px;
     color:white;
 }
 
 .payment-options {
     font-size: 1.4rem;
-    font-weight: 300;
+    font-weight: 500;
 }
 
 .header {
@@ -167,7 +167,7 @@ div.break {
     font-size: 14px;
     font-weight: 100;
     text-align: center; */
-    padding: 10px 0px 2px 0px;    
+    padding: 10px 0px 2px 0px;
 }
 
 .footer {
@@ -196,14 +196,14 @@ div.break {
     position:absolute;
     top: 100px;
     height:400px;
-    width:660px;
+    width:680px;
     background-color: white;
     border:5px solid orange;
     border-radius: 25px 0px 25px 0px;
     text-align: center;
-    padding-top:5px;    
+    padding-top:5px;
 
-}  
+}
 
 .price-orange-box {
     /* position: relative;
@@ -211,7 +211,7 @@ div.break {
     top: 50px;
     left: 180px;
     width:140px; */
-    margin-left:20px;
+    margin-left:15px;
     background-color: rgb(251,126,51);
     border:5px solid rgb(251,126,51);
     border-radius: 8px 0px 8px 0px;
@@ -233,14 +233,14 @@ div.break {
     padding-right:25px;
     padding-top: 10px;
     padding-bottom: 10px;
-    margin-left:130px;
+    margin-left:150px;
     margin-right: 130px;
     background-color: #494d53;
     border:5px solid #494d53;
     border-radius: 40px 0px 40px 0px;
     color:white;
     font-size: 1.2rem;
-    font-weight: 300;
+    font-weight: 500;
     text-align: center;
 }
 
@@ -255,7 +255,7 @@ div.break {
     background-color: #e8f1f4;
     border:5px solid #e8f1f4;
     border-radius: 10px 10px 10px 10px;
-    text-align: left;  
+    text-align: left;
 
 }
 
@@ -279,7 +279,7 @@ div.break {
     margin-left:5px;
     margin-right:5px;
 }
-  
+
   /* Bottom right text */
   .text-block {
     position: absolute;
@@ -300,25 +300,25 @@ div.break {
   .product-details {
       /* background-color: yellow; */
       /* height:350px; */
-      width:320px;
+      width:330px;
       float: left;
       /* display: inline-block; */
       text-align: left;
       margin:0;
-      padding:0;
-      
+      padding:2;
+
 
   }
 
   .alt-product-details {
       /* background-color: red; */
       /* height:350px; */
-      width:320px;
+      width:330px;
       float:right;
       /* display:block; */
       text-align: left;
       margin:0;
-      padding:0;
+      padding-right:15px;
   }
 
   .product-details-no-alt-product_details {
@@ -358,7 +358,7 @@ div.break {
   }
 
   .product-name li {
-    margin-left: 8px; 
+    margin-left: 8px;
     font-size: 0.7rem;
     width:140px;
     /* font-weight:400; */
@@ -371,7 +371,7 @@ div.break {
 
 .tech-title {
     font-size: 1.1rem;
-    font-weight:300;
+    font-weight:500;
     margin-top:5px;
     margin-bottom:1px;
     padding:0px;
@@ -426,10 +426,11 @@ table.account-information {
 
 p.account-header {
     font-size: 1rem;
-    font-weight: 400;
+    font-weight: 600;
  }
 
 p.account-details {
     font-size: 0.9rem;
-    font-weight: 300;
- }  
+    font-weight: 400;
+ }
+
