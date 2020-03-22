@@ -1279,9 +1279,9 @@ class FormStepFive_yh(forms.Form):
 	incoming_flow_rate = forms.ChoiceField(choices=INCOMING_FLOW_RATE_DROPDOWN)
 	will_boiler_be_housed_in_cupboard = forms.ChoiceField(choices=WILL_BOILER_BE_HOUSED_IN_CUPBOARD_DROPDOWN)
 	#new_flue_metres = forms.ChoiceField(choices=NEW_FLUE_METRES_DROPDOWN)
-	cupboard_height = forms.IntegerField(required=False,  widget=forms.TextInput(attrs={ 'placeholder': 'If appropriate'}))
-	cupboard_width = forms.IntegerField(required=False,  widget=forms.TextInput(attrs={ 'placeholder': 'If appropriate'}))
-	cupboard_depth = forms.IntegerField(required=False,  widget=forms.TextInput(attrs={ 'placeholder': 'If appropriate'}))
+	cupboard_height = forms.IntegerField(required=False,  widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate'}))
+	cupboard_width = forms.IntegerField(required=False,  widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate'}))
+	cupboard_depth = forms.IntegerField(required=False,  widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate'}))
 	
 class FormStepSix_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation

@@ -64,11 +64,11 @@
                 <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.first }}" class="boilerbtn">First step</button>
                 <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.prev }}" class="boilerbtn">Previous step</button>
                 {% endif %}
-                <button class="btn btn-danger" class="boilerbtn" type="button" onclick="doIt()">Calculate Finance</button>
+                <button class="btn btn-danger" class="boilerbtn" type="button" onclick="enableSubmitBtnAnddoIt()">Calculate Finance</button>
                 {% if wizard.steps.step1 != 10 %}
                 <input class="btn btn-primary" id="next-step-btn" type="submit" value="Next Step" class="boilerbtn"/>
                 {% else %}
-                <input class="btn btn-primary" type="submit" value="Final Step" class="boilerbtn"/>
+                <input class="btn btn-primary" id="final-step-btn" type="submit" value="Final Step" class="boilerbtn" disabled/>
                 {% endif %}
             </div>  
         </div>
@@ -95,28 +95,6 @@
 <!-- Hitachi page Layout code  -->
 
 
-<!-- <main>
-  <table id = "container">
-<tr>
-<td> -->
-  <!-- <form id="inputForm" action="#">
-    <table id="inputTab">
-      <tr>
-        <td><img align="left" src="data:image/bmp;base64"></td>
-        <td><input type="text" name="price" placeholder="Price" oninput="doIt()"></td>
-        <td><input type="text" name="deposit" placeholder="Deposit" oninput="doIt()"></td>
-      </tr>
-    </table>
-  </form> -->
-<!-- </td>
-</tr>
-<tr>
-<td> -->
-
-<!-- </main> -->
-
-
-
 <script type="text/javascript">
 $(function () {
   $('[data-toggle="popover"]').popover()
@@ -125,6 +103,16 @@ $(function () {
 $('.popover-dismiss').popover({
   trigger: 'focus'
 })
+
+function enableSubmitBtnAnddoIt() {
+  
+  //Enable the submit button on form
+  console.log(document.getElementById("id_9-deposit_amount").value.length)
+  if (document.getElementById("id_9-deposit_amount").value.length != 0) {
+    document.getElementById("final-step-btn").disabled = false;
+    doIt();
+  }  
+}
 
 // Hitachi JS script 
 
