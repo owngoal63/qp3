@@ -190,22 +190,20 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			if index == 5:
 				# This code replaces the <object reference> in the form array[5] with the product_id
 				string = str(line)
-				print(string)
 				firstDelPos=string.find("<") # get the position of <
 				secondDelPos=string.find(">") # get the position of >
-				stringAfterFirstReplace = string.replace(string[firstDelPos:secondDelPos+1], "'" + str(product_id) + "'")
+				stringAfterFirstReplace = string.replace(string[firstDelPos:secondDelPos+1], "'" + str(product_id) + "'", 1)
 				#file.write(str(stringAfterFirstReplace) + "\n")
 				#print(stringAfterFirstReplace)
 				# Repeat for Alternative product Code
-				print(stringAfterFirstReplace)
 				if alt_product_exists:
 					string = stringAfterFirstReplace
 					firstDelPos=string.find("<") # get the position of <
 					secondDelPos=string.find(">") # get the position of >
-					stringAfterReplace = string.replace(string[firstDelPos:secondDelPos+1], "'" + str(alt_product_id) + "'")
+					stringAfterReplace = string.replace(string[firstDelPos:secondDelPos+1], "'" + str(alt_product_id) + "'", 1)
 				else:
 					stringAfterReplace = stringAfterFirstReplace
-				print(stringAfterReplace)
+				
 
 				file.write(str(stringAfterReplace) + "\n")
 			elif index == 6:
@@ -260,8 +258,9 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			optional_extra_ext_price = OptionalExtra.objects.get(product_name = [form.cleaned_data for form in form_list][8].get('extra_10')).price * int([form.cleaned_data for form in form_list][8].get('extra_qty_10'))
 			optional_extra_extended_prices.append(optional_extra_ext_price)					
 		
-		print(product_record)
-		print(alt_product_record)
+		#print(product_record)
+		#print(alt_product_record)
+		print("end")
 		# Generate the PDF and write to disk
 		pdf_generation_to_file(sourceHtml, outputFilename, {
 			'form_data': [form.cleaned_data for form in form_list],
