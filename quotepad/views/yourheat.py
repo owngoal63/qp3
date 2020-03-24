@@ -16,8 +16,11 @@ import datetime
 from pathlib import Path, PureWindowsPath
 import os, os.path, errno
 
-# imports associated with sending email
-from django.core.mail import EmailMessage
+# imports associated with sending email ( sendgrid )
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import (Mail, Attachment, FileContent, FileName, FileType, Disposition, ContentId)
+import base64
+import json
 
 # import associated with signals (used for setting session variables)
 from django.dispatch import receiver
@@ -409,8 +412,8 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 		# Assign file name to store generated PDF
 		outputFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/Quote_{}_{}{}.pdf".format(request.user.username,idx.quote_prefix,customer_last_name.replace(" ","_"),f"{idx.current_quote_number:05}")) # pad with leading zeros (5 positions)
 		# Generate the PDF and write to disk
-		convertHtmlToPdf2(sourceHtml, outputFilename, {
-			'form_data': file_form_data,
+		pdf_generation_to_file(sourceHtml, outputFilename, {
+	    	'form_data': file_form_data,
 			'idx':idx,
 			'frecords': frecords,
 			'alt_product_record': alt_product_record,
@@ -423,14 +426,50 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 		# Generate the email, attach the pdf and send out
 		fd = file_form_data
 		msg=""
-		msg = msg + " Hi {}.\n Thank you for your enquiry to {}. The quote that you requested is on the attached PDF file.\n\n".format(fd[0]['customer_first_name'], idx.company_name)
-		msg = msg + " Should you have any further questions please feel free to contact me on {}.\n\n".format(idx.telephone)
-		msg = msg + " Kind regards,\n"
+		msg = msg + "<p>Hi {}.\n Thank you for your enquiry to {}.</p><p> The quote that you requested is on the attached PDF file.</p>".format(fd[0]['customer_first_name'], idx.company_name)
+		msg = msg + "<p>Should you have any further questions please feel free to contact me on {}.</p>".format(idx.telephone)
+		msg = msg + "<p>Kind regards,</p>"
 		msg = msg + " " + idx.first_name
-		email = EmailMessage(
-		'Your boiler installation quote from {}'.format(idx.company_name), msg, idx.email, [fd[0]['customer_email']])
-		email.attach_file(outputFilename)
-		email.send()
+		mail_subject = 'Your boiler installation quote from {}'.format(idx.company_name)
+		##email = EmailMessage(
+		##'Your boiler installation quote from {}'.format(idx.company_name), msg, idx.email, [fd[0]['customer_email']])
+		##email.attach_file(outputFilename)
+		##email.send()
+
+		# Where it was uploaded Path.
+		file_path = outputFilename
+
+		with open(file_path, 'rb') as f:
+			data = f.read()
+
+		# Encode contents of file as Base 64
+		encoded = base64.b64encode(data).decode()
+
+		"""Build attachment"""
+		attachment = Attachment()
+		attachment.file_content = FileContent(encoded)
+		attachment.file_type = FileType('application/pdf')
+		attachment.file_name = FileName('your_quote.pdf')
+		attachment.disposition = Disposition('attachment')
+		attachment.content_id = ContentId('Example Content ID')
+
+
+		message = Mail(
+			from_email='quotes@yourheat.co.uk',
+			to_emails=fd[0]['customer_email'],
+			subject = mail_subject,
+			html_content = msg)
+		message.attachment = attachment
+			#html_content='<strong>and easy to do anywhere, even with Python</strong>')
+
+		try:
+			sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+			response = sg.send(message)
+			print(response.status_code)
+			print(response.body)
+			print(response.headers)
+		except Exception as e:
+			print(e.message)
 		return HttpResponseRedirect('/quoteemailed/')
 
 	else:   # HTMLOutput
