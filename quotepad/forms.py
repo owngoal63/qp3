@@ -1294,9 +1294,11 @@ class FormStepSix_yh(forms.Form):
 		self.user = kwargs.pop('user')
 		self.manuf = kwargs.pop('manufacturer')
 		self.alt_manuf = kwargs.pop('alt_manufacturer')
+		self.fuel_type = kwargs.pop('fuel_type')
+		self.boiler_type = kwargs.pop('boiler_type')
 		super(FormStepSix_yh, self).__init__(*args, **kwargs)
-		self.fields['product_choice'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user, brand = self.manuf), empty_label = 'Select Product for quote')
-		self.fields['alt_product_choice'] = forms.ModelChoiceField(required=False, queryset=ProductPrice.objects.filter(user = self.user, brand = self.alt_manuf), empty_label = 'Select Alternative Product for quote')
+		self.fields['product_choice'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user, brand = self.manuf, fuel_type = self.fuel_type, boiler_type = self.boiler_type ), empty_label = 'Select Product for quote')
+		self.fields['alt_product_choice'] = forms.ModelChoiceField(required=False, queryset=ProductPrice.objects.filter(user = self.user, brand = self.alt_manuf, fuel_type = self.fuel_type, boiler_type = self.boiler_type), empty_label = 'Select Alternative Product for quote')
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
 	chemical_system_treatment = forms.ChoiceField(choices=CHEMICAL_SYSTEM_TREATMENT_DROPDOWN)

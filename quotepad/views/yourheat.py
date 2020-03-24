@@ -92,11 +92,13 @@ class BoilerFormWizardView_yh(SessionWizardView):
 	def get_form_kwargs(self, step):
 		#print(step)
 		if step == '5':
-			manuf_step_data = self.storage.get_step_data('4')
-			manuf = manuf_step_data.get('4-boiler_manufacturer','')
-			alt_manuf = manuf_step_data.get('4-alt_boiler_manufacturer','')
+			step_data = self.storage.get_step_data('4')
+			manuf = step_data.get('4-boiler_manufacturer','')
+			alt_manuf = step_data.get('4-alt_boiler_manufacturer','')
+			fuel_type = step_data.get('4-new_fuel_type','')
+			boiler_type = step_data.get('4-new_boiler_type','')
 			#print(manuf)
-			return {'user': self.request.user, 'manufacturer': manuf, 'alt_manufacturer': alt_manuf }
+			return {'user': self.request.user, 'manufacturer': manuf, 'alt_manufacturer': alt_manuf, 'fuel_type': fuel_type, 'boiler_type': boiler_type }
 		elif step == '6':
 			manuf_step_data = self.storage.get_step_data('4')
 			manuf = manuf_step_data.get('4-boiler_manufacturer','')
