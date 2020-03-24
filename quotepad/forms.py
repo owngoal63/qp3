@@ -1468,6 +1468,10 @@ class FormStepNine_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
 	# within double curly braces...
 	# form_data.8.field_name e.g. form_data.8.estimated_duration
+	estimated_duration = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}), choices=ESTIMATED_DURATION_DROPDOWN)
+	description_of_works = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':16, 'cols':60}))
+	optional_extras = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs = {'class': 'form-check-input', 'onchange' : "extras_handler();"}))
+
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user')
 		super(FormStepNine_yh, self).__init__(*args, **kwargs)
@@ -1493,11 +1497,12 @@ class FormStepNine_yh(forms.Form):
 		self.fields['extra_qty_9'] = forms.ChoiceField(required=False, choices=OPTIONAL_EXTRAS_QTY_DROPDOWN)
 		self.fields['extra_qty_10'] = forms.ChoiceField(required=False, choices=OPTIONAL_EXTRAS_QTY_DROPDOWN)
 
-	estimated_duration = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}), choices=ESTIMATED_DURATION_DROPDOWN)
-	description_of_works = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':16, 'cols':60}))
-	# add_optional_extras = forms.ChoiceField(widget=forms.CheckboxInput(attrs = {'class': 'form-check-input', 'onchange' : "radiator_handler();"}),
-	# 										 choices=OPTIONAL_EXTRAS_DROPDOWN)
-	optional_extras = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs = {'class': 'form-check-input', 'onchange' : "extras_handler();"}))										 
+		# Initialise the description of works field
+		text = "Our engineer(s) will install your new boiler and equipment safely and efficiently with minimal disruption to your home.  To protect the boiler, system and radiators from sludge and corrosion, a Magnetic System Filter will be installed. The system will also be chemically flushed as a minimum, along with the required dose of inhibitor added to protect the system.\n\n"
+		text = text + "The engineer(s) will arrive each day between 08:00 and 09:30 and before they leave, your new system will be fully tested and commissioned. The necessary safety certificates will be registered on completion and all paperwork will be sent you direct from the manufacturer and building control. We promise they will take good care of your home, using dust sheets to protect all surfaces.\n\n"
+		text = text + "All waste will be disposed of in accordance with current Waste Disposal Regulation. While we always endeavour to keep the installation to the estimated duration, we may use additional labour to achieve completion in a shorter time-frame, or we may require additional days on site."
+		self.fields['description_of_works'].initial = text
+
 
 class FinanceForm_yh(forms.Form):
 	total_cost = forms.FloatField()
