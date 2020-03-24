@@ -971,10 +971,12 @@ class ProductPriceForm(forms.ModelForm):
 	
 	class Meta:
 		model = ProductPrice
-		fields = ['brand', 'model_name', 'product_code','price','product_image','guarantee']
+		fields = ['brand', 'fuel_type', 'boiler_type', 'model_name', 'product_code','price','product_image','guarantee']
 
 		widgets = {
-			'brand': forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Enter the Manufacturer's Brand Name",  'autofocus': ''}),
+			'brand': forms.Select(attrs={'class': 'form-control',  'autofocus': ''}),
+			'fuel_type': forms.Select(attrs={'class': 'form-control'}),
+			'boiler_type': forms.Select(attrs={'class': 'form-control'}),
 			'model_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter the Model Name'}),
 			'product_code': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter the Product Code'}),
 			'price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter the Price of the product'}),

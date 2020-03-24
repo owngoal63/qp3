@@ -3,6 +3,28 @@ from django.contrib.auth.models import User
 
 ''' Models used in the quotepad application '''
 
+PRODUCT_BRAND_DROPDOWN = (
+	('Worcester Bosch','Worcester Bosch'),
+	('Worcester Bosch 2000','Worcester Bosch 2000'),
+	('Worcester Bosch Lifestyle','Worcester Bosch Lifestyle'),
+	('Vaillant','Vaillant'),
+	('Ideal','Ideal'),
+	('Glow Worm','Glow Worm'),
+	('Baxi','Baxi'),
+)
+
+PRODUCT_FUEL_TYPE_DROPDOWN = (
+	('Gas','Gas'),
+	('LPG','LPG'),
+	('Oil','Oil'),
+)
+
+PRODUCT_BOILER_TYPE_DROPDOWN = (
+	('Combi','Combi'),
+	('Conventional','Conventional'),
+	('System','System'),
+)
+
 PRODUCT_GUARANTEE_DROPDOWN = (
 	('12 Year Parts & Labour Guarantee','12 Year Parts & Labour Guarantee'),
 	('6 Year Parts & Labour Guarantee','6 Year Parts & Labour Guarantee'),
@@ -56,7 +78,9 @@ class Profile(models.Model):
 ''' Model for storing details on the product that will be used in the quote '''
 class ProductPrice(models.Model):
 	user            =   models.ForeignKey(User, on_delete=models.CASCADE)
-	brand           =   models.CharField(max_length=100)
+	brand           =   models.CharField(max_length=50, choices=PRODUCT_BRAND_DROPDOWN)
+	fuel_type       =   models.CharField(max_length=50, choices=PRODUCT_FUEL_TYPE_DROPDOWN)
+	boiler_type     =   models.CharField(max_length=50, choices=PRODUCT_BOILER_TYPE_DROPDOWN)
 	model_name      =   models.CharField(max_length=100)
 	product_code    =   models.CharField(max_length=40)
 	price           =   models.DecimalField(max_digits=10, decimal_places=2, default=0)
