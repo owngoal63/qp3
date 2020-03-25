@@ -25,6 +25,9 @@
             <div class="form-group">
                 <label>{{ wizard.form.radiator_specification.label }}</label>
                 {{ wizard.form.radiator_specification }}
+                <div class="form-cust-rad-qty">
+                    Qty: {{ wizard.form.cust_supply_radiator_quantity }}
+                </div>
             </div>
         </div>
     </div>
@@ -196,34 +199,39 @@
                 <p class="radiator-section-headings">Towel Rail Measurement / Location *</p> 
                 <table>
                     <tr>
-                        <td width="180px">Location</td>
+                        <td width="220px">Location</td>
+                        <td width="50px">Width</td>
                         <td width="100px">Height</td>
-                        <td width="100px">Width</td>
                         <td width="50px">Colour</td>
+                        <td width="50px">Type</td>
                     </tr>
                     <tr>
-                        <td width="180px">{{wizard.form.towel_rail_location_1}}</td>
+                        <td width="220px">{{wizard.form.towel_rail_location_1}}</td>
+                        <td width="50px">{{wizard.form.towel_rail_width_1}}</td>
                         <td width="100px">{{wizard.form.towel_rail_height_1}}</td>
-                        <td width="100px">{{wizard.form.towel_rail_width_1}}</td>
                         <td width="50px">{{wizard.form.towel_rail_colour_1}}</td>
+                        <td width="50px">{{wizard.form.towel_rail_type_1}}</td>
                     </tr>
                     <tr>
-                        <td width="180px">{{wizard.form.towel_rail_location_2}}</td>
+                        <td width="220px">{{wizard.form.towel_rail_location_2}}</td>
+                        <td width="50px">{{wizard.form.towel_rail_width_2}}</td>
                         <td width="100px">{{wizard.form.towel_rail_height_2}}</td>
-                        <td width="100px">{{wizard.form.towel_rail_width_2}}</td>
                         <td width="50px">{{wizard.form.towel_rail_colour_2}}</td>
+                        <td width="50px">{{wizard.form.towel_rail_type_2}}</td>
                     </tr>
                     <tr>
-                        <td width="180px">{{wizard.form.towel_rail_location_3}}</td>
+                        <td width="220px">{{wizard.form.towel_rail_location_3}}</td>
+                        <td width="50px">{{wizard.form.towel_rail_width_3}}</td>
                         <td width="100px">{{wizard.form.towel_rail_height_3}}</td>
-                        <td width="100px">{{wizard.form.towel_rail_width_3}}</td>
                         <td width="50px">{{wizard.form.towel_rail_colour_3}}</td>
+                        <td width="50px">{{wizard.form.towel_rail_type_3}}</td>
                     </tr>
                     <tr>
-                        <td width="180px">{{wizard.form.towel_rail_location_4}}</td>
+                        <td width="220px">{{wizard.form.towel_rail_location_4}}</td>
+                        <td width="50px">{{wizard.form.towel_rail_width_4}}</td>
                         <td width="100px">{{wizard.form.towel_rail_height_4}}</td>
-                        <td width="100px">{{wizard.form.towel_rail_width_4}}</td>
                         <td width="50px">{{wizard.form.towel_rail_colour_4}}</td>
+                        <td width="50px">{{wizard.form.towel_rail_type_4}}</td>
                     </tr>
                 </table>
             </div>        
@@ -307,6 +315,9 @@
         document.getElementsByClassName("form-rad-group")[0].style.visibility = "hidden";
         document.getElementsByClassName("form-rad-valve-group")[0].style.visibility = "hidden";
         document.getElementsByClassName("form-towel-group")[0].style.visibility = "hidden";
+        document.getElementsByClassName("form-cust-rad-qty")[0].style.visibility = "visible";
+    } else {
+        document.getElementsByClassName("form-cust-rad-qty")[0].style.visibility = "hidden";
     }
 
 //     var x = document.getElementById("myDIV");

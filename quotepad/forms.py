@@ -94,6 +94,7 @@ CURRENT_CONTROLS_DROPDOWN = (
 )
 
 REMOVALS_CHOICES = (
+	('Radiators','Radiators'),
 	('Old Boiler','Old Boiler'),
 	('Hot Water Cylinder','Hot Water Cylinder'),
 	('Cold Water Tank','Cold Water Tank'),
@@ -122,6 +123,8 @@ NEW_BOILER_TYPE_DROPDOWN = (
 
 NEW_BOILER_LOCATION_DROPDOWN = (
 	('','Select One'),
+	('Existing Location','Existing Location'),
+	('Relocate in current room','Relocate in current room'),
 	('Kitchen','Kitchen'),
 	('Bathroom','Bathroom'),
 	('Bedroom','Bedroom'),
@@ -387,6 +390,9 @@ CURRENT_RADIATORS_WORKING_CORRECTLY_DROPDOWN = (
 INCOMING_FLOW_RATE_DROPDOWN = (
 	('','Select One'),
 	('N/A','N/A'),
+	('Visually weak (remote quote)','Visually weak (remote quote)'),
+	('Visually average (remote quote)','Visually average (remote quote)'),
+	('Visually strong (remote quote)','Visually strong (remote quote)'),
 	('1','1'),
 	('2','2'),
 	('3','3'),
@@ -428,8 +434,12 @@ WILL_BOILER_BE_HOUSED_IN_CUPBOARD_DROPDOWN = (
 CHEMICAL_SYSTEM_TREATMENT_DROPDOWN = (
 	('','Select One'),
 	('Chemical Flush & Inhibitor','Chemical Flush & Inhibitor'),
-	#('Magna Pro Flush & Inhibitor','Magna Pro Flush & Inhibitor'),
 	('Chemical Powerflush & Inhibitor','Chemical Powerflush & Inhibitor'),
+	('Magnacleanse added (up to 10 rads)','Magnacleanse added (up to 10 rads)'),
+	('Magnacleanse added (up to 15 rads)','Magnacleanse added (up to 15 rads)'),
+	('Magnacleanse added (up to 20 rads)','Magnacleanse added (up to 20 rads)'),
+	('Magnacleanse added (more than 20 rads)','Magnacleanse added (more than 20 rads)'),
+	
 )
 
 SCAFFOLDING_REQUIRED_DROPDOWN = (
@@ -758,6 +768,12 @@ TOWEL_RAIL_COLOUR = (
 	("White","White"),
 )
 
+TOWEL_RAIL_TYPE = (
+	('','-----'),
+	("Straight","Straight"),
+	("Curved","Curved"),
+)
+
 OPTIONAL_EXTRAS_QTY_DROPDOWN = (
 	('','--'),
 	('1','1'),
@@ -770,6 +786,41 @@ OPTIONAL_EXTRAS_QTY_DROPDOWN = (
 	('8','8'),
 	('9','9'),
 	('10','10'),
+)
+
+LOCATIONS_WHERE_RADIATORS_NOT_WORKING_CORRECTLY_DROPDOWN = (
+	("Bedroom 1","Bedroom 1"),
+	("Bedroom 2","Bedroom 2"),
+	("Bedroom 3","Bedroom 3"),
+	("Bedroom 4","Bedroom 4"),
+	("Bedroom 5","Bedroom 5"),
+	("Dining Room","Dining Room"),
+	("Lounge","Lounge"),
+	("Downstairs Hallway","Downstairs Hallway"),
+	("Downstairs WC","Downstairs WC"),
+	("Kitchen","Kitchen"),
+	("Conservatory","Conservatory"),
+	("Landing","Landing"),
+	("Bathroom 1","Bathroom 1"),
+	("Bathroom 2","Bathroom 2"),
+	("Ensuite 1","Ensuite 1"),
+	("Ensuite 2","Ensuite 2"),
+	("Ensuite 3","Ensuite 3"),
+	("Wardrobe","Wardrobe"),
+	("Study","Study"),
+	("Utility Room","Utility Room"),
+	("Games Room","Games Room"),
+)
+
+BUILDING_PACK_REQUIRED_DROPDOWN = (
+	("Same flue hole","Same flue hole"),
+	("Minor building","Minor building"),
+	("Engineer to collect bricks","Engineer to collect bricks"),
+	("Customer to collect bricks","Customer to collect bricks"),
+	("Boiler board required","Boiler board required"),
+	("Block and render","Block and render"),
+	("Custom building","Custom building"),
+	("Red/Yellow brick standard","Red/Yellow brick standard"),
 )
 
 
@@ -1248,6 +1299,7 @@ class FormStepThree_yh(forms.Form):
 	current_flue_location = forms.ChoiceField(choices=CURRENT_FLUE_LOCATION_DROPDOWN)
 	current_controls = forms.MultipleChoiceField(choices=CURRENT_CONTROLS_DROPDOWN)
 	current_radiators_working_correctly = forms.ChoiceField(choices=CURRENT_RADIATORS_WORKING_CORRECTLY_DROPDOWN)
+	locations_where_radiators_not_working_correctly = forms.MultipleChoiceField(required=False, choices=LOCATIONS_WHERE_RADIATORS_NOT_WORKING_CORRECTLY_DROPDOWN)
 	
 class FormStepFour_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
@@ -1255,6 +1307,7 @@ class FormStepFour_yh(forms.Form):
 	# form_data.3.field_name e.g. form_data.3.removals
 	removals = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
 											 choices=REMOVALS_CHOICES)
+	radiator_quantity = forms.IntegerField(required=False,  widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate'}))
 
 class FormStepFive_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
@@ -1336,6 +1389,7 @@ class FormStepSeven_yh(forms.Form):
 		self.fields['filling_link'] = forms.ChoiceField(choices=FILLING_LINK_DROPDOWN)
 		self.fields['special_lift_requirements'] = forms.ChoiceField(choices=SPECIAL_LIFT_REQUIREMENTS_DROPDOWN)
 		self.fields['double_handed_lift_required'] = forms.ChoiceField(choices=DOUBLE_HANDED_LIFT_REQUIRED_DROPDOWN)
+		self.fields['building_pack_required'] = forms.MultipleChoiceField(choices=BUILDING_PACK_REQUIRED_DROPDOWN)
 
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
@@ -1460,6 +1514,13 @@ class FormStepEight_yh(forms.Form):
 		self.fields['towel_rail_colour_2'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_COLOUR)
 		self.fields['towel_rail_colour_3'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_COLOUR)
 		self.fields['towel_rail_colour_4'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_COLOUR)
+
+		self.fields['towel_rail_type_1'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_TYPE)
+		self.fields['towel_rail_type_2'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_TYPE)
+		self.fields['towel_rail_type_3'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_TYPE)
+		self.fields['towel_rail_type_4'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_TYPE)
+
+		self.fields['cust_supply_radiator_quantity'] = forms.IntegerField(required=False)
 
 class ExtrasModelChoiceField(ModelChoiceField):
 	def label_from_instance(self, obj):

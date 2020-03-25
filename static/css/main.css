@@ -189,6 +189,14 @@ a:hover {
     padding-bottom: 50px;
   }
 
+.form-cust-rad-qty {
+  position: relative;
+  left: 50px;
+  background-color: rgb(228, 228, 228);
+  visibility: hidden;
+
+}  
+
 .form-rad-group {
   background-color: rgb(228, 228, 228);
   visibility: hidden;
