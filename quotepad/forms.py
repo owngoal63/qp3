@@ -727,39 +727,55 @@ TOWEL_RAIL_LOCATION_DROPDOWN = (
 	("Downstairs Bathroom","Downstairs Bathroom"),	
 )
 
+# TOWEL_RAIL_HEIGHT = (
+# 	('','-----'),
+# 	("400","400"),
+# 	("500","500"),
+# 	("600","600"),
+# 	("700","700"),
+# 	("800","800"),
+# 	("900","900"),
+# 	("1000","1000"),
+# 	("1100","1100"),
+# 	("1200","1200"),
+# 	("1300","1300"),
+# 	("1400","1400"),
+# 	("1500","1500"),
+# 	("1600","1600"),
+# 	("1700","1700"),
+# 	("1800","1800"),
+# 	("1900","1900"),
+# 	("2000","2000"),
+
+# )
+
+# TOWEL_RAIL_WIDTH = (
+# 	('','----'),
+# 	("300","300"),
+# 	("350","350"),
+# 	("400","400"),
+# 	("450","450"),
+# 	("500","500"),
+# 	("550","550"),
+# 	("600","600"),
+# 	("650","650"),
+# 	("700","700"),
+# )
+
+
 TOWEL_RAIL_HEIGHT = (
 	('','-----'),
-	("400","400"),
-	("500","500"),
-	("600","600"),
-	("700","700"),
-	("800","800"),
 	("900","900"),
 	("1000","1000"),
-	("1100","1100"),
 	("1200","1200"),
-	("1300","1300"),
-	("1400","1400"),
-	("1500","1500"),
 	("1600","1600"),
-	("1700","1700"),
 	("1800","1800"),
-	("1900","1900"),
-	("2000","2000"),
-
 )
 
 TOWEL_RAIL_WIDTH = (
 	('','----'),
-	("300","300"),
-	("350","350"),
-	("400","400"),
 	("450","450"),
-	("500","500"),
-	("550","550"),
 	("600","600"),
-	("650","650"),
-	("700","700"),
 )
 
 TOWEL_RAIL_COLOUR = (
@@ -1373,9 +1389,13 @@ class FormStepSeven_yh(forms.Form):
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user')
 		self.manuf = kwargs.pop('manufacturer')
+		self.plume_management_kit = kwargs.pop('plume_management_kit')
 		super(FormStepSeven_yh, self).__init__(*args, **kwargs)
 		self.fields['gas_flue_components'] = forms.ModelMultipleChoiceField(required=False, queryset=ProductComponent.objects.filter(user = self.user, brand = self.manuf, component_type = 'Gas Flue Component').only('component_name'))
-		self.fields['plume_components'] = forms.ModelMultipleChoiceField(required=False, queryset=ProductComponent.objects.filter(user = self.user, brand = self.manuf, component_type = 'Plume Component').only('component_name'))
+		if self.plume_management_kit == "Required":
+			self.fields['plume_components'] = forms.ModelMultipleChoiceField(required=True, queryset=ProductComponent.objects.filter(user = self.user, brand = self.manuf, component_type = 'Plume Component').only('component_name'))
+		else:
+			self.fields['plume_components'] = forms.ChoiceField(required=False, choices = (('Not Required (from step 5)','Not Required (from step 5)'),('Required','Required')), widget=forms.Select(attrs={'disabled': 'disabled'}))
 		self.fields['programmer_thermostat'] = forms.MultipleChoiceField(choices=PROGRAMMER_THERMOSTAT_DROPDOWN)
 		self.fields['additional_central_heating_components'] = forms.MultipleChoiceField(choices=ADDITIONAL_CENTRAL_HEATING_COMPONENTS_DROPDOWN)
 		self.fields['central_heating_system_filter'] = forms.ChoiceField(choices=CENTRAL_HEATING_SYSTEM_FILTER_DROPDOWN)

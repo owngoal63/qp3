@@ -100,10 +100,11 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			#print(manuf)
 			return {'user': self.request.user, 'manufacturer': manuf, 'alt_manufacturer': alt_manuf, 'fuel_type': fuel_type, 'boiler_type': boiler_type }
 		elif step == '6':
-			manuf_step_data = self.storage.get_step_data('4')
-			manuf = manuf_step_data.get('4-boiler_manufacturer','')
-			print(manuf)
-			return {'user': self.request.user, 'manufacturer': manuf }
+			step_data = self.storage.get_step_data('4')
+			manuf = step_data.get('4-boiler_manufacturer','')
+			plume_management_kit = 	step_data.get('4-plume_management_kit','')
+			print(plume_management_kit)
+			return {'user': self.request.user, 'manufacturer': manuf, 'plume_management_kit': plume_management_kit }
 		elif step == '4':
 			return {'user': self.request.user}
 		elif step == '8':
