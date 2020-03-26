@@ -24,6 +24,11 @@ PROPERTY_TYPE_DROPDOWN = (
 	('Flat','Flat'),
 )
 
+ALTERNATIVE_BILLING_ADDRESS_DROPDOWN = (
+	('No','No'),
+	('Yes','Yes'),
+)
+
 CURRENT_FUEL_TYPE_DROPDOWN = (
 	('','Select One'),
 	('Gas','Gas'),
@@ -1296,9 +1301,22 @@ class FormStepTwo_yh(forms.Form):
 		super(FormStepTwo_yh, self).__init__(*args, **kwargs)
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
-	installation_address = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'rows':5, 'cols':30, 'placeholder': 'Please ensure entry of the full address'}))
-	billing_address = forms.CharField(max_length=2000, required = False,  widget=forms.Textarea(attrs={'rows':5, 'cols':30, 'placeholder': 'Leave blank for Billing address same as Installation address'},))
+	house_name_or_number = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'size':60}))
+	street_address = forms.CharField(max_length=100)
+	city = forms.CharField(max_length=100)
+	county = forms.CharField(max_length=100)
+	postcode = forms.CharField(max_length=100)
 	property_type = forms.ChoiceField(choices=PROPERTY_TYPE_DROPDOWN)	
+	alternative_billing_address = forms.ChoiceField(choices=ALTERNATIVE_BILLING_ADDRESS_DROPDOWN)		
+	#alt_billing_address = forms.BooleanField(required=False)		
+	#alt_billing_address = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs = {'class': 'form-check-input', 'onchange' : "extras_handler();"}))		
+	billing_house_name_or_number = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address'}))
+	billing_street_address = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address'}))
+	billing_city = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address'}))
+	billing_county = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address'}))
+	billing_postcode = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address'}))		
+	#installation_address = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'rows':5, 'cols':30, 'placeholder': 'Please ensure entry of the full address'}))
+	#billing_address = forms.CharField(max_length=2000, required = False,  widget=forms.Textarea(attrs={'rows':5, 'cols':30, 'placeholder': 'Leave blank for Billing address same as Installation address'},))
 
 class FormStepThree_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation

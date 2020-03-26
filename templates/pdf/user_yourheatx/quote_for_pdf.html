@@ -4,69 +4,7 @@
 <html>
 
 <head>
-    <title>Quote PDF</title>
-    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,400i,700,700i,900" rel="stylesheet" />
-    <style type="text/css">
-        body {
-            /* font-weight: 200;
-            font-size: 14px; */
-        }
-
-        .section_header {
-            font-size: 18px;
-            font-weight: 100;
-        }
-
-        .section_italics {
-            font-size: 14px;
-            font-style: italic;
-        }
-
-        /* .header {
-            font-size: 8px;
-            font-weight: 100;
-            text-align: center;
-            color: #007cae;
-        } */
-
-        .title {
-            font-size: 22px;
-            font-weight: 100;
-            /* text-align: right;*/
-            padding: 10px 20px 0px 20px;
-        }
-
-        .title span {
-            color: #007cae;
-        }
-
-        .details {
-            padding: 10px 20px 0px 20px;
-            text-align: left !important;
-            /*margin-left: 40%;*/
-        }
-
-        .hrItem {
-            border: none;
-            height: 1px;
-            /* Set the hr color */
-            color: #333;
-            /* old IE */
-            background-color: #fff;
-            /* Modern Browsers */
-        }
-
-        /* .footer {
-            border: 2px solid black;
-            border-radius: 5px;
-            background-color: coral;
-            color: black;
-            font-size: 14px;
-            font-weight: 100;
-            text-align: center;
-            padding: 10px 0px 2px 0px;
-        } */
-    </style>
+    <title>Quote PDF</title>   
 </head>
 
 <body>
@@ -249,8 +187,9 @@
         <hr>
         <br>
         <p><b>Installation Address</b><br>
-            {{ form_data.1.installation_address|linebreaks }}
-
+            {{ form_data.1.house_name_or_number }} {{ form_data.1.street_address}}<br>
+            {{ form_data.1.city }}, {{ form_data.1.county }}<br>
+            {{ form_data.1.postcode }}
         </p>
         <br>
         <p><b>Contact Details</b><br>
@@ -309,8 +248,10 @@
             </tr>
             <tr>    
                 <td class="tech-value">
-                    {% if form_data.1.billing_address|length %}
-                        {{form_data.1.billing_address}}
+                    {% if form_data.1.alternative_billing_address == 'Yes' %}
+                        {{ form_data.1.billing_house_name_or_number }} {{ form_data.1.billing_street_address}} &nbsp;
+                        {{ form_data.1.billing_city }}, {{ form_data.1.billing_county }} &nbsp;
+                        {{ form_data.1.billing_postcode }}
                     {% else %}
                         &bull; No
                     {% endif %}    
@@ -354,7 +295,15 @@
                 <td class="tech-attrib">CURRENT RADIATORS ALL WORKING CORRECTLY?</td>
             </tr>
             <tr>    
+            {% if form_data.2.current_radiators_working_correctly == 'Yes' %}
                 <td class="tech-value">{{ form_data.2.current_radiators_working_correctly }}</td>
+            {% else %}
+                <td class="tech-value">Not working in: 
+                    {% for rooms in form_data.2.locations_where_radiators_not_working_correctly  %}
+                        &bull; {{ rooms }}
+                    {% endfor %}
+                </td>
+            {% endif %}    
             </tr>
         </table>
         <br>
@@ -369,6 +318,9 @@
                 <td class="tech-value">
                     {% for removal_item in form_data.3.removals %}
                     &bull; {{ removal_item }}
+                        {% if removal_item == 'Radiators' %}
+                            ({{ form_data.3.radiator_quantity }})
+                        {% endif %}    
                     {% endfor %}
                 </td>
             </tr>
@@ -524,16 +476,18 @@
                     {% endfor %}
                 </td>
             </tr>
-            <tr>
-                <td class="tech-attrib" colspan="2">PLUME COMPONENTS</td>
-            </tr>
-            <tr>    
-                <td class="tech-value" colspan="2">
-                    {% for plume_component in form_data.6.plume_components  %}
-                    &bull; {{ plume_component }}<br>
-                    {% endfor %}
-                </td>
-            </tr>
+            {% if form_data.4.plume_management_kit == 'Required' %}
+                <tr>
+                    <td class="tech-attrib" colspan="2">PLUME COMPONENTS</td>
+                </tr>
+                <tr>    
+                    <td class="tech-value" colspan="2">
+                        {% for plume_component in form_data.6.plume_components  %}
+                        &bull; {{ plume_component }}<br>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endif %}
             <tr>
                 <td class="tech-attrib" colspan="2">PROGRAMMER / THERMOSTAT</td>
             </tr>
@@ -627,7 +581,11 @@
             <tr>    
                 <td class="tech-value" colspan="2">
                     {% for radiator in form_data.7.radiator_specification  %}
-                    &bull; {{ radiator }}<br>
+                    &bull; {{ radiator }}
+                    {% if radiator == 'Customer to Provide Radiators' %}
+                        ({{ form_data.7.cust_supply_radiator_quantity }})
+                    {% endif %}
+                    <br>
 
                         {% if radiator == 'Radiator(s) Required' %}
                             <table class="radiator-table">
@@ -770,25 +728,25 @@
         
                             <table class="radiator-table">
                                 <tr>
-                                <td>Location</td><td>Height</td><td>Width</td><td>Colour</td>
+                                <td>Location</td><td>Height</td><td>Width</td><td>Colour</td><td>Type</td>
                                 {% if form_data.7.towel_rail_location_1 %}
                                     <tr>
-                                    <td>{{form_data.7.towel_rail_location_1}}</td><td>{{form_data.7.towel_rail_height_1}}</td><td>{{form_data.7.towel_rail_width_1}}</td><td>{{form_data.7.towel_rail_colour_1}}</td>
+                                    <td>{{form_data.7.towel_rail_location_1}}</td><td>{{form_data.7.towel_rail_height_1}}</td><td>{{form_data.7.towel_rail_width_1}}</td><td>{{form_data.7.towel_rail_colour_1}}</td><td>{{form_data.7.towel_rail_type_1}}</td>
                                     </tr>
                                 {% endif %}
                                 {% if form_data.7.towel_rail_location_2 %}
                                     <tr>
-                                    <td>{{form_data.7.towel_rail_location_2}}</td><td>{{form_data.7.towel_rail_height_2}}</td><td>{{form_data.7.towel_rail_width_2}}</td><td>{{form_data.7.towel_rail_colour_2}}</td>
+                                    <td>{{form_data.7.towel_rail_location_2}}</td><td>{{form_data.7.towel_rail_height_2}}</td><td>{{form_data.7.towel_rail_width_2}}</td><td>{{form_data.7.towel_rail_colour_2}}</td><td>{{form_data.7.towel_rail_type_2}}</td>
                                     </tr>
                                 {% endif %}
                                 {% if form_data.7.towel_rail_location_3 %}
                                     <tr>
-                                    <td>{{form_data.7.towel_rail_location_3}}</td><td>{{form_data.7.towel_rail_height_3}}</td><td>{{form_data.7.towel_rail_width_3}}</td><td>{{form_data.7.towel_rail_colour_3}}</td>
+                                    <td>{{form_data.7.towel_rail_location_3}}</td><td>{{form_data.7.towel_rail_height_3}}</td><td>{{form_data.7.towel_rail_width_3}}</td><td>{{form_data.7.towel_rail_colour_3}}</td><td>{{form_data.7.towel_rail_type_3}}</td>
                                     </tr>
                                 {% endif %}
                                 {% if form_data.7.towel_rail_location_4 %}
                                     <tr>
-                                    <td>{{form_data.7.towel_rail_location_4}}</td><td>{{form_data.7.towel_rail_height_4}}</td><td>{{form_data.7.towel_rail_width_4}}</td><td>{{form_data.7.towel_rail_colour_4}}</td>
+                                    <td>{{form_data.7.towel_rail_location_4}}</td><td>{{form_data.7.towel_rail_height_4}}</td><td>{{form_data.7.towel_rail_width_4}}</td><td>{{form_data.7.towel_rail_colour_4}}</td><td>{{form_data.7.towel_rail_type_4}}</td>
                                     </tr>
                                 {% endif %}
                                 
@@ -817,10 +775,10 @@
             <tr>    
                 <td class="tech-value" colspan="2">{{form_data.8.description_of_works|linebreaks }}</td>
             </tr>
+            {% if form_data.8.optional_extras %}
             <tr>
                 <td class="tech-attrib" colspan="2">OPTIONAL EXTRAS</td>
             </tr>
-            {% if form_data.8.optional_extras %}
             <tr>
                 <td colspan="2">
                     <table class="optional-extras">
