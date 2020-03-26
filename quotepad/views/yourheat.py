@@ -140,17 +140,27 @@ class BoilerFormWizardView_yh(SessionWizardView):
 		idx = Profile.objects.get(user = self.request.user)
 
 		product_id = ([form.cleaned_data for form in form_list][5].get('product_choice').id)
+
+		# Is a plume management kit required
+		if ([form.cleaned_data for form in form_list][4].get('plume_management_kit')) == 'Required':
+			plume_management_kit = True
+		else:
+			plume_management_kit = False
 		
 		if ([form.cleaned_data for form in form_list][5].get('alt_product_choice')) != None:
 			alt_product_id = ([form.cleaned_data for form in form_list][5].get('alt_product_choice').id)
-			alt_product_exists = True;	
+			alt_product_exists = True	
 		else:
-			alt_product_exists = False;	
-		gas_flue_components_obj = ([form.cleaned_data for form in form_list][6].get('gas_flue_components'))
-		plume_components_obj = ([form.cleaned_data for form in form_list][6].get('plume_components'))
+			alt_product_exists = False
 
+		gas_flue_components_obj = ([form.cleaned_data for form in form_list][6].get('gas_flue_components'))
 		gas_flue_components = list(gas_flue_components_obj.values_list('component_name', flat=True))
-		plume_components = list(plume_components_obj.values_list('component_name', flat=True))
+
+		if plume_management_kit:
+			plume_components_obj = ([form.cleaned_data for form in form_list][6].get('plume_components'))
+			plume_components = list(plume_components_obj.values_list('component_name', flat=True))
+		else:
+			plume_components = list(['Not Required'])
 
 		# Get the record of the product that was selected
 		product_record = ProductPrice.objects.get(pk = product_id)
@@ -209,18 +219,21 @@ class BoilerFormWizardView_yh(SessionWizardView):
 					stringAfterReplace = string.replace(string[firstDelPos:secondDelPos+1], "'" + str(alt_product_id) + "'", 1)
 				else:
 					stringAfterReplace = stringAfterFirstReplace
-				
-
+			
 				file.write(str(stringAfterReplace) + "\n")
 			elif index == 6:
 				string = str(line)
 				firstDelPos=string.find("<QuerySet [<ProductComponent:") # get the position of the string
 				secondDelPos=string.find(">]>") # get the position of the string
 				stringAfterFirstReplace = string.replace(string[firstDelPos:secondDelPos+3], str(gas_flue_components).replace('"',''))
-				string = stringAfterFirstReplace
-				firstDelPos=string.find("<QuerySet [<ProductComponent:") # get the position of <
-				secondDelPos=string.find(">]>") # get the position of >
-				stringAfterReplace = string.replace(string[firstDelPos:secondDelPos+3], str(plume_components).replace('"',''))
+				if plume_management_kit:
+					string = stringAfterFirstReplace
+					firstDelPos=string.find("<QuerySet [<ProductComponent:") # get the position of <
+					secondDelPos=string.find(">]>") # get the position of >
+					stringAfterReplace = string.replace(string[firstDelPos:secondDelPos+3], str(plume_components).replace('"',''))
+				else:
+					stringAfterReplace = stringAfterFirstReplace
+					
 				file.write(str(stringAfterReplace) + "\n")
 			elif index == 8:
 				string = str(line)
