@@ -97,6 +97,7 @@ class ProductComponent(models.Model):
 	brand           =   models.CharField(max_length=50, choices=COMPONENT_BRAND_DROPDOWN)
 	component_type  =   models.CharField(max_length=30, choices=COMPONENT_TYPE_DROPDOWN)
 	component_name  =   models.CharField(max_length=200)
+	price           =   models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
 	def __str__(self):
 		return self.component_name

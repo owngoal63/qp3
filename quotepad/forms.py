@@ -1067,12 +1067,13 @@ class ProductComponentForm(forms.ModelForm):
 	
 	class Meta:
 		model = ProductComponent
-		fields = ['brand', 'component_type', 'component_name']
+		fields = ['brand', 'component_type', 'component_name', 'price']
 
 		widgets = {
 			'brand': forms.Select(attrs={'class': 'form-control',  'autofocus': ''}),
 			'component_type': forms.Select(attrs={'class': 'form-control'}),
 			'component_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter the Component Name'}),
+			'price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter the Price of the Component'}),
 		}
 
 	def __init__(self, *args, **kwargs):

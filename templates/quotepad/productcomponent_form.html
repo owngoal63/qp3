@@ -24,6 +24,10 @@
             {{ form.component_name }}
         </div>
 
+        <div class="form-group">
+            {{ form.price.label}} (£) *<br>
+            {{ form.price }}
+        </div>
         
         <button class="btn btn-primary" type="submit">Save</button>
         <a href="/productcomponentlist/" class="btn btn-secondary">Cancel</a>

@@ -23,8 +23,11 @@
         <div class="col-2">
             <h4>Type</h4>
         </div>
-        <div class="col-6">
+        <div class="col-4">
             <h4>Component</h4>
+        </div>
+        <div class="col-2">
+            <h4>Price</h4>
         </div>
         <div class="col-2">
             <h4>Action</h4>
@@ -41,10 +44,12 @@
         <div class="col-2">
             {{ comp.component_type|slice:":-9" }}
         </div>
-        <div class="col-6">
+        <div class="col-4">
             {{ comp.component_name}}
         </div>
-
+        <div class="col-2">
+            £{{ comp.price}}
+        </div>
         <div class="col-2">
             <a href="{% url 'productcomponentupdate' comp.pk %}" class="btn btn-primary btn-sm" role="button">Edit</a>
             <a href="{% url 'productcomponentdelete' comp.pk  %}" class="btn btn-secondary btn-sm" role="button">Del</a>
