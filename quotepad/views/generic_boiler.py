@@ -283,7 +283,12 @@ class ProductPriceList(ListView):
 	paginate_by = 10
 
 	def get_queryset(self):
-		return ProductPrice.objects.filter(user=self.request.user).order_by('brand','model_name')
+		filter_val = self.request.GET.get('filter', None)
+		print(filter_val)
+		if filter_val:
+			return ProductPrice.objects.filter(user=self.request.user, brand=filter_val).order_by('fuel_type','boiler_type', 'model_name', 'id')
+		else:
+			return ProductPrice.objects.filter(user=self.request.user).order_by('brand','model_name')
 
 @login_required
 def ProductPriceCreate(request):
@@ -335,10 +340,15 @@ class ProductPriceDelete(DeleteView):
 class ProductComponentList(ListView):
 	''' Invoke the django Generic Model form capability to display the ProductComponent information in a list ''' 
 	context_object_name = 'components_by_user'
-	paginate_by = 10
+	paginate_by = 20
 
 	def get_queryset(self):
-		return ProductComponent.objects.filter(user=self.request.user).order_by('brand','component_type','id')
+		filter_val = self.request.GET.get('filter', None)
+		print(filter_val)
+		if filter_val:
+			return ProductComponent.objects.filter(user=self.request.user, component_type=filter_val).order_by('component_type','brand','id')
+		else:
+			return ProductComponent.objects.filter(user=self.request.user).order_by('component_type','brand','id')
 
 @login_required
 def ProductComponentCreate(request):

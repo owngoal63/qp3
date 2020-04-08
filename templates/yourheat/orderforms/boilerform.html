@@ -98,13 +98,14 @@
                 {% else %}
                     
                     {% if forloop.counter == form.fields|length %}
-                        <div class = "col-6"></div></div>
+                        <div class = "col-6">x</div></div>
                     {% endif %}    
                 {% endif %}    
 
             {% endfor %}
             
             {% endif %}
+
         
             <div class = "row">
             <div class="col-12">
@@ -133,6 +134,8 @@ $(function () {
 $('.popover-dismiss').popover({
   trigger: 'focus'
 })
+
+
 </script>
 
 {% endblock %}

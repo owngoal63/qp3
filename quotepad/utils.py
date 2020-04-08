@@ -2,6 +2,7 @@ from io import BytesIO
 from django.http import HttpResponse
 from django.template.loader import get_template
 from django.conf import settings
+from quotepad.models import ProductComponent
 
 from xhtml2pdf import pisa
 
@@ -123,5 +124,14 @@ def pdf_generation_to_file(template_src, outputFilename, context_dict={}):
 	response = HttpResponse(pdf, content_type='application/pdf')
 	response['Content-Disposition'] = 'attachment; filename=outputFilename'
 
-	return response    
+	return response
+
+def component_attrib_build(component_name, user, qty=1):
+	price = ProductComponent.objects.get(component_name=component_name, user=user).price
+	ext_price = price * qty
+	cost = ProductComponent.objects.get(component_name=component_name, user=user).cost
+	duration = ProductComponent.objects.get(component_name=component_name, user=user).est_time_duration
+	ext_duration = duration * qty
+	return {component_name: [qty, price, ext_price, cost, ext_duration]}
+
 

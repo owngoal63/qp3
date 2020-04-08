@@ -4,7 +4,7 @@
 
 
 
-<div class="container component-details-container">
+<div class="container-fluid component-details-container">
     <div class="row">
         <div class="col-12">
             <h2>List of Components</h2>
@@ -18,37 +18,35 @@
 
     <div class="row price-list-headings">
         <div class="col-2">
-            <h4>Brand</h4>
+            <a href="/productcomponentlist/"><h5>Type</h5></a>
         </div>
         <div class="col-2">
-            <h4>Type</h4>
+            <h5>Brand</h5>
         </div>
         <div class="col-4">
-            <h4>Component</h4>
+            <h5>Component</h5>
         </div>
         <div class="col-2">
-            <h4>Price</h4>
+            <h5>Price/Cost/Time</h5>
         </div>
         <div class="col-2">
-            <h4>Action</h4>
+            <h5>Action</h5>
         </div>
     </div>
 
     {% for comp in components_by_user %}
-    <div class="row {% if comp.component_type == 'Plume Component' %}plume-row{% else %}gas-flue-row{% endif %}">
+    <div class="row component-row">
         <div class="col-2">
-            {{ comp.brand }}
-            
+            <h6><a href="/productcomponentlist/?filter={{comp.component_type}}">{{ comp.component_type|slice:":30" }}</a></h6>
         </div>
-
         <div class="col-2">
-            {{ comp.component_type|slice:":-9" }}
+            <h6>{{ comp.brand }}</h6>
         </div>
         <div class="col-4">
-            {{ comp.component_name}}
+            <h6>{{ comp.component_name}}</h6>
         </div>
         <div class="col-2">
-            £{{ comp.price}}
+            <h6>£{{ comp.price }}/£{{ comp.cost }}/{{comp.est_time_duration}}hrs</h6>
         </div>
         <div class="col-2">
             <a href="{% url 'productcomponentupdate' comp.pk %}" class="btn btn-primary btn-sm" role="button">Edit</a>
@@ -67,24 +65,21 @@
 
     <a href="{% url 'productcomponentcreate' %}" class="btn btn-primary" role="button">Add</a>
 
-
 {% if is_paginated %}
 <div class="row">
     <div class="col-12">
 
         <ul class="pagination justify-content-center">
         {% if page_obj.has_previous %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{%if 'filter' in request.get_full_path %}&filter={{components_by_user.0.component_type}}{%endif%}">&laquo;</a></li>
         {% else %}
             <li class="page-item"><span class="page-link">&laquo;</span></li>
         {% endif %}
-        {% for i in paginator.page_range %}
-            
-            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-            
+        {% for i in paginator.page_range %}            
+            <li class="page-item"><a class="page-link" href="?page={{ i }}{%if 'filter' in request.get_full_path %}&filter={{components_by_user.0.component_type}}{%endif%}">{{ i }}</a></li>
         {% endfor %}
         {% if page_obj.has_next %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{%if 'filter' in request.get_full_path %}&filter={{components_by_user.0.component_type}}{%endif%}">&raquo;</a></li>
         {% else %}
             <li class="page-item"><span class="page-link">&raquo;</span></li>
         {% endif %}

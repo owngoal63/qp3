@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib import messages
 
+from decimal import *
+
 # Form wizard imports
 #from quotepad.forms import FormStepOne, FormStepTwo, FormStepThree, FormStepFour, FormStepFive, FormStepSix, FormStepSeven, FormStepEight, FormStepNine
 from quotepad.forms import FormStepOne_yh, FormStepTwo_yh, FormStepThree_yh, FormStepFour_yh, FormStepFive_yh, FormStepSix_yh, FormStepSeven_yh, FormStepEight_yh, FormStepNine_yh, FinanceForm_yh
@@ -11,7 +13,7 @@ from formtools.wizard.views import SessionWizardView
 
 # imports associated with xhtml2pdf
 from django.http import HttpResponseRedirect, HttpResponse, FileResponse
-from quotepad.utils import pdf_generation, pdf_generation_to_file, convertHtmlToPdf, convertHtmlToPdf2
+from quotepad.utils import pdf_generation, pdf_generation_to_file, convertHtmlToPdf, convertHtmlToPdf2, component_attrib_build
 import datetime
 from pathlib import Path, PureWindowsPath
 import os, os.path, errno
@@ -27,7 +29,7 @@ from django.dispatch import receiver
 from django.contrib.auth.signals import user_logged_in
 from django.contrib.auth.models import User, Group
 
-from quotepad.models import Profile, ProductPrice, Document, OptionalExtra
+from quotepad.models import Profile, ProductPrice, Document, OptionalExtra, ProductComponent
 from quotepad.forms import ProfileForm, UserProfileForm, ProductPriceForm, EditQuoteTemplateForm
 
 @login_required
@@ -80,6 +82,8 @@ class BoilerFormWizardView_yh(SessionWizardView):
 		#print(self.steps.current)
 		if self.steps.current == '9':
 			return "yourheat/orderforms/financeform.html"
+		elif self.steps.current == '6':
+			return "yourheat/orderforms/newinstallationmaterialsform.html"	
 		elif self.steps.current == '7':
 			return "yourheat/orderforms/radiatorform.html"
 		elif self.steps.current == '8':
@@ -102,24 +106,325 @@ class BoilerFormWizardView_yh(SessionWizardView):
 		elif step == '6':
 			step_data = self.storage.get_step_data('4')
 			manuf = step_data.get('4-boiler_manufacturer','')
-			plume_management_kit = 	step_data.get('4-plume_management_kit','')
+			plume_management_kit = step_data.get('4-plume_management_kit','')
+			new_fuel_type = step_data.get('4-new_fuel_type','')
 			print(plume_management_kit)
-			return {'user': self.request.user, 'manufacturer': manuf, 'plume_management_kit': plume_management_kit }
+			return {'user': self.request.user, 'manufacturer': manuf, 'plume_management_kit': plume_management_kit, 'new_fuel_type': new_fuel_type }
 		elif step == '4':
 			return {'user': self.request.user}
 		elif step == '8':
-			return {'user': self.request.user}	
+			return {'user': self.request.user}
+		elif step == '7':
+			return {'user': self.request.user}		
 		elif step == '9':
-			print(self.storage.get_step_data('6'))
-			print(self.storage.get_step_data('8'))
+			#print(self.storage.get_step_data('6'))
+			#print(self.storage.get_step_data('8'))
+			# Get Product Price
 			product_step_data = self.storage.get_step_data('5')
-			productx = product_step_data.get('5-product_choice','')
-			#Object.objects.get(pk=1)
-			#field_value = field_object.value_from_object(obj)
-			# print("--------------")
-			# print(ProductPrice.objects.get(id=productx).price)
-			# print(productx)
-			return {'product_price': ProductPrice.objects.get(id=productx).price}
+			product = product_step_data.get('5-product_choice','')
+			product_price = ProductPrice.objects.get(id=product).price
+			#print(product_price)
+			
+			# Initialise All component price and duration totals
+			component_price_total = 0
+			component_duration_total = 0
+
+			# Initialise the component price dictionary - to build the BOM PDF
+			# ( make it global so that it can be accessed from other functions in the class )
+			global comp_dict
+			comp_dict = {}
+			
+			# Get the step data for INSTALLATION REQUIREMENTS
+			new_installation_step_data = self.storage.get_step_data('5')
+
+			#-----------------------------------------------------------------------------------------
+			# Get the Chemical System Treatment Prices
+			components_list = new_installation_step_data.getlist('5-chemical_system_treatment')
+			components = []
+			for i in components_list:
+				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, user=self.request.user).price
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, user=self.request.user).est_time_duration
+				components.append(dict(component_attrib_build(i, self.request.user)))
+				comp_dict['Chemical System Treatment'] = components
+				print(ProductComponent.objects.get(component_name=i, user=self.request.user).price)
+
+			# Get the Gas Supply Length Prices
+			components_list = new_installation_step_data.getlist('5-gas_supply_length')
+			components = []
+			for i in components_list:
+				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, user=self.request.user).price
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, user=self.request.user).est_time_duration
+				components.append(dict(component_attrib_build(i, self.request.user)))
+				comp_dict['Gas Supply Length'] = components
+				print(ProductComponent.objects.get(component_name=i, user=self.request.user).price)
+
+
+			# Get the Scaffolding Required Prices
+			components_list = new_installation_step_data.getlist('5-scaffolding_required')
+			components = []
+			for i in components_list:
+				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, user=self.request.user).price
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, user=self.request.user).est_time_duration
+				components.append(dict(component_attrib_build(i, self.request.user)))
+				comp_dict['Scaffolding Required'] = components
+				print(ProductComponent.objects.get(component_name=i, user=self.request.user).price)
+		
+
+			# Get the Asbestos Removel Procedure Prices
+			components_list = new_installation_step_data.getlist('5-asbestos_removal_procedure')
+			components = []
+			for i in components_list:
+				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, user=self.request.user).price
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, user=self.request.user).est_time_duration
+				components.append(dict(component_attrib_build(i, self.request.user)))
+				comp_dict['Asbestos Removal_Procedure'] = components
+				print(ProductComponent.objects.get(component_name=i, user=self.request.user).price)	
+			#-----------------------------------------------------------------------------------------	
+
+			# Get the step data for NEW INSTALLATION MATERIALS
+			new_installation_step_data = self.storage.get_step_data('6')
+
+			# Get the Gas Flue or Oil Flue Components Prices
+			if new_installation_step_data.get('4-new_fuel_type','') == "Oil":
+				components_list = new_installation_step_data.getlist('6-oil_flue_components')
+			else:
+				components_list = new_installation_step_data.getlist('6-gas_flue_components')
+			components = []	
+			for i in components_list:
+				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, user=self.request.user).price
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, user=self.request.user).est_time_duration
+				components.append(dict(component_attrib_build(i, self.request.user)))
+				if new_installation_step_data.get('4-new_fuel_type','') == "Oil":
+					comp_dict['Oil Flue Components'] = components
+				else:	
+					comp_dict['Gas Flue Components'] = components
+				print(ProductComponent.objects.get(component_name=i, user=self.request.user).price)
+
+			# Get the Plume Components Prices
+			components_list = new_installation_step_data.getlist('6-plume_components')
+			components = []
+			for i in components_list:
+				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, user=self.request.user).price
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, user=self.request.user).est_time_duration
+				components.append(dict(component_attrib_build(i, self.request.user)))
+				comp_dict['Plume Components'] = components
+				print(ProductComponent.objects.get(component_name=i, user=self.request.user).price)
+
+			# Get the programmer_thermostat Components Prices
+			components_list = new_installation_step_data.getlist('6-programmer_thermostat')
+			components = []
+			for i in components_list:
+				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, user=self.request.user).price
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, user=self.request.user).est_time_duration
+				components.append(dict(component_attrib_build(i, self.request.user)))
+				comp_dict['Programmer/Thermostat'] = components
+				print(ProductComponent.objects.get(component_name=i, user=self.request.user).price)
+
+			# Get the Additional Central Heating System Components Prices
+			components_list = new_installation_step_data.getlist('6-additional_central_heating_components')
+			components = []
+			for i in components_list:
+				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, user=self.request.user).price
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, user=self.request.user).est_time_duration
+				components.append(dict(component_attrib_build(i, self.request.user)))
+				comp_dict['Additional Central Heating Components'] = components
+				print(ProductComponent.objects.get(component_name=i, user=self.request.user).price)
+
+			# Get the Central Heating System Filter Components Prices
+			components_list = new_installation_step_data.getlist('6-central_heating_system_filter')
+			components = []
+			for i in components_list:
+				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, user=self.request.user).price
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, user=self.request.user).est_time_duration
+				components.append(dict(component_attrib_build(i, self.request.user)))
+				comp_dict['Central Heating System Filter'] = components
+				print(ProductComponent.objects.get(component_name=i, user=self.request.user).price)			
+
+			# Get the Scale reducer Components Prices
+			components_list = new_installation_step_data.getlist('6-scale_reducer')
+			components = []
+			for i in components_list:
+				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, user=self.request.user).price
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, user=self.request.user).est_time_duration
+				components.append(dict(component_attrib_build(i, self.request.user)))
+				comp_dict['Scale Reducer'] = components
+				print(ProductComponent.objects.get(component_name=i, user=self.request.user).price)
+
+			# Get the Condensate Components Prices
+			components_list = new_installation_step_data.getlist('6-condensate_components')
+			components = []
+			for i in components_list:
+				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, user=self.request.user).price
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, user=self.request.user).est_time_duration
+				components.append(dict(component_attrib_build(i, self.request.user)))
+				comp_dict['Condensate Components'] = components
+				print(ProductComponent.objects.get(component_name=i, user=self.request.user).price)		
+
+			# Get the Additional Copper Prices
+			components_list = new_installation_step_data.getlist('6-additional_copper_required')
+			components = []
+			for i in components_list:
+				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, user=self.request.user).price
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, user=self.request.user).est_time_duration
+				components.append(dict(component_attrib_build(i, self.request.user)))
+				comp_dict['Additional Copper'] = components
+				print(ProductComponent.objects.get(component_name=i, user=self.request.user).price)		
+
+			# Get the Fitting Packs Prices
+			components_list = new_installation_step_data.getlist('6-fittings_packs')
+			components = []
+			for i in components_list:
+				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, user=self.request.user).price
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, user=self.request.user).est_time_duration
+				components.append(dict(component_attrib_build(i, self.request.user)))
+				comp_dict['Fittings Pack'] = components
+				print(ProductComponent.objects.get(component_name=i, user=self.request.user).price)		
+
+			# Get the Electrical Packs Prices
+			components_list = new_installation_step_data.getlist('6-electrical_pack')
+			components = []
+			for i in components_list:
+				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, user=self.request.user).price
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, user=self.request.user).est_time_duration
+				components.append(dict(component_attrib_build(i, self.request.user)))
+				comp_dict['Electrical Pack'] = components
+				print(ProductComponent.objects.get(component_name=i, user=self.request.user).price)		
+
+			# Get the Earth Spike Prices
+			components_list = new_installation_step_data.getlist('6-earth_spike_required')
+			components = []
+			for i in components_list:
+				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, user=self.request.user).price
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, user=self.request.user).est_time_duration
+				components.append(dict(component_attrib_build(i, self.request.user)))
+				comp_dict['Earth Spike'] = components
+				print(ProductComponent.objects.get(component_name=i, user=self.request.user).price)		
+
+			# Get the Filling Link Prices
+			components_list = new_installation_step_data.getlist('6-filling_link')
+			components = []
+			for i in components_list:
+				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, user=self.request.user).price
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, user=self.request.user).est_time_duration
+				components.append(dict(component_attrib_build(i, self.request.user)))
+				comp_dict['Filling Link'] = components
+				print(ProductComponent.objects.get(component_name=i, user=self.request.user).price)		
+
+			# Get the Special Lift Prices
+			components_list = new_installation_step_data.getlist('6-special_lift_requirements')
+			components = []
+			for i in components_list:
+				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, user=self.request.user).price
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, user=self.request.user).est_time_duration
+				components.append(dict(component_attrib_build(i, self.request.user)))
+				comp_dict['Special Lift'] = components
+				print(ProductComponent.objects.get(component_name=i, user=self.request.user).price)		
+
+			# Get the Double Handed Lift Prices
+			components_list = new_installation_step_data.getlist('6-double_handed_lift_required')
+			components = []
+			for i in components_list:
+				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, user=self.request.user).price
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, user=self.request.user).est_time_duration
+				components.append(dict(component_attrib_build(i, self.request.user)))
+				comp_dict['Double Handed Lift'] = components
+				print(ProductComponent.objects.get(component_name=i, user=self.request.user).price)		
+
+			# Get the Building Pack Prices
+			components_list = new_installation_step_data.getlist('6-building_pack_required')
+			components = []
+			for i in components_list:
+				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, user=self.request.user).price
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, user=self.request.user).est_time_duration
+				components.append(dict(component_attrib_build(i, self.request.user)))
+				comp_dict['Building Pack'] = components
+				print(ProductComponent.objects.get(component_name=i, user=self.request.user).price)
+
+			# for outer_key, outer_value in comp_dict.items():
+			# 	print("\t", outer_key)
+			# 	for elem in outer_value:
+			# 		print("\t\t", elem)
+			# 		for inner_key, inner_value in elem.items():
+			# 			print("\t\t\t",inner_value)
+			# 			for elem2 in inner_value:
+			# 				print("\t\t\t\t",elem2)		
+
+			# Get the step data for RADIATOR REQUIREMENTS
+			radiators_step_data = self.storage.get_step_data('7')
+
+			# Get the radiator prices
+			for x in range(1, 13):
+				components = []
+				if radiators_step_data.get('7-radiator_' + str(x)):
+					component_price_total = component_price_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-radiator_' + str(x)), user=self.request.user).price
+					component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-radiator_' + str(x)), user=self.request.user).est_time_duration
+					components.append(dict(component_attrib_build(radiators_step_data.get('7-radiator_' + str(x)), self.request.user)))
+					comp_dict['Radiator ' + str(x)] = components
+					print(ProductComponent.objects.get(component_name = radiators_step_data.get('7-radiator_' + str(x)), user=self.request.user).price)
+
+			# Get the Thermostatic radiator value prices
+			for x in range(1, 13):
+				components = []
+				if radiators_step_data.get('7-radiator_valve_' + str(x)):
+					component_price_total = component_price_total + (ProductComponent.objects.get(component_name = radiators_step_data.get('7-radiator_valve_' + str(x)), user=self.request.user).price * int(radiators_step_data.get('7-radiator_valve_quantity_' + str(x))))
+					component_duration_total = component_duration_total + (ProductComponent.objects.get(component_name = radiators_step_data.get('7-radiator_valve_' + str(x)), user=self.request.user).est_time_duration * int(radiators_step_data.get('7-radiator_valve_quantity_' + str(x))))
+					components.append(dict(component_attrib_build(radiators_step_data.get('7-radiator_valve_' + str(x)), self.request.user, int(radiators_step_data.get('7-radiator_valve_quantity_' + str(x))))))
+					comp_dict['Radiator Valve ' + str(x)] = components
+					print((ProductComponent.objects.get(component_name = radiators_step_data.get('7-radiator_valve_' + str(x)), user=self.request.user).price * int(radiators_step_data.get('7-radiator_valve_quantity_' + str(x)))))
+
+			# Get the Towel Rail prices
+			for x in range(1, 5):
+				components = []
+				if radiators_step_data.get('7-towel_rail_' + str(x)):
+					component_price_total = component_price_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-towel_rail_' + str(x)), user=self.request.user).price
+					component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-towel_rail_' + str(x)), user=self.request.user).est_time_duration
+					components.append(dict(component_attrib_build(radiators_step_data.get('7-towel_rail_' + str(x)), self.request.user)))
+					comp_dict['Towel Rail ' + str(x)] = components
+					print(ProductComponent.objects.get(component_name = radiators_step_data.get('7-towel_rail_' + str(x)), user=self.request.user).price)
+
+							
+			# Get the Special Parts Prices
+			if new_installation_step_data.get('6-special_part_1',''):
+				components = []
+				component_price_total = component_price_total + Decimal(new_installation_step_data.get('6-special_part_qty_1')) * Decimal(new_installation_step_data.get('6-special_part_price_1'))
+				component = {new_installation_step_data.get('6-special_part_1',''): [Decimal(new_installation_step_data.get('6-special_part_qty_1')), Decimal(new_installation_step_data.get('6-special_part_price_1')), Decimal(new_installation_step_data.get('6-special_part_qty_1')) * Decimal(new_installation_step_data.get('6-special_part_price_1')), 'N/A', 'N/A']}
+				components.append(dict(component))
+				comp_dict['Special Part 1'] = components
+				print(Decimal(new_installation_step_data.get('6-special_part_qty_1')) * Decimal(new_installation_step_data.get('6-special_part_price_1')))
+			if new_installation_step_data.get('6-special_part_2',''):
+				components = []
+				component_price_total = component_price_total + Decimal(new_installation_step_data.get('6-special_part_qty_2')) * Decimal(new_installation_step_data.get('6-special_part_price_2'))
+				component = {new_installation_step_data.get('6-special_part_2',''): [Decimal(new_installation_step_data.get('6-special_part_qty_2')), Decimal(new_installation_step_data.get('6-special_part_price_2')), Decimal(new_installation_step_data.get('6-special_part_qty_2')) * Decimal(new_installation_step_data.get('6-special_part_price_2')), 'N/A', 'N/A']}
+				components.append(dict(component))
+				comp_dict['Special Part 2'] = components
+				print(Decimal(new_installation_step_data.get('6-special_part_qty_2')) * Decimal(new_installation_step_data.get('6-special_part_price_2')))	
+			if new_installation_step_data.get('6-special_part_3',''):
+				components = []
+				component_price_total = component_price_total + Decimal(new_installation_step_data.get('6-special_part_qty_3')) * Decimal(new_installation_step_data.get('6-special_part_price_3'))
+				component = {new_installation_step_data.get('6-special_part_3',''): [Decimal(new_installation_step_data.get('6-special_part_qty_3')), Decimal(new_installation_step_data.get('6-special_part_price_3')), Decimal(new_installation_step_data.get('6-special_part_qty_3')) * Decimal(new_installation_step_data.get('6-special_part_price_3')), 'N/A', 'N/A']}
+				components.append(dict(component))
+				comp_dict['Special Part 3'] = components
+				print(Decimal(new_installation_step_data.get('6-special_part_qty_3')) * Decimal(new_installation_step_data.get('6-special_part_price_3')))	
+
+			# Calculate Workload cost if more than 1 days work
+			workload_requirements_step_data = self.storage.get_step_data('8')
+			estimated_duration = int(workload_requirements_step_data.getlist('8-estimated_duration')[0])
+			idx = Profile.objects.get(user = self.request.user)
+			if estimated_duration > 1:
+				estimated_duration_cost = idx.baseline_work_rate + (idx.additional_daily_work_rate * estimated_duration)
+			else:
+				estimated_duration_cost = idx.baseline_work_rate
+
+			# Sum the grand total
+			total_quote_price = product_price + component_price_total + estimated_duration_cost
+			print(product_price)
+			print(component_price_total)
+			print(estimated_duration_cost)
+			print(total_quote_price)
+
+			return {'product_price': product_price, 'component_price_total':component_price_total, 
+				'estimated_duration_cost': estimated_duration_cost, 'component_duration_total': component_duration_total,
+				 'total_quote_price': total_quote_price}
 		else:
 			return {}
 
@@ -136,31 +441,16 @@ class BoilerFormWizardView_yh(SessionWizardView):
 
 			sourceHtml = "pdf/quote_for_pdf.html"      # Under templates folder
 
-		# Get the data for the Installer from Installer table to populate email(id) and pdf(idx)
+		# Get the data for the Surveyor from Profile table to populate email(id) and pdf(idx)
 		idx = Profile.objects.get(user = self.request.user)
 
 		product_id = ([form.cleaned_data for form in form_list][5].get('product_choice').id)
 
-		# Is a plume management kit required
-		if ([form.cleaned_data for form in form_list][4].get('plume_management_kit')) == 'Required':
-			plume_management_kit = True
-		else:
-			plume_management_kit = False
-		
 		if ([form.cleaned_data for form in form_list][5].get('alt_product_choice')) != None:
 			alt_product_id = ([form.cleaned_data for form in form_list][5].get('alt_product_choice').id)
 			alt_product_exists = True	
 		else:
 			alt_product_exists = False
-
-		gas_flue_components_obj = ([form.cleaned_data for form in form_list][6].get('gas_flue_components'))
-		gas_flue_components = list(gas_flue_components_obj.values_list('component_name', flat=True))
-
-		if plume_management_kit:
-			plume_components_obj = ([form.cleaned_data for form in form_list][6].get('plume_components'))
-			plume_components = list(plume_components_obj.values_list('component_name', flat=True))
-		else:
-			plume_components = list(['Not Required'])
 
 		# Get the record of the product that was selected
 		product_record = ProductPrice.objects.get(pk = product_id)
@@ -183,11 +473,9 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			print(type(e)) 
 			print("Error: No Image exists for the Product")
 
-		
-
-		# Calculate the daily_work_rate multiplied by the estimated_duration
-		workload_cost = idx.daily_work_rate * int([form.cleaned_data for form in form_list][8].get('estimated_duration')[0])
-		# Calculate the total quote price for the quote
+		# Calculate the daily_work_rate multiplied by the estimated_duration ( can be removed ?)
+		workload_cost = idx.additional_daily_work_rate * int([form.cleaned_data for form in form_list][8].get('estimated_duration')[0])
+		# Calculate the total quote price for the quote (is this now wrong ?)
 		total_quote_price = workload_cost + product_record.price
 
 		# Get the records of the images file for the current user
@@ -221,27 +509,17 @@ class BoilerFormWizardView_yh(SessionWizardView):
 					stringAfterReplace = stringAfterFirstReplace
 			
 				file.write(str(stringAfterReplace) + "\n")
-			elif index == 6:
-				string = str(line)
-				firstDelPos=string.find("<QuerySet [<ProductComponent:") # get the position of the string
-				secondDelPos=string.find(">]>") # get the position of the string
-				stringAfterFirstReplace = string.replace(string[firstDelPos:secondDelPos+3], str(gas_flue_components).replace('"',''))
-				if plume_management_kit:
-					string = stringAfterFirstReplace
-					firstDelPos=string.find("<QuerySet [<ProductComponent:") # get the position of <
-					secondDelPos=string.find(">]>") # get the position of >
-					stringAfterReplace = string.replace(string[firstDelPos:secondDelPos+3], str(plume_components).replace('"',''))
-				else:
-					stringAfterReplace = stringAfterFirstReplace
-					
-				file.write(str(stringAfterReplace) + "\n")
 			elif index == 8:
 				string = str(line)
 				file.write(string.replace("<OptionalExtra: ","'").replace(">, '","', '") + "\n")
 				#file.write(str(stringAfterReplace) + "\n")	
 			else:	
 				file.write(str(line) + "\n")
+		# Finally write the component dict to the file
+		file.write(str(comp_dict) + "\n")		
 		file.close() #close file
+
+		print(a_break)
 
 		# Optional Extras Extended Price - build list
 		optional_extra_extended_prices = []
@@ -279,7 +557,7 @@ class BoilerFormWizardView_yh(SessionWizardView):
 		
 		#print(product_record)
 		#print(alt_product_record)
-		print("end")
+		#print(xxx)
 		# Generate the PDF and write to disk
 		pdf_generation_to_file(sourceHtml, outputFilename, {
 			'form_data': [form.cleaned_data for form in form_list],
@@ -400,7 +678,7 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 
 
 	# Calculate the daily_work_rate multiplied by the estimated_duration
-	workload_cost = idx.daily_work_rate * int(file_form_data[8].get('estimated_duration')[0])
+	workload_cost = idx.baseline_work_rate * int(file_form_data[8].get('estimated_duration')[0])
 	# Calculate the total quote price for the quote
 	total_quote_price = workload_cost + product_record.price	
 
@@ -429,7 +707,7 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 		outputFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/Quote_{}_{}{}.pdf".format(request.user.username,idx.quote_prefix,customer_last_name.replace(" ","_"),f"{idx.current_quote_number:05}")) # pad with leading zeros (5 positions)
 		# Generate the PDF and write to disk
 		pdf_generation_to_file(sourceHtml, outputFilename, {
-	    	'form_data': file_form_data,
+			'form_data': file_form_data,
 			'idx':idx,
 			'frecords': frecords,
 			'alt_product_record': alt_product_record,

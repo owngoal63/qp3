@@ -1,9 +1,14 @@
-@import url('https://fonts.googleapis.com/css?family=Poppins&display=swap');
+/* @import url('https://fonts.googleapis.com/css?family=Poppins&display=swap'); */
+/* @import url('https://fonts.googleapis.com/css?family=Lato&display=swap'); */
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+
 
 * {
     margin: 0px;
     padding: 0px;
-    font-family: 'Poppins', sans-serif;
+    /* font-family: 'Poppins', sans-serif; */
+    /* font-family: 'Lato', sans-serif; */
+    font-family: 'Open Sans', sans-serif;
     font-size: 14px;
 
 }
@@ -407,9 +412,15 @@ div.break {
     vertical-align: top;
 }
 
-.optional-extras {
+table.optional-extras {
     width:100%;
     border: 1px solid black;
+}
+
+table.special-parts-table {
+    border-spacing:0;
+    border: 1px solid black;
+    padding:10px;
 }
 
 table.radiator-table {
@@ -433,4 +444,34 @@ p.account-details {
     font-size: 0.9rem;
     font-weight: 400;
  }
+
+ #bom {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-size: 0.7rem;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  #bom td, #bom th {
+    border: 1px solid #ddd;
+    padding: 4px;
+  }
+  
+  #bom tr:nth-child(even){background-color: #f2f2f2;}
+  
+  #bom tr:hover {background-color: #ddd;}
+  
+  #bom th {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    text-align: left;
+    background-color: #4db79c;
+    color: rgb(35, 36, 36);
+    font-weight: 100;
+  }
+
+  #SalutAndRef {
+    border-collapse: collapse;
+    width: 100%;
+  }
 

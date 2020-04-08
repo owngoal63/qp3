@@ -18,10 +18,10 @@
 
     <div class="row price-list-headings">
         <div class="col-6">
-            <h4>Product</h4>
+            <a href="/productpricelist/"><h4>Brand/Product</h4></a>
         </div>
         <div class="col-2">
-            <h4>Price</h4>
+            <h4>Price/Cost</h4>
         </div>
         <div class="col-1">
             <h4>Image</h4>
@@ -34,12 +34,11 @@
     <div class="row">
         {% for prod in products_by_user %}
         <div class="col-6">
-            {{ prod.brand }}
-            {{ prod.model_name }}
+            <a href="/productpricelist/?filter={{prod.brand}}">{{ prod.brand }}</a> {{ prod.model_name }}
         </div>
 
         <div class="col-2">
-            £{{ prod.price }}
+            £{{ prod.price }}/£{{prod.cost}}
         </div>
         <div class="col-1">
             {% if prod.product_image != null %}
@@ -70,17 +69,17 @@
 
             <ul class="pagination justify-content-center">
             {% if page_obj.has_previous %}
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{%if 'filter' in request.get_full_path %}&filter={{products_by_user.0.brand}}{%endif%}">&laquo;</a></li>
             {% else %}
                 <li class="page-item"><span class="page-link">&laquo;</span></li>
             {% endif %}
             {% for i in paginator.page_range %}
                 
-                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ i }}{%if 'filter' in request.get_full_path %}&filter={{products_by_user.0.brand}}{%endif%}">{{ i }}</a></li>
                 
             {% endfor %}
             {% if page_obj.has_next %}
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{%if 'filter' in request.get_full_path %}&filter={{products_by_user.0.brand}}{%endif%}">&raquo;</a></li>
             {% else %}
                 <li class="page-item"><span class="page-link">&raquo;</span></li>
             {% endif %}

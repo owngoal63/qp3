@@ -165,15 +165,16 @@ a:hover {
     margin-left: 15px;
   }
 
-  .plume-row {
+  /* .plume-row {
     color:red;
     font-weight:1.3rem;
     padding:1px; 
-  }
+  } */
 
-  .gas-flue-row {
+  .component-row {
     padding:1px; 
   }
+
 
   .opt_extra-row {
     padding:1px; 

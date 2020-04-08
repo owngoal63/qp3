@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+    <div class = "container quote-form-container">
+
+    <form action="" method="post">
+    {% csrf_token %}
+
+    <h3>NEW INSTALLATION MATERIALS</h3>
+    
+    <h5>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</h5>
+    
+    {{ wizard.management_form }}
+    {% if wizard.form.forms %}
+        {{ wizard.form.management_form }}
+        {% for form in wizard.form.forms %}
+          {{ form }}
+        {% endfor %}
+    {% else %}
+
+    <div class = "row">
+        <div class = "col-6">
+            <div class="form-group">
+                <label>{{ wizard.form.gas_flue_components.label }}</label>{% if wizard.form.gas_flue_components.field.required %} *{% endif %}
+                {{ wizard.form.gas_flue_components }}
+                <label>{{ wizard.form.oil_flue_components.label }}</label>{% if wizard.form.oil_flue_components.field.required %} *{% endif %}
+                {{ wizard.form.oil_flue_components }}
+            </div>
+        </div>
+        <div class = "col-6">
+            <div class="form-group">
+                <label>{{ wizard.form.plume_components.label }}</label>{% if wizard.form.plume_components.field.required %} *{% endif %}
+                {{ wizard.form.plume_components }}
+            </div>
+        </div>
+    </div>
+    <div class = "row">
+        <div class = "col-6">
+            <div class="form-group">
+                <label>{{ wizard.form.programmer_thermostat.label }}</label>{% if wizard.form.programmer_thermostat.field.required %} *{% endif %}
+                {{ wizard.form.programmer_thermostat }}
+            </div>
+        </div>
+        <div class = "col-6">
+            <div class="form-group">
+                <label>{{ wizard.form.additional_central_heating_components.label }}</label>{% if wizard.form.additional_central_heating_components.field.required %} *{% endif %}
+                {{ wizard.form.additional_central_heating_components }}
+            </div>
+        </div>
+    </div>
+    <div class = "row">
+        <div class = "col-6">
+            <div class="form-group">
+                <label>{{ wizard.form.central_heating_system_filter.label }}</label>{% if wizard.form.central_heating_system_filter.field.required %} *{% endif %}
+                {{ wizard.form.central_heating_system_filter }}
+            </div>
+        </div>
+        <div class = "col-6">
+            <div class="form-group">
+                <label>{{ wizard.form.scale_reducer.label }}</label>{% if wizard.form.scale_reducer.field.required %} *{% endif %}
+                {{ wizard.form.scale_reducer }}
+            </div>
+        </div>
+    </div>
+    <div class = "row">
+        <div class = "col-6">
+            <div class="form-group">
+                <label>{{ wizard.form.condensate_components.label }}</label>{% if wizard.form.condensate_components.field.required %} *{% endif %}
+                {{ wizard.form.condensate_components }}
+            </div>
+        </div>
+        <div class = "col-6">
+            <div class="form-group">
+                <label>{{ wizard.form.additional_copper_required.label }}</label>{% if wizard.form.additional_copper_required.field.required %} *{% endif %}
+                {{ wizard.form.additional_copper_required }}
+            </div>
+        </div>
+    </div>
+    <div class = "row">
+        <div class = "col-6">
+            <div class="form-group">
+                <label>{{ wizard.form.fittings_packs.label }}</label>{% if wizard.form.fittings_packs.field.required %} *{% endif %}
+                {{ wizard.form.fittings_packs }}
+            </div>
+        </div>
+        <div class = "col-6">
+            <div class="form-group">
+                <label>{{ wizard.form.electrical_pack.label }}</label>{% if wizard.form.electrical_pack.field.required %} *{% endif %}
+                {{ wizard.form.electrical_pack }}
+            </div>
+        </div>
+    </div>
+    <div class = "row">
+        <div class = "col-6">
+            <div class="form-group">
+                <label>{{ wizard.form.earth_spike_required.label }}</label>{% if wizard.form.earth_spike_required.field.required %} *{% endif %}
+                {{ wizard.form.earth_spike_required }}
+            </div>
+        </div>
+        <div class = "col-6">
+            <div class="form-group">
+                <label>{{ wizard.form.filling_link.label }}</label>{% if wizard.form.filling_link.field.required %} *{% endif %}
+                {{ wizard.form.filling_link }}
+            </div>
+        </div>
+    </div>
+    <div class = "row">
+        <div class = "col-6">
+            <div class="form-group">
+                <label>{{ wizard.form.building_pack_required.label }}</label>{% if wizard.form.building_pack_required.field.required %} *{% endif %}
+                {{ wizard.form.building_pack_required }}
+            </div>
+        </div>
+        <div class = "col-6">
+            <div class="form-group">
+                <label>{{ wizard.form.double_handed_lift_required.label }}</label>{% if wizard.form.double_handed_lift_required.field.required %} *{% endif %}
+                {{ wizard.form.double_handed_lift_required }}
+            </div>
+        </div>
+    </div>
+    <div class = "row">
+        
+        <div class = "col-6">
+            <div class="form-group">
+                <table>
+                    <tr>
+                        <td width="55%">Special Part(s)</td>
+                        <td width="15%">Qty</td>
+                        <td width="20%">Price £</td>
+                    </tr>
+                    <tr>
+                        <td>{{ wizard.form.special_part_1 }}</td>
+                        <td>{{ wizard.form.special_part_qty_1 }}</td>
+                        <td>{{ wizard.form.special_part_price_1 }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ wizard.form.special_part_2 }}</td>
+                        <td>{{ wizard.form.special_part_qty_2 }}</td>
+                        <td>{{ wizard.form.special_part_price_2 }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ wizard.form.special_part_3 }}</td>
+                        <td>{{ wizard.form.special_part_qty_3 }}</td>
+                        <td>{{ wizard.form.special_part_price_3 }}</td>
+                    </tr>
+                   
+                </table>
+            </div>
+        </div>
+        <div class = "col-6">
+            &nbsp;
+        </div>
+    </div>
+    
+{% endif %}
+        
+    <div class = "row">
+        <div class="col-12">
+            <div class="boilerformbtns">
+                {% if wizard.steps.prev %}
+                <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.first }}" class="boilerbtn">First step</button>
+                <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.prev }}" class="boilerbtn">Previous step</button>
+                {% endif %}
+                {% if wizard.steps.step1 != 10 %}
+                <input class="btn btn-primary" id="next-step-btn" type="submit" value="Next Step" class="boilerbtn"/>
+                {% else %}
+                <input class="btn btn-primary" type="submit" value="Final Step" class="boilerbtn"/>
+                {% endif %}
+            </div>  
+        </div>
+    </div>
+    </form>
+    <br>
+
+</div> 
+{% endif %} 
+
+<script type="text/javascript">
+    $(function () {
+      $('[data-toggle="popover"]').popover()
+    })
+    
+    $('.popover-dismiss').popover({
+      trigger: 'focus'
+    })
+    
+</script>
+
+    {% endblock %}

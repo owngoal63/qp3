@@ -40,9 +40,39 @@
         <li class="nav-item">
           <a class="nav-link" href="/home">Dashboard<span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/productcomponentlist">Components<span class="sr-only">(current)</span></a>
-        </li>
+        <span class="nav-item dropdown">
+          <a class="nav-link dropdown dropdown-toggle" href="/productcomponentlist/" id="navbarDropdown" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          Components
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/productcomponentlist/">All Components</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Additional Central Heating Component">Additional Central Heating Components</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Additional Copper">Additional Copper</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Asbestos Removal Procedure">Asbestos Removal Procedure</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Building Pack">Building Pack</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Central Heating System Filter">Central Heating System Filter</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Chemical System Treatment">Chemical System Treatment</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Condenstate Component">Condenstate Component</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Customer Supplied Radiator">Customer Supplied Radiator</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Double Handed Lift">Double Handed Lift</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Earth Spike">Earth Spike</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Electrical Pack">Electrical Pack</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Filling Link">Filling Link</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Fitting Pack">Fitting Pack</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Gas Flue Component">Gas Flue Component</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Gas Supply Length">Gas Supply Length</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Oil Flue Component">Oil Flue Component</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Plume Component">Plume Component</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Programmer Thermostat">Programmer Thermostat</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Radiator">Radiator</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Scaffolding">Scaffolding</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Scale Reducer">Scale Reducer</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Special Lift">Special Lift</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Thermostatic Radiator Valve">Thermostatic Radiator Valve</a>
+            <a class="dropdown-item" href="/productcomponentlist/?filter=Towel Rail">Towel Rail</a>
+          </div>
+        </span>
         <li class="nav-item">
           <a class="nav-link" href="/optionalextralist">Optional Extras<span class="sr-only">(current)</span></a>
         </li>
@@ -61,6 +91,8 @@
           </li>
           {% endif %}
         {% endif %}
+
+        
       </ul>
 
       <span class="nav-item dropdown">
