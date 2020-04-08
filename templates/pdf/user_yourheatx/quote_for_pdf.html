@@ -46,7 +46,7 @@
                     <td><img class="product-image" src="{{img_record.document.url}}" /></td>
                     <td>
                         <div class="price-orange-box">
-                            £{{product_record.price}} Inc. VAT
+                            £{{form_data.9.total_cost|floatformat:2}} Inc. VAT
                         </div>
                         <div class="product-name">
                             <p>{{product_record.brand}}<br>
@@ -892,13 +892,13 @@
                 <td class="tech-attrib">TOTAL (PRICE INCLUSIVE OF VAT)</td>
             </tr>
             <tr>    
-                <td class="tech-value">£{{product_record.price}}</td>
+                <td class="tech-value">£{{form_data.9.total_cost|floatformat:2}}</td>
             </tr>
             <tr>
                 <td class="tech-attrib">DEPOSIT REQUIRED</td>
             </tr>
             <tr>    
-                <td class="tech-value">£{{ form_data.9.deposit_amount|floatformat:2 }}</td>
+                <td class="tech-value">£{{form_data.9.deposit_amount_thirty_percent}}</td>
             </tr>
             <tr>
                 <td class="tech-attrib">BALANCE DUE ON COMPLETION</td>

@@ -416,7 +416,8 @@ class BoilerFormWizardView_yh(SessionWizardView):
 				estimated_duration_cost = idx.baseline_work_rate
 
 			# Sum the grand total
-			total_quote_price = product_price + component_price_total + estimated_duration_cost
+			#total_quote_price = product_price + component_price_total + estimated_duration_cost
+			total_quote_price = component_price_total + estimated_duration_cost
 			print(product_price)
 			print(component_price_total)
 			print(estimated_duration_cost)
