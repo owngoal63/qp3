@@ -1432,7 +1432,7 @@ class FormStepSeven_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
 	# within double curly braces...
 	# form_data.6.field_name e.g. form_data.6.boiler_manufactureruel_type
-	alt_manufx = forms.BooleanField()	# Temp boolean field value to determine if alt_manuf has been selected 
+	alt_manufx = forms.BooleanField(required=False)	# Temp boolean field value to determine if alt_manuf has been selected 
 
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user')
@@ -1503,8 +1503,8 @@ class FormStepSeven_yh(forms.Form):
 	special_part_qty_2 = forms.IntegerField(required=False)
 	special_part_qty_3 = forms.IntegerField(required=False)
 	special_part_price_1 = forms.DecimalField(required=False, max_digits=7, decimal_places=2)
-	special_part_price_2 = forms.DecimalField(required=False)
-	special_part_price_3 = forms.DecimalField(required=False)
+	special_part_price_2 = forms.DecimalField(required=False, max_digits=7, decimal_places=2)
+	special_part_price_3 = forms.DecimalField(required=False, max_digits=7, decimal_places=2)
 	
 class FormStepEight_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation

@@ -171,7 +171,7 @@ def send_pdf_email_using_SendGrid(sender, receiver, mail_subject, mail_content, 
 	attachment.content_id = ContentId('Example Content ID')
 
 	""" Add txt file """
-	if txt_atachment:
+	if txt_attachment:
 		file_path = txt_attachment
 
 		with open(file_path, 'rb') as f:

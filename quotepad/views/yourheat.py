@@ -476,7 +476,7 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			estimated_duration = int(workload_requirements_step_data.getlist('8-estimated_duration')[0])
 			idx = Profile.objects.get(user = settings.YH_MASTER_PROFILE_ID)
 			if estimated_duration > 1:
-				estimated_duration_cost = idx.baseline_work_rate + (idx.additional_daily_work_rate * estimated_duration)
+				estimated_duration_cost = idx.baseline_work_rate + (idx.additional_daily_work_rate * (estimated_duration - 1))
 			else:
 				estimated_duration_cost = idx.baseline_work_rate
 
@@ -699,7 +699,7 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 		msg = msg + "<p>Customer Email: <a href='mailto:{}'>{}</a><p>".format(fd[0]['customer_email'], fd[0]['customer_email'])
 		msg = msg + "<p>You can contact the surveyor, {} on {} or <a href='mailto:{}'>{}</a><p>.</p>".format(idx.first_name, str(idx.telephone), idx.email, idx.email)
 		
-		mail_subject = 'Boiler Installation Quote Number: {} Customer: {} {} Surveyor: {} {}'.format(fd[11]['quote_number'], fd[0]['customer_first_name'], fd[0]['customer_last_name'], idx.first_name, idx.last_name)
+		mail_subject = 'Boiler Installation Quote Number: {} Customer: {} {} Surveyor: {} {}'.format(fd[17]['quote_number'], fd[0]['customer_first_name'], fd[0]['customer_last_name'], idx.first_name, idx.last_name)
 
 		if settings.YH_TEST_EMAIL:
 			email = EmailMessage(mail_subject, msg, idx.email, [idx_master.email])
