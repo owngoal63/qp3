@@ -24,8 +24,8 @@ from django.core.files.storage import FileSystemStorage
 from quotepad.models import Document, Profile, ProductPrice
 from quotepad.forms import DocumentForm 
 
-# import associated with Editing quote template
-from quotepad.forms import EditQuoteTemplateForm
+# import associated with Editing files
+from quotepad.forms import EditQuoteTemplateForm, EditCurrentQuoteDataForm
 
 # import associated with signals (used for setting session variables)
 from django.dispatch import receiver
@@ -256,7 +256,31 @@ def edit_quote_template(request):
 		form = EditQuoteTemplateForm(request.user)
 		return render(request,"edit_quote_template.html",{'form': form}) 
 
-	return redirect('/home/')	
+	return redirect('/home/')
+
+@login_required
+def edit_quote_data(request):
+	''' Function to allow users to edit the current quote data (in json format) '''
+	
+	if request.method=="POST":
+		form = EditCurrentQuoteDataForm(request.user)
+		
+		quote_data = request.POST['quote_data']
+	
+		usr_data_template_file = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/current_quote.txt".format(request.user.username))	
+		template_file = open(usr_data_template_file,'w', newline='')
+		template_file.write(quote_data)
+		template_file.close()
+		#request.session['created_quote_template'] = True
+		#created_quote_template_group = Group.objects.get(name = 'created_quote_template')
+		#request.user.groups.add(created_quote_template_group)
+		messages.success(request, 'Your quote data has been updated.')
+		return HttpResponseRedirect('/quotegenerated_yh/')
+	else:
+		form = EditCurrentQuoteDataForm(request.user)
+		return render(request,"edit_quote_data.html",{'form': form}) 
+
+	return redirect('/home/')
 
 
 

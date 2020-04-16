@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h4>Edit the content of the current quote</h4>
+
+    <a href="{% url 'quotepad_template_help' %}" target="_blank">Quotepad Template Design Helpsheet (opens in a new
+        window/tab)</a>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button class="btn btn-primary" type="submit">Save</button>
+
+        <a href="{% url 'home' %}" class="btn btn-secondary">Cancel</a>
+
+    </form>
+    <br>
+</div>
+{% endblock content %}

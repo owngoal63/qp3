@@ -34,7 +34,7 @@
     <div class = "row">
         <div class = "col-7">
             <div class="form-rad-group">
-                <p class="radiator-section-headings" >Radiator / Location *</p> 
+                <!-- <p class="radiator-section-headings" >Radiator / Location *</p>  -->
                 <table>
                     <tr>
                         <td width="180px">Radiator</td>
@@ -94,7 +94,7 @@
 
         <div class = "col-5"> 
             <div class="form-rad-valve-group">
-                <p class="radiator-section-headings">Thermostatic Radiator Valves *</p> 
+                <!-- <p class="radiator-section-headings">Thermostatic Radiator Valves *</p>  -->
                 <table>
                     <tr>
                         <td width="150px">Thermostatic Radiator Valve</td>
@@ -156,7 +156,7 @@
     <div class = "row">
         <div class = "col-12">
             <div class="form-towel-group">
-                <p class="radiator-section-headings">Towel Rail / Location *</p> 
+                <!-- <p class="radiator-section-headings">Towel Rail / Location *</p>  -->
                 <table>
                     <tr>
                         <td width="180px">Towel Rail</td>
@@ -215,12 +215,16 @@
     $('.popover-dismiss').popover({
       trigger: 'focus'
     })
+
+    radiator_handler();
     
     function radiator_handler() {
       //Create an input type dynamically.
     
     // document.forms[0].element.value
      //console.log(7-radiator_specification.value);
+
+     console.log("Running");
     
      var no_rads_checkbox = document.getElementById('id_7-radiator_specification_0');
      var rads_req_checkbox = document.getElementById('id_7-radiator_specification_1');
@@ -285,73 +289,73 @@
 
     // Main code //
 
-    document.getElementById('id_7-towel_rail_width_1').addEventListener('change', function() {
+//     document.getElementById('id_7-towel_rail_width_1').addEventListener('change', function() {
 
-    delete_dropdown_elements('id_7-towel_rail_height_1');
-    createOption('id_7-towel_rail_height_1','-----');
-    if (document.getElementById('id_7-towel_rail_width_1').value == "450") {
-        createOption('id_7-towel_rail_height_1','900');
-        createOption('id_7-towel_rail_height_1','1000');
-        createOption('id_7-towel_rail_height_1','1200');    
-    }
-    if (document.getElementById('id_7-towel_rail_width_1').value == "600") {
-        createOption('id_7-towel_rail_height_1','1000');
-        createOption('id_7-towel_rail_height_1','1200');
-        createOption('id_7-towel_rail_height_1','1600');
-        createOption('id_7-towel_rail_height_1','1800');    
-    }
-});
+//     delete_dropdown_elements('id_7-towel_rail_height_1');
+//     createOption('id_7-towel_rail_height_1','-----');
+//     if (document.getElementById('id_7-towel_rail_width_1').value == "450") {
+//         createOption('id_7-towel_rail_height_1','900');
+//         createOption('id_7-towel_rail_height_1','1000');
+//         createOption('id_7-towel_rail_height_1','1200');    
+//     }
+//     if (document.getElementById('id_7-towel_rail_width_1').value == "600") {
+//         createOption('id_7-towel_rail_height_1','1000');
+//         createOption('id_7-towel_rail_height_1','1200');
+//         createOption('id_7-towel_rail_height_1','1600');
+//         createOption('id_7-towel_rail_height_1','1800');    
+//     }
+// });
 
-    document.getElementById('id_7-towel_rail_width_2').addEventListener('change', function() {
+//     document.getElementById('id_7-towel_rail_width_2').addEventListener('change', function() {
 
-    delete_dropdown_elements('id_7-towel_rail_height_2');
-    createOption('id_7-towel_rail_height_2','-----');
-    if (document.getElementById('id_7-towel_rail_width_2').value == "450") {
-        createOption('id_7-towel_rail_height_2','900');
-        createOption('id_7-towel_rail_height_2','1000');
-        createOption('id_7-towel_rail_height_2','1200');    
-    }
-    if (document.getElementById('id_7-towel_rail_width_2').value == "600") {
-        createOption('id_7-towel_rail_height_2','1000');
-        createOption('id_7-towel_rail_height_2','1200');
-        createOption('id_7-towel_rail_height_2','1600');
-        createOption('id_7-towel_rail_height_2','1800');    
-    }
-});
+//     delete_dropdown_elements('id_7-towel_rail_height_2');
+//     createOption('id_7-towel_rail_height_2','-----');
+//     if (document.getElementById('id_7-towel_rail_width_2').value == "450") {
+//         createOption('id_7-towel_rail_height_2','900');
+//         createOption('id_7-towel_rail_height_2','1000');
+//         createOption('id_7-towel_rail_height_2','1200');    
+//     }
+//     if (document.getElementById('id_7-towel_rail_width_2').value == "600") {
+//         createOption('id_7-towel_rail_height_2','1000');
+//         createOption('id_7-towel_rail_height_2','1200');
+//         createOption('id_7-towel_rail_height_2','1600');
+//         createOption('id_7-towel_rail_height_2','1800');    
+//     }
+// });
 
-    document.getElementById('id_7-towel_rail_width_3').addEventListener('change', function() {
+//     document.getElementById('id_7-towel_rail_width_3').addEventListener('change', function() {
 
-    delete_dropdown_elements('id_7-towel_rail_height_3');
-    createOption('id_7-towel_rail_height_3','-----');
-    if (document.getElementById('id_7-towel_rail_width_3').value == "450") {
-        createOption('id_7-towel_rail_height_3','900');
-        createOption('id_7-towel_rail_height_3','1000');
-        createOption('id_7-towel_rail_height_3','1200');    
-    }
-    if (document.getElementById('id_7-towel_rail_width_3').value == "600") {
-        createOption('id_7-towel_rail_height_3','1000');
-        createOption('id_7-towel_rail_height_3','1200');
-        createOption('id_7-towel_rail_height_3','1600');
-        createOption('id_7-towel_rail_height_3','1800');    
-    }
-}); 
+//     delete_dropdown_elements('id_7-towel_rail_height_3');
+//     createOption('id_7-towel_rail_height_3','-----');
+//     if (document.getElementById('id_7-towel_rail_width_3').value == "450") {
+//         createOption('id_7-towel_rail_height_3','900');
+//         createOption('id_7-towel_rail_height_3','1000');
+//         createOption('id_7-towel_rail_height_3','1200');    
+//     }
+//     if (document.getElementById('id_7-towel_rail_width_3').value == "600") {
+//         createOption('id_7-towel_rail_height_3','1000');
+//         createOption('id_7-towel_rail_height_3','1200');
+//         createOption('id_7-towel_rail_height_3','1600');
+//         createOption('id_7-towel_rail_height_3','1800');    
+//     }
+// }); 
 
-    document.getElementById('id_7-towel_rail_width_4').addEventListener('change', function() {
+//     document.getElementById('id_7-towel_rail_width_4').addEventListener('change', function() {
 
-    delete_dropdown_elements('id_7-towel_rail_height_4');
-    createOption('id_7-towel_rail_height_4','-----');
-    if (document.getElementById('id_7-towel_rail_width_4').value == "450") {
-        createOption('id_7-towel_rail_height_4','900');
-        createOption('id_7-towel_rail_height_4','1000');
-        createOption('id_7-towel_rail_height_4','1200');    
-    }
-    if (document.getElementById('id_7-towel_rail_width_4').value == "600") {
-        createOption('id_7-towel_rail_height_4','1000');
-        createOption('id_7-towel_rail_height_4','1200');
-        createOption('id_7-towel_rail_height_4','1600');
-        createOption('id_7-towel_rail_height_4','1800');    
-    }
-});
+//     delete_dropdown_elements('id_7-towel_rail_height_4');
+//     createOption('id_7-towel_rail_height_4','-----');
+//     if (document.getElementById('id_7-towel_rail_width_4').value == "450") {
+//         createOption('id_7-towel_rail_height_4','900');
+//         createOption('id_7-towel_rail_height_4','1000');
+//         createOption('id_7-towel_rail_height_4','1200');    
+//     }
+//     if (document.getElementById('id_7-towel_rail_width_4').value == "600") {
+//         createOption('id_7-towel_rail_height_4','1000');
+//         createOption('id_7-towel_rail_height_4','1200');
+//         createOption('id_7-towel_rail_height_4','1600');
+//         createOption('id_7-towel_rail_height_4','1800');    
+//     }
+// });
 
     </script>
 

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h4>Upload Quote Data File for Reprint</h4>
+
+    <!-- <form method="post" enctype="multipart/form-data"> -->
+    <form enctype="multipart/form-data" method="POST">    
+        {% csrf_token %}
+        <!-- <input type="file" name="avatar" accept="image/gif, image/jpeg, image/png"> -->
+        <input type="file" name="datafile">
+       <!-- <button type="submit">Upload</button>--> 
+       <input class="btn btn-primary btn-md" role="button" type="submit" name="submit" value="Upload File" > 
+       </form>
+
+</div>
+
+
+{% endblock %}

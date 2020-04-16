@@ -150,6 +150,11 @@ EMAIL_PORT = '2525'
 STRIPE_SECRET_KEY = 'sk_test_4YVK8BcxtDC2f0F7DVau0JWG00TJj1bFLs'
 STRIPE_PUBLISHABLE_KEY = 'pk_test_34Pl9iMCAFEIfxCGX84ZrP6G0047uZg93B'
 
+# yourheat master settings
+YH_MASTER_PROFILE_ID = 6
+YH_MASTER_PROFILE_USERNAME = 'yourheatx'
+YH_TEST_EMAIL = True
+
 # REST Framework Authentication settings
 
 REST_FRAMEWORK = {

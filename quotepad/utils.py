@@ -8,6 +8,12 @@ from xhtml2pdf import pisa
 
 import os, os.path, errno
 
+# imports associated with sending email ( sendgrid )
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import (Mail, Attachment, FileContent, FileName, FileType, Disposition, ContentId)
+import base64
+import json
+
 #Added for Weasyprint
 from django.template.loader import render_to_string
 from weasyprint import HTML, CSS
@@ -126,12 +132,81 @@ def pdf_generation_to_file(template_src, outputFilename, context_dict={}):
 
 	return response
 
-def component_attrib_build(component_name, user, qty=1):
-	price = ProductComponent.objects.get(component_name=component_name, user=user).price
-	ext_price = price * qty
-	cost = ProductComponent.objects.get(component_name=component_name, user=user).cost
-	duration = ProductComponent.objects.get(component_name=component_name, user=user).est_time_duration
-	ext_duration = duration * qty
+def component_attrib_build(component_name, component_type, user, qty=1, brand=None):
+	if brand:
+		#print(component_type)
+		#print(brand)
+		price = ProductComponent.objects.get(component_name=component_name, component_type=component_type, brand=brand, user=user).price
+		ext_price = price * qty
+		cost = ProductComponent.objects.get(component_name=component_name, component_type=component_type, brand=brand, user=user).cost
+		duration = ProductComponent.objects.get(component_name=component_name, component_type=component_type, brand=brand, user=user).est_time_duration
+		ext_duration = duration * qty
+	else:
+		#print(component_type)
+		price = ProductComponent.objects.get(component_name=component_name, component_type=component_type, user=user).price
+		ext_price = price * qty
+		cost = ProductComponent.objects.get(component_name=component_name, component_type=component_type, user=user).cost
+		duration = ProductComponent.objects.get(component_name=component_name, component_type=component_type, user=user).est_time_duration
+		ext_duration = duration * qty
+
 	return {component_name: [qty, price, ext_price, cost, ext_duration]}
+
+def send_pdf_email_using_SendGrid(sender, receiver, mail_subject, mail_content, pdf_attachment, txt_attachment=None):
+	
+	# Where it was uploaded Path.
+	file_path = pdf_attachment
+
+	with open(file_path, 'rb') as f:
+		data = f.read()
+
+	# Encode contents of file as Base 64
+	encoded = base64.b64encode(data).decode()
+
+	"""Build PDF attachment"""
+	attachment = Attachment()
+	attachment.file_content = FileContent(encoded)
+	attachment.file_type = FileType('application/pdf')
+	attachment.file_name = FileName('your_quote.pdf')
+	attachment.disposition = Disposition('attachment')
+	attachment.content_id = ContentId('Example Content ID')
+
+	""" Add txt file """
+	if txt_atachment:
+		file_path = txt_attachment
+
+		with open(file_path, 'rb') as f:
+			data = f.read()
+
+		# Encode contents of file as Base 64
+		encoded = base64.b64encode(data).decode()
+
+		"""Build txt attachment"""
+		attachment2 = Attachment()
+		attachment2.file_content = FileContent(encoded)
+		attachment2.file_type = FileType('text/html')
+		attachment2.file_name = FileName('quote.txt')
+		attachment2.disposition = Disposition('attachment')
+		attachment2.content_id = ContentId('Text Example Content ID')
+
+	message = Mail(
+		from_email = sender,
+		to_emails = receiver,
+		subject = mail_subject,
+		html_content = mail_content)
+	message.attachment = attachment
+	if txt_attachment:
+		message.add_attachment(attachment2)
+
+	try:
+		sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+		response = sg.send(message)
+		print(response.status_code)
+		print(response.body)
+		print(response.headers)
+	except Exception as e:
+		print(e.message)
+
+	return
+
 
 

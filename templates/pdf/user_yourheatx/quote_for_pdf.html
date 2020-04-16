@@ -27,7 +27,7 @@
         <table id="SalutAndRef">
             <tr>
                 <td width=50%><div class="salutation">{{form_data.0.customer_title}} {{form_data.0.customer_last_name}}</div></td>
-                <td width=50%><div class="your-reference">Your reference: {{ idx.quote_prefix }}-{{ idx.current_quote_number }}</div></td>
+                <td width=50%><div class="your-reference">Your reference: {{ idx.quote_prefix }}-{{ form_data.17.quote_number }}</div></td>
             </tr>
         </table>
         
@@ -71,7 +71,7 @@
                     <td><img class="alt-product-image" src="{{alt_img_record.document.url}}" /></td>
                     <td>
                         <div class="price-orange-box">
-                            £{{alt_product_record.price}} Inc. VAT
+                            £{{form_data.9.alt_total_cost|floatformat:2}} Inc. VAT
                         </div>
                         <div class="product-name">
                             <p>{{alt_product_record.brand}}<br>
@@ -190,12 +190,24 @@
         <br>
         <h2>Customer Details</h2>
         <hr>
-        <br>
+        <table class="address"><tr>
+        <td>    
         <p><b>Installation Address</b><br>
             {{ form_data.1.house_name_or_number }} {{ form_data.1.street_address}}<br>
             {{ form_data.1.city }}, {{ form_data.1.county }}<br>
             {{ form_data.1.postcode }}
         </p>
+        </td>
+
+        {% if form_data.1.alternative_billing_address == 'Yes' %}
+        <td>
+        <p><b>Billing Address</b><br>
+        {{ form_data.1.billing_house_name_or_number }} {{ form_data.1.billing_street_address}}<br>
+        {{ form_data.1.billing_city }}, {{ form_data.1.billing_county }}<br>
+        {{ form_data.1.billing_postcode }}
+        </td>                
+        {% endif %}
+        </tr></table>
         <br>
         <p><b>Contact Details</b><br>
             Name: {{form_data.0.customer_first_name }} {{form_data.0.customer_last_name }}<br>
@@ -468,13 +480,19 @@
                 <td class="tech-value">{{ product_record.model_name }}</td>
             </tr>
             <tr>
-                <td class="tech-attrib" colspan="2">GAS FLUE COMPONENTS</td>
+                <td class="tech-attrib" colspan="2">FLUE COMPONENTS</td>
             </tr>
             <tr>    
                 <td class="tech-value" colspan="2">
-                    {% for gas_flue_component in form_data.6.gas_flue_components  %}
-                    &bull; {{ gas_flue_component }}<br>
-                    {% endfor %}
+                    {% if form_data.4.new_fuel_type == "Oil" %}
+                        {% for oil_flue_component in form_data.6.oil_flue_components  %}
+                            &bull; {{ oil_flue_component }}<br>
+                        {% endfor %}
+                    {% else %}
+                        {% for gas_flue_component in form_data.6.gas_flue_components  %}
+                            &bull; {{ gas_flue_component }}<br>
+                        {% endfor %}
+                    {% endif %}    
                 </td>
             </tr>
             {% if form_data.4.plume_management_kit == 'Required' %}
@@ -569,21 +587,21 @@
                 <td class="tech-value">
                     <table class="special-parts-table">
                         {% if form_data.6.special_part_1 %}
+                        <!-- <tr> -->
+                            <th>Part</th><th>Qty</th>   
+                        <!-- </tr> -->
                         <tr>
-                            <td width=>Part</td><td>Qty</td><td>Price</td>   
-                           </tr>
-                        <tr>
-                         <td>{{form_data.6.special_part_1 }}</td><td>{{form_data.6.special_part_qty_1 }}</td><td>£{{form_data.6.special_part_price_1 }}</td>   
+                         <td>{{form_data.6.special_part_1 }}</td><td>{{form_data.6.special_part_qty_1 }}</td>   
                         </tr>
                         {% endif %}
                         {% if form_data.6.special_part_2 %}
                         <tr>
-                         <td>{{form_data.6.special_part_2 }}</td><td>{{form_data.6.special_part_qty_2 }}</td><td>£{{form_data.6.special_part_price_2 }}</td>   
+                         <td>{{form_data.6.special_part_2 }}</td><td>{{form_data.6.special_part_qty_2 }}</td>   
                         </tr>
                         {% endif %}
                         {% if form_data.6.special_part_3 %}
                         <tr>
-                         <td>{{form_data.6.special_part_3 }}</td><td>{{form_data.6.special_part_qty_3 }}</td><td>£{{form_data.6.special_part_price_3 }}</td>   
+                         <td>{{form_data.6.special_part_3 }}</td><td>{{form_data.6.special_part_qty_3 }}</td>   
                         </tr>
                         {% endif %}
                     </table>
@@ -614,14 +632,14 @@
                     {% for radiator in form_data.7.radiator_specification  %}
                     &bull; {{ radiator }}
                     {% if radiator == 'Customer to Provide Radiators' %}
-                        ({{ form_data.7.cust_supply_radiator_quantity }})
+                        (Qty: {{ form_data.7.cust_supply_radiator_quantity }})
                     {% endif %}
                     <br>
 
                         {% if radiator == 'Radiator(s) Required' %}
                             <table class="radiator-table">
-                                <tr>
-                                <td>Location</td><td>Radiator</td>
+                                <!-- <tr> -->
+                                <th>Location</th><th>Radiator</th>
                                 {% if form_data.7.radiator_1 %}
                                     <tr>
                                         <td>{{form_data.7.location_2}}</td><td>{{form_data.7.radiator_1}}</td>
@@ -689,8 +707,8 @@
                         {% if radiator == 'Radiator(s) Required' or radiator == 'Thermostatic Radiator Valves Only' %}
                         &bull; Thermostatic Radiator Valves<br> 
                             <table class="radiator-table">
-                                <tr>
-                                <td>Radiator Valve</td><td>Qty</td>
+                                <!-- <tr> -->
+                                <th>Radiator Valve</th><th>Qty</th>
                                 {% if form_data.7.radiator_valve_1 %}
                                     <tr>
                                         <td>{{form_data.7.radiator_valve_1}}</td><td>{{form_data.7.radiator_valve_quantity_1}}</td>
@@ -758,8 +776,8 @@
                         {% if radiator == 'Towel Rail(s) Required'  %}
         
                             <table class="radiator-table">
-                                <tr>
-                                <td>Location</td><td>Towel Rail</td>
+                                <!-- <tr> -->
+                                <th>Location</th><th>Towel Rail</th>
                                 {% if form_data.7.towel_rail_location_1 %}
                                     <tr>
                                         <td>{{form_data.7.towel_rail_location_1}}</td><td>{{form_data.7.towel_rail_1}}</td>
@@ -804,20 +822,76 @@
                 <td class="tech-attrib" colspan="2">DESCRIPTION OF WORKS</td>
             </tr>
             <tr>    
-                <td class="tech-value" colspan="2">{{form_data.8.description_of_works|linebreaks }}</td>
+                <td class="tech-value" id="description-of-works" colspan="2">{{form_data.8.description_of_works|safe|linebreaksbr }}</td>
             </tr>
+        </table>
+
+    </div>
+    <!-- End of Page 5 -->
+
+    <div class="break"></div>
+
+    <!-- Page 6 -->
+
+    <div class="page-start"><br><br><br><br><br></div>
+
+    <div class="tech-details">
+        <table>
+            <tr>
+                <td class="tech-title">Pricing</td>
+            </tr>
+            <tr>
+                <td class="tech-attrib">TOTAL (PRICE INCLUSIVE OF VAT)</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">£{{form_data.9.total_cost|floatformat:2}}</td>
+            </tr>
+            <tr>
+                <td class="tech-attrib">DEPOSIT REQUIRED</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">£{{form_data.9.deposit_amount_thirty_percent}}</td>
+            </tr>
+            <tr>
+                <td class="tech-attrib">BALANCE DUE ON COMPLETION</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">£{{ form_data.9.ib120_loan_amount }}</td>
+            </tr>
+            {% if alt_product_record %}
+            <tr>
+                <td class="tech-attrib">ALTERNATIVE BOILER MANUFACTURER</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">{{alt_product_record.brand}}</td>
+            </tr>
+            <tr>
+                <td class="tech-attrib">ALTERNATIVE BOILER MODEL</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">{{alt_product_record.model_name}}</td>
+            </tr>
+            <tr>
+                <td class="tech-attrib">ALTERNATIVE BOILER PRICE</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">£{{form_data.9.alt_total_cost|floatformat:2}}</td>
+            </tr>
+            {% endif %}
+            <br>
             {% if form_data.8.optional_extras %}
-            <tr>
-                <td class="tech-attrib" colspan="2">OPTIONAL EXTRAS</td>
-            </tr>
-            <tr>
-                <td class="tech-value" colspan="2">
-                    <table class="optional-extras">
+            <!-- <div class="opt-extra-orange-box"> -->
+                <tr>
+                    <td  colspan="2">
+                        <table class="optional-extras">
                         <tr>
-                            <td width="60%">Product Description</th>
-                            <td width="20%">Qty</th>
-                            <td width="20%">Price (Inc VAT)</th>
+                            <td id="optional-extras-heading" colspan="3">OPTIONAL EXTRAS</td>
                         </tr>
+                        
+                            <th width="60%">Product Description</th>
+                            <th width="20%">Qty</th>
+                            <th width="20%">Price (Inc VAT)</th>
+                        
                         {% if form_data.8.extra_1 %}
                             <tr>
                                 <td>{{form_data.8.extra_1}}</td><td>{{form_data.8.extra_qty_1}}</td><td>£{{optional_extra_extended_prices.0}}</td>
@@ -871,62 +945,8 @@
                     </table>
                 </td>
             </tr>
+            <!-- </div> -->
             {% endif %}
-        </table>
-
-    </div>
-    <!-- End of Page 5 -->
-
-    <div class="break"></div>
-
-    <!-- Page 6 -->
-
-    <div class="page-start"><br><br><br><br><br></div>
-
-    <div class="tech-details">
-        <table>
-            <tr>
-                <td class="tech-title">Pricing</td>
-            </tr>
-            <tr>
-                <td class="tech-attrib">TOTAL (PRICE INCLUSIVE OF VAT)</td>
-            </tr>
-            <tr>    
-                <td class="tech-value">£{{form_data.9.total_cost|floatformat:2}}</td>
-            </tr>
-            <tr>
-                <td class="tech-attrib">DEPOSIT REQUIRED</td>
-            </tr>
-            <tr>    
-                <td class="tech-value">£{{form_data.9.deposit_amount_thirty_percent}}</td>
-            </tr>
-            <tr>
-                <td class="tech-attrib">BALANCE DUE ON COMPLETION</td>
-            </tr>
-            <tr>    
-                <td class="tech-value">£{{ form_data.9.ib120_loan_amount }}</td>
-            </tr>
-            {% if alt_product_record %}
-            <tr>
-                <td class="tech-attrib">ALTERNATIVE BOILER MANUFACTURER</td>
-            </tr>
-            <tr>    
-                <td class="tech-value">{{alt_product_record.brand}}</td>
-            </tr>
-            <tr>
-                <td class="tech-attrib">ALTERNATIVE BOILER MODEL</td>
-            </tr>
-            <tr>    
-                <td class="tech-value">{{alt_product_record.model_name}}</td>
-            </tr>
-            <tr>
-                <td class="tech-attrib">ALTERNATIVE BOILER PRICE</td>
-            </tr>
-            <tr>    
-                <td class="tech-value">£{{alt_product_record.price}}</td>
-            </tr>
-            {% endif %}
-            <br>
             <tr>    
                 <td class="tech-value">
                     <table class="account-information">
@@ -965,6 +985,8 @@
      <div class="break"></div>
 
      <!-- Page 8 (BOM) -->
+
+     {% if include_report %}
  
      <div class="page-start"><br><br><br><br></div>
 
@@ -973,23 +995,23 @@
             <td class="tech-title">Components Summary Details</td>
         </tr>
         <tr>
-            <td class="tech-attrib">(for internal Yourheat use only)</td>
+            <td class="tech-attrib">(for internal Yourheat use only) &nbsp;|&nbsp; Quotation Date: {% now "jS F Y H:i" %} &nbsp;|&nbsp; Produced By: {{idx.first_name}} {{idx.last_name}}</td>
         </tr>
      </table>
      <br>    
 
      <table id="bom">
          <tr>
-             <th>Component Type</th>
-             <th>Component</th>
-             <th>Qty</th>
-             <th>Price</th>
-             <th>Ext Price</th>
-             <th>Cost</th>
-             <th>Duration</th>
+             <th class="col1">Installation Requirements</th>
+             <th class="col2">Component</th>
+             <th class="col3">Qty</th>
+             <th class="col4">Price</th>
+             <th class="col5">Ext Price</th>
+             <th class="col6">Cost</th>
+             <th class="col7">Duration</th>
          </tr>
          {% for component_type,outer_value in form_data.10.items %}
-         {% if component_type|slice:"0:8" != "Radiator" and component_type|slice:"0:14" != "Radiator Valve" and component_type|slice:"0:10" != "Towel Rail" and component_type|slice:"0:12" != "Special Part" %}
+
          <tr>
              <td>{{ component_type }}</td>
                 {% for elem in outer_value %}
@@ -1009,10 +1031,86 @@
 
                 {% endfor %}
             </tr>
-        {% endif %}    
         {% endfor %}
         
-     </table>   
+     </table>
+ 
+     <table id="bom">
+        <tr>
+            <th class="col1">New Installation Materials</th>
+             <th class="col2">Component {% if alt_product_record %}(Primary Boiler){% endif %}</th>
+             <th class="col3">Qty</th>
+             <th class="col4">Price</th>
+             <th class="col5">Ext Price</th>
+             <th class="col6">Cost</th>
+             <th class="col7">Duration</th>
+        </tr>
+        {% for component_type,outer_value in form_data.11.items %}
+        {% if component_type != "Alt Gas Flue Components" and component_type != "Alt Oil Flue Components" %}
+        <tr>
+            <td>{{ component_type }}</td>
+               {% for elem in outer_value %}
+                   {% for comp_name,comp_param in elem.items %}
+                       <td>{{ comp_name }}</td>
+                       {% for param in comp_param %}
+                           <td>{{param}}</td>
+                       {% endfor %}
+                       {% if outer_value|length > 1  %}
+                           </tr>
+                       {% endif %}
+                       
+                       {% endfor %}
+                       {% if forloop.counter != outer_value|length %}
+                       <tr><td>&nbsp;</td>
+                       {% endif %}
+
+               {% endfor %}
+           </tr>
+        {% endif %}   
+       {% endfor %}
+       
+    </table>
+
+    {% if alt_product_record %}
+
+     <table id="bom">
+        <tr>
+            <th class="col1">New Installation Materials</th>
+             <th class="col2">Component</th>
+             <th class="col3">Qty</th>
+             <th class="col4">Price</th>
+             <th class="col5">Ext Price</th>
+             <th class="col6">Cost</th>
+             <th class="col7">Duration</th>
+        </tr>
+        {% for component_type,outer_value in form_data.11.items %}
+        {% if component_type == "Alt Gas Flue Components" or component_type == "Alt Oil Flue Components" %}
+        <tr>
+            <td>{{ component_type }}</td>
+               {% for elem in outer_value %}
+                   {% for comp_name,comp_param in elem.items %}
+                       <td>{{ comp_name }}</td>
+                       {% for param in comp_param %}
+                           <td>{{param}}</td>
+                       {% endfor %}
+                       {% if outer_value|length > 1  %}
+                           </tr>
+                       {% endif %}
+                       
+                       {% endfor %}
+                       {% if forloop.counter != outer_value|length %}
+                       <tr><td>&nbsp;</td>
+                       {% endif %}
+
+               {% endfor %}
+           </tr>
+        {% endif %}   
+       {% endfor %}
+       
+    </table>
+    
+    
+    {% endif %}
      
     <!-- End of Page 8 -->
 
@@ -1022,18 +1120,54 @@
   
     <div class="page-start"><br><br><br><br><br></div>
 
+    {% if 'Radiator(s) Required' in form_data.7.radiator_specification %}
+        <table id="bom">
+            <tr>
+                <th class="col1">Radiators</th>
+                <th class="col2">Component</th>
+                <th class="col3">Qty</th>
+                <th class="col4">Price</th>
+                <th class="col5">Ext Price</th>
+                <th class="col6">Cost</th>
+                <th class="col7">Duration</th>
+            </tr>
+            {% for component_type,outer_value in form_data.12.items %}
+            <tr>
+                <td>{{ component_type }}</td>
+                {% for elem in outer_value %}
+                    {% for comp_name,comp_param in elem.items %}
+                        <td>{{ comp_name }}</td>
+                        {% for param in comp_param %}
+                            <td>{{param}}</td>
+                        {% endfor %}
+                        {% if outer_value|length > 1  %}
+                            </tr>
+                        {% endif %}
+                        
+                        {% endfor %}
+                        {% if forloop.counter != outer_value|length %}
+                        <tr><td>&nbsp;</td>
+                        {% endif %}
+
+                {% endfor %}
+            </tr>
+
+        {% endfor %}
+        </table>
+    {% endif %}
+
+    {% if 'Radiator(s) Required' in form_data.7.radiator_specification or 'Thermostatic Radiator Valves Only' in form_data.7.radiator_specification %}
     <table id="bom">
         <tr>
-            <th>Component Type</th>
-            <th>Component</th>
-            <th>Qty</th>
-            <th>Price</th>
-            <th>Ext Price</th>
-            <th>Cost</th>
-            <th>Duration</th>
+            <th class="col1">Radiator Valves</th>
+            <th class="col2">Component</th>
+             <th class="col3">Qty</th>
+             <th class="col4">Price</th>
+             <th class="col5">Ext Price</th>
+             <th class="col6">Cost</th>
+             <th class="col7">Duration</th>
         </tr>
-        {% for component_type,outer_value in form_data.10.items %}
-        {% if component_type|slice:"0:8" == "Radiator" or component_type|slice:"0:14" == "Radiator Valve" and component_type|slice:"0:10" == "Towel Rail" %}
+        {% for component_type,outer_value in form_data.13.items %}
         <tr>
             <td>{{ component_type }}</td>
                {% for elem in outer_value %}
@@ -1053,24 +1187,23 @@
 
                {% endfor %}
            </tr>
-       {% endif %}    
+
        {% endfor %}
     </table>
-
-    <br>
-
+    {% endif %}
+    
+    {% if 'Towel Rail(s) Required' in form_data.7.radiator_specification %}
     <table id="bom">
         <tr>
-            <th>Component Type</th>
-            <th>Component</th>
-            <th>Qty</th>
-            <th>Price</th>
-            <th>Ext Price</th>
-            <th>Cost</th>
-            <th>Duration</th>
+            <th class="col1">Towel Rails</th>
+            <th class="col2">Component</th>
+             <th class="col3">Qty</th>
+             <th class="col4">Price</th>
+             <th class="col5">Ext Price</th>
+             <th class="col6">Cost</th>
+             <th class="col7">Duration</th>
         </tr>
-        {% for component_type,outer_value in form_data.10.items %}
-        {% if component_type|slice:"0:12" == "Special Part"  %}
+        {% for component_type,outer_value in form_data.14.items %}
         <tr>
             <td>{{ component_type }}</td>
                {% for elem in outer_value %}
@@ -1089,8 +1222,78 @@
                        {% endif %}
 
                {% endfor %}
-           </tr>
-       {% endif %}    
+           </tr>   
+       {% endfor %}
+      
+    </table>
+    {% endif %}
+    
+    {% if 'Customer to Provide Radiators' in form_data.7.radiator_specification %}
+    <table id="bom">
+        <tr>
+            <th class="col1">Customer Supplied Radiators</th>
+            <th class="col2">Component</th>
+             <th class="col3">Qty</th>
+             <th class="col4">Price</th>
+             <th class="col5">Ext Price</th>
+             <th class="col6">Cost</th>
+             <th class="col7">Duration</th>
+        </tr>
+        {% for component_type,outer_value in form_data.15.items %}
+        <tr>
+            <td>{{ component_type }}</td>
+               {% for elem in outer_value %}
+                   {% for comp_name,comp_param in elem.items %}
+                       <td>{{ comp_name }}</td>
+                       {% for param in comp_param %}
+                           <td>{{param}}</td>
+                       {% endfor %}
+                       {% if outer_value|length > 1  %}
+                           </tr>
+                       {% endif %}
+                       
+                       {% endfor %}
+                       {% if forloop.counter != outer_value|length %}
+                       <tr><td>&nbsp;</td>
+                       {% endif %}
+
+               {% endfor %}
+           </tr>   
+       {% endfor %}
+      
+    </table>
+    {% endif %}
+    
+    <table id="bom">
+        <tr>
+            <th class="col1">Special Parts</th>
+            <th class="col2">Component</th>
+             <th class="col3">Qty</th>
+             <th class="col4">Price</th>
+             <th class="col5">Ext Price</th>
+             <th class="col6">Cost</th>
+             <th class="col7">Duration</th>
+        </tr>
+        {% for component_type,outer_value in form_data.16.items %}
+        <tr>
+            <td>{{ component_type }}</td>
+               {% for elem in outer_value %}
+                   {% for comp_name,comp_param in elem.items %}
+                       <td>{{ comp_name }}</td>
+                       {% for param in comp_param %}
+                           <td>{{param}}</td>
+                       {% endfor %}
+                       {% if outer_value|length > 1  %}
+                           </tr>
+                       {% endif %}
+                       
+                       {% endfor %}
+                       {% if forloop.counter != outer_value|length %}
+                       <tr><td>&nbsp;</td>
+                       {% endif %}
+
+               {% endfor %}
+           </tr>   
        {% endfor %}
       
     </table>
@@ -1138,6 +1341,7 @@
         </table>
     </div>        
 
+    {% endif %}
 
 </body>
 

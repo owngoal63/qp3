@@ -23,7 +23,7 @@
     <div class = "row">
         <div class = "col-6">
             <div class="form-group">
-                <label>{{ wizard.form.estimated_duration.label }}</label>
+                <label>{{ wizard.form.estimated_duration.label }} *</label>
                 {{ wizard.form.estimated_duration }}
             </div>
             <div class="form-check">
@@ -83,11 +83,11 @@
         </div>
         <div class = "col-6">
             <div class="form-group">
-                <label>{{ wizard.form.description_of_works.label }}</label>
+                <label>{{ wizard.form.description_of_works.label }} *</label>
                 {{ wizard.form.description_of_works }}
             </div>
             <div class="form-group">
-                <label>{{ wizard.form.surveyors_notes.label }}</label>
+                <label>{{ wizard.form.surveyors_notes.label }} *</label>
                 {{ wizard.form.surveyors_notes }}
             </div>
         </div>
@@ -126,6 +126,8 @@
     $('.popover-dismiss').popover({
       trigger: 'focus'
     })
+
+    extras_handler();
     
     function extras_handler() {
     

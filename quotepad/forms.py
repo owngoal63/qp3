@@ -244,6 +244,14 @@ GAS_SUPPLY_DROPDOWN = (
 	('New internal gas supply required','New internal gas supply required'),
 )
 
+FUEL_SUPPLY_DROPDOWN = (
+	('','Select One'),
+	('Current Gas supply deemed satisfactory','Current Gas supply deemed satisfactory'),
+	('Adaptation to existing gas supply required','Adaptation to existing gas supply required'),
+	('New external gas supply required','New external gas supply required'),
+	('New internal gas supply required','New internal gas supply required'),
+)
+
 GAS_SUPPLY_LENGTH_DROPDOWN = (
 	('','Select One'),
 	('N/A','N/A'),
@@ -395,9 +403,6 @@ CURRENT_RADIATORS_WORKING_CORRECTLY_DROPDOWN = (
 INCOMING_FLOW_RATE_DROPDOWN = (
 	('','Select One'),
 	('N/A','N/A'),
-	('Visually weak (remote quote)','Visually weak (remote quote)'),
-	('Visually average (remote quote)','Visually average (remote quote)'),
-	('Visually strong (remote quote)','Visually strong (remote quote)'),
 	('1','1'),
 	('2','2'),
 	('3','3'),
@@ -428,6 +433,9 @@ INCOMING_FLOW_RATE_DROPDOWN = (
 	('28','28'),
 	('29','29'),
 	('30','30'),
+	('Visually weak (remote quote)','Visually weak (remote quote)'),
+	('Visually average (remote quote)','Visually average (remote quote)'),
+	('Visually strong (remote quote)','Visually strong (remote quote)'),
 )
 
 WILL_BOILER_BE_HOUSED_IN_CUPBOARD_DROPDOWN = (
@@ -1116,6 +1124,22 @@ class EditQuoteTemplateForm(forms.Form):
 		alert = None
 
 
+''' form for editing current_quote.txt (json file) '''
+class EditCurrentQuoteDataForm(forms.Form):
+
+	#quote_data = JSONField2()
+	quote_data = forms.CharField(widget=forms.Textarea(attrs={'rows':24, 'cols':100}))
+
+	def __init__(self, user, *args, **kwargs):
+		self.user = user
+		super(EditCurrentQuoteDataForm, self).__init__(*args, **kwargs)
+		usr_data_template_file = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/current_quote.txt".format(self.user.username))
+		template_file = open(usr_data_template_file,'r')
+		self.fields['quote_data'].initial = template_file.read
+		alert = None
+
+	
+
 
 ''' Section for defining the multiple forms that will be used for the boiler quote (FormWizard library) '''
 
@@ -1282,6 +1306,7 @@ class EditQuoteTemplateForm(forms.Form):
 # 	quantity = forms.IntegerField(label=False, widget=forms.TextInput(attrs={'class': "input-int"}))
 
 ''' ----------- Form pages for yourheat -------------'''
+
 class FormStepOne_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
 	# within double curly braces...
@@ -1369,10 +1394,8 @@ class FormStepFive_yh(forms.Form):
 	plume_management_kit = forms.ChoiceField(choices=PLUME_MANAGEMENT_KIT_DROPDOWN)
 	condensate_termination = forms.ChoiceField(choices=CONDENSATE_TERMINATION_DROPDOWN)
 	new_controls = forms.MultipleChoiceField(choices=NEW_CONTROLS_DROPDOWN)
-	# cws_flow_rate = forms.ChoiceField(choices=CWS_FLOW_RATE_DROPDOWN)
 	incoming_flow_rate = forms.ChoiceField(choices=INCOMING_FLOW_RATE_DROPDOWN)
 	will_boiler_be_housed_in_cupboard = forms.ChoiceField(choices=WILL_BOILER_BE_HOUSED_IN_CUPBOARD_DROPDOWN)
-	#new_flue_metres = forms.ChoiceField(choices=NEW_FLUE_METRES_DROPDOWN)
 	cupboard_height = forms.IntegerField(required=False,  widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate'}))
 	cupboard_width = forms.IntegerField(required=False,  widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate'}))
 	cupboard_depth = forms.IntegerField(required=False,  widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate'}))
@@ -1390,8 +1413,8 @@ class FormStepSix_yh(forms.Form):
 		self.boiler_type = kwargs.pop('boiler_type')
 		super(FormStepSix_yh, self).__init__(*args, **kwargs)
 		self.fields['chemical_system_treatment'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Chemical System Treatment').order_by('brand').only('component_name')])
-		self.fields['gas_supply_requirements'] = forms.ChoiceField(choices=GAS_SUPPLY_DROPDOWN)
-		self.fields['gas_supply_length'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Gas Supply Length').order_by('brand').only('component_name')])
+		self.fields['fuel_supply_requirements'] = forms.ChoiceField(choices=FUEL_SUPPLY_DROPDOWN)
+		self.fields['fuel_supply_length'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Fuel Supply Length').order_by('brand').only('component_name')])
 		self.fields['scaffolding_required'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Scaffolding').order_by('brand').only('component_name')])
 		self.fields['asbestos_containing_materials_identified'] = forms.ChoiceField(choices=ASBESTOS_CONTAINING_MATERIALS_IDENTIFIED_DROPDOWN)
 		self.fields['asbestos_removal_procedure'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Asbestos Removal Procedure').order_by('brand').only('component_name')])
@@ -1409,10 +1432,13 @@ class FormStepSeven_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
 	# within double curly braces...
 	# form_data.6.field_name e.g. form_data.6.boiler_manufactureruel_type
+	alt_manufx = forms.BooleanField()	# Temp boolean field value to determine if alt_manuf has been selected 
 
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user')
 		self.manuf = kwargs.pop('manufacturer')
+		self.alt_manuf = kwargs.pop('alt_manufacturer')
+		print(self.alt_manuf)
 		self.plume_management_kit = kwargs.pop('plume_management_kit')
 		self.new_fuel_type = kwargs.pop('new_fuel_type')
 		super(FormStepSeven_yh, self).__init__(*args, **kwargs)
@@ -1426,6 +1452,20 @@ class FormStepSeven_yh(forms.Form):
 			self.fields['plume_components'] = forms.MultipleChoiceField(choices=[(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, brand = self.manuf, component_type = 'Plume Component').only('component_name')])
 		else:
 			self.fields['plume_components'] = forms.ChoiceField(required=False, choices = (('Not Required (from step 5)','Not Required (from step 5)'),('Required','Required')), widget=forms.Select(attrs={'disabled': 'disabled'}))
+		if self.alt_manuf:
+			self.fields['alt_manufx'].disabled = True
+			self.fields['alt_manufx'].initial = True
+			if self.new_fuel_type == 'Oil':
+				self.fields['alt_oil_flue_components'] = forms.MultipleChoiceField(choices=[(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, brand = self.alt_manuf, component_type = 'Oil Flue Component').only('component_name')])
+			else:	
+				self.fields['alt_gas_flue_components'] = forms.MultipleChoiceField(choices=[(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, brand = self.alt_manuf, component_type = 'Gas Flue Component').only('component_name')])	
+		else:
+			self.fields['alt_manufx'].disabled = True
+			self.fields['alt_manufx'].initial = False
+			if self.new_fuel_type == 'Oil':
+				self.fields['alt_oil_flue_components'] = forms.ChoiceField(required=False, choices = (('Not Required (no Alternative Boiler)','Not Required (no Alternative Boiler)'),('Required','Required')), widget=forms.Select(attrs={'disabled': 'disabled'}))
+			else:
+				self.fields['alt_gas_flue_components'] = forms.ChoiceField(required=False, choices = (('Not Required (no Alternative Boiler)','Not Required (no Alternative Boiler)'),('Required','Required')), widget=forms.Select(attrs={'disabled': 'disabled'}))
 		#self.fields['programmer_thermostat'] = forms.MultipleChoiceField(choices=PROGRAMMER_THERMOSTAT_DROPDOWN)
 		self.fields['programmer_thermostat'] = forms.MultipleChoiceField(choices=[(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Programmer Thermostat').order_by('brand').only('component_name')])
 		#self.fields['additional_central_heating_components'] = forms.MultipleChoiceField(choices=ADDITIONAL_CENTRAL_HEATING_COMPONENTS_DROPDOWN)
@@ -1456,7 +1496,6 @@ class FormStepSeven_yh(forms.Form):
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
 
-	#self.fields['any_special_parts'] = forms.CharField(max_length=2000, required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30, 'placeholder': 'Input if necessary'}))
 	special_part_1 = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={ 'placeholder': 'If required'}))
 	special_part_2 = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={ 'placeholder': 'If required'}))
 	special_part_3 = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={ 'placeholder': 'If required'}))
@@ -1466,7 +1505,6 @@ class FormStepSeven_yh(forms.Form):
 	special_part_price_1 = forms.DecimalField(required=False, max_digits=7, decimal_places=2)
 	special_part_price_2 = forms.DecimalField(required=False)
 	special_part_price_3 = forms.DecimalField(required=False)
-	#DecimalField(..., max_digits=5, decimal_places=2)
 	
 class FormStepEight_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
@@ -1679,6 +1717,7 @@ class FormStepNine_yh(forms.Form):
 
 class FinanceForm_yh(forms.Form):
 	total_cost = forms.FloatField()
+	alt_total_cost = forms.FloatField()
 	deposit_amount = forms.FloatField()
 	deposit_amount_thirty_percent = forms.DecimalField()
 	ib36_loan_amount = forms.CharField(max_length=30)
@@ -1713,6 +1752,7 @@ class FinanceForm_yh(forms.Form):
 		self.estimated_duration_cost = kwargs.pop('estimated_duration_cost')
 		self.component_duration_total = kwargs.pop('component_duration_total')
 		self.total_quote_price = kwargs.pop('total_quote_price')
+		self.alt_total_quote_price = kwargs.pop('alt_total_quote_price')
 		print('-----')
 		print(self.total_quote_price)
 		super(FinanceForm_yh, self).__init__(*args, **kwargs)
@@ -1725,6 +1765,7 @@ class FinanceForm_yh(forms.Form):
 		self.fields['component_price_total'].initial = self.component_price_total
 		self.fields['estimated_duration_cost'].initial = self.estimated_duration_cost
 		self.fields['component_duration_total'].initial = self.component_duration_total
+		self.fields['alt_total_cost'].initial = self.alt_total_quote_price
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
 

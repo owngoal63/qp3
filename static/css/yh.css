@@ -412,27 +412,60 @@ div.break {
     vertical-align: top;
 }
 
-table.optional-extras {
+table.address {
     width:100%;
-    border: 1px solid black;
+}
+
+table.optional-extras {
+    width:94%; 
+    border:5px solid orange;
+    border-radius: 25px 0px 25px 0px;
+    /* text-align: center; */
+    padding-top:5px;
+    /* border: 1px solid black; */
+}
+
+table.optional-extras {
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+#optional-extras-heading {
+    font-size: 1rem;
+    font-weight: 800;
 }
 
 table.special-parts-table {
     border-spacing:0;
-    border: 1px solid black;
+    /* border: 1px solid black; */
     padding:10px;
+}
+
+table.special-parts-table th {
+    font-size: 0.8rem;
+    font-weight: 800;
 }
 
 table.radiator-table {
     border-spacing:0;
-    border: 1px solid black;
+    /* border: 1px solid black; */
     padding:10px;
+}
+
+table.radiator-table th {
+    font-size: 0.8rem;
+    font-weight: 800;
+    width: 50%;
 }
 
 table.account-information {
     border-spacing:0;
     border: 1px solid black;
     padding:10px;
+}
+
+#description-of-works {
+    font-size: 0.8rem !important;   
 }
 
 p.account-header {
@@ -468,10 +501,34 @@ p.account-details {
     background-color: #4db79c;
     color: rgb(35, 36, 36);
     font-weight: 100;
+    font-size: 0.8rem;
   }
+
+#bom th.col1 {
+      width:25%;
+  }
+#bom th.col2 {
+    width:40%;
+}
+#bom th.col3 {
+    width:7%;
+}
+#bom th.col4 {
+    width:7%;
+}
+#bom th.col5 {
+    width:7%;
+}
+#bom th.col6 {
+    width:7%;
+}
+#bom th.col7 {
+    width:7%;
+}
 
   #SalutAndRef {
     border-collapse: collapse;
     width: 100%;
   }
+
 
