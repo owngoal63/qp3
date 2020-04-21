@@ -1678,14 +1678,18 @@ class FormStepNine_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
 	# within double curly braces...
 	# form_data.8.field_name e.g. form_data.8.estimated_duration
-	estimated_duration = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}), choices=ESTIMATED_DURATION_DROPDOWN)
+	#estimated_duration = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}), choices=ESTIMATED_DURATION_DROPDOWN)	
 	description_of_works = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':8, 'cols':60}))
 	surveyors_notes = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':8, 'cols':60}))
 	optional_extras = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs = {'class': 'form-check-input', 'onchange' : "extras_handler();"}))
+	component_duration_total = forms.DecimalField(required=False)
 
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user')
+		self.component_duration_total = kwargs.pop('component_duration_total')
 		super(FormStepNine_yh, self).__init__(*args, **kwargs)
+		self.fields['estimated_duration'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Estimated Duration').order_by('brand').only('component_name')])
+
 		self.fields['extra_1'] = ExtrasModelChoiceField(required=False, queryset=OptionalExtra.objects.filter(user = self.user))
 		self.fields['extra_2'] = ExtrasModelChoiceField(required=False, queryset=OptionalExtra.objects.filter(user = self.user))
 		self.fields['extra_3'] = ExtrasModelChoiceField(required=False, queryset=OptionalExtra.objects.filter(user = self.user))
@@ -1714,11 +1718,14 @@ class FormStepNine_yh(forms.Form):
 		text = text + "All waste will be disposed of in accordance with current Waste Disposal Regulation. While we always endeavour to keep the installation to the estimated duration, we may use additional labour to achieve completion in a shorter time-frame, or we may require additional days on site."
 		self.fields['description_of_works'].initial = text
 
+		# Initialise the component_duration_total field
+		self.fields['component_duration_total'].initial = self.component_duration_total
+
 
 class FinanceForm_yh(forms.Form):
-	total_cost = forms.FloatField()
-	alt_total_cost = forms.FloatField()
-	deposit_amount = forms.FloatField()
+	total_cost = forms.DecimalField()
+	alt_total_cost = forms.DecimalField()
+	deposit_amount = forms.DecimalField(max_digits=8,decimal_places=2)
 	deposit_amount_thirty_percent = forms.DecimalField()
 	ib36_loan_amount = forms.CharField(max_length=30)
 	ib36_monthly_payment = forms.CharField(max_length=30)
@@ -1759,6 +1766,7 @@ class FinanceForm_yh(forms.Form):
 		self.fields['total_cost'].disabled = True
 		self.fields['total_cost'].initial = self.total_quote_price
 		self.fields['deposit_amount'].initial = (float(self.total_quote_price) * 30) / 100
+		self.fields['deposit_amount'].decimal_places = 2
 		self.fields['deposit_amount_thirty_percent'].initial = (float(self.total_quote_price) * 30) / 100
 		self.fields['interest_free_12m_deposit_amount'].initial = (float(self.total_quote_price) * 30) / 100
 		self.fields['product_price'].initial = self.product_price

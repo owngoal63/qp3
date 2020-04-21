@@ -110,10 +110,145 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			return {'user': settings.YH_MASTER_PROFILE_ID, 'manufacturer': manuf, 'alt_manufacturer': alt_manuf, 'plume_management_kit': plume_management_kit, 'new_fuel_type': new_fuel_type }
 		elif step == '4':
 			return {'user': settings.YH_MASTER_PROFILE_ID}
-		elif step == '8':
-			return {'user': settings.YH_MASTER_PROFILE_ID}
 		elif step == '7':
-			return {'user': settings.YH_MASTER_PROFILE_ID}		
+			return {'user': settings.YH_MASTER_PROFILE_ID}
+		elif step == '8':
+			# Get the step data for INSTALLATION REQUIREMENTS
+			new_installation_step_data = self.storage.get_step_data('5')
+			# Get the step data for NEW SYSTEM CONFIGURATION
+			new_system_configuration_step_data = self.storage.get_step_data('4')
+
+			# Initialise Component Duration Total
+			component_duration_total = 0
+
+			# Get the Chemical System Treatment Duration
+			components_list = new_installation_step_data.getlist('5-chemical_system_treatment')
+			for i in components_list:
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Chemical System Treatment', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+
+			# Get the Fuel Supply Length Duration
+			components_list = new_installation_step_data.getlist('5-fuel_supply_length')
+			for i in components_list:
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Fuel Supply Length', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+
+			# Get the Scaffolding Required Duration
+			components_list = new_installation_step_data.getlist('5-scaffolding_required')
+			for i in components_list:
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Scaffolding', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+
+			# Get the Asbestos Removel Procedure Duration
+			components_list = new_installation_step_data.getlist('5-asbestos_removal_procedure')
+			for i in components_list:
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Asbestos Removal Procedure', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+
+			# Get the step data for NEW INSTALLATION MATERIALS
+			new_installation_step_data = self.storage.get_step_data('6')
+
+			# Get the Gas Flue or Oil Flue Components Duration
+			brand = new_system_configuration_step_data.get('4-boiler_manufacturer','')
+			if new_system_configuration_step_data.get('4-new_fuel_type','') == "Oil":
+				components_list = new_installation_step_data.getlist('6-oil_flue_components')
+			else:
+				components_list = new_installation_step_data.getlist('6-gas_flue_components')
+			for i in components_list:
+				if new_system_configuration_step_data.get('4-new_fuel_type','') == "Oil":
+					component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Oil Flue Component', brand=brand, user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+				else:
+					component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Gas Flue Component', brand=brand, user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+
+			# No requirement to calculate the alternative boiler Gas Flue or Oil Flue Component duration
+
+			# Get the Plume Components Duration
+			components_list = new_installation_step_data.getlist('6-plume_components')
+			for i in components_list:
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Plume Component', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+
+			# Get the programmer_thermostat Components Duration
+			components_list = new_installation_step_data.getlist('6-programmer_thermostat')
+			for i in components_list:
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Programmer Thermostat', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+
+			# Get the Additional Central Heating System Components Duration
+			components_list = new_installation_step_data.getlist('6-additional_central_heating_components')
+			for i in components_list:
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Additional Central Heating Component', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+
+			# Get the Central Heating System Filter Components Duration
+			components_list = new_installation_step_data.getlist('6-central_heating_system_filter')
+			for i in components_list:
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Central Heating System Filter', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+
+			# Get the Scale reducer Components Duration
+			components_list = new_installation_step_data.getlist('6-scale_reducer')
+			for i in components_list:
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Scale Reducer', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+
+			# Get the Condensate Components Duration
+			components_list = new_installation_step_data.getlist('6-condensate_components')
+			for i in components_list:
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Condenstate Component', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+
+			# Get the Additional Copper Duration
+			components_list = new_installation_step_data.getlist('6-additional_copper_required')
+			for i in components_list:
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Additional Copper', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+
+			# Get the Fitting Packs Duration
+			components_list = new_installation_step_data.getlist('6-fittings_packs')
+			for i in components_list:
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Fitting Pack', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+
+			# Get the Electrical Packs Duration
+			components_list = new_installation_step_data.getlist('6-electrical_pack')
+			for i in components_list:
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Electrical Pack', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+
+			# Get the Earth Spike Duration
+			components_list = new_installation_step_data.getlist('6-earth_spike_required')
+			for i in components_list:
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Earth Spike', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+
+			# Get the Filling Link Duration
+			components_list = new_installation_step_data.getlist('6-filling_link')
+			for i in components_list:
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Filling Link', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+
+			# Get the Double Handed Lift Duration
+			components_list = new_installation_step_data.getlist('6-double_handed_lift_required')
+			for i in components_list:
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Double Handed Lift', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+
+			# Get the Building Pack Duration
+			components_list = new_installation_step_data.getlist('6-building_pack_required')
+			for i in components_list:
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Building Pack', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+
+			# Get the step data for RADIATOR REQUIREMENTS
+			radiators_step_data = self.storage.get_step_data('7')
+
+			# Get the radiator Duration
+			if 'Radiator(s) Required' in radiators_step_data.getlist('7-radiator_specification'):
+				for x in range(1, 13):
+					if radiators_step_data.get('7-radiator_' + str(x)):
+						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-radiator_' + str(x)), component_type='Radiator', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+
+			# Get the Thermostatic radiator value Duration
+			if 'Radiator(s) Required' in radiators_step_data.getlist('7-radiator_specification') or 'Thermostatic Radiator Valves Only' in radiators_step_data.getlist('7-radiator_specification') :
+				for x in range(1, 13):
+					if radiators_step_data.get('7-radiator_valve_' + str(x)):
+						component_duration_total = component_duration_total + (ProductComponent.objects.get(component_name = radiators_step_data.get('7-radiator_valve_' + str(x)), component_type='Thermostatic Radiator Valve', user=settings.YH_MASTER_PROFILE_ID).est_time_duration * int(radiators_step_data.get('7-radiator_valve_quantity_' + str(x))))
+
+			# Get the Towel Rail Duration
+			if 'Towel Rail(s) Required' in radiators_step_data.getlist('7-radiator_specification'):
+				for x in range(1, 5):
+					if radiators_step_data.get('7-towel_rail_' + str(x)):
+						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-towel_rail_' + str(x)), component_type='Towel Rail', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+
+			# Get the customer Supplied Radiator Duration
+			if 'Customer to Provide Radiators' in radiators_step_data.getlist('7-radiator_specification'):
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = 'Customer Supplied Radiator', component_type='Customer Supplied Radiator', user=settings.YH_MASTER_PROFILE_ID).est_time_duration * int(radiators_step_data.get('7-cust_supply_radiator_quantity'))
+
+			return {'user': settings.YH_MASTER_PROFILE_ID, 'component_duration_total': component_duration_total}		
 		elif step == '9':
 			#print(self.storage.get_step_data('6'))
 			#print(self.storage.get_step_data('8'))
@@ -121,6 +256,8 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			product_step_data = self.storage.get_step_data('5')
 			product = product_step_data.get('5-product_choice','')
 			product_price = ProductPrice.objects.get(id=product).price
+			alt_product = product_step_data.get('5-alt_product_choice','')
+			alt_product_price = ProductPrice.objects.get(id=alt_product).price
 			#print(product_price)
 			
 			# Initialise All component price and duration totals
@@ -471,20 +608,31 @@ class BoilerFormWizardView_yh(SessionWizardView):
 				special_parts_comp_dict['Special Part 3'] = components
 				print(Decimal(new_installation_step_data.get('6-special_part_qty_3')) * Decimal(new_installation_step_data.get('6-special_part_price_3')))	
 
-			# Calculate Workload cost if more than 1 days work
+			# Calculate Workload cost (Add to install_requirments_comp_dict)
 			workload_requirements_step_data = self.storage.get_step_data('8')
-			estimated_duration = int(workload_requirements_step_data.getlist('8-estimated_duration')[0])
-			idx = Profile.objects.get(user = settings.YH_MASTER_PROFILE_ID)
-			if estimated_duration > 1:
-				estimated_duration_cost = idx.baseline_work_rate + (idx.additional_daily_work_rate * (estimated_duration - 1))
-			else:
-				estimated_duration_cost = idx.baseline_work_rate
+			estimated_duration = workload_requirements_step_data.get('8-estimated_duration')
+			components = []
+			component_price_total = component_price_total + ProductComponent.objects.get(component_name=estimated_duration, component_type='Estimated Duration', user=settings.YH_MASTER_PROFILE_ID).price
+			components.append(dict(component_attrib_build(estimated_duration, 'Estimated Duration', settings.YH_MASTER_PROFILE_ID)))
+			install_requirments_comp_dict['Estimated Duration'] = components
+			estimated_duration_cost = ProductComponent.objects.get(component_name=estimated_duration, component_type='Estimated Duration', user=settings.YH_MASTER_PROFILE_ID).price
+			print('Estimated Duration Price', estimated_duration_cost)
+
+
+			#idx = Profile.objects.get(user = settings.YH_MASTER_PROFILE_ID)
+			#if estimated_duration > 1:
+			#	estimated_duration_cost = idx.baseline_work_rate + (idx.additional_daily_work_rate * (estimated_duration - 1))
+			#else:
+			#	estimated_duration_cost = idx.baseline_work_rate
+
 
 			# Sum the grand total
-			#total_quote_price = product_price + component_price_total + estimated_duration_cost
-			total_quote_price = component_price_total + estimated_duration_cost
-			alt_total_quote_price = total_quote_price - primary_component_price_total + alt_component_price_total
+			total_quote_price = product_price + component_price_total + estimated_duration_cost
+			#total_quote_price = component_price_total + estimated_duration_cost
+			alt_total_quote_price = alt_product_price + (component_price_total - primary_component_price_total + alt_component_price_total) + estimated_duration_cost
 			#print(product_price)
+			print("Primary Boiler Price", product_price)
+			print("Alternate Boiler Price", alt_product_price)
 			print("Primary Component Price Total", component_price_total)
 			print("Alt Component Price Total", component_price_total - primary_component_price_total + alt_component_price_total )
 			print("Est Duration Cost",estimated_duration_cost)
@@ -573,7 +721,7 @@ class BoilerFormWizardView_yh(SessionWizardView):
 		file.write("{'quote_number': " + str(idx_master.current_quote_number) + "} \n")	
 		file.close()
 
-		print(a_break)
+		#print(a_break)
 
 		return HttpResponseRedirect('/quotegenerated_yh/')
 
@@ -660,7 +808,7 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 		created_quote_template_group = Group.objects.get(name = 'created_quote_template')
 		request.user.groups.add(created_quote_template_group)
 		# Set Flag to generate the quote and include the supplementary internal report output
-		include_report = True
+		include_report = False
 		pdf = pdf_generation(sourceHtml, {
 			'form_data': file_form_data,
 			'idx': idx,

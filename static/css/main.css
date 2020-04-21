@@ -305,52 +305,52 @@ a:hover {
   }
   
   .card-1-complete {
-    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(104, 216, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://static.thenounproject.com/png/88296-200.png);
-    background-image: linear-gradient(rgba(104, 216, 94, 0.671), rgba(230, 212, 212, 0.911)), url(https://static.thenounproject.com/png/88296-200.png);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(251, 127, 51, 0.671)), to(rgba(255, 210, 41, 0.911))), url(https://static.thenounproject.com/png/88296-200.png);
+    background-image: linear-gradient(rgba(251, 127, 51, 0.671), rgba(255, 210, 41, 0.311)), url(https://static.thenounproject.com/png/88296-200.png);
     background-position: center;
-    border: 1px solid rgb(38, 255, 0);
+    border: 1px solid rgb(251, 127, 51);
     background-size: cover;
   
   }
   
   .card-2-complete {
     background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(104, 216, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://static.thenounproject.com/png/3927-200.png);
-    background-image: linear-gradient(rgba(104, 216, 94, 0.671), rgba(230, 212, 212, 0.911)), url(https://static.thenounproject.com/png/3927-200.png);
+    background-image: linear-gradient(rgba(251, 127, 51, 0.671), rgba(255, 210, 41, 0.311)), url(https://static.thenounproject.com/png/3927-200.png);
     background-position: center;
     background-size: cover;
-    border: 1px solid rgb(38, 255, 0);
+    border: 1px solid rgb(251, 127, 51);
   }
   
   .card-3-complete {
     background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(104, 216, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://images.assetsdelivery.com/compings_v2/anartelman/anartelman1802/anartelman180200862.jpg);
-    background-image: linear-gradient(rgba(104, 216, 94, 0.671), rgba(230, 212, 212, 0.911)), url(https://images.assetsdelivery.com/compings_v2/anartelman/anartelman1802/anartelman180200862.jpg);
+    background-image: linear-gradient(rgba(251, 127, 51, 0.671), rgba(255, 210, 41, 0.311)), url(https://images.assetsdelivery.com/compings_v2/anartelman/anartelman1802/anartelman180200862.jpg);
     background-position: center;
     background-size: cover;
-    border: 1px solid rgb(38, 255, 0);
+    border: 1px solid rgb(251, 127, 51);
   }
   
   .card-4-complete {
     background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(104, 216, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://image.flaticon.com/icons/png/512/18/18227.png);
-    background-image: linear-gradient(rgba(104, 216, 94, 0.671), rgba(230, 212, 212, 0.911)), url(https://image.flaticon.com/icons/png/512/18/18227.png);
+    background-image: linear-gradient(rgba(251, 127, 51, 0.671), rgba(255, 210, 41, 0.311)), url(https://image.flaticon.com/icons/png/512/18/18227.png);
     background-position: center;
     background-size: cover;
-    border: 1px solid rgb(38, 255, 0);
+    border: 1px solid rgb(251, 127, 51);
   }
   
   .card-5-complete {
     background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(104, 216, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://cdn0.iconfinder.com/data/icons/miscellaneous-1-2/128/subscribe_subscription_button_online-512.png);
-    background-image: linear-gradient(rgba(104, 216, 94, 0.671), rgba(230, 212, 212, 0.911)), url(https://cdn0.iconfinder.com/data/icons/miscellaneous-1-2/128/subscribe_subscription_button_online-512.png);
+    background-image: linear-gradient(rgba(251, 127, 51, 0.671), rgba(255, 210, 41, 0.311)), url(https://cdn0.iconfinder.com/data/icons/miscellaneous-1-2/128/subscribe_subscription_button_online-512.png);
     background-position: center;
     background-size: cover;
-    border: 1px solid rgb(38, 255, 0);
+    border: 1px solid rgb(251, 127, 51);
   }
   
   .card-6-complete {
     background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(104, 216, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://cdn1.iconfinder.com/data/icons/feedback-review-1/64/x-21-512.png);
-    background-image: linear-gradient(rgba(104, 216, 94, 0.671), rgba(230, 212, 212, 0.911)), url(https://cdn1.iconfinder.com/data/icons/feedback-review-1/64/x-21-512.png);
+    background-image: linear-gradient(rgba(251, 127, 51, 0.671), rgba(255, 210, 41, 0.311)), url(https://cdn1.iconfinder.com/data/icons/feedback-review-1/64/x-21-512.png);
     background-position: center;
     background-size: cover;
-    border: 1px solid rgb(38, 255, 0);
+    border: 1px solid rgb(251, 127, 51);
   }
   
   .card:hover {

@@ -26,8 +26,18 @@ PRODUCT_BOILER_TYPE_DROPDOWN = (
 )
 
 PRODUCT_GUARANTEE_DROPDOWN = (
-	('12 Year Parts & Labour Guarantee','12 Year Parts & Labour Guarantee'),
+	('1 Year Parts & Labour Guarantee','1 Year Parts & Labour Guarantee'),
+	('2 Year Parts & Labour Guarantee','2 Year Parts & Labour Guarantee'),
+	('3 Year Parts & Labour Guarantee','3 Year Parts & Labour Guarantee'),
+	('4 Year Parts & Labour Guarantee','4 Year Parts & Labour Guarantee'),
+	('5 Year Parts & Labour Guarantee','5 Year Parts & Labour Guarantee'),
 	('6 Year Parts & Labour Guarantee','6 Year Parts & Labour Guarantee'),
+	('7 Year Parts & Labour Guarantee','7 Year Parts & Labour Guarantee'),
+	('8 Year Parts & Labour Guarantee','8 Year Parts & Labour Guarantee'),
+	('9 Year Parts & Labour Guarantee','9 Year Parts & Labour Guarantee'),
+	('10 Year Parts & Labour Guarantee','10 Year Parts & Labour Guarantee'),
+	('11 Year Parts & Labour Guarantee','11 Year Parts & Labour Guarantee'),
+	('12 Year Parts & Labour Guarantee','12 Year Parts & Labour Guarantee'),
 )
 
 COMPONENT_BRAND_DROPDOWN = (
@@ -57,6 +67,7 @@ COMPONENT_TYPE_DROPDOWN = (
 	('Fitting Pack','Fitting Pack'),
 	('Electrical Pack','Electrical Pack'),
 	('Earth Spike','Earth Spike'),
+	('Estimated Duration','Estimated Duration'),
 	('Filling Link','Filling Link'),
 	('Double Handed Lift','Double Handed Lift'),
 	('Building Pack','Building Pack'),

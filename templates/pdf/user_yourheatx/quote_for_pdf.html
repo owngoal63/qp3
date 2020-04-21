@@ -9,21 +9,22 @@
 
 <body>
     <div class="header">
-    <table>
+    <table id ="header">
         <tr>
-            <td><img class="img--logo" src="{{frecords.0.document.url}}"></td>
-            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-            <td><img class="img--checkatrade"  src="{{frecords.2.document.url}}">&nbsp; &nbsp;</td>
-            <td><img class="img--worcester-bosch" src="{{frecords.5.document.url}}">&nbsp; &nbsp;</td>
-            <td><img class="img--bosch"  src="{{frecords.6.document.url}}">&nbsp; &nbsp;</td>
-            <td><img class="img--gassafe"  src="{{frecords.7.document.url}}">&nbsp;
-            <td><div class="gas-safe-number">Gas Safe Number<br>570636</div></td>
+            <td class="col1"><img class="img--logo" src="{{frecords.0.document.url}}"></td>
+            <!-- <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td> -->
+            
+            <td class="col2"><img class="img--worcester-bosch" src="{{frecords.5.document.url}}">&nbsp; &nbsp;</td>
+            <td class="col3"><img class="img--bosch"  src="{{frecords.6.document.url}}">&nbsp; &nbsp;</td>
+            <td class="col4"><img class="img--gassafe"  src="{{frecords.7.document.url}}">&nbsp;
+            <td class="col5"><div class="gas-safe-number">Gas Safe Number<br>570636</div></td>
         </tr>
     </table>
     <br>
     </div>
 
     <div class="orange-box">
+        <br>
         <table id="SalutAndRef">
             <tr>
                 <td width=50%><div class="salutation">{{form_data.0.customer_title}} {{form_data.0.customer_last_name}}</div></td>
@@ -34,12 +35,12 @@
         <div class="thankyou">Thank you for having <b>{{idx.first_name}} {{idx.last_name}}</b> visit you today. Please
             find your bespoke, fixed-price
             quotation for your brand new boiler. We estimate that your installation will take
-            {{form_data.8.estimated_duration}}{% if form_data.8.estimated_duration == "1" %} day{% else %} days{% endif %}.</div>
-        
+            {{form_data.8.estimated_duration}}.</div>
+        <br>
         {% if alt_product_record %}
         <div class="product-details">
         {% else %}
-        <div class="product-details-no-alt-product_details">
+        <div class="product-details-no-alt-product-details">
         {% endif %}
             <table>
                 <tr>
@@ -92,10 +93,10 @@
 
     </div>
 
-    <div class="rating-gray-box">
+    <!-- <div class="rating-gray-box">
         Rated 9.9 out of 10 on Checkatrade<br>
         <sm>based on 350+ reviews</sm>
-    </div>
+    </div> -->
 
     <div class="page1-lower">
         <div class="payment-options">Payment Options</div>
@@ -396,17 +397,17 @@
             <tr>
                 <td class="tech-attrib">WILL BOILER BE HOUSED IN A CUPBOARD?</td>
                 {% if form_data.4.will_boiler_be_housed_in_cupboard == "Yes" %}
-                    <td class="tech-attrib-cupb">H</td>
-                    <td class="tech-attrib-cupb">W</td>
-                    <td class="tech-attrib-cupb">D</td>
+                    <td class="tech-attrib-cupb">H (mm)</td>
+                    <td class="tech-attrib-cupb">W (mm)</td>
+                    <td class="tech-attrib-cupb">D (mm)</td>
                 {% endif %}
             </tr>
             <tr>    
                 <td class="tech-value">{{ form_data.4.will_boiler_be_housed_in_cupboard }}</td>
                 {% if form_data.4.will_boiler_be_housed_in_cupboard == "Yes" %}
-                <td class="tech-value">{{form_data.4.cupboard_height }}mm</td>
-                <td class="tech-value">{{form_data.4.cupboard_width }}mm</td>
-                <td class="tech-value">{{form_data.4.cupboard_depth }}mm</td>
+                <td class="tech-value">{{form_data.4.cupboard_height }}</td>
+                <td class="tech-value">{{form_data.4.cupboard_width }}</td>
+                <td class="tech-value">{{form_data.4.cupboard_depth }}</td>
                 {% endif %}
             </tr>
         </table>
@@ -816,7 +817,7 @@
                 <td class="tech-attrib" colspan="2">ESTIMATED INSTALLATION DURATION</td>
             </tr>
             <tr>    
-                <td class="tech-value" colspan="2">{{form_data.8.estimated_duration }}{% if form_data.8.estimated_duration == "1" %} day{% else %} days{% endif %}</td>
+                <td class="tech-value" colspan="2">{{form_data.8.estimated_duration }}</td>
             </tr>
             <tr>
                 <td class="tech-attrib" colspan="2">DESCRIPTION OF WORKS</td>
@@ -850,7 +851,7 @@
                 <td class="tech-attrib">DEPOSIT REQUIRED</td>
             </tr>
             <tr>    
-                <td class="tech-value">£{{form_data.9.deposit_amount_thirty_percent}}</td>
+                <td class="tech-value">£{{form_data.9.deposit_amount_thirty_percent|floatformat:2}}</td>
             </tr>
             <tr>
                 <td class="tech-attrib">BALANCE DUE ON COMPLETION</td>
@@ -881,6 +882,10 @@
             <br>
             {% if form_data.8.optional_extras %}
             <!-- <div class="opt-extra-orange-box"> -->
+            <tr>
+                <br>
+                <td class="opt-extra-title">Below are some options you may want to consider with your installation to help compliment your new boiler system.  These haven’t been included in your standard quotation.</td>
+            </tr>
                 <tr>
                     <td  colspan="2">
                         <table class="optional-extras">
@@ -978,6 +983,9 @@
             </tr>
 
         </table>
+        <div id="final-strap-line">
+            <p id="final-strap-text">Your Heat is our priority</p>
+        </div>
     </div>
     
      <!-- End of Page 7 -->
@@ -1315,8 +1323,7 @@
             </tr>
             <tr>    
                 <td class="tech-value">{{form_data.9.component_duration_total}} hrs</td>
-                <td class="tech-value">{{form_data.8.estimated_duration }}
-                    {% if form_data.8.estimated_duration == "1" %} day{% else %} days{% endif %} - £{{ form_data.9.estimated_duration_cost}}
+                <td class="tech-value">{{form_data.8.estimated_duration }} - £{{ form_data.9.estimated_duration_cost}}
                 </td>    
             </tr>
             <tr>

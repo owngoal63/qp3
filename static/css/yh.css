@@ -1,6 +1,7 @@
 /* @import url('https://fonts.googleapis.com/css?family=Poppins&display=swap'); */
 /* @import url('https://fonts.googleapis.com/css?family=Lato&display=swap'); */
-@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+/* @import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap'); */
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap"');
 
 
 * {
@@ -8,7 +9,8 @@
     padding: 0px;
     /* font-family: 'Poppins', sans-serif; */
     /* font-family: 'Lato', sans-serif; */
-    font-family: 'Open Sans', sans-serif;
+    /* font-family: 'Open Sans', sans-serif; */
+    font-family: 'Source Sans Pro', sans-serif;
     font-size: 14px;
 
 }
@@ -145,7 +147,8 @@ div.break {
 }
 
 .endrow {
-    background-color: #4db79c;
+    /* background-color: #4db79c; */
+    background-color: rgb(251,126,51);
     text-align: center;
     font-size: 0.9rem;
     font-weight: 400;
@@ -224,6 +227,7 @@ div.break {
     font-size: 0.9rem;
     font-weight: 500;
     text-align: center;
+    width:150px;
 }
 
 .rating-gray-box {
@@ -303,14 +307,15 @@ div.break {
   } */
 
   .product-details {
-      /* background-color: yellow; */
+      /* background-color: yellow;  */
       /* height:350px; */
       width:330px;
       float: left;
       /* display: inline-block; */
       text-align: left;
       margin:0;
-      padding:2;
+      /* padding:2; */
+      padding-left:5px ;
 
 
   }
@@ -323,24 +328,34 @@ div.break {
       /* display:block; */
       text-align: left;
       margin:0;
-      padding-right:15px;
+      padding-right:5px;
   }
 
-  .product-details-no-alt-product_details {
+  .product-details-no-alt-product-details {
     width:640px;
     float: center;
     /* display: inline-block; */
     text-align: left;
     margin:0;
-    padding-left:150px;
-
+    padding-left:155px;
   }
+
+  /* .product-details-no-alt-product-details table {
+      background-color: deepskyblue;
+      width:100%;
+  } */
+
+  .product-details-no-alt-product-details table td {
+      padding-left:20px;
+      padding-right:20px;
+  }    
 
   .product-image {
     position: relative;
     top: 10px;
     left: 10px;
-    height:200px;
+    /* height:200px; */
+    width:122px;
 
   }
 
@@ -348,7 +363,8 @@ div.break {
     position: relative;
     top: 10px;
     left: 10px;
-    height:200px;
+    /* height:200px; */
+    width:122px;
 
   }
 
@@ -412,12 +428,17 @@ div.break {
     vertical-align: top;
 }
 
+.opt-extra-title {
+    font-size: 0.9rem;
+    font-weight:500;
+}
+
 table.address {
     width:100%;
 }
 
 table.optional-extras {
-    width:94%; 
+    width:99%; 
     border:5px solid orange;
     border-radius: 25px 0px 25px 0px;
     /* text-align: center; */
@@ -531,4 +552,43 @@ p.account-details {
     width: 100%;
   }
 
+#final-strap-line {
+    text-align: center;
+    color: rgb(251,126,51);
+}
+
+#final-strap-text {
+    font-style: italic;
+    font-size: 150%;
+    font-weight: 900;
+}
+
+#header {
+    width: 100%;
+}
+
+#header td.col1 {
+    width:50%;
+    text-align: left;
+}
+
+#header td.col2 {
+    width:15%;
+    text-align: center;
+}
+
+#header td.col3 {
+    width:15%;
+    text-align: right;
+}
+
+#header td.col4 {
+    width:10%;
+    text-align: right;
+}
+
+#header td.col5 {
+    width:10%;
+    text-align: left;
+}
 
