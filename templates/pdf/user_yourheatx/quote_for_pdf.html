@@ -49,13 +49,21 @@
                         <div class="price-orange-box">
                             £{{form_data.9.total_cost|floatformat:2}} Inc. VAT
                         </div>
-                        <div class="product-name">
+                        {% if alt_product_record  %}
+                                <div class="product-name">
+                            {% else %}
+                                <div class="product-name-no-alt">
+                        {% endif %}    
                             <p>{{product_record.brand}}<br>
                                 {{product_record.model_name}}</p>
                                 <br>
                                 <ul>
                                     <li>{{product_record.guarantee}}*</li>
-                                    <li>Gas Safe Installation</li>
+                                    {% if form_data.4.new_fuel_type == "Oil" %}
+                                        <li>OFTEC Installation</li>
+                                    {% else %}    
+                                        <li>Gas Safe Installation</li>
+                                    {% endif %}    
                                     <li>Interest Free Credit Available</li>
                                     <li>Option to Spread The Cost</li>
                                 </ul>
@@ -80,7 +88,11 @@
                                 <br>
                                 <ul>
                                     <li>{{alt_product_record.guarantee}}*</li>
-                                    <li>Gas Safe Installation</li>
+                                    {% if form_data.4.new_fuel_type == "Oil" %}
+                                        <li>OFTEC Installation</li>
+                                    {% else %}    
+                                        <li>Gas Safe Installation</li>
+                                    {% endif %}
                                     <li>Interest Free Credit Available</li>
                                     <li>Option to Spread The Cost</li>
                                 </ul>
@@ -376,11 +388,7 @@
             <tr>    
                 <td class="tech-value">{{form_data.4.plume_management_kit }}</td>
                 <td class="tech-value">{{form_data.4.condensate_termination }}</td>
-                <td class="tech-value">
-                    {% for new_controls_item in form_data.4.new_controls  %}
-                        &bull; {{ new_controls_item }}<br>
-                    {% endfor %}
-                </td>
+                <td class="tech-value">{{ form_data.4.new_controls }}</td>
             </tr>
         </table>
 
@@ -418,19 +426,23 @@
                 </tr>
                 <tr>
                     <td class="tech-attrib">CHEMICAL SYSTEM TREATMENT</td>
-                    <td class="tech-attrib">GAS SUPPLY REQUIREMENTS</td>
+                    <td class="tech-attrib">FUEL SUPPLY REQUIREMENTS</td>
                 </tr>
                 <tr>    
                     <td class="tech-value">{{form_data.5.chemical_system_treatment }}</td>
-                    <td class="tech-value">{{form_data.5.gas_supply_requirements }}</td>
+                    <td class="tech-value">{{form_data.5.fuel_supply_requirements }}</td>
                 </tr>
                 <tr>
-                    <td class="tech-attrib">GAS SUPPLY LENGTH</td>
+                    <td class="tech-attrib">FUEL SUPPLY LENGTH</td>
                     <td class="tech-attrib">SCAFFOLDING REQUIRED?</td>
                 </tr>
-                <tr>
-                    <td class="tech-value">{{form_data.5.gas_supply_length }}</td>    
-                    <td class="tech-value">{{form_data.5.scaffolding_required }}</td>
+                <tr>            
+                    <td class="tech-value">
+                        {% for fuel_supply_len in form_data.5.fuel_supply_length  %}
+                            &bull; {% if fuel_supply_len == "_N/A"%}N/A{% else %} {{fuel_supply_len}}{%endif%}
+                        {% endfor %}
+                        </td>
+                    <td class="tech-value">{% if form_data.5.scaffolding_required == "_N/A"%}N/A{% else %} {{form_data.5.scaffolding_required }}{%endif%}</td>    
                 </tr>
                 <tr>
                     <td class="tech-attrib">ASBESTOS CONTAINING MATERIALS (ACM) IDENTIFIED?</td>
@@ -532,7 +544,7 @@
             <tr>    
                 <td class="tech-value" colspan="2">
                     {% for additional in form_data.6.additional_central_heating_components  %}
-                    &bull; {{ additional }}<br>
+                    &bull; {% if additional == "_N/A"%}N/A{% else %} {{additional}}{%endif%}<br>
                     {% endfor %}
                 </td>
             </tr>
@@ -568,7 +580,7 @@
                 </td>
                 <td class="tech-value">
                     {% for packs in form_data.6.building_pack_required  %}
-                    &bull; {{ packs }}
+                    &bull; {% if packs == "_N/A"%}N/A{% else %} {{packs}}{%endif%}
                     {% endfor %}
                 </td>
             </tr>
@@ -581,11 +593,18 @@
                 <td class="tech-value">{{form_data.6.earth_spike_required }}</td>
             </tr>
             <tr>
-                <td class="tech-attrib">ANY SPECIAL PARTS</td>
                 <td class="tech-attrib">DOUBLED HANDED LIFT REQUIRED</td>
+                <td class="tech-attrib">CYLINDER</td>
             </tr>
             <tr>    
-                <td class="tech-value">
+                <td class="tech-value">{{form_data.6.double_handed_lift_required }}</td>
+                <td class="tech-value">{{form_data.6.cylinder }}</td>
+            </tr>
+            <tr>
+                <td class="tech-attrib" colspan="2">SPECIAL PARTS</td>
+            </tr>
+            <tr>    
+                <td class="tech-value" colspan="2">
                     <table class="special-parts-table">
                         {% if form_data.6.special_part_1 %}
                         <!-- <tr> -->
@@ -607,7 +626,6 @@
                         {% endif %}
                     </table>
                 </td>
-                <td class="tech-value">{{form_data.6.double_handed_lift_required }}</td>
             </tr>
             
            
@@ -878,6 +896,12 @@
             <tr>    
                 <td class="tech-value">£{{form_data.9.alt_total_cost|floatformat:2}}</td>
             </tr>
+            <tr>
+                <td class="tech-attrib">ESTIMATED HOME HEATLOSS</td>
+            </tr>
+            <tr>    
+                <td class="tech-value">{{form_data.17.house_heat_loss_value|floatformat:2}} KW</td>
+            </tr>
             {% endif %}
             <br>
             {% if form_data.8.optional_extras %}
@@ -974,17 +998,17 @@
                     </table>
                 </td>
             </tr>
-            <tr>
-                <td class="tech-attrib">Boiler 1: {{product_record.guarantee}} 
-                    {% if alt_product_record %}
-                        &nbsp;&nbsp;&nbsp;Boiler 2: {{alt_product_record.guarantee}}
-                    {% endif %}
-                </td>
-            </tr>
+           <!--<tr>-->
+            <!--    <td class="tech-attrib">Boiler 1: { { product_record.guarantee } }-->
+            <!--        { % if alt_product_record % }-->
+            <!--            &nbsp;&nbsp;&nbsp;Boiler 2: { { alt_product_record.guarantee } }-->
+            <!--        { % endif % }-->
+            <!--    </td>-->
+            <!--</tr>-->
 
         </table>
         <div id="final-strap-line">
-            <p id="final-strap-text">Your Heat is our priority</p>
+            <p id="final-strap-text">Your Heat - Our Priority, Always.</p>
         </div>
     </div>
     
@@ -1309,13 +1333,13 @@
     <div class="tech-details">
         <table>
             <tr>
-                <td class="tech-title" colspan="2">Component Summary Totals</td>
+                <td class="tech-title" colspan="2">Summary Totals</td>
             </tr>
             <tr>
-                <td class="tech-attrib" colspan="2">COMPONENT PRICE TOTAL</td>
+                <td class="tech-attrib" colspan="2">PARTS PRICE TOTAL (Boiler + Components)</td>
             </tr>
             <tr>    
-                <td class="tech-value" colspan="2">£{{form_data.9.component_price_total}}</td>
+                <td class="tech-value" colspan="2">£{{form_data.9.parts_price_total}}</td>
             </tr>
             <tr>
                 <td class="tech-attrib">COMPONENT DURATION SUMMARY TOTAL</td>
@@ -1343,6 +1367,12 @@
             </tr>
             <tr>    
                 <td class="tech-value" colspan="2">{{form_data.5.details_on_potential_contractor_requirements }}</td>
+            </tr>
+            <tr>
+                <td class="tech-attrib" colspan="2">ESTIMATED HOME HEATLOSS</td>
+            </tr>
+            <tr>    
+                <td class="tech-value" colspan="2">{{form_data.17.house_heat_loss_value|floatformat:2}} KW</td>
             </tr>
 
         </table>

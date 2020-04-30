@@ -134,29 +134,41 @@
                 {{ wizard.form.double_handed_lift_required }}
             </div>
         </div>
-        
         <div class = "col-6">
+            <div class="form-group">
+                <label>{{ wizard.form.cylinder.label }}</label>{% if wizard.form.cylinder.field.required %} *{% endif %}
+                {{ wizard.form.cylinder }}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">    
+        <div class = "col-9">
             <div class="form-group">
                 <table>
                     <tr>
-                        <td width="55%">Special Part(s)</td>
-                        <td width="15%">Qty</td>
-                        <td width="20%">Price £</td>
+                        <td width="60%">Special Part(s)</td>
+                        <td width="10%">Qty</td>
+                        <td width="10%">Price £</td>
+                        <td width="10%">Duration</td>
                     </tr>
                     <tr>
                         <td>{{ wizard.form.special_part_1 }}</td>
                         <td>{{ wizard.form.special_part_qty_1 }}</td>
                         <td>{{ wizard.form.special_part_price_1 }}</td>
+                        <td>{{ wizard.form.special_part_duration_1 }}</td>
                     </tr>
                     <tr>
                         <td>{{ wizard.form.special_part_2 }}</td>
                         <td>{{ wizard.form.special_part_qty_2 }}</td>
                         <td>{{ wizard.form.special_part_price_2 }}</td>
+                        <td>{{ wizard.form.special_part_duration_2 }}</td>
                     </tr>
                     <tr>
                         <td>{{ wizard.form.special_part_3 }}</td>
                         <td>{{ wizard.form.special_part_qty_3 }}</td>
                         <td>{{ wizard.form.special_part_price_3 }}</td>
+                        <td>{{ wizard.form.special_part_duration_3 }}</td>
                     </tr>
                    
                 </table>

@@ -6,6 +6,9 @@ from django.contrib import messages
 
 from decimal import *
 
+import smartsheet
+import json
+
 # Form wizard imports
 #from quotepad.forms import FormStepOne, FormStepTwo, FormStepThree, FormStepFour, FormStepFive, FormStepSix, FormStepSeven, FormStepEight, FormStepNine
 from quotepad.forms import FormStepOne_yh, FormStepTwo_yh, FormStepThree_yh, FormStepFour_yh, FormStepFive_yh, FormStepSix_yh, FormStepSeven_yh, FormStepEight_yh, FormStepNine_yh, FinanceForm_yh
@@ -29,6 +32,10 @@ from django.contrib.auth.models import User, Group
 
 from quotepad.models import Profile, ProductPrice, Document, OptionalExtra, ProductComponent
 from quotepad.forms import ProfileForm, UserProfileForm, ProductPriceForm, EditQuoteTemplateForm
+
+#Added for Smartsheet
+from quotepad.utils import ss_get_customers_data_for_survey_from_report, ss_update_data
+
 
 @login_required
 def quote_generated_yh(request):
@@ -99,15 +106,23 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			alt_manuf = step_data.get('4-alt_boiler_manufacturer','')
 			fuel_type = step_data.get('4-new_fuel_type','')
 			boiler_type = step_data.get('4-new_boiler_type','')
+
+			#step_data = self.storage.get_step_data('1')
+			#print(step_data.get('1-heat_loss_house_type'))
+			#heat_loss_value = float(step_data.get('1-heat_loss_house_type')) * float(step_data.get('1-building_width')) * float(step_data.get('1-building_length')) * (float(step_data.get('1-ceiling_height')) * float(step_data.get('1-floors')))
+			#print("heat loss value", heat_loss_value)
+			#return {'user': settings.YH_MASTER_PROFILE_ID, 'manufacturer': manuf, 'alt_manufacturer': alt_manuf, 'fuel_type': fuel_type, 'boiler_type': boiler_type, 'heat_loss_value': heat_loss_value }
 			return {'user': settings.YH_MASTER_PROFILE_ID, 'manufacturer': manuf, 'alt_manufacturer': alt_manuf, 'fuel_type': fuel_type, 'boiler_type': boiler_type }
 		elif step == '6':
 			step_data = self.storage.get_step_data('4')
 			manuf = step_data.get('4-boiler_manufacturer','')
 			plume_management_kit = step_data.get('4-plume_management_kit','')
+			new_controls = step_data.get('4-new_controls','')
 			alt_manuf = step_data.get('4-alt_boiler_manufacturer','')
 			new_fuel_type = step_data.get('4-new_fuel_type','')
-			print(plume_management_kit)
-			return {'user': settings.YH_MASTER_PROFILE_ID, 'manufacturer': manuf, 'alt_manufacturer': alt_manuf, 'plume_management_kit': plume_management_kit, 'new_fuel_type': new_fuel_type }
+			boiler_type = step_data.get('4-new_boiler_type','')
+			#print(plume_management_kit)
+			return {'user': settings.YH_MASTER_PROFILE_ID, 'manufacturer': manuf, 'alt_manufacturer': alt_manuf, 'plume_management_kit': plume_management_kit, 'new_fuel_type': new_fuel_type, 'new_controls': new_controls, 'boiler_type': boiler_type }
 		elif step == '4':
 			return {'user': settings.YH_MASTER_PROFILE_ID}
 		elif step == '7':
@@ -140,6 +155,16 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			components_list = new_installation_step_data.getlist('5-asbestos_removal_procedure')
 			for i in components_list:
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Asbestos Removal Procedure', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+
+			# Get the Electrical Work Duration
+			components_list = new_installation_step_data.getlist('5-electrical_work_required')
+			for i in components_list:
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Electrical Work', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+
+			# Get the Parking Duration
+			components_list = new_installation_step_data.getlist('5-parking_requirements')
+			for i in components_list:
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Parking', user=settings.YH_MASTER_PROFILE_ID).est_time_duration		
 
 			# Get the step data for NEW INSTALLATION MATERIALS
 			new_installation_step_data = self.storage.get_step_data('6')
@@ -223,6 +248,14 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			for i in components_list:
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Building Pack', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 
+			# Get Special Parts Duration
+			if new_installation_step_data.get('6-special_part_duration_1'):
+				component_duration_total = component_duration_total + Decimal(new_installation_step_data.get('6-special_part_duration_1'))
+			if new_installation_step_data.get('6-special_part_duration_2'):	
+				component_duration_total = component_duration_total + Decimal(new_installation_step_data.get('6-special_part_duration_2'))
+			if new_installation_step_data.get('6-special_part_duration_3'):
+				component_duration_total = component_duration_total + Decimal(new_installation_step_data.get('6-special_part_duration_3'))
+
 			# Get the step data for RADIATOR REQUIREMENTS
 			radiators_step_data = self.storage.get_step_data('7')
 
@@ -257,7 +290,11 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			product = product_step_data.get('5-product_choice','')
 			product_price = ProductPrice.objects.get(id=product).price
 			alt_product = product_step_data.get('5-alt_product_choice','')
-			alt_product_price = ProductPrice.objects.get(id=alt_product).price
+			#print("alt product", alt_product)
+			if alt_product:
+				alt_product_price = ProductPrice.objects.get(id=alt_product).price
+			else:
+				alt_product_price = 0			
 			#print(product_price)
 			
 			# Initialise All component price and duration totals
@@ -315,7 +352,7 @@ class BoilerFormWizardView_yh(SessionWizardView):
 				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Fuel Supply Length', user=settings.YH_MASTER_PROFILE_ID).price
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Fuel Supply Length', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 				components.append(dict(component_attrib_build(i, 'Fuel Supply Length', settings.YH_MASTER_PROFILE_ID)))
-				install_requirments_comp_dict['Gas Supply Length'] = components
+				install_requirments_comp_dict['Fuel Supply Length'] = components
 				print('Fuel Supply Length', ProductComponent.objects.get(component_name=i, component_type='Fuel Supply Length', user=settings.YH_MASTER_PROFILE_ID).price)
 
 
@@ -329,16 +366,26 @@ class BoilerFormWizardView_yh(SessionWizardView):
 				install_requirments_comp_dict['Scaffolding Required'] = components
 				print('Scaffolding', ProductComponent.objects.get(component_name=i, component_type='Scaffolding', user=settings.YH_MASTER_PROFILE_ID).price)
 		
-
-			# Get the Asbestos Removel Procedure Prices
-			components_list = new_installation_step_data.getlist('5-asbestos_removal_procedure')
+			# Get the Electrical Work Prices
+			components_list = new_installation_step_data.getlist('5-electrical_work_required')
 			components = []
 			for i in components_list:
-				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Asbestos Removal Procedure', user=settings.YH_MASTER_PROFILE_ID).price
-				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Asbestos Removal Procedure', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
-				components.append(dict(component_attrib_build(i, 'Asbestos Removal Procedure', settings.YH_MASTER_PROFILE_ID)))
-				install_requirments_comp_dict['Asbestos Removal_Procedure'] = components
-				print('Asbestos Removal Procedure', ProductComponent.objects.get(component_name=i, component_type='Asbestos Removal Procedure', user=settings.YH_MASTER_PROFILE_ID).price)	
+				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Electrical Work', user=settings.YH_MASTER_PROFILE_ID).price
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Electrical Work', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+				components.append(dict(component_attrib_build(i, 'Electrical Work', settings.YH_MASTER_PROFILE_ID)))
+				install_requirments_comp_dict['Electrical Work Required'] = components
+				print('Electrical Work', ProductComponent.objects.get(component_name=i, component_type='Electrical Work', user=settings.YH_MASTER_PROFILE_ID).price)
+
+			# Get the Parking Prices
+			components_list = new_installation_step_data.getlist('5-parking_requirements')
+			components = []
+			for i in components_list:
+				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Parking', user=settings.YH_MASTER_PROFILE_ID).price
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Parking', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+				components.append(dict(component_attrib_build(i, 'Parking', settings.YH_MASTER_PROFILE_ID)))
+				install_requirments_comp_dict['Parking Requirements'] = components
+				print('Parking', ProductComponent.objects.get(component_name=i, component_type='Parking', user=settings.YH_MASTER_PROFILE_ID).price)	
+			
 			#-----------------------------------------------------------------------------------------	
 
 			# Get the step data for NEW INSTALLATION MATERIALS
@@ -529,6 +576,16 @@ class BoilerFormWizardView_yh(SessionWizardView):
 				new_materials_comp_dict['Building Pack'] = components
 				print('Building Pack', ProductComponent.objects.get(component_name=i, component_type='Building Pack', user=settings.YH_MASTER_PROFILE_ID).price)
 
+			# Get the Cylinder Prices
+			components_list = new_installation_step_data.getlist('6-cylinder')
+			components = []
+			for i in components_list:
+				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Cylinder', user=settings.YH_MASTER_PROFILE_ID).price
+				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Cylinder', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+				components.append(dict(component_attrib_build(i,'Cylinder', settings.YH_MASTER_PROFILE_ID)))
+				new_materials_comp_dict['Cylinder'] = components
+				print('Cylinder', ProductComponent.objects.get(component_name=i, component_type='Cylinder', user=settings.YH_MASTER_PROFILE_ID).price)
+
 			# for outer_key, outer_value in comp_dict.items():
 			# 	print("\t", outer_key)
 			# 	for elem in outer_value:
@@ -589,24 +646,27 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			if new_installation_step_data.get('6-special_part_1',''):
 				components = []
 				component_price_total = component_price_total + Decimal(new_installation_step_data.get('6-special_part_qty_1')) * Decimal(new_installation_step_data.get('6-special_part_price_1'))
-				component = {new_installation_step_data.get('6-special_part_1',''): [Decimal(new_installation_step_data.get('6-special_part_qty_1')), Decimal(new_installation_step_data.get('6-special_part_price_1')), Decimal(new_installation_step_data.get('6-special_part_qty_1')) * Decimal(new_installation_step_data.get('6-special_part_price_1')), 'N/A', 'N/A']}
+				component_duration_total = component_duration_total + Decimal(new_installation_step_data.get('6-special_part_duration_1'))
+				component = {new_installation_step_data.get('6-special_part_1',''): [Decimal(new_installation_step_data.get('6-special_part_qty_1')), Decimal(new_installation_step_data.get('6-special_part_price_1')), Decimal(new_installation_step_data.get('6-special_part_qty_1')) * Decimal(new_installation_step_data.get('6-special_part_price_1')), 'N/A', Decimal(new_installation_step_data.get('6-special_part_duration_1'))]}
 				components.append(dict(component))
 				special_parts_comp_dict['Special Part 1'] = components
-				print(Decimal(new_installation_step_data.get('6-special_part_qty_1')) * Decimal(new_installation_step_data.get('6-special_part_price_1')))
+				print('Special Part 1', Decimal(new_installation_step_data.get('6-special_part_qty_1')) * Decimal(new_installation_step_data.get('6-special_part_price_1')))
 			if new_installation_step_data.get('6-special_part_2',''):
 				components = []
 				component_price_total = component_price_total + Decimal(new_installation_step_data.get('6-special_part_qty_2')) * Decimal(new_installation_step_data.get('6-special_part_price_2'))
-				component = {new_installation_step_data.get('6-special_part_2',''): [Decimal(new_installation_step_data.get('6-special_part_qty_2')), Decimal(new_installation_step_data.get('6-special_part_price_2')), Decimal(new_installation_step_data.get('6-special_part_qty_2')) * Decimal(new_installation_step_data.get('6-special_part_price_2')), 'N/A', 'N/A']}
+				component_duration_total = component_duration_total + Decimal(new_installation_step_data.get('6-special_part_duration_2'))
+				component = {new_installation_step_data.get('6-special_part_2',''): [Decimal(new_installation_step_data.get('6-special_part_qty_2')), Decimal(new_installation_step_data.get('6-special_part_price_2')), Decimal(new_installation_step_data.get('6-special_part_qty_2')) * Decimal(new_installation_step_data.get('6-special_part_price_2')), 'N/A', Decimal(new_installation_step_data.get('6-special_part_duration_2'))]}
 				components.append(dict(component))
 				special_parts_comp_dict['Special Part 2'] = components
-				print(Decimal(new_installation_step_data.get('6-special_part_qty_2')) * Decimal(new_installation_step_data.get('6-special_part_price_2')))	
+				print('Special Part 2', Decimal(new_installation_step_data.get('6-special_part_qty_2')) * Decimal(new_installation_step_data.get('6-special_part_price_2')))	
 			if new_installation_step_data.get('6-special_part_3',''):
 				components = []
 				component_price_total = component_price_total + Decimal(new_installation_step_data.get('6-special_part_qty_3')) * Decimal(new_installation_step_data.get('6-special_part_price_3'))
-				component = {new_installation_step_data.get('6-special_part_3',''): [Decimal(new_installation_step_data.get('6-special_part_qty_3')), Decimal(new_installation_step_data.get('6-special_part_price_3')), Decimal(new_installation_step_data.get('6-special_part_qty_3')) * Decimal(new_installation_step_data.get('6-special_part_price_3')), 'N/A', 'N/A']}
+				component_duration_total = component_duration_total + Decimal(new_installation_step_data.get('6-special_part_duration_3'))
+				component = {new_installation_step_data.get('6-special_part_3',''): [Decimal(new_installation_step_data.get('6-special_part_qty_3')), Decimal(new_installation_step_data.get('6-special_part_price_3')), Decimal(new_installation_step_data.get('6-special_part_qty_3')) * Decimal(new_installation_step_data.get('6-special_part_price_3')), 'N/A', Decimal(new_installation_step_data.get('6-special_part_duration_3'))]}
 				components.append(dict(component))
 				special_parts_comp_dict['Special Part 3'] = components
-				print(Decimal(new_installation_step_data.get('6-special_part_qty_3')) * Decimal(new_installation_step_data.get('6-special_part_price_3')))	
+				print('Special Part 3', Decimal(new_installation_step_data.get('6-special_part_qty_3')) * Decimal(new_installation_step_data.get('6-special_part_price_3')))	
 
 			# Calculate Workload cost (Add to install_requirments_comp_dict)
 			workload_requirements_step_data = self.storage.get_step_data('8')
@@ -627,19 +687,24 @@ class BoilerFormWizardView_yh(SessionWizardView):
 
 
 			# Sum the grand total
-			total_quote_price = product_price + component_price_total + estimated_duration_cost
+			total_quote_price = product_price + component_price_total
 			#total_quote_price = component_price_total + estimated_duration_cost
-			alt_total_quote_price = alt_product_price + (component_price_total - primary_component_price_total + alt_component_price_total) + estimated_duration_cost
+			if alt_product:
+				alt_total_quote_price = alt_product_price + (component_price_total - primary_component_price_total + alt_component_price_total) 
+			else:
+				alt_total_quote_price = 0
+			parts_total = total_quote_price - estimated_duration_cost	# or Boiler price + components price
 			#print(product_price)
 			print("Primary Boiler Price", product_price)
 			print("Alternate Boiler Price", alt_product_price)
 			print("Primary Component Price Total", component_price_total)
 			print("Alt Component Price Total", component_price_total - primary_component_price_total + alt_component_price_total )
 			print("Est Duration Cost",estimated_duration_cost)
+			print("Primary parts total", parts_total )
 			print("Primary Total Price Total", total_quote_price)
 			print("Alt Total Price Total", alt_total_quote_price)
 
-			return {'product_price': product_price, 'component_price_total':component_price_total, 
+			return {'product_price': product_price, 'component_price_total':component_price_total, 'parts_price_total':parts_total,
 				'estimated_duration_cost': estimated_duration_cost, 'component_duration_total': component_duration_total,
 				 'total_quote_price': total_quote_price, 'alt_total_quote_price': alt_total_quote_price }
 		else:
@@ -675,6 +740,15 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			alt_product_record = ProductPrice.objects.get(pk = alt_product_id)
 		else:
 			alt_product_record = ProductPrice.objects.none()
+
+		# Calculate the heat loss for the house
+		heat_loss_house_type = float([form.cleaned_data for form in form_list][1].get('heat_loss_house_type'))
+		building_width = [form.cleaned_data for form in form_list][1].get('building_width')
+		building_length = [form.cleaned_data for form in form_list][1].get('building_length')
+		ceiling_height = [form.cleaned_data for form in form_list][1].get('ceiling_height')
+		floors = [form.cleaned_data for form in form_list][1].get('floors')
+		heat_loss_value = heat_loss_house_type * building_width * building_length * (ceiling_height * floors)
+		print("Heat Loss Value:", heat_loss_value)
 
 		# Write the form data input to a file in the folder pdf_quote_archive/user_xxxx/current_quote.txt
 		current_quote_form_filename =  Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/current_quote.txt".format(self.request.user.username))
@@ -714,14 +788,14 @@ class BoilerFormWizardView_yh(SessionWizardView):
 		file.write(str(special_parts_comp_dict) + "\n")
 
 		#file.write(str(comp_dict) + "\n")
-		# Get and write the quote Number to the file
+		# Get and write the quote Number to the file ( and add the heat loss value)
 		idx_master = Profile.objects.get(user = settings.YH_MASTER_PROFILE_ID)
 		idx_master.current_quote_number = idx_master.current_quote_number + 1
 		idx_master.save()
-		file.write("{'quote_number': " + str(idx_master.current_quote_number) + "} \n")	
+		file.write("{'quote_number': " + str(idx_master.current_quote_number) + ",'house_heat_loss_value': " + str(heat_loss_value) + "} \n")	
 		file.close()
 
-		#print(a_break)
+		print(a_break)
 
 		return HttpResponseRedirect('/quotegenerated_yh/')
 
@@ -808,7 +882,7 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 		created_quote_template_group = Group.objects.get(name = 'created_quote_template')
 		request.user.groups.add(created_quote_template_group)
 		# Set Flag to generate the quote and include the supplementary internal report output
-		include_report = False
+		include_report = True
 		pdf = pdf_generation(sourceHtml, {
 			'form_data': file_form_data,
 			'idx': idx,
@@ -856,7 +930,7 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			email.send()
 
 		else:
-			send_pdf_email_using_SendGrid('quotes@yourheat.co.uk', fd[0]['customer_email'], mail_subject, msg, outputFilename, quote_form_filename )
+			send_pdf_email_using_SendGrid('quotes@yourheat.co.uk', idx_master.email, mail_subject, msg, outputFilename, quote_form_filename )
 
 		# Generate the PDF and write to disk ( Customer Copy )
 		# Set Flag to generate the quote and include the supplementary internal report output
@@ -938,3 +1012,188 @@ def upload_for_reprint_yh(request):
 
 	return render(request, 'yourheat/pages/upload_for_reprint.html')
 
+def get_smartsheet(request):
+
+	ss_get_customers_data_for_survey_from_report(
+		settings.YH_SS_ACCESS_TOKEN,
+		settings.YH_SS_SHEET_NAME,
+		settings.YH_SS_SURVEY_REPORT,
+		Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/ss_custdata.txt".format(request.user.username))
+	)
+
+	ss_update_data(
+		settings.YH_SS_ACCESS_TOKEN,
+		settings.YH_SS_SHEET_NAME,
+		[],
+		"Customer Status",
+		"10 Fresh Lead",
+		"Landline",
+		"0141 889 9999"
+	)
+
+	print(stop)
+
+	# Instantiate smartsheet and specify access token value.
+	ss = smartsheet.Smartsheet(settings.YH_SS_ACCESS_TOKEN)
+
+	# Get the id of the Sheet required
+	sheet_name = settings.YH_SS_SHEET_NAME
+	search_results = ss.Search.search(sheet_name).results
+	sheet_id = next(result.object_id for result in search_results if result.object_type == 'sheet')
+
+	# Get all the columns for the sheet
+
+	#sheet_that_I_want = ss.Sheets.get_sheet(sheet_id)
+	#print(sheet_that_I_want)
+
+	#ss = smartsheet.Smartsheet('rix4kc3qoulzw42y4ukuqyfxfe')
+
+	# Get all the columns for the sheet
+	all_columns = ss.Sheets.get_columns(sheet_id, include_all=True)
+	columns = all_columns.data
+
+	# Create two reference dictionaries that will be useful in the subsequent code
+	# colMap {column-name: column-id } and colMapRev { column-id: column-name }
+	colMap = {}
+	colMapRev = {}
+	for col in columns:
+		colMap[col.title] = col.id
+		colMapRev[col.id] = col.title
+		
+
+	#print(colMap)	
+
+	#print("++++++++++")
+	#print(colMap.get('Surname'))
+	#print("++++++++++")
+
+	# Create an array of ColumnIds to limit the returned dataset
+	col_ids = []
+	col_ids.append(colMap.get('Customer Status'))
+	col_ids.append(colMap.get('Customer ID'))
+	col_ids.append(colMap.get('First Name'))
+	col_ids.append(colMap.get('Surname'))
+	col_ids.append(colMap.get('Address Line 1'))
+	col_ids.append(colMap.get('Postcode'))
+	col_ids.append(colMap.get('Mobile'))
+	col_ids.append(colMap.get('Landline'))
+	col_ids.append(colMap.get('Email'))
+
+
+	#print(col_ids)
+
+	customer_dict = {}
+	customers = []
+
+	MySheet = ss.Sheets.get_sheet(sheet_id, column_ids=col_ids)
+
+	MySheetjson = json.loads(str(MySheet))
+
+	#print(MySheetjson["accessLevel"])
+
+	for MyRow in MySheetjson["rows"]:
+		pass
+		#print(MyRow)
+		
+		for MyCell in MyRow["cells"]:
+			pass
+			#print(colMapRev.get(MyCell.get("columnId")), MyCell.get("value"))
+		#print("")		
+
+	# -------------------- Reports ----------------------------
+	MyReports = ss.Reports.list_reports(include_all=True)
+	reports = MyReports.data
+
+	reportMap = {}
+	reportMapRev = {}
+	# For each column, print Id and Title.
+	for rep in reports:
+		reportMap[rep.name] = rep.id
+		reportMapRev[rep.id] = rep.name
+
+	#print(reportMapRev)
+
+	#print("")
+
+	#print(reportMap)
+
+	#print("")
+
+	report = ss.Reports.get_report(reportMap.get("20.0 All Booked Surveys"))
+
+	#print(report)
+
+	#print("")
+
+	MyReportjson = json.loads(str(report))
+
+	CustomersForSurvey = []
+
+	current_data_filename =  Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/ss_custdata.txt")
+	file = open(current_data_filename, 'w') #write to file
+
+	for MyRow in MyReportjson["rows"]:
+		file.write("{")
+		
+		for MyCell in MyRow["cells"]:
+			#print(colMapRev.get(MyCell.get("columnId")),MyCell.get("value"))
+			#print("{'" + str(colMapRev.get(MyCell.get("columnId"))) + "': '" + str(MyCell.get("value")) + "'}")
+			#CustomersForSurvey.append(dict("{'" + str(colMapRev.get(MyCell.get("columnId"))) + "': '" + str(MyCell.get("value")) + "'}"))
+			file.write("'" + str(colMapRev.get(MyCell.get("columnId"))) + "': '" + str(MyCell.get("value")) +"', ")
+		file.write("}\n")	
+
+	#print(MyReportsjson)
+	file.close
+	print("done")
+
+	
+	#print(stop)
+
+	# ------------------ Update a cell in SS ------------------------
+	#print("MySheet", MySheet)
+	#print(MySheet.get("accessLevel"))
+	print("-------------------- Update ---------------------------------")
+
+	MySheetjson = json.loads(str(MySheet))
+
+	# Build new cell value
+	new_cell = smartsheet.models.Cell()
+	new_cell.column_id = colMap.get('Landline')
+	new_cell.value = "0141 883 8944"
+	new_cell.strict = False
+
+	
+
+	for MyRow in MySheetjson["rows"]:
+		#print(MyRow.sheetId)
+		#if MyRow.cells[1].value == "10 Fresh Lead":
+		#print(MyRow["cells"])
+
+		# Build the row to update
+		new_row = smartsheet.models.Row()
+
+		for MyCell in MyRow["cells"]:
+			#print(myCell)
+			if colMapRev.get(MyCell.get("columnId")) == "Customer Status" and MyCell.get("value") == "10 Fresh Lead":
+				print(colMapRev.get(MyCell.get("columnId")), MyCell.get("columnId"), MyCell.get("value"))
+				#print("Row ID to update", MyRow["id"])
+				new_row.id = MyRow["id"]
+				new_row.cells.append(new_cell)
+				updated_row = ss.Sheets.update_rows(sheet_id,[new_row])
+		print("")
+
+	# Update rows
+	#updated_row = ss.Sheets.update_rows(sheet_id,[new_row])
+	
+
+	print(stop)
+
+
+
+# Build the row to update
+#new_row = smartsheet.models.Row()
+#new_row.id = 6809535313667972
+#new_row.cells.append(new_cell)
+
+
+	return HttpResponseRedirect('/home/')

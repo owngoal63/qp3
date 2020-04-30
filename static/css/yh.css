@@ -368,8 +368,28 @@ div.break {
 
   }
 
+  .product-name-no-alt {
+    margin:20px;
+    width:300px; 
+  }
+
+  .product-name-no-alt p {
+    font-size: 1rem;
+    font-weight:400;
+    color:grey;
+  }
+
+  .product-name-no-alt li {
+    margin-left: 8px;
+    font-size: 0.7rem;
+    width:140px;
+    /* font-weight:400; */
+    /* color:grey; */
+}
+
   .product-name {
     margin:20px;
+    width:200px; */
   }
 
   .product-name p {

@@ -19,6 +19,8 @@ from django.template.loader import render_to_string
 from weasyprint import HTML, CSS
 from weasyprint.fonts import FontConfiguration
 
+#Added for Smartsheet API
+import smartsheet
 
 ''' Various functions used by the XHtml2pdf library '''
 
@@ -207,6 +209,120 @@ def send_pdf_email_using_SendGrid(sender, receiver, mail_subject, mail_content, 
 		print(e.message)
 
 	return
+
+def ss_get_customers_data_for_survey_from_report(access_token, sheet_name, report_name, file_output):
+
+	# Instantiate smartsheet and specify access token value.
+	ss = smartsheet.Smartsheet(access_token)
+
+	# Get the id for the Sheet name
+	search_results = ss.Search.search(sheet_name).results
+	sheet_id = next(result.object_id for result in search_results if result.object_type == 'sheet')
+
+	# Get all the columns for the sheet
+	all_columns = ss.Sheets.get_columns(sheet_id, include_all=True)
+	columns = all_columns.data
+
+	# Create two reference dictionaries that will be useful in the subsequent code
+	# colMap {column-name: column-id } and colMapRev { column-id: column-name }
+	colMap = {}
+	colMapRev = {}
+	for col in columns:
+		colMap[col.title] = col.id
+		colMapRev[col.id] = col.title
+
+
+	# Get all the reports for the sheet
+	all_reports = ss.Reports.list_reports(include_all=True)
+	reports = all_reports.data
+
+	reportMap = {}
+	reportMapRev = {}
+	
+	# Create two reference dictionaries that will be useful in the subsequent code
+	# reportMap {report-name: report-id } and reportMapRev { report-id: report-name }
+	for rep in reports:
+		reportMap[rep.name] = rep.id
+		reportMapRev[rep.id] = rep.name
+
+	# Get the Report from Smartsheet
+	report = ss.Reports.get_report(reportMap.get(report_name))
+	# Covert data to a JSON object
+	reportjson = json.loads(str(report))
+
+	# Open file for writing in user folder
+	file = open(file_output, 'w')
+
+	# Loop through rows and columns to write data to file
+	for MyRow in reportjson["rows"]:
+		file.write("{")
+		
+		for MyCell in MyRow["cells"]:
+			#print(colMapRev.get(MyCell.get("columnId")),MyCell.get("value"))
+			#print("{'" + str(colMapRev.get(MyCell.get("columnId"))) + "': '" + str(MyCell.get("value")) + "'}")
+			#CustomersForSurvey.append(dict("{'" + str(colMapRev.get(MyCell.get("columnId"))) + "': '" + str(MyCell.get("value")) + "'}"))
+			file.write("'" + str(colMapRev.get(MyCell.get("columnId"))) + "': '" + str(MyCell.get("value")) +"', ")
+		file.write("}\n")	
+
+	#print(MyReportsjson)
+	file.close
+	print("done")
+
+	return
+
+def ss_update_data(access_token, sheet_name, column_ids, conditional_field_name, conditional_field_value, update_field_name, update_field_value):
+
+		# Instantiate smartsheet and specify access token value.
+		ss = smartsheet.Smartsheet(access_token)
+
+		# Get the id for the Sheet name
+		search_results = ss.Search.search(sheet_name).results
+		sheet_id = next(result.object_id for result in search_results if result.object_type == 'sheet')
+
+		# Get all the columns for the sheet
+		all_columns = ss.Sheets.get_columns(sheet_id, include_all=True)
+		columns = all_columns.data
+
+		# Create two reference dictionaries that will be useful in the subsequent code
+		# colMap {column-name: column-id } and colMapRev { column-id: column-name }
+		colMap = {}
+		colMapRev = {}
+		for col in columns:
+			colMap[col.title] = col.id
+			colMapRev[col.id] = col.title
+
+		# Get the Sheet from Smartsheet
+		sheet = ss.Sheets.get_sheet(sheet_id, column_ids=column_ids)
+		# Covert data to a JSON object
+		sheetjson = json.loads(str(sheet))
+
+		# Build new cell value
+		new_cell = smartsheet.models.Cell()
+		new_cell.column_id = colMap.get(update_field_name)
+		new_cell.value = update_field_value
+		new_cell.strict = False
+
+		# Loop through rows and columns and update the appropriate cells
+		for MyRow in sheetjson["rows"]:
+			new_row = smartsheet.models.Row()
+
+			for MyCell in MyRow["cells"]:
+			#print(myCell)
+				if colMapRev.get(MyCell.get("columnId")) == conditional_field_name and MyCell.get("value") == conditional_field_value:
+					#print(colMapRev.get(MyCell.get("columnId")), MyCell.get("columnId"), MyCell.get("value"))
+					#print("Row ID to update", MyRow["id"])
+					new_row.id = MyRow["id"]
+					new_row.cells.append(new_cell)
+					updated_row = ss.Sheets.update_rows(sheet_id,[new_row])
+					#print(updated_row)
+
+		return
+
+
+
+
+
+
 
 
 

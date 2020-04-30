@@ -47,12 +47,16 @@
     {% else %}
             {% for field in wizard.form %} 
                 {% if forloop.counter == 1 or forloop.counter == 3 or forloop.counter == 5 or forloop.counter == 7 or forloop.counter == 9  or forloop.counter == 11 or forloop.counter == 13 or forloop.counter == 15 or forloop.counter == 17 %}
-                    {% if field.label != 'Cupboard height' and field.label != "Cupboard width" and field.label != "Cupboard depth" %}
+                    {% if field.label != 'Cupboard height' and field.label != "Cupboard width" and field.label != "Cupboard depth" and field.label != "Building width" and field.label != "Building length" and field.label != "Ceiling height" and field.label != "Floors" %}
                         <div class = "row">
                     {% endif %}
                 {% endif %}
                 {% if field.label == 'Cupboard height' or field.label == "Cupboard width" or field.label == "Cupboard depth" %}
-                    <div class = "col-2">    
+                    <div class = "col-2">
+                {% elif field.label == 'Building width' or field.label == "Building length" or field.label == "Ceiling height" or field.label == "Floors" %}
+                    <div class = "col-2">
+                {% elif field.label == 'Heat loss house type' %}
+                    <div class = "col-4">        
                 {% else %}
                     <div class = "col-6">
                 {% endif %}
@@ -92,7 +96,7 @@
                 <!-- <span class="message">{{ field.errors }}</span> -->
 
                 {% if forloop.counter == 2 or forloop.counter == 4 or forloop.counter == 6 or forloop.counter == 8 or forloop.counter == 10 or forloop.counter == 12 or forloop.counter == 14 or forloop.counter == 16 or forloop.counter == 18 %}
-                {% if field.label != 'Cupboard height' and field.label != "Cupboard width"  %}
+                {% if field.label != 'Cupboard height' and field.label != "Cupboard width" and field.label != "Building width" and field.label != "Building length" and field.label != "Ceiling height"  %}
                     </div>  <!-- row-->
                 {% endif %}    
                 {% else %}
@@ -101,7 +105,6 @@
                         <div class = "col-6"></div></div>
                     {% endif %}    
                 {% endif %}    
-
             {% endfor %}
             
             {% endif %}
@@ -119,6 +122,9 @@
                 {% else %}
                 <input class="btn btn-primary" type="submit" value="Final Step" class="boilerbtn"/>
                 {% endif %}
+                {% if wizard.steps.step1 == 2 %}
+                <button name="heat_loss" id="heat-loss-btn" type="button" class="btn btn-danger" onclick="calculate_heat_loss()" >Calculate Heat Loss</button>
+                {% endif %}
             </div>  
             </div>
             </div>
@@ -135,6 +141,153 @@ $('.popover-dismiss').popover({
   trigger: 'focus'
 })
 
+function calculate_heat_loss() {
+    var el;
+
+    // if (el.value.length == 0)
+    el = document.getElementById("id_1-heat_loss_house_type");
+    var heat_loss_house_type = el.options[el.selectedIndex].value;
+    el = document.getElementById("id_1-building_width");
+    var width = el.value;
+    el = document.getElementById("id_1-building_length");
+    var length = el.value;
+    el = document.getElementById("id_1-ceiling_height");
+    var ceiling = el.value;
+    el = document.getElementById("id_1-floors");
+    var floors = el.value;
+    heat_loss_calc = heat_loss_house_type * width * length * ceiling * floors;
+    // alert(heat_loss_calc);
+    all_good_no_redirect("Home Heat Loss Calculation",
+        "The estimated heat loss for the house is " + String(heat_loss_calc) + " KW");
+}
+
+
+document.addEventListener('input', function (event) {
+
+// Billing Address Toggle
+if (event.target.id == 'id_1-alternative_billing_address') {
+    
+    if (event.target.value == "Yes") {
+        document.getElementById("id_1-billing_house_name_or_number").removeAttribute("disabled");
+        document.getElementById("id_1-billing_house_name_or_number").required = true;
+        document.getElementById("id_1-billing_street_address").removeAttribute("disabled");
+        document.getElementById("id_1-billing_street_address").required = true;
+        document.getElementById("id_1-billing_city").removeAttribute("disabled");
+        document.getElementById("id_1-billing_city").required = true;
+        document.getElementById("id_1-billing_county").removeAttribute("disabled");
+        document.getElementById("id_1-billing_county").required = true;
+        document.getElementById("id_1-billing_postcode").removeAttribute("disabled");
+        document.getElementById("id_1-billing_postcode").required = true;
+
+    }    
+    else {
+        document.getElementById("id_1-billing_house_name_or_number").disabled=true;
+        document.getElementById("id_1-billing_house_name_or_number").required = false;
+        document.getElementById("id_1-billing_street_address").disabled=true;
+        document.getElementById("id_1-billing_street_address").required = false;
+        document.getElementById("id_1-billing_city").disabled=true;
+        document.getElementById("id_1-billing_city").required = false;
+        document.getElementById("id_1-billing_county").disabled=true;
+        document.getElementById("id_1-billing_county").required = false;
+        document.getElementById("id_1-billing_postcode").disabled=true;
+        document.getElementById("id_1-billing_postcode").required = false;
+    }
+
+return;
+
+    }
+
+    // Radiators Working Correctly Toggle
+    if (event.target.id == 'id_2-current_radiators_working_correctly') {
+    
+    if (event.target.value == "No") {
+        document.getElementById("id_2-locations_where_radiators_not_working_correctly").removeAttribute("disabled");
+        document.getElementById("id_2-locations_where_radiators_not_working_correctly").required = true;
+    }    
+    else {
+        document.getElementById("id_2-locations_where_radiators_not_working_correctly").disabled=true;
+        document.getElementById("id_2-locations_where_radiators_not_working_correctly").required = false;
+    }
+
+return;
+
+    }
+
+    // Radiators for Removal Quantity Toggle
+    if (event.target.id == 'id_3-removals_0') {
+    
+    if (document.getElementById("id_3-removals_0").checked ) {
+        document.getElementById("id_3-radiator_quantity").removeAttribute("disabled");
+        document.getElementById("id_3-radiator_quantity").required = true;
+        console.log("checked")
+    }    
+    else {
+        document.getElementById("id_3-radiator_quantity").disabled=true;
+        document.getElementById("id_3-radiator_quantity").required = false;
+        console.log("not checked")
+    }
+
+return;
+
+    }
+
+ // Boiler housed in cupboard toggle
+ if (event.target.id == 'id_4-will_boiler_be_housed_in_cupboard') {
+    
+    if (event.target.value == "Yes") {
+        document.getElementById("id_4-cupboard_height").removeAttribute("disabled");
+        document.getElementById("id_4-cupboard_height").required = true;
+        document.getElementById("id_4-cupboard_width").removeAttribute("disabled");
+        document.getElementById("id_4-cupboard_width").required = true;
+        document.getElementById("id_4-cupboard_depth").removeAttribute("disabled");
+        document.getElementById("id_4-cupboard_depth").required = true;
+    }    
+    else {
+        document.getElementById("id_4-cupboard_height").disabled=true;
+        document.getElementById("id_4-cupboard_height").required = false;
+        document.getElementById("id_4-cupboard_width").disabled=true;
+        document.getElementById("id_4-cupboard_width").required = false;
+        document.getElementById("id_4-cupboard_depth").disabled=true;
+        document.getElementById("id_4-cupboard_depth").required = false;
+    }
+
+return;
+
+    }
+
+ // Asbestos Containing Materials Toggle
+ if (event.target.id == 'id_5-asbestos_containing_materials_identified') {
+    
+    if (event.target.value == "Potential Asbestos Containing Material Identified") {
+        document.getElementById("id_5-asbestos_removal_procedure").removeAttribute("disabled");
+        document.getElementById("id_5-asbestos_removal_procedure").required = true;
+    }    
+    else {
+        document.getElementById("id_5-asbestos_removal_procedure").disabled=true;
+        document.getElementById("id_5-asbestos_removal_procedure").required = false;
+    }
+
+return;
+
+    }       
+    
+ // Potential Contractor attendance Toggle
+ if (event.target.id == 'id_5-potential_contractor_attendance_required') {
+    
+    if (event.target.value == "Yes") {
+        document.getElementById("id_5-details_on_potential_contractor_requirements").removeAttribute("disabled");
+        document.getElementById("id_5-details_on_potential_contractor_requirements").required = true;
+    }    
+    else {
+        document.getElementById("id_5-details_on_potential_contractor_requirements").disabled=true;
+        document.getElementById("id_5-details_on_potential_contractor_requirements").required = false;
+    }
+
+return;
+
+    }    
+
+}, false);
 
 </script>
 

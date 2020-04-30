@@ -375,6 +375,11 @@ a:hover {
   
   #next-step-btn {
     float: right;
+    margin-left:3px;
+  }
+
+  #heat-loss-btn {
+    float: right; 
   }
 
   /* classes for pretty checkbox input */

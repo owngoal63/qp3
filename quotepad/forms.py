@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from quotepad.models import Document, Profile, ProductPrice, ProductComponent, OptionalExtra
 from django.forms import ModelMultipleChoiceField, ModelChoiceField
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 # For Editing the template
 from django.conf import settings
@@ -66,6 +67,7 @@ CURRENT_BOILER_LOCATION_DROPDOWN = (
 	('Garage','Garage'),
 	('Outdoor Room','Outdoor Room'),
 	('Other','Other'),
+	('N/A','N/A'),
 )
 
 CURRENT_FLUE_SYSTEM_DROPDOWN = (
@@ -188,6 +190,7 @@ CONDENSATE_TERMINATION_DROPDOWN = (
 	('Internal Waste Point','Internal Waste Point'),
 )
 NEW_CONTROLS_DROPDOWN = (
+	('','Select One'),
 	('Connect on to Existing','Connect on to Existing'),
 	('New Programmer Only','New Programmer Only'),
 	('New Thermostat Only','New Thermostat Only'),
@@ -246,10 +249,10 @@ GAS_SUPPLY_DROPDOWN = (
 
 FUEL_SUPPLY_DROPDOWN = (
 	('','Select One'),
-	('Current Gas supply deemed satisfactory','Current Gas supply deemed satisfactory'),
-	('Adaptation to existing gas supply required','Adaptation to existing gas supply required'),
-	('New external gas supply required','New external gas supply required'),
-	('New internal gas supply required','New internal gas supply required'),
+	('Current Supply deemed satisfactory','Current Supply deemed satisfactory'),
+	('Adaptation to existing supply required','Adaptation to existing supply required'),
+	('New external supply required','New external supply required'),
+	('New internal supply required','New internal supply required'),
 )
 
 GAS_SUPPLY_LENGTH_DROPDOWN = (
@@ -440,8 +443,8 @@ INCOMING_FLOW_RATE_DROPDOWN = (
 
 WILL_BOILER_BE_HOUSED_IN_CUPBOARD_DROPDOWN = (
 	('','Select One'),
-	('Yes', 'Yes'),
 	('No', 'No'),	
+	('Yes', 'Yes'),
 )
 
 CHEMICAL_SYSTEM_TREATMENT_DROPDOWN = (
@@ -852,6 +855,11 @@ BUILDING_PACK_REQUIRED_DROPDOWN = (
 	("Red/Yellow brick standard","Red/Yellow brick standard"),
 )
 
+HEAT_LOSS_HOUSE_TYPE_DROPDOWN = (
+	(0.04,"1985 onwards"),
+	(0.05,"1950 - 1984"),
+	(0.04,"Pre 1950"),
+)
 
 
 ''' Section for defining the multiple forms that will be used for the boiler quote (FormWizard library) '''
@@ -1340,13 +1348,18 @@ class FormStepTwo_yh(forms.Form):
 	alternative_billing_address = forms.ChoiceField(choices=ALTERNATIVE_BILLING_ADDRESS_DROPDOWN)		
 	#alt_billing_address = forms.BooleanField(required=False)		
 	#alt_billing_address = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs = {'class': 'form-check-input', 'onchange' : "extras_handler();"}))		
-	billing_house_name_or_number = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address'}))
-	billing_street_address = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address'}))
-	billing_city = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address'}))
-	billing_county = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address'}))
-	billing_postcode = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address'}))		
-	#installation_address = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'rows':5, 'cols':30, 'placeholder': 'Please ensure entry of the full address'}))
-	#billing_address = forms.CharField(max_length=2000, required = False,  widget=forms.Textarea(attrs={'rows':5, 'cols':30, 'placeholder': 'Leave blank for Billing address same as Installation address'},))
+	billing_house_name_or_number = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address', 'disabled': 'disabled'}))
+	billing_street_address = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address', 'disabled': 'disabled'}))
+	billing_city = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address', 'disabled': 'disabled'}))
+	billing_county = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address', 'disabled': 'disabled'}))
+	billing_postcode = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address', 'disabled': 'disabled'}))		
+	
+	heat_loss_house_type = forms.ChoiceField(choices=HEAT_LOSS_HOUSE_TYPE_DROPDOWN)
+	building_width = forms.FloatField( validators = [MinValueValidator(0.0)],widget=forms.NumberInput(attrs={'placeholder': 'Metres'}))
+	building_length = forms.FloatField( validators = [MinValueValidator(0.0)],widget=forms.NumberInput(attrs={'placeholder': 'Metres'}))
+	ceiling_height = forms.FloatField( validators = [MinValueValidator(0.0)],widget=forms.NumberInput(attrs={'placeholder': 'Metres'}))
+	floors = forms.IntegerField( validators = [MinValueValidator(0)], widget=forms.NumberInput(attrs={'placeholder': 'No. of floors'}))
+
 
 class FormStepThree_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
@@ -1363,7 +1376,7 @@ class FormStepThree_yh(forms.Form):
 	current_flue_location = forms.ChoiceField(choices=CURRENT_FLUE_LOCATION_DROPDOWN)
 	current_controls = forms.MultipleChoiceField(choices=CURRENT_CONTROLS_DROPDOWN)
 	current_radiators_working_correctly = forms.ChoiceField(choices=CURRENT_RADIATORS_WORKING_CORRECTLY_DROPDOWN)
-	locations_where_radiators_not_working_correctly = forms.MultipleChoiceField(required=False, choices=LOCATIONS_WHERE_RADIATORS_NOT_WORKING_CORRECTLY_DROPDOWN)
+	locations_where_radiators_not_working_correctly = forms.MultipleChoiceField(required=False, choices=LOCATIONS_WHERE_RADIATORS_NOT_WORKING_CORRECTLY_DROPDOWN, disabled=True)
 	
 class FormStepFour_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
@@ -1371,7 +1384,7 @@ class FormStepFour_yh(forms.Form):
 	# form_data.3.field_name e.g. form_data.3.removals
 	removals = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
 											 choices=REMOVALS_CHOICES)
-	radiator_quantity = forms.IntegerField(required=False,  widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate'}))
+	radiator_quantity = forms.IntegerField(required=False, validators = [MinValueValidator(0)], widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate', 'disabled': 'disabled'}))
 
 class FormStepFive_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
@@ -1393,17 +1406,20 @@ class FormStepFive_yh(forms.Form):
 	new_flue_diameter = forms.ChoiceField(choices=NEW_FLUE_DIAMETER_DROPDOWN)
 	plume_management_kit = forms.ChoiceField(choices=PLUME_MANAGEMENT_KIT_DROPDOWN)
 	condensate_termination = forms.ChoiceField(choices=CONDENSATE_TERMINATION_DROPDOWN)
-	new_controls = forms.MultipleChoiceField(choices=NEW_CONTROLS_DROPDOWN)
+	#new_controls = forms.MultipleChoiceField(choices=NEW_CONTROLS_DROPDOWN)
+	new_controls = forms.ChoiceField(choices=NEW_CONTROLS_DROPDOWN)
 	incoming_flow_rate = forms.ChoiceField(choices=INCOMING_FLOW_RATE_DROPDOWN)
 	will_boiler_be_housed_in_cupboard = forms.ChoiceField(choices=WILL_BOILER_BE_HOUSED_IN_CUPBOARD_DROPDOWN)
-	cupboard_height = forms.IntegerField(required=False,  widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate'}))
-	cupboard_width = forms.IntegerField(required=False,  widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate'}))
-	cupboard_depth = forms.IntegerField(required=False,  widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate'}))
+	cupboard_height = forms.IntegerField(required=False, validators = [MinValueValidator(0)],  widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate', 'disabled': 'disabled'}))
+	cupboard_width = forms.IntegerField(required=False, validators = [MinValueValidator(0)], widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate', 'disabled': 'disabled'}))
+	cupboard_depth = forms.IntegerField(required=False, validators = [MinValueValidator(0)], widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate', 'disabled': 'disabled'}))
 	
 class FormStepSix_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
 	# within double curly braces...
 	# form_data.5.field_name e.g. form_data.5.new_fuel_type
+	#heat_loss_value = forms.DecimalField(required=False)
+
 	def __init__(self, *args, **kwargs):
 		# Get the user to seed the filter on the drop down.
 		self.user = kwargs.pop('user')
@@ -1411,20 +1427,28 @@ class FormStepSix_yh(forms.Form):
 		self.alt_manuf = kwargs.pop('alt_manufacturer')
 		self.fuel_type = kwargs.pop('fuel_type')
 		self.boiler_type = kwargs.pop('boiler_type')
+		#self.heat_loss_value = kwargs.pop('heat_loss_value')
 		super(FormStepSix_yh, self).__init__(*args, **kwargs)
 		self.fields['chemical_system_treatment'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Chemical System Treatment').order_by('brand').only('component_name')])
 		self.fields['fuel_supply_requirements'] = forms.ChoiceField(choices=FUEL_SUPPLY_DROPDOWN)
-		self.fields['fuel_supply_length'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Fuel Supply Length').order_by('brand').only('component_name')])
-		self.fields['scaffolding_required'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Scaffolding').order_by('brand').only('component_name')])
+		self.fields['fuel_supply_length'] = forms.MultipleChoiceField(choices=[(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Fuel Supply Length').order_by('-component_name').only('component_name')])
+		self.fields['scaffolding_required'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Scaffolding').order_by('-component_name').only('component_name')])
 		self.fields['asbestos_containing_materials_identified'] = forms.ChoiceField(choices=ASBESTOS_CONTAINING_MATERIALS_IDENTIFIED_DROPDOWN)
-		self.fields['asbestos_removal_procedure'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Asbestos Removal Procedure').order_by('brand').only('component_name')])
-		self.fields['electrical_work_required'] = forms.ChoiceField(choices=ELECTRICAL_WORK_REQUIRED_DROPDOWN)
+		self.fields['asbestos_removal_procedure'] = forms.ChoiceField(required = False, choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Asbestos Removal Procedure').order_by('brand').only('component_name')], widget=forms.Select(attrs={'disabled': 'disabled'}))
+		#self.fields['electrical_work_required'] = forms.ChoiceField(choices=ELECTRICAL_WORK_REQUIRED_DROPDOWN)
+		self.fields['electrical_work_required'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Electrical Work').order_by('brand').only('component_name')])
 		self.fields['potential_contractor_attendance_required'] = forms.ChoiceField(choices=POTENTIAL_CONTRACTOR_ATTENDANCE_REQUIRED_DROPDOWN)
-		self.fields['details_on_potential_contractor_requirements'] = forms.CharField(max_length=2000, required = False, widget=forms.Textarea(attrs={'rows':3, 'cols':30, 'placeholder': 'if applicable, please be detailed'}))
-		self.fields['parking_requirements'] = forms.CharField(max_length=2000, required = False, widget=forms.Textarea(attrs={'rows':3, 'cols':30, 'placeholder': 'if applicable, please be detailed'}))
+		self.fields['details_on_potential_contractor_requirements'] = forms.CharField(max_length=2000, required = False, widget=forms.Textarea(attrs={'rows':3, 'cols':30, 'placeholder': 'if applicable, please be detailed', 'disabled': 'disabled'}))
+		#self.fields['parking_requirements'] = forms.CharField(max_length=2000, required = False, widget=forms.Textarea(attrs={'rows':3, 'cols':30, 'placeholder': 'if applicable, please be detailed'}))
+		self.fields['parking_requirements'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Parking').order_by('brand').only('component_name')])
 
 		self.fields['product_choice'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user, brand = self.manuf, fuel_type = self.fuel_type, boiler_type = self.boiler_type ), empty_label = 'Select Product for quote')
-		self.fields['alt_product_choice'] = forms.ModelChoiceField(required=False, queryset=ProductPrice.objects.filter(user = self.user, brand = self.alt_manuf, fuel_type = self.fuel_type, boiler_type = self.boiler_type), empty_label = 'Select Alternative Product for quote')
+		if self.alt_manuf:
+			self.fields['alt_product_choice'] = forms.ModelChoiceField(required=True, queryset=ProductPrice.objects.filter(user = self.user, brand = self.alt_manuf, fuel_type = self.fuel_type, boiler_type = self.boiler_type), empty_label = 'Select Alternative Product for quote')
+		else:
+			self.fields['alt_product_choice'] = forms.ModelChoiceField(required=False, queryset=ProductPrice.objects.filter(user = self.user, brand = self.alt_manuf, fuel_type = self.fuel_type, boiler_type = self.boiler_type), empty_label = 'Select Alternative Product for quote')
+		# Initialise the component_duration_total field
+		#self.fields['heat_loss_value'].initial = self.heat_loss_value	
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
 
@@ -1438,9 +1462,11 @@ class FormStepSeven_yh(forms.Form):
 		self.user = kwargs.pop('user')
 		self.manuf = kwargs.pop('manufacturer')
 		self.alt_manuf = kwargs.pop('alt_manufacturer')
-		print(self.alt_manuf)
+		#print(self.alt_manuf)
 		self.plume_management_kit = kwargs.pop('plume_management_kit')
 		self.new_fuel_type = kwargs.pop('new_fuel_type')
+		self.new_controls = kwargs.pop('new_controls')
+		self.boiler_type = kwargs.pop('boiler_type')
 		super(FormStepSeven_yh, self).__init__(*args, **kwargs)
 		#self.fields['gas_flue_components'] = forms.ModelMultipleChoiceField(required=True, queryset=ProductComponent.objects.filter(user = self.user, brand = self.manuf, component_type = 'Gas Flue Component').only('component_name'))
 		if self.new_fuel_type == 'Oil':
@@ -1465,33 +1491,30 @@ class FormStepSeven_yh(forms.Form):
 			if self.new_fuel_type == 'Oil':
 				self.fields['alt_oil_flue_components'] = forms.ChoiceField(required=False, choices = (('Not Required (no Alternative Boiler)','Not Required (no Alternative Boiler)'),('Required','Required')), widget=forms.Select(attrs={'disabled': 'disabled'}))
 			else:
-				self.fields['alt_gas_flue_components'] = forms.ChoiceField(required=False, choices = (('Not Required (no Alternative Boiler)','Not Required (no Alternative Boiler)'),('Required','Required')), widget=forms.Select(attrs={'disabled': 'disabled'}))
-		#self.fields['programmer_thermostat'] = forms.MultipleChoiceField(choices=PROGRAMMER_THERMOSTAT_DROPDOWN)
-		self.fields['programmer_thermostat'] = forms.MultipleChoiceField(choices=[(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Programmer Thermostat').order_by('brand').only('component_name')])
-		#self.fields['additional_central_heating_components'] = forms.MultipleChoiceField(choices=ADDITIONAL_CENTRAL_HEATING_COMPONENTS_DROPDOWN)
-		self.fields['additional_central_heating_components'] = forms.MultipleChoiceField(choices=[(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Additional Central Heating Component').order_by('brand').only('component_name')])
-		#self.fields['central_heating_system_filter'] = forms.ChoiceField(choices=CENTRAL_HEATING_SYSTEM_FILTER_DROPDOWN)
+				self.fields['alt_gas_flue_components'] = forms.ChoiceField(required=False, choices = (('Not Required (no Alternative Boiler)','Not Required (no Alternative Boiler)'),('Required','Required')), widget=forms.Select(attrs={'disabled': 'disabled'}))				
+		if self.new_controls != 'Connect on to Existing':		
+			self.fields['programmer_thermostat'] = forms.MultipleChoiceField(choices=[(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Programmer Thermostat').order_by('brand').only('component_name')])
+		else:
+			self.fields['programmer_thermostat'] = forms.ChoiceField(required=False, choices = (('Not Required-Connect on to Existing (from step 5)','Not Required-Connect on to Existing (from step 5)'),('Required','Required')), widget=forms.Select(attrs={'disabled': 'disabled'}))
+		self.fields['additional_central_heating_components'] = forms.MultipleChoiceField(choices=[(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Additional Central Heating Component').order_by('-component_name').only('component_name')])
 		self.fields['central_heating_system_filter'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Central Heating System Filter').order_by('brand').only('component_name')])
-		#self.fields['scale_reducer'] = forms.ChoiceField(choices=SCALE_REDUCER_DROPDOWN)
 		self.fields['scale_reducer'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Scale Reducer').order_by('brand').only('component_name')])
-		#self.fields['condensate_components'] = forms.MultipleChoiceField(choices=CONDENSATE_COMPONENTS_DROPDOWN)
 		self.fields['condensate_components'] = forms.MultipleChoiceField(choices=[(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Condenstate Component').order_by('brand').only('component_name')])
-		#self.fields['additional_copper_required'] = forms.MultipleChoiceField(choices=ADDITIONAL_COPPER_REQUIRED_DROPDOWN)
 		self.fields['additional_copper_required'] = forms.MultipleChoiceField(choices=[(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Additional Copper').order_by('brand').only('component_name')])
-		#self.fields['fittings_packs'] = forms.MultipleChoiceField(choices=FITTINGS_PACKS_DROPDOWN)
 		self.fields['fittings_packs'] = forms.MultipleChoiceField(choices=[(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Fitting Pack').order_by('brand').only('component_name')])
-		#self.fields['electrical_pack'] = forms.ChoiceField(choices=ELECTRICAL_PACK_DROPDOWN)
 		self.fields['electrical_pack'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Electrical Pack').order_by('brand').only('component_name')])
-		#self.fields['earth_spike_required'] = forms.ChoiceField(choices=EARTH_SPIKE_REQUIRED_DROPDOWN)
 		self.fields['earth_spike_required'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Earth Spike').order_by('brand').only('component_name')])
-		#self.fields['filling_link'] = forms.ChoiceField(choices=FILLING_LINK_DROPDOWN)
-		self.fields['filling_link'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Filling Link').order_by('brand').only('component_name')])
+		self.fields['filling_link'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Filling Link').order_by('-component_name').only('component_name')])
 		#self.fields['special_lift_requirements'] = forms.ChoiceField(choices=SPECIAL_LIFT_REQUIREMENTS_DROPDOWN)
 		#self.fields['special_lift_requirements'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Special Lift').order_by('brand').only('component_name')])
 		#self.fields['double_handed_lift_required'] = forms.ChoiceField(choices=DOUBLE_HANDED_LIFT_REQUIRED_DROPDOWN)
 		self.fields['double_handed_lift_required'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Double Handed Lift').order_by('brand').only('component_name')])
-		#self.fields['building_pack_required'] = forms.MultipleChoiceField(choices=BUILDING_PACK_REQUIRED_DROPDOWN)
 		self.fields['building_pack_required'] = forms.MultipleChoiceField(choices=[(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Building Pack').order_by('brand').only('component_name')])
+		if self.boiler_type == 'Combi':
+			self.fields['cylinder'] = forms.ChoiceField(required=False, choices = (('Not Required (Combi Boiler)','Not Required (Combi Boiler)'),('Required','Required')), widget=forms.Select(attrs={'disabled': 'disabled'}))
+		else:
+			self.fields['cylinder'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Cylinder').order_by('brand').only('component_name')])
+
 		
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
@@ -1499,12 +1522,15 @@ class FormStepSeven_yh(forms.Form):
 	special_part_1 = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={ 'placeholder': 'If required'}))
 	special_part_2 = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={ 'placeholder': 'If required'}))
 	special_part_3 = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={ 'placeholder': 'If required'}))
-	special_part_qty_1 = forms.IntegerField(required=False)
-	special_part_qty_2 = forms.IntegerField(required=False)
-	special_part_qty_3 = forms.IntegerField(required=False)
+	special_part_qty_1 = forms.IntegerField(required=False, validators = [MinValueValidator(0)])
+	special_part_qty_2 = forms.IntegerField(required=False, validators = [MinValueValidator(0)])
+	special_part_qty_3 = forms.IntegerField(required=False, validators = [MinValueValidator(0)])
 	special_part_price_1 = forms.DecimalField(required=False, max_digits=7, decimal_places=2)
 	special_part_price_2 = forms.DecimalField(required=False, max_digits=7, decimal_places=2)
 	special_part_price_3 = forms.DecimalField(required=False, max_digits=7, decimal_places=2)
+	special_part_duration_1 = forms.DecimalField(required=False, max_digits=7, decimal_places=2)
+	special_part_duration_2 = forms.DecimalField(required=False, max_digits=7, decimal_places=2)
+	special_part_duration_3 = forms.DecimalField(required=False, max_digits=7, decimal_places=2)
 	
 class FormStepEight_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
@@ -1540,71 +1566,6 @@ class FormStepEight_yh(forms.Form):
 		self.fields['radiator_11'] = forms.ChoiceField(required = False, choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Radiator').order_by('brand').only('component_name')])
 		self.fields['radiator_12'] = forms.ChoiceField(required = False, choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Radiator').order_by('brand').only('component_name')])
 
-		# self.fields['radiator_height_1'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
-		# self.fields['radiator_height_2'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
-		# self.fields['radiator_height_3'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
-		# self.fields['radiator_height_4'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
-		# self.fields['radiator_height_5'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
-		# self.fields['radiator_height_6'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
-		# self.fields['radiator_height_7'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
-		# self.fields['radiator_height_8'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
-		# self.fields['radiator_height_9'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
-		# self.fields['radiator_height_10'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
-		# self.fields['radiator_height_11'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
-		# self.fields['radiator_height_12'] = forms.ChoiceField(required = False, choices=RADIATOR_HEIGHT_DROPDOWN)
-
-		# self.fields['radiator_width_1'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
-		# self.fields['radiator_width_2'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
-		# self.fields['radiator_width_3'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
-		# self.fields['radiator_width_4'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
-		# self.fields['radiator_width_5'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
-		# self.fields['radiator_width_6'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
-		# self.fields['radiator_width_7'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
-		# self.fields['radiator_width_8'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
-		# self.fields['radiator_width_9'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
-		# self.fields['radiator_width_10'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
-		# self.fields['radiator_width_11'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
-		# self.fields['radiator_width_12'] = forms.ChoiceField(required = False, choices=RADIATOR_WIDTH_DROPDOWN)
-		
-
-		# self.fields['radiator_type_1'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
-		# self.fields['radiator_type_2'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
-		# self.fields['radiator_type_3'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
-		# self.fields['radiator_type_4'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
-		# self.fields['radiator_type_5'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
-		# self.fields['radiator_type_6'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
-		# self.fields['radiator_type_7'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
-		# self.fields['radiator_type_8'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
-		# self.fields['radiator_type_9'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
-		# self.fields['radiator_type_10'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
-		# self.fields['radiator_type_11'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
-		# self.fields['radiator_type_12'] = forms.ChoiceField(required = False, choices=RADIATOR_TYPE_DROPDOWN)
-
-		# self.fields['radiator_valve_size_1'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
-		# self.fields['radiator_valve_size_2'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
-		# self.fields['radiator_valve_size_3'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
-		# self.fields['radiator_valve_size_4'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
-		# self.fields['radiator_valve_size_5'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
-		# self.fields['radiator_valve_size_6'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
-		# self.fields['radiator_valve_size_7'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
-		# self.fields['radiator_valve_size_8'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
-		# self.fields['radiator_valve_size_9'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
-		# self.fields['radiator_valve_size_10'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
-		# self.fields['radiator_valve_size_11'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
-		# self.fields['radiator_valve_size_12'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVES_DROPDOWN)
-
-		# self.fields['radiator_valve_type_1'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
-		# self.fields['radiator_valve_type_2'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
-		# self.fields['radiator_valve_type_3'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
-		# self.fields['radiator_valve_type_4'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
-		# self.fields['radiator_valve_type_5'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
-		# self.fields['radiator_valve_type_6'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
-		# self.fields['radiator_valve_type_7'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
-		# self.fields['radiator_valve_type_8'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
-		# self.fields['radiator_valve_type_9'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
-		# self.fields['radiator_valve_type_10'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
-		# self.fields['radiator_valve_type_11'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
-		# self.fields['radiator_valve_type_12'] = forms.ChoiceField(required = False, choices=RADIATOR_VALVE_TYPE_DROPDOWN)
 
 		self.fields['radiator_valve_1'] = forms.ChoiceField(required = False, choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Thermostatic Radiator Valve').order_by('brand').only('component_name')])
 		self.fields['radiator_valve_2'] = forms.ChoiceField(required = False, choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Thermostatic Radiator Valve').order_by('brand').only('component_name')])
@@ -1642,27 +1603,7 @@ class FormStepEight_yh(forms.Form):
 		self.fields['towel_rail_location_3'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_LOCATION_DROPDOWN)
 		self.fields['towel_rail_location_4'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_LOCATION_DROPDOWN)
 
-		# self.fields['towel_rail_height_1'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_HEIGHT)
-		# self.fields['towel_rail_height_2'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_HEIGHT)
-		# self.fields['towel_rail_height_3'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_HEIGHT)
-		# self.fields['towel_rail_height_4'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_HEIGHT)
-
-		# self.fields['towel_rail_width_1'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_WIDTH)
-		# self.fields['towel_rail_width_2'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_WIDTH)
-		# self.fields['towel_rail_width_3'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_WIDTH)
-		# self.fields['towel_rail_width_4'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_WIDTH)
-
-		# self.fields['towel_rail_colour_1'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_COLOUR)
-		# self.fields['towel_rail_colour_2'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_COLOUR)
-		# self.fields['towel_rail_colour_3'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_COLOUR)
-		# self.fields['towel_rail_colour_4'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_COLOUR)
-
-		# self.fields['towel_rail_type_1'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_TYPE)
-		# self.fields['towel_rail_type_2'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_TYPE)
-		# self.fields['towel_rail_type_3'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_TYPE)
-		# self.fields['towel_rail_type_4'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_TYPE)
-
-		self.fields['cust_supply_radiator_quantity'] = forms.IntegerField(required=False)
+		self.fields['cust_supply_radiator_quantity'] = forms.IntegerField(required=False, validators = [MinValueValidator(0)])
 
 	radiator_specification = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(attrs = {'onchange' : "radiator_handler();"}),
 											 choices=RADIATOR_SPECIFICATION_CHOICES)	
@@ -1723,9 +1664,9 @@ class FormStepNine_yh(forms.Form):
 
 
 class FinanceForm_yh(forms.Form):
-	total_cost = forms.DecimalField()
-	alt_total_cost = forms.DecimalField()
-	deposit_amount = forms.DecimalField(max_digits=8,decimal_places=2)
+	total_cost = forms.FloatField()
+	alt_total_cost = forms.FloatField()
+	deposit_amount = forms.FloatField()
 	deposit_amount_thirty_percent = forms.DecimalField()
 	ib36_loan_amount = forms.CharField(max_length=30)
 	ib36_monthly_payment = forms.CharField(max_length=30)
@@ -1745,6 +1686,7 @@ class FinanceForm_yh(forms.Form):
 
 	product_price = forms.DecimalField()
 	component_price_total = forms.DecimalField()
+	parts_price_total = forms.DecimalField()
 	estimated_duration_cost = forms.DecimalField()
 	component_duration_total = forms.DecimalField()
 
@@ -1756,12 +1698,14 @@ class FinanceForm_yh(forms.Form):
 	def __init__(self, *args, **kwargs):
 		self.product_price = kwargs.pop('product_price')
 		self.component_price_total = kwargs.pop('component_price_total')
+		self.parts_price_total = kwargs.pop('parts_price_total')
+		#print(self.parts_price_total)
 		self.estimated_duration_cost = kwargs.pop('estimated_duration_cost')
 		self.component_duration_total = kwargs.pop('component_duration_total')
 		self.total_quote_price = kwargs.pop('total_quote_price')
 		self.alt_total_quote_price = kwargs.pop('alt_total_quote_price')
-		print('-----')
-		print(self.total_quote_price)
+		#print('-----')
+		#print(self.total_quote_price)
 		super(FinanceForm_yh, self).__init__(*args, **kwargs)
 		self.fields['total_cost'].disabled = True
 		self.fields['total_cost'].initial = self.total_quote_price
@@ -1771,6 +1715,7 @@ class FinanceForm_yh(forms.Form):
 		self.fields['interest_free_12m_deposit_amount'].initial = (float(self.total_quote_price) * 30) / 100
 		self.fields['product_price'].initial = self.product_price
 		self.fields['component_price_total'].initial = self.component_price_total
+		self.fields['parts_price_total'].initial = self.parts_price_total
 		self.fields['estimated_duration_cost'].initial = self.estimated_duration_cost
 		self.fields['component_duration_total'].initial = self.component_duration_total
 		self.fields['alt_total_cost'].initial = self.alt_total_quote_price
