@@ -340,7 +340,7 @@ class ProductPriceDelete(DeleteView):
 class ProductComponentList(ListView):
 	''' Invoke the django Generic Model form capability to display the ProductComponent information in a list ''' 
 	context_object_name = 'components_by_user'
-	paginate_by = 20
+	paginate_by = 30
 
 	def get_queryset(self):
 		filter_val = self.request.GET.get('filter', None)
