@@ -266,57 +266,136 @@ def ss_get_customers_data_for_survey_from_report(access_token, sheet_name, repor
 
 	#print(MyReportsjson)
 	file.close
-	print("done")
+	#print("done")
 
 	return
 
 def ss_update_data(access_token, sheet_name, column_ids, conditional_field_name, conditional_field_value, update_field_name, update_field_value):
 
-		# Instantiate smartsheet and specify access token value.
-		ss = smartsheet.Smartsheet(access_token)
+	# Instantiate smartsheet and specify access token value.
+	ss = smartsheet.Smartsheet(access_token)
 
-		# Get the id for the Sheet name
-		search_results = ss.Search.search(sheet_name).results
-		sheet_id = next(result.object_id for result in search_results if result.object_type == 'sheet')
+	# Get the id for the Sheet name
+	search_results = ss.Search.search(sheet_name).results
+	sheet_id = next(result.object_id for result in search_results if result.object_type == 'sheet')
 
-		# Get all the columns for the sheet
-		all_columns = ss.Sheets.get_columns(sheet_id, include_all=True)
-		columns = all_columns.data
+	# Get all the columns for the sheet
+	all_columns = ss.Sheets.get_columns(sheet_id, include_all=True)
+	columns = all_columns.data
 
-		# Create two reference dictionaries that will be useful in the subsequent code
-		# colMap {column-name: column-id } and colMapRev { column-id: column-name }
-		colMap = {}
-		colMapRev = {}
-		for col in columns:
-			colMap[col.title] = col.id
-			colMapRev[col.id] = col.title
+	# Create two reference dictionaries that will be useful in the subsequent code
+	# colMap {column-name: column-id } and colMapRev { column-id: column-name }
+	colMap = {}
+	colMapRev = {}
+	for col in columns:
+		colMap[col.title] = col.id
+		colMapRev[col.id] = col.title
 
-		# Get the Sheet from Smartsheet
-		sheet = ss.Sheets.get_sheet(sheet_id, column_ids=column_ids)
-		# Covert data to a JSON object
-		sheetjson = json.loads(str(sheet))
+	# Get the Sheet from Smartsheet
+	sheet = ss.Sheets.get_sheet(sheet_id, column_ids=column_ids)
+	# Covert data to a JSON object
+	sheetjson = json.loads(str(sheet))
 
-		# Build new cell value
-		new_cell = smartsheet.models.Cell()
-		new_cell.column_id = colMap.get(update_field_name)
-		new_cell.value = update_field_value
-		new_cell.strict = False
+	# Build new cell value
+	new_cell = smartsheet.models.Cell()
+	new_cell.column_id = colMap.get(update_field_name)
+	new_cell.value = update_field_value
+	new_cell.strict = False
 
-		# Loop through rows and columns and update the appropriate cells
-		for MyRow in sheetjson["rows"]:
-			new_row = smartsheet.models.Row()
+	# Loop through rows and columns and update the appropriate cells
+	for MyRow in sheetjson["rows"]:
+		new_row = smartsheet.models.Row()
 
-			for MyCell in MyRow["cells"]:
-			#print(myCell)
-				if colMapRev.get(MyCell.get("columnId")) == conditional_field_name and MyCell.get("value") == conditional_field_value:
-					#print(colMapRev.get(MyCell.get("columnId")), MyCell.get("columnId"), MyCell.get("value"))
-					#print("Row ID to update", MyRow["id"])
-					new_row.id = MyRow["id"]
-					new_row.cells.append(new_cell)
-					updated_row = ss.Sheets.update_rows(sheet_id,[new_row])
-					#print(updated_row)
+		for MyCell in MyRow["cells"]:
 
-		return
+			if colMapRev.get(MyCell.get("columnId")) == conditional_field_name and MyCell.get("value") == conditional_field_value:
+				new_row.id = MyRow["id"]
+				new_row.cells.append(new_cell)
+				updated_row = ss.Sheets.update_rows(sheet_id,[new_row])
+
+	return
+
+def ss_append_data(access_token, sheet_name, append_data):
+
+	# Instantiate smartsheet and specify access token value.
+	ss = smartsheet.Smartsheet(access_token)
+
+	# Get the id for the Sheet name
+	search_results = ss.Search.search(sheet_name).results
+	sheet_id = next(result.object_id for result in search_results if result.object_type == 'sheet')
+
+	# Get all the columns for the sheet
+	all_columns = ss.Sheets.get_columns(sheet_id, include_all=True)
+	columns = all_columns.data
+
+	# Create two reference dictionaries that will be useful in the subsequent code
+	# colMap {column-name: column-id } and colMapRev { column-id: column-name }
+	colMap = {}
+	colMapRev = {}
+	for col in columns:
+		colMap[col.title] = col.id
+		colMapRev[col.id] = col.title
+
+	# Specify cell values for row
+	new_row = smartsheet.models.Row()
+	new_row.to_bottom = True
+
+	for data_element in append_data:
+		for key in data_element:
+			print(key,data_element[key])
+			new_row.cells.append({
+				'column_id': colMap.get(key),
+				'value': data_element[key]
+			})
+		
+	# Add rows to sheet
+	response = ss.Sheets.add_rows(
+		sheet_id,       # sheet_id
+		[new_row])
+
+	return
+
+def ss_attach_pdf(access_token, sheet_name, conditional_field_name, conditional_field_value, attachFilename):
+
+	# Instantiate smartsheet and specify access token value.
+	ss = smartsheet.Smartsheet(access_token)
+
+	# Get the id for the Sheet name
+	search_results = ss.Search.search(sheet_name).results
+	sheet_id = next(result.object_id for result in search_results if result.object_type == 'sheet')
+
+	# Get all the columns for the sheet
+	all_columns = ss.Sheets.get_columns(sheet_id, include_all=True)
+	columns = all_columns.data
+
+	# Create two reference dictionaries that will be useful in the subsequent code
+	# colMap {column-name: column-id } and colMapRev { column-id: column-name }
+	colMap = {}
+	colMapRev = {}
+	for col in columns:
+		colMap[col.title] = col.id
+		colMapRev[col.id] = col.title
+
+	# Create an array of ColumnIds to limit the returned dataset
+	col_ids = []
+	col_ids.append(colMap.get(conditional_field_name))
+
+	# Get the Sheet Data and convert to json
+	MySheet = ss.Sheets.get_sheet(sheet_id, column_ids=col_ids)
+	MySheetjson = json.loads(str(MySheet))
+
+	for MyRow in MySheetjson["rows"]:
+		for MyCell in MyRow["cells"]:
+			if colMapRev.get(MyCell.get("columnId")) == conditional_field_name and MyCell.get("value") == conditional_field_value:
+				#print("found it", MyRow["id"])
+				updated_attachment = ss.Attachments.attach_file_to_row(
+  					sheet_id,       # sheet_id
+  					MyRow["id"],       # row_id
+  					('Customer Quote.pdf', 
+    				open(attachFilename, 'rb'), 
+    				'application/pdf')
+				)
+
 
 
 
