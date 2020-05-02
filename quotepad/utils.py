@@ -10,7 +10,7 @@ import os, os.path, errno
 
 # imports associated with sending email ( sendgrid )
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import (Mail, Attachment, FileContent, FileName, FileType, Disposition, ContentId)
+from sendgrid.helpers.mail import (Mail, Attachment, FileContent, FileName, FileType, Disposition, ContentId,  Personalization, Email)
 import base64
 import json
 
@@ -153,7 +153,7 @@ def component_attrib_build(component_name, component_type, user, qty=1, brand=No
 
 	return {component_name: [qty, price, ext_price, cost, ext_duration]}
 
-def send_pdf_email_using_SendGrid(sender, receiver, mail_subject, mail_content, pdf_attachment, txt_attachment=None):
+def send_pdf_email_using_SendGrid(sender, receiver, mail_subject, mail_content, pdf_attachment, txt_attachment=None, cc_email=None):
 	
 	# Where it was uploaded Path.
 	file_path = pdf_attachment
@@ -190,12 +190,26 @@ def send_pdf_email_using_SendGrid(sender, receiver, mail_subject, mail_content, 
 		attachment2.disposition = Disposition('attachment')
 		attachment2.content_id = ContentId('Text Example Content ID')
 
+
 	message = Mail(
 		from_email = sender,
 		to_emails = receiver,
 		subject = mail_subject,
 		html_content = mail_content)
 	message.attachment = attachment
+	
+	if cc_email:
+		cc = Email(cc_email)
+		to = Email(receiver)
+		p = Personalization()
+		p.add_to(to)
+		p.add_cc(cc)
+		message.add_personalization(p)
+	else:	# no cc
+		to = Email(receiver)
+		p = Personalization()
+		p.add_to(to)
+		message.add_personalization(p)
 	if txt_attachment:
 		message.add_attachment(attachment2)
 
@@ -392,8 +406,8 @@ def ss_attach_pdf(access_token, sheet_name, conditional_field_name, conditional_
   					sheet_id,       # sheet_id
   					MyRow["id"],       # row_id
   					('Customer Quote.pdf', 
-    				open(attachFilename, 'rb'), 
-    				'application/pdf')
+					open(attachFilename, 'rb'), 
+					'application/pdf')
 				)
 
 	return			

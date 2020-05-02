@@ -34,7 +34,7 @@ from quotepad.models import Profile, ProductPrice, Document, OptionalExtra, Prod
 from quotepad.forms import ProfileForm, UserProfileForm, ProductPriceForm, EditQuoteTemplateForm
 
 #Added for Smartsheet
-from quotepad.utils import ss_get_customers_data_for_survey_from_report, ss_update_data
+from quotepad.utils import ss_get_customers_data_for_survey_from_report, ss_update_data, ss_append_data, ss_attach_pdf
 
 
 @login_required
@@ -962,7 +962,7 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			email.send()
 
 		else:
-			send_pdf_email_using_SendGrid('quotes@yourheat.co.uk', fd[0]['customer_email'], mail_subject, msg, outputFilename )	
+			send_pdf_email_using_SendGrid('quotes@yourheat.co.uk', fd[0]['customer_email'], mail_subject, msg, outputFilename, None, idx.email)	
 
 
 		return HttpResponseRedirect('/quoteemailed/')
@@ -1031,7 +1031,22 @@ def get_smartsheet(request):
 		"0141 889 9999"
 	)
 
+	ss_attach_pdf(
+		settings.YH_SS_ACCESS_TOKEN,
+		settings.YH_SS_SHEET_NAME,
+		"Customer ID",
+		"GRH-126-01",
+		Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/Quote_YH_Lindsay00068.pdf".format(request.user.username))
+	)
+
 	print(stop)
+
+	#ss_append_data(
+	#	settings.YH_SS_ACCESS_TOKEN,
+	#	settings.YH_SS_SHEET_NAME,
+	#	[{'First Name':'Bart'},{'Surname':'Simpson'},{'Address Line 1':'Springfield'}],	
+	#)
+
 
 	# Instantiate smartsheet and specify access token value.
 	ss = smartsheet.Smartsheet(settings.YH_SS_ACCESS_TOKEN)
@@ -1059,8 +1074,69 @@ def get_smartsheet(request):
 	for col in columns:
 		colMap[col.title] = col.id
 		colMapRev[col.id] = col.title
+
+
+	# ----------------- Add Rows ----------------------------------------
+	# Specify cell values for one row
+	#field_names = ['First Name', 'Surname', 'Address Line 1' ]
+	#field_values = ['Homer', 'Simpson', 'Springfield']
+
+	#append_data = [{'First Name':'Homer'},{'Surname':'Simpson'},{'Address Line 1':'Springfield'}]
+
+	#row_a = smartsheet.models.Row()
+	#row_a.to_bottom = True
+
+	#for data_element in append_data:
+	#	for key in data_element:
+	#		print(key,data_element[key])
+	#		row_a.cells.append({
+  	#			'column_id': colMap.get(key),
+  	#			'value': data_element[key]
+	#		})
+			
+	# Add rows to sheet
+	#response = ss.Sheets.add_rows(
+  	#sheet_id,       # sheet_id
+  	#[row_a])
+
+	#print(stop)
+
+	#row_a = smartsheet.models.Row()
+	#row_a.to_bottom = True
+	#row_a.cells.append({
+  	#	'column_id': colMap.get('Surname'),
+  	#	'value': 'Campbell'
+	#})
+
+	#row_a.cells.append({
+  	#'column_id': colMap.get('First Name'),
+  	#'value': 'James',
+  	#'strict': True
+	#})
+
+	# Specify cell values for another row
+	#row_b = smartsheet.models.Row()
+	#row_b.to_top = True
+	#row_b.cells.append({
+	#  'column_id': 7960873114331012,
+	#  'value': True
+	#})
+
+	#row_b.cells.append({
+	#  'column_id': 642523719853956
+	#  'value': 'New Status',
+	#  'strict': False
+	#})
+
+	# Add rows to sheet
+	#response = ss.Sheets.add_rows(
+  	#sheet_id,       # sheet_id
+  	#[row_a])
+
+	# ---------------------- End of Add Rows ----------------------------
 		
 
+	# -------------------- Add attachment ------------------------------
 	#print(colMap)	
 
 	#print("++++++++++")
@@ -1069,21 +1145,21 @@ def get_smartsheet(request):
 
 	# Create an array of ColumnIds to limit the returned dataset
 	col_ids = []
-	col_ids.append(colMap.get('Customer Status'))
+	#col_ids.append(colMap.get('Customer Status'))
 	col_ids.append(colMap.get('Customer ID'))
-	col_ids.append(colMap.get('First Name'))
-	col_ids.append(colMap.get('Surname'))
-	col_ids.append(colMap.get('Address Line 1'))
-	col_ids.append(colMap.get('Postcode'))
-	col_ids.append(colMap.get('Mobile'))
-	col_ids.append(colMap.get('Landline'))
-	col_ids.append(colMap.get('Email'))
+	#col_ids.append(colMap.get('First Name'))
+	#col_ids.append(colMap.get('Surname'))
+	#col_ids.append(colMap.get('Address Line 1'))
+	#col_ids.append(colMap.get('Postcode'))
+	#col_ids.append(colMap.get('Mobile'))
+	#col_ids.append(colMap.get('Landline'))
+	#col_ids.append(colMap.get('Email'))
 
 
 	#print(col_ids)
 
-	customer_dict = {}
-	customers = []
+	#customer_dict = {}
+	#customers = []
 
 	MySheet = ss.Sheets.get_sheet(sheet_id, column_ids=col_ids)
 
@@ -1091,14 +1167,23 @@ def get_smartsheet(request):
 
 	#print(MySheetjson["accessLevel"])
 
+	#attachFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/Quote_{}_{}{}.pdf".format(request.user.username)
+	attachFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/Quote_YH_Lindsay00069.pdf".format(request.user.username))
+
 	for MyRow in MySheetjson["rows"]:
-		pass
-		#print(MyRow)
-		
 		for MyCell in MyRow["cells"]:
-			pass
-			#print(colMapRev.get(MyCell.get("columnId")), MyCell.get("value"))
-		#print("")		
+			if colMapRev.get(MyCell.get("columnId")) == "Customer ID" and MyCell.get("value") == "GRH-125-01":
+				print("found it", MyRow["id"])
+				updated_attachment = ss.Attachments.attach_file_to_row(
+  					sheet_id,       # sheet_id
+  					MyRow["id"],       # row_id
+  					('Quote_YH_Lindsay00069.pdf', 
+    				open(attachFilename, 'rb'), 
+    				'application/pdf')
+				)
+			
+			
+	print(stop)		
 
 	# -------------------- Reports ----------------------------
 	MyReports = ss.Reports.list_reports(include_all=True)
@@ -1182,18 +1267,13 @@ def get_smartsheet(request):
 				updated_row = ss.Sheets.update_rows(sheet_id,[new_row])
 		print("")
 
-	# Update rows
-	#updated_row = ss.Sheets.update_rows(sheet_id,[new_row])
+	# -------------------- Add attachment -------------------------------------
 	
 
 	print(stop)
 
+	
 
-
-# Build the row to update
-#new_row = smartsheet.models.Row()
-#new_row.id = 6809535313667972
-#new_row.cells.append(new_cell)
 
 
 	return HttpResponseRedirect('/home/')
