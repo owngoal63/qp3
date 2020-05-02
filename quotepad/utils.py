@@ -396,6 +396,8 @@ def ss_attach_pdf(access_token, sheet_name, conditional_field_name, conditional_
     				'application/pdf')
 				)
 
+	return			
+
 
 
 
