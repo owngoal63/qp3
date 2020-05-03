@@ -20,133 +20,170 @@
         {% endfor %}
     {% else %}
 
+    
+
     <div class = "row">
         <div class = "col-12">
             <div class="form-group">
                 <label>{{ wizard.form.radiator_specification.label }}</label>
                 {{ wizard.form.radiator_specification }}
-                <div class="form-cust-rad-qty">
+                <!-- <div class="form-cust-rad-qty">
                     Qty: {{ wizard.form.cust_supply_radiator_quantity }}
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
+    
     <div class = "row">
-        <div class = "col-7">
+        <div class="col-12">
+            <div class="boilerformbtns">
+                {% if wizard.steps.prev %}
+                <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.first }}" class="boilerbtn">First step</button>
+                <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.prev }}" class="boilerbtn">Previous step</button>
+                {% endif %}
+                {% if wizard.steps.step1 != 10 %}
+                <input class="btn btn-primary" id="next-step-btn" type="submit" value="Next Step" class="boilerbtn"/>
+                {% else %}
+                <input class="btn btn-primary" type="submit" value="Final Step" class="boilerbtn"/>
+                {% endif %}
+            </div>  
+        </div>
+    </div>
+
+    <br>
+
+    <div class = "row">
+        <div class = "col-12">
             <div class="form-rad-group">
                 <!-- <p class="radiator-section-headings" >Radiator / Location *</p>  -->
                 <table>
                     <tr>
-                        <td width="180px">Radiator</td>
-                        <td width="108px">Location</td>
+                        <td>Radiator</td>
+                        <td>Style</td>
+                        <td>Location</td>
                     </tr>
                     <tr>
-                        <td width="180px">{{wizard.form.radiator_1}}</td>
-                        <td width="100px">{{wizard.form.location_1}}</td>    
+                        <td>{{wizard.form.radiator_1}}</td>
+                        <td>{{wizard.form.radiator_style_1}}</td>
+                        <td>{{wizard.form.location_1}}</td>    
                     </tr>
                     <tr>
-                        <td width="180px">{{wizard.form.radiator_2}}</td>
-                        <td width="100px">{{wizard.form.location_2}}</td>    
+                        <td>{{wizard.form.radiator_2}}</td>
+                        <td>{{wizard.form.radiator_style_2}}</td>
+                        <td>{{wizard.form.location_2}}</td>    
                     </tr>
                     <tr>
-                        <td width="180px">{{wizard.form.radiator_3}}</td>
-                        <td width="100px">{{wizard.form.location_3}}</td>    
+                        <td>{{wizard.form.radiator_3}}</td>
+                        <td>{{wizard.form.radiator_style_3}}</td>
+                        <td>{{wizard.form.location_3}}</td>    
                     </tr>
                     <tr>
-                        <td width="180px">{{wizard.form.radiator_4}}</td>
-                        <td width="100px">{{wizard.form.location_4}}</td>    
+                        <td>{{wizard.form.radiator_4}}</td>
+                        <td>{{wizard.form.radiator_style_4}}</td>
+                        <td>{{wizard.form.location_4}}</td>    
                     </tr>
                     <tr>
-                        <td width="180px">{{wizard.form.radiator_5}}</td>
-                        <td width="100px">{{wizard.form.location_5}}</td>    
+                        <td>{{wizard.form.radiator_5}}</td>
+                        <td>{{wizard.form.radiator_style_5}}</td>
+                        <td>{{wizard.form.location_5}}</td>    
                     </tr>
                     <tr>
-                        <td width="180px">{{wizard.form.radiator_6}}</td>
-                        <td width="100px">{{wizard.form.location_6}}</td>    
+                        <td>{{wizard.form.radiator_6}}</td>
+                        <td>{{wizard.form.radiator_style_6}}</td>
+                        <td>{{wizard.form.location_6}}</td>    
                     </tr>
                     <tr>
-                        <td width="180px">{{wizard.form.radiator_7}}</td>
-                        <td width="100px">{{wizard.form.location_7}}</td>    
+                        <td>{{wizard.form.radiator_7}}</td>
+                        <td>{{wizard.form.radiator_style_7}}</td>
+                        <td>{{wizard.form.location_7}}</td>    
                     </tr>
                     <tr>
-                        <td width="180px">{{wizard.form.radiator_8}}</td>
-                        <td width="100px">{{wizard.form.location_8}}</td>    
+                        <td>{{wizard.form.radiator_8}}</td>
+                        <td>{{wizard.form.radiator_style_8}}</td>
+                        <td>{{wizard.form.location_8}}</td>    
                     </tr>
                     <tr>
-                        <td width="180px">{{wizard.form.radiator_9}}</td>
-                        <td width="100px">{{wizard.form.location_9}}</td>    
+                        <td>{{wizard.form.radiator_9}}</td>
+                        <td>{{wizard.form.radiator_style_9}}</td>
+                        <td>{{wizard.form.location_9}}</td>    
                     </tr>
                     <tr>
-                        <td width="180px">{{wizard.form.radiator_10}}</td>
-                        <td width="100px">{{wizard.form.location_10}}</td>    
+                        <td>{{wizard.form.radiator_10}}</td>
+                        <td>{{wizard.form.radiator_style_10}}</td>
+                        <td>{{wizard.form.location_10}}</td>    
                     </tr>
                     <tr>
-                        <td width="180px">{{wizard.form.radiator_11}}</td>
-                        <td width="100px">{{wizard.form.location_11}}</td>    
+                        <td>{{wizard.form.radiator_11}}</td>
+                        <td>{{wizard.form.radiator_style_11}}</td>
+                        <td>{{wizard.form.location_11}}</td>    
                     </tr>
                     <tr>
-                        <td width="180px">{{wizard.form.radiator_12}}</td>
-                        <td width="100px">{{wizard.form.location_12}}</td>    
+                        <td>{{wizard.form.radiator_12}}</td>
+                        <td>{{wizard.form.radiator_style_12}}</td>
+                        <td>{{wizard.form.location_12}}</td>    
                     </tr>
+                    
                 </table>
             </div>
         </div>
-
+    </div>
+    <br>
+    <div class = "row">
         <div class = "col-5"> 
             <div class="form-rad-valve-group">
                 <!-- <p class="radiator-section-headings">Thermostatic Radiator Valves *</p>  -->
                 <table>
                     <tr>
-                        <td width="150px">Thermostatic Radiator Valve</td>
-                        <td width="50px">Qty</td>
+                        <td>Thermostatic Radiator Valve</td>
+                        <td>Qty</td>
                     </tr>
                     <tr>
-                        <td width="150px">{{wizard.form.radiator_valve_1}}</td>
-                        <td width="50px">{{wizard.form.radiator_valve_quantity_1}}</td>
+                        <td>{{wizard.form.radiator_valve_1}}</td>
+                        <td>{{wizard.form.radiator_valve_quantity_1}}</td>
                     </tr>
                     <tr>
-                        <td width="150px">{{wizard.form.radiator_valve_2}}</td>
-                        <td width="50px">{{wizard.form.radiator_valve_quantity_2}}</td>
+                        <td>{{wizard.form.radiator_valve_2}}</td>
+                        <td>{{wizard.form.radiator_valve_quantity_2}}</td>
                     </tr>
                     <tr>
-                        <td width="150px">{{wizard.form.radiator_valve_3}}</td>
-                        <td width="50px">{{wizard.form.radiator_valve_quantity_3}}</td>
+                        <td>{{wizard.form.radiator_valve_3}}</td>
+                        <td>{{wizard.form.radiator_valve_quantity_3}}</td>
                     </tr>
                     <tr>
-                        <td width="150px">{{wizard.form.radiator_valve_4}}</td>
-                        <td width="50px">{{wizard.form.radiator_valve_quantity_4}}</td>
+                        <td>{{wizard.form.radiator_valve_4}}</td>
+                        <td>{{wizard.form.radiator_valve_quantity_4}}</td>
                     </tr>
                     <tr>
-                        <td width="150px">{{wizard.form.radiator_valve_5}}</td>
-                        <td width="50px">{{wizard.form.radiator_valve_quantity_5}}</td>
+                        <td>{{wizard.form.radiator_valve_5}}</td>
+                        <td>{{wizard.form.radiator_valve_quantity_5}}</td>
                     </tr>
                     <tr>
-                        <td width="150px">{{wizard.form.radiator_valve_6}}</td>
-                        <td width="50px">{{wizard.form.radiator_valve_quantity_6}}</td>
+                        <td>{{wizard.form.radiator_valve_6}}</td>
+                        <td>{{wizard.form.radiator_valve_quantity_6}}</td>
                     </tr>
                     <tr>
-                        <td width="150px">{{wizard.form.radiator_valve_7}}</td>
-                        <td width="50px">{{wizard.form.radiator_valve_quantity_7}}</td>
+                        <td>{{wizard.form.radiator_valve_7}}</td>
+                        <td>{{wizard.form.radiator_valve_quantity_7}}</td>
                     </tr>
                     <tr>
-                        <td width="150px">{{wizard.form.radiator_valve_8}}</td>
-                        <td width="50px">{{wizard.form.radiator_valve_quantity_8}}</td>
+                        <td>{{wizard.form.radiator_valve_8}}</td>
+                        <td>{{wizard.form.radiator_valve_quantity_8}}</td>
                     </tr>
                     <tr>
-                        <td width="150px">{{wizard.form.radiator_valve_9}}</td>
-                        <td width="50px">{{wizard.form.radiator_valve_quantity_9}}</td>
+                        <td>{{wizard.form.radiator_valve_9}}</td>
+                        <td>{{wizard.form.radiator_valve_quantity_9}}</td>
                     </tr>
                     <tr>
-                        <td width="150px">{{wizard.form.radiator_valve_10}}</td>
-                        <td width="50px">{{wizard.form.radiator_valve_quantity_10}}</td>
+                        <td>{{wizard.form.radiator_valve_10}}</td>
+                        <td>{{wizard.form.radiator_valve_quantity_10}}</td>
                     </tr>
                     <tr>
-                        <td width="150px">{{wizard.form.radiator_valve_11}}</td>
-                        <td width="50px">{{wizard.form.radiator_valve_quantity_11}}</td>
+                        <td>{{wizard.form.radiator_valve_11}}</td>
+                        <td>{{wizard.form.radiator_valve_quantity_11}}</td>
                     </tr>
                     <tr>
-                        <td width="150px">{{wizard.form.radiator_valve_12}}</td>
-                        <td width="50px">{{wizard.form.radiator_valve_quantity_12}}</td>
+                        <td>{{wizard.form.radiator_valve_12}}</td>
+                        <td>{{wizard.form.radiator_valve_quantity_12}}</td>
                     </tr>
                 </table>
             </div>
@@ -154,6 +191,7 @@
     </div>
     <br>
     <div class = "row">
+
         <div class = "col-12">
             <div class="form-towel-group">
                 <!-- <p class="radiator-section-headings">Towel Rail / Location *</p>  -->

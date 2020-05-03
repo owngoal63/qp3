@@ -64,6 +64,7 @@ COMPONENT_TYPE_DROPDOWN = (
 	('Chemical System Treatment','Chemical System Treatment'),
 	('Customer Supplied Radiator', 'Customer Supplied Radiator'),
 	('Cylinder', 'Cylinder'),
+	('Cylinder Location', 'Cylinder Location'),
 	('Double Handed Lift','Double Handed Lift'),
 	('Earth Spike','Earth Spike'),
 	('Electrical Pack','Electrical Pack'),
@@ -78,10 +79,13 @@ COMPONENT_TYPE_DROPDOWN = (
 	('Plume Component','Plume Component'),
 	('Programmer Thermostat','Programmer Thermostat'),
 	('Radiator','Radiator'),
+	('Radiator Location','Radiator Location'),
+	('Radiator Style','Radiator Style'),
 	('Scaffolding','Scaffolding'),
 	('Scale Reducer','Scale Reducer'),
 	('Thermostatic Radiator Valve','Thermostatic Radiator Valve'),
 	('Towel Rail','Towel Rail'),
+	('Towel Rail Location','Towel Rail Location'),
 
 )
 

@@ -23,85 +23,65 @@
     <br>
     </div>
 
-    <div class="orange-box">
-        <br>
-        <table id="SalutAndRef">
-            <tr>
-                <td width=50%><div class="salutation">{{form_data.0.customer_title}} {{form_data.0.customer_last_name}}</div></td>
-                <td width=50%><div class="your-reference">Your reference: {{ idx.quote_prefix }}-{{ form_data.17.quote_number }}</div></td>
-            </tr>
-        </table>
-        
-        <div class="thankyou">Thank you for having <b>{{idx.first_name}} {{idx.last_name}}</b> visit you today. Please
-            find your bespoke, fixed-price
-            quotation for your brand new boiler. We estimate that your installation will take
-            {{form_data.8.estimated_duration}}.</div>
-        <br>
-        {% if alt_product_record %}
-        <div class="product-details">
-        {% else %}
-        <div class="product-details-no-alt-product-details">
-        {% endif %}
-            <table>
-                <tr>
-                    <td><img class="product-image" src="{{img_record.document.url}}" /></td>
-                    <td>
-                        <div class="price-orange-box">
-                            £{{form_data.9.total_cost|floatformat:2}} Inc. VAT
-                        </div>
-                        {% if alt_product_record  %}
-                                <div class="product-name">
-                            {% else %}
-                                <div class="product-name-no-alt">
-                        {% endif %}    
-                            <p>{{product_record.brand}}<br>
-                                {{product_record.model_name}}</p>
-                                <br>
-                                <ul>
-                                    <li>{{product_record.guarantee}}*</li>
-                                    {% if form_data.4.new_fuel_type == "Oil" %}
-                                        <li>OFTEC Installation</li>
-                                    {% else %}    
-                                        <li>Gas Safe Installation</li>
-                                    {% endif %}    
-                                    <li>Interest Free Credit Available</li>
-                                    <li>Option to Spread The Cost</li>
-                                </ul>
-                                
-                        </div>
-                    </td>
-                </tr>
-            </table>
+    <div class="page-start"><br><br><br><br><br></div>
+
+    <div class="ob-orange-box">
+
+        <div class="ob-top">
+            <p class="ob-name">{{form_data.0.customer_title}} {{form_data.0.customer_last_name}}</p>
+            <p class="ob-reference">Your reference: {{ idx.quote_prefix }}-{{ form_data.19.quote_number }}</p>
+            <br>
+            <br>
+            <p class="ob-text">Thank you for having <b>{{idx.first_name}} {{idx.last_name}}</b> visit you today. Please find your bespoke, fixed-price
+                quotation
+                for your brand new boiler. We estimate that your installation will take {{form_data.8.estimated_duration}}.</p>
+
         </div>
-        {% if alt_product_record %}
-        <div class="alt-product-details">
-            <table>
-                <tr>
-                    <td><img class="alt-product-image" src="{{alt_img_record.document.url}}" /></td>
-                    <td>
-                        <div class="price-orange-box">
-                            £{{form_data.9.alt_total_cost|floatformat:2}} Inc. VAT
-                        </div>
-                        <div class="product-name">
-                            <p>{{alt_product_record.brand}}<br>
-                                {{alt_product_record.model_name}}</p>
-                                <br>
-                                <ul>
-                                    <li>{{alt_product_record.guarantee}}*</li>
-                                    {% if form_data.4.new_fuel_type == "Oil" %}
-                                        <li>OFTEC Installation</li>
-                                    {% else %}    
-                                        <li>Gas Safe Installation</li>
-                                    {% endif %}
-                                    <li>Interest Free Credit Available</li>
-                                    <li>Option to Spread The Cost</li>
-                                </ul>
-                        </div>
-                    </td>
-                </tr>
-            </table>
+
+        <div class="ob-left {% if not alt_product_record %}push-right {%endif%}">
+
+            <div class="ob-boiler-left">
+                <img class="product-image" src="{{img_record.document.url}}" alt="">
+            </div>
+            <div class="ob-text-left">
+                <h1 class="price">£{{form_data.9.total_cost|floatformat:2}} Inc. VAT</h1>
+                <h2 class="name">{{product_record.brand}}<br>{{product_record.model_name}}</h2>
+                <ul>
+                    <li class="features">{{product_record.guarantee}}*</li>
+                    {% if form_data.4.new_fuel_type == "Oil" %}
+                        <li class="features">OFTEC Installation</li>
+                    {% else %}    
+                        <li class="features">Gas Safe Installation</li>
+                    {% endif %} 
+                    <li class="features">Interest Free Credit Available</li>
+                    <li class="features">Option to Spread The Cost</li>
+                </ul>
+            </div>
+
         </div>
-        {% endif %}
+
+        <div class="ob-right {% if not alt_product_record %}hidden{%endif%}">
+
+            <div class="ob-boiler-right">
+                <img class="product-image" src="{{alt_img_record.document.url}}" alt="">
+            </div>
+            <div class="ob-text-right">
+                <h1 class="price">£{{form_data.9.alt_total_cost|floatformat:2}} Inc. VAT</h1>
+                <h2 class="name">{{alt_product_record.brand}}<br>{{alt_product_record.model_name}}</h2>
+                <ul>
+                    <li class="features">{{alt_product_record.guarantee}}*</li>
+                    {% if form_data.4.new_fuel_type == "Oil" %}
+                        <li class="features">OFTEC Installation</li>
+                    {% else %}    
+                        <li class="features">Gas Safe Installation</li>
+                    {% endif %} 
+                    <li class="features">Interest Free Credit Available</li>
+                    <li class="features">Option to Spread The Cost</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
 
     </div>
 
@@ -246,8 +226,8 @@
         </p>
         <br>
         <p>
-        To discuss or accept your quotation, please call our office on <b>{{idx.telephone}}</b>, alternatively email
-        <b>{{idx.email}}</b>
+        To discuss or accept your quotation, please call our office on <b>01732 622990</b>, alternatively email
+        <b>info@yourheat.co.uk</b>
         </p>
         <br>
     </div>
@@ -896,13 +876,13 @@
             <tr>    
                 <td class="tech-value">£{{form_data.9.alt_total_cost|floatformat:2}}</td>
             </tr>
+            {% endif %}
             <tr>
                 <td class="tech-attrib">ESTIMATED HOME HEATLOSS</td>
             </tr>
             <tr>    
-                <td class="tech-value">{{form_data.17.house_heat_loss_value|floatformat:2}} KW</td>
+                <td class="tech-value">{{form_data.19.house_heat_loss_value|floatformat:2}} KW</td>
             </tr>
-            {% endif %}
             <br>
             {% if form_data.8.optional_extras %}
             <!-- <div class="opt-extra-orange-box"> -->
@@ -1108,7 +1088,7 @@
      <table id="bom">
         <tr>
             <th class="col1">New Installation Materials</th>
-             <th class="col2">Component</th>
+             <th class="col2">Component (Secondary Boiler)</th>
              <th class="col3">Qty</th>
              <th class="col4">Price</th>
              <th class="col5">Ext Price</th>
@@ -1140,9 +1120,43 @@
        {% endfor %}
        
     </table>
-    
-    
+
     {% endif %}
+
+    <!-- Special Parts  -->
+    <table id="bom">
+        <tr>
+            <th class="col1">Special Parts</th>
+            <th class="col2">Component</th>
+             <th class="col3">Qty</th>
+             <th class="col4">Price</th>
+             <th class="col5">Ext Price</th>
+             <th class="col6">Cost</th>
+             <th class="col7">Duration</th>
+        </tr>
+        {% for component_type,outer_value in form_data.12.items %}
+        <tr>
+            <td>{{ component_type }}</td>
+               {% for elem in outer_value %}
+                   {% for comp_name,comp_param in elem.items %}
+                       <td>{{ comp_name }}</td>
+                       {% for param in comp_param %}
+                           <td>{{param}}</td>
+                       {% endfor %}
+                       {% if outer_value|length > 1  %}
+                           </tr>
+                       {% endif %}
+                       
+                       {% endfor %}
+                       {% if forloop.counter != outer_value|length %}
+                       <tr><td>&nbsp;</td>
+                       {% endif %}
+
+               {% endfor %}
+           </tr>   
+       {% endfor %}
+      
+    </table>
      
     <!-- End of Page 8 -->
 
@@ -1163,7 +1177,81 @@
                 <th class="col6">Cost</th>
                 <th class="col7">Duration</th>
             </tr>
-            {% for component_type,outer_value in form_data.12.items %}
+            {% for component_type,outer_value in form_data.13.items %}
+            <tr>
+                <td>{{ component_type }}</td>
+                {% for elem in outer_value %}
+                    {% for comp_name,comp_param in elem.items %}
+                        <td>{{ comp_name }}</td>
+                        {% for param in comp_param %}
+                            <td>{{param}}</td>
+                        {% endfor %}
+                        {% if outer_value|length > 1  %}
+                            </tr>
+                        {% endif %}
+                        
+                        {% endfor %}
+                        {% if forloop.counter != outer_value|length %}
+                        <tr><td>&nbsp;</td>
+                        {% endif %}
+
+                {% endfor %}
+            </tr>
+
+        {% endfor %}
+        </table>
+    {% endif %}
+
+    <!-- Radiator Styles  -->
+    {% if 'Radiator(s) Required' in form_data.7.radiator_specification %}
+        <table id="bom">
+            <tr>
+                <th class="col1">Radiator Styles</th>
+                <th class="col2">Component</th>
+                <th class="col3">Qty</th>
+                <th class="col4">Price</th>
+                <th class="col5">Ext Price</th>
+                <th class="col6">Cost</th>
+                <th class="col7">Duration</th>
+            </tr>
+            {% for component_type,outer_value in form_data.16.items %}
+            <tr>
+                <td>{{ component_type }}</td>
+                {% for elem in outer_value %}
+                    {% for comp_name,comp_param in elem.items %}
+                        <td>{{ comp_name }}</td>
+                        {% for param in comp_param %}
+                            <td>{{param}}</td>
+                        {% endfor %}
+                        {% if outer_value|length > 1  %}
+                            </tr>
+                        {% endif %}
+                        
+                        {% endfor %}
+                        {% if forloop.counter != outer_value|length %}
+                        <tr><td>&nbsp;</td>
+                        {% endif %}
+
+                {% endfor %}
+            </tr>
+
+        {% endfor %}
+        </table>
+    {% endif %}
+
+    <!-- Radiator Locations  -->
+    {% if 'Radiator(s) Required' in form_data.7.radiator_specification %}
+        <table id="bom">
+            <tr>
+                <th class="col1">Radiator Locations</th>
+                <th class="col2">Component</th>
+                <th class="col3">Qty</th>
+                <th class="col4">Price</th>
+                <th class="col5">Ext Price</th>
+                <th class="col6">Cost</th>
+                <th class="col7">Duration</th>
+            </tr>
+            {% for component_type,outer_value in form_data.17.items %}
             <tr>
                 <td>{{ component_type }}</td>
                 {% for elem in outer_value %}
@@ -1199,7 +1287,7 @@
              <th class="col6">Cost</th>
              <th class="col7">Duration</th>
         </tr>
-        {% for component_type,outer_value in form_data.13.items %}
+        {% for component_type,outer_value in form_data.14.items %}
         <tr>
             <td>{{ component_type }}</td>
                {% for elem in outer_value %}
@@ -1235,7 +1323,44 @@
              <th class="col6">Cost</th>
              <th class="col7">Duration</th>
         </tr>
-        {% for component_type,outer_value in form_data.14.items %}
+        {% for component_type,outer_value in form_data.15.items %}
+        <tr>
+            <td>{{ component_type }}</td>
+               {% for elem in outer_value %}
+                   {% for comp_name,comp_param in elem.items %}
+                       <td>{{ comp_name }}</td>
+                       {% for param in comp_param %}
+                           <td>{{param}}</td>
+                       {% endfor %}
+                       {% if outer_value|length > 1  %}
+                           </tr>
+                       {% endif %}
+                       
+                       {% endfor %}
+                       {% if forloop.counter != outer_value|length %}
+                       <tr><td>&nbsp;</td>
+                       {% endif %}
+
+               {% endfor %}
+           </tr>   
+       {% endfor %}
+      
+    </table>
+    {% endif %}
+
+    <!-- Towel Rail Locations  -->
+    {% if 'Towel Rail(s) Required' in form_data.7.radiator_specification %}
+    <table id="bom">
+        <tr>
+            <th class="col1">Towel Rail Locations</th>
+            <th class="col2">Component</th>
+             <th class="col3">Qty</th>
+             <th class="col4">Price</th>
+             <th class="col5">Ext Price</th>
+             <th class="col6">Cost</th>
+             <th class="col7">Duration</th>
+        </tr>
+        {% for component_type,outer_value in form_data.18.items %}
         <tr>
             <td>{{ component_type }}</td>
                {% for elem in outer_value %}
@@ -1260,6 +1385,7 @@
     </table>
     {% endif %}
     
+    <!-- This can now be removed  -->
     {% if 'Customer to Provide Radiators' in form_data.7.radiator_specification %}
     <table id="bom">
         <tr>
@@ -1296,40 +1422,14 @@
     </table>
     {% endif %}
     
-    <table id="bom">
-        <tr>
-            <th class="col1">Special Parts</th>
-            <th class="col2">Component</th>
-             <th class="col3">Qty</th>
-             <th class="col4">Price</th>
-             <th class="col5">Ext Price</th>
-             <th class="col6">Cost</th>
-             <th class="col7">Duration</th>
-        </tr>
-        {% for component_type,outer_value in form_data.16.items %}
-        <tr>
-            <td>{{ component_type }}</td>
-               {% for elem in outer_value %}
-                   {% for comp_name,comp_param in elem.items %}
-                       <td>{{ comp_name }}</td>
-                       {% for param in comp_param %}
-                           <td>{{param}}</td>
-                       {% endfor %}
-                       {% if outer_value|length > 1  %}
-                           </tr>
-                       {% endif %}
-                       
-                       {% endfor %}
-                       {% if forloop.counter != outer_value|length %}
-                       <tr><td>&nbsp;</td>
-                       {% endif %}
+     <!-- End of Page -->
 
-               {% endfor %}
-           </tr>   
-       {% endfor %}
-      
-    </table>
-    <br>
+     <div class="break"></div>
+
+     <!-- Page - Final Summary Page -->
+   
+     <div class="page-start"><br><br><br><br><br></div>
+    
     <div class="tech-details">
         <table>
             <tr>
@@ -1372,7 +1472,7 @@
                 <td class="tech-attrib" colspan="2">ESTIMATED HOME HEATLOSS</td>
             </tr>
             <tr>    
-                <td class="tech-value" colspan="2">{{form_data.17.house_heat_loss_value|floatformat:2}} KW</td>
+                <td class="tech-value" colspan="2">{{form_data.19.house_heat_loss_value|floatformat:2}} KW</td>
             </tr>
 
         </table>
