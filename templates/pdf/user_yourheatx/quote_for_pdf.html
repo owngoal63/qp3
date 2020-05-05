@@ -4,7 +4,8 @@
 <html>
 
 <head>
-    <title>Quote PDF</title>   
+    <title>Quote PDF</title>
+    <!-- <link href="{% static 'css/yh.css' %}" rel="stylesheet" type="text/css">  -->
 </head>
 
 <body>
@@ -629,143 +630,144 @@
             <tr>    
                 <td class="tech-value" colspan="2">
                     {% for radiator in form_data.7.radiator_specification  %}
-                    &bull; {{ radiator }}
-                    {% if radiator == 'Customer to Provide Radiators' %}
-                        (Qty: {{ form_data.7.cust_supply_radiator_quantity }})
+                    <!-- &bull; {{ radiator }} -->
+                    {% if radiator == 'No Radiators Required' %}
+                        &bull; No Radiators Required<br>
                     {% endif %}
-                    <br>
+                    <!-- <br> -->
 
                         {% if radiator == 'Radiator(s) Required' %}
                             <table class="radiator-table">
                                 <!-- <tr> -->
-                                <th>Location</th><th>Radiator</th>
-                                {% if form_data.7.radiator_1 %}
+                                <th>Radiator</th><th>Style</th><th>Location</th>
+                                {% if form_data.7.rad_1 %}
                                     <tr>
-                                        <td>{{form_data.7.location_2}}</td><td>{{form_data.7.radiator_1}}</td>
+                                        <td class="col1">{{form_data.7.rad_1}}</td><td class="col2">{{form_data.7.sty_1}}</td><td class="col3">{{form_data.7.loc_1}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.radiator_2 %}
+                                {% if form_data.7.rad_1 %}
                                     <tr>
-                                        <td>{{form_data.7.location_2}}</td><td>{{form_data.7.radiator_2}}</td>
+                                        <td>{{form_data.7.rad_2}}</td><td>{{form_data.7.sty_2}}</td><td>{{form_data.7.loc_2}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.radiator_3 %}
+                                {% if form_data.7.rad_1 %}
                                     <tr>
-                                        <td>{{form_data.7.location_3}}</td><td>{{form_data.7.radiator_3}}</td>
+                                        <td>{{form_data.7.rad_3}}</td><td>{{form_data.7.sty_3}}</td><td>{{form_data.7.loc_3}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.radiator_4 %}
+                                {% if form_data.7.rad_1 %}
                                     <tr>
-                                        <td>{{form_data.7.location_4}}</td><td>{{form_data.7.radiator_4}}</td>
+                                        <td>{{form_data.7.rad_4}}</td><td>{{form_data.7.sty_4}}</td><td>{{form_data.7.loc_4}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.radiator_5 %}
+                                {% if form_data.7.rad_1 %}
                                     <tr>
-                                        <td>{{form_data.7.location_5}}</td><td>{{form_data.7.radiator_5}}</td>
+                                        <td>{{form_data.7.rad_5}}</td><td>{{form_data.7.sty_5}}</td><td>{{form_data.7.loc_5}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.radiator_6 %}
+                                {% if form_data.7.rad_1 %}
                                     <tr>
-                                        <td>{{form_data.7.location_6}}</td><td>{{form_data.7.radiator_6}}</td>
+                                        <td>{{form_data.7.rad_6}}</td><td>{{form_data.7.sty_6}}</td><td>{{form_data.7.loc_6}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.radiator_7 %}
+                                {% if form_data.7.rad_1 %}
                                     <tr>
-                                        <td>{{form_data.7.location_7}}</td><td>{{form_data.7.radiator_7}}</td>
+                                        <td>{{form_data.7.rad_7}}</td><td>{{form_data.7.sty_7}}</td><td>{{form_data.7.loc_7}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.radiator_8 %}
+                                {% if form_data.7.rad_1 %}
                                     <tr>
-                                        <td>{{form_data.7.location_8}}</td><td>{{form_data.7.radiator_8}}</td>
+                                        <td>{{form_data.7.rad_8}}</td><td>{{form_data.7.sty_8}}</td><td>{{form_data.7.loc_8}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.radiator_9 %}
+                                {% if form_data.7.rad_1 %}
                                     <tr>
-                                        <td>{{form_data.7.location_9}}</td><td>{{form_data.7.radiator_9}}</td>
+                                        <td>{{form_data.7.rad_9}}</td><td>{{form_data.7.sty_9}}</td><td>{{form_data.7.loc_9}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.radiator_10 %}
+                                {% if form_data.7.rad_1 %}
                                     <tr>
-                                        <td>{{form_data.7.location_10}}</td><td>{{form_data.7.radiator_10}}</td>
+                                        <td>{{form_data.7.rad_10}}</td><td>{{form_data.7.sty_10}}</td><td>{{form_data.7.loc_10}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.radiator_11 %}
+                                {% if form_data.7.rad_1 %}
                                     <tr>
-                                        <td>{{form_data.7.location_11}}</td><td>{{form_data.7.radiator_11}}</td>
+                                        <td>{{form_data.7.rad_11}}</td><td>{{form_data.7.sty_11}}</td><td>{{form_data.7.loc_11}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.radiator_12 %}
+                                {% if form_data.7.rad_1 %}
                                     <tr>
-                                        <td>{{form_data.7.location_12}}</td><td>{{form_data.7.radiator_12}}</td>
+                                        <td>{{form_data.7.rad_12}}</td><td>{{form_data.7.sty_12}}</td><td>{{form_data.7.loc_12}}</td>
                                     </tr>
                                 {% endif %}
-                                </tr>
+                                
+                                
                             </table>
                         {% endif %}
 
                         {% if radiator == 'Radiator(s) Required' or radiator == 'Thermostatic Radiator Valves Only' %}
-                        &bull; Thermostatic Radiator Valves<br> 
+                        <!-- &bull; Thermostatic Radiator Valves<br>  -->
                             <table class="radiator-table">
                                 <!-- <tr> -->
                                 <th>Radiator Valve</th><th>Qty</th>
-                                {% if form_data.7.radiator_valve_1 %}
+                                {% if form_data.7.val_1 %}
                                     <tr>
-                                        <td>{{form_data.7.radiator_valve_1}}</td><td>{{form_data.7.radiator_valve_quantity_1}}</td>
+                                        <td>{{form_data.7.val_1}}</td><td>{{form_data.7.vaq_1}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.radiator_valve_2 %}
+                                {% if form_data.7.val_2 %}
                                     <tr>
-                                        <td>{{form_data.7.radiator_valve_2}}</td><td>{{form_data.7.radiator_valve_quantity_2}}</td>
+                                        <td>{{form_data.7.val_2}}</td><td>{{form_data.7.vaq_2}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.radiator_valve_3 %}
+                                {% if form_data.7.val_3 %}
                                     <tr>
-                                        <td>{{form_data.7.radiator_valve_3}}</td><td>{{form_data.7.radiator_valve_quantity_3}}</td>
+                                        <td>{{form_data.7.val_3}}</td><td>{{form_data.7.vaq_3}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.radiator_valve_4 %}
+                                {% if form_data.7.val_4 %}
                                     <tr>
-                                        <td>{{form_data.7.radiator_valve_4}}</td><td>{{form_data.7.radiator_valve_quantity_4}}</td>
+                                        <td>{{form_data.7.val_4}}</td><td>{{form_data.7.vaq_4}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.radiator_valve_5 %}
+                                {% if form_data.7.val_5 %}
                                     <tr>
-                                        <td>{{form_data.7.radiator_valve_5}}</td><td>{{form_data.7.radiator_valve_quantity_5}}</td>
+                                        <td>{{form_data.7.val_5}}</td><td>{{form_data.7.vaq_5}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.radiator_valve_6 %}
+                                {% if form_data.7.val_6 %}
                                     <tr>
-                                        <td>{{form_data.7.radiator_valve_6}}</td><td>{{form_data.7.radiator_valve_quantity_6}}</td>
+                                        <td>{{form_data.7.val_6}}</td><td>{{form_data.7.vaq_6}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.radiator_valve_7 %}
+                                {% if form_data.7.val_7 %}
                                     <tr>
-                                        <td>{{form_data.7.radiator_valve_7}}</td><td>{{form_data.7.radiator_valve_quantity_7}}</td>
+                                        <td>{{form_data.7.val_7}}</td><td>{{form_data.7.vaq_7}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.radiator_valve_8 %}
+                                {% if form_data.7.val_8 %}
                                     <tr>
-                                        <td>{{form_data.7.radiator_valve_8}}</td><td>{{form_data.7.radiator_valve_quantity_8}}</td>
+                                        <td>{{form_data.7.val_8}}</td><td>{{form_data.7.vaq_8}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.radiator_valve_9 %}
+                                {% if form_data.7.val_9 %}
                                     <tr>
-                                        <td>{{form_data.7.radiator_valve_9}}</td><td>{{form_data.7.radiator_valve_quantity_9}}</td>
+                                        <td>{{form_data.7.val_9}}</td><td>{{form_data.7.vaq_9}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.radiator_valve_10 %}
+                                {% if form_data.7.val_10 %}
                                     <tr>
-                                        <td>{{form_data.7.radiator_valve_10}}</td><td>{{form_data.7.radiator_valve_quantity_10}}</td>
+                                        <td>{{form_data.7.val_10}}</td><td>{{form_data.7.vaq_10}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.radiator_valve_11 %}
+                                {% if form_data.7.val_11 %}
                                     <tr>
-                                        <td>{{form_data.7.radiator_valve_11}}</td><td>{{form_data.7.radiator_valve_quantity_11}}</td>
+                                        <td>{{form_data.7.val_11}}</td><td>{{form_data.7.vaq_11}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.radiator_valve_12 %}
+                                {% if form_data.7.val_12 %}
                                     <tr>
-                                        <td>{{form_data.7.radiator_valve_12}}</td><td>{{form_data.7.radiator_valve_quantity_12}}</td>
+                                        <td>{{form_data.7.val_12}}</td><td>{{form_data.7.vaq_12}}</td>
                                     </tr>
                                 {% endif %}
                                 </tr>
@@ -776,25 +778,25 @@
         
                             <table class="radiator-table">
                                 <!-- <tr> -->
-                                <th>Location</th><th>Towel Rail</th>
-                                {% if form_data.7.towel_rail_location_1 %}
+                                <th>Towel Rail</th><th>Location</th>
+                                {% if form_data.7.trl_1 %}
                                     <tr>
-                                        <td>{{form_data.7.towel_rail_location_1}}</td><td>{{form_data.7.towel_rail_1}}</td>
+                                        <td>{{form_data.7.tow_1}}</td><td>{{form_data.7.trl_1}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.towel_rail_location_2 %}
+                                {% if form_data.7.tow_2 %}
                                     <tr>
-                                        <td>{{form_data.7.towel_rail_location_2}}</td><td>{{form_data.7.towel_rail_2}}</td>
+                                        <td>{{form_data.7.tow_2}}</td><td>{{form_data.7.trl_2}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.towel_rail_location_3 %}
+                                {% if form_data.7.tow_3 %}
                                     <tr>
-                                        <td>{{form_data.7.towel_rail_location_3}}</td><td>{{form_data.7.towel_rail_3}}</td>
+                                        <td>{{form_data.7.tow_3}}</td><td>{{form_data.7.trl_3}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.towel_rail_location_4 %}
+                                {% if form_data.7.tow_4 %}
                                     <tr>
-                                        <td>{{form_data.7.towel_rail_location_4}}</td><td>{{form_data.7.towel_rail_4}}</td>
+                                        <td>{{form_data.7.tow_4}}</td><td>{{form_data.7.trl_4}}</td>
                                     </tr>
                                 {% endif %}
                                 
@@ -832,7 +834,7 @@
 
     <!-- Page 6 -->
 
-    <div class="page-start"><br><br><br><br><br></div>
+    <div class="page-start"><br><br></div>
 
     <div class="tech-details">
         <table>
@@ -1017,9 +1019,9 @@
              <th class="col1">Installation Requirements</th>
              <th class="col2">Component</th>
              <th class="col3">Qty</th>
-             <th class="col4">Price</th>
-             <th class="col5">Ext Price</th>
-             <th class="col6">Cost</th>
+             <th class="col4">Unit £</th>
+             <th class="col5">Tot £</th>
+             <th class="col6">Cost £</th>
              <th class="col7">Duration</th>
          </tr>
          {% for component_type,outer_value in form_data.10.items %}
@@ -1052,13 +1054,13 @@
             <th class="col1">New Installation Materials</th>
              <th class="col2">Component {% if alt_product_record %}(Primary Boiler){% endif %}</th>
              <th class="col3">Qty</th>
-             <th class="col4">Price</th>
-             <th class="col5">Ext Price</th>
-             <th class="col6">Cost</th>
+             <th class="col4">Unit £</th>
+             <th class="col5">Tot £</th>
+             <th class="col6">Cost £</th>
              <th class="col7">Duration</th>
         </tr>
         {% for component_type,outer_value in form_data.11.items %}
-        {% if component_type != "Alt Gas Flue Components" and component_type != "Alt Oil Flue Components" %}
+        {% if component_type != "Alt Gas Flue Components" and component_type != "Alt Oil Flue Components" and component_type != "Alt Programmer/Thermostat" %}
         <tr>
             <td>{{ component_type }}</td>
                {% for elem in outer_value %}
@@ -1083,20 +1085,55 @@
        
     </table>
 
-    {% if alt_product_record %}
-
-     <table id="bom">
+    <!-- Special Parts  -->
+    <table id="bom">
         <tr>
-            <th class="col1">New Installation Materials</th>
-             <th class="col2">Component (Secondary Boiler)</th>
+            <th class="col1">Special Parts</th>
+            <th class="col2">Component</th>
              <th class="col3">Qty</th>
-             <th class="col4">Price</th>
-             <th class="col5">Ext Price</th>
-             <th class="col6">Cost</th>
+             <th class="col4">Unit £</th>
+             <th class="col5">Tot £</th>
+             <th class="col6">Cost £</th>
              <th class="col7">Duration</th>
         </tr>
+        {% for component_type,outer_value in form_data.12.items %}
+        <tr>
+            <td>{{ component_type }}</td>
+               {% for elem in outer_value %}
+                   {% for comp_name,comp_param in elem.items %}
+                       <td>{{ comp_name }}</td>
+                       {% for param in comp_param %}
+                           <td>{{param}}</td>
+                       {% endfor %}
+                       {% if outer_value|length > 1  %}
+                           </tr>
+                       {% endif %}
+                       
+                       {% endfor %}
+                       {% if forloop.counter != outer_value|length %}
+                       <tr><td>&nbsp;</td>
+                       {% endif %}
+
+               {% endfor %}
+           </tr>   
+       {% endfor %}
+      
+    </table>
+
+    {% if alt_product_record %}
+    <br>
+     <table id="bom">
+        <tr>
+            <th class="col1 alt">New Installation Materials</th>
+             <th class="col2 alt">Component (Secondary Boiler)</th>
+             <th class="col3 alt">Qty</th>
+             <th class="col4 alt">Unit £</th>
+             <th class="col5 alt">Tot £</th>
+             <th class="col6 alt">Cost £</th>
+             <th class="col7 alt">Duration</th>
+        </tr>
         {% for component_type,outer_value in form_data.11.items %}
-        {% if component_type == "Alt Gas Flue Components" or component_type == "Alt Oil Flue Components" %}
+        {% if component_type == "Alt Gas Flue Components" or component_type == "Alt Oil Flue Components" or component_type == "Alt Programmer/Thermostat" %}
         <tr>
             <td>{{ component_type }}</td>
                {% for elem in outer_value %}
@@ -1123,40 +1160,7 @@
 
     {% endif %}
 
-    <!-- Special Parts  -->
-    <table id="bom">
-        <tr>
-            <th class="col1">Special Parts</th>
-            <th class="col2">Component</th>
-             <th class="col3">Qty</th>
-             <th class="col4">Price</th>
-             <th class="col5">Ext Price</th>
-             <th class="col6">Cost</th>
-             <th class="col7">Duration</th>
-        </tr>
-        {% for component_type,outer_value in form_data.12.items %}
-        <tr>
-            <td>{{ component_type }}</td>
-               {% for elem in outer_value %}
-                   {% for comp_name,comp_param in elem.items %}
-                       <td>{{ comp_name }}</td>
-                       {% for param in comp_param %}
-                           <td>{{param}}</td>
-                       {% endfor %}
-                       {% if outer_value|length > 1  %}
-                           </tr>
-                       {% endif %}
-                       
-                       {% endfor %}
-                       {% if forloop.counter != outer_value|length %}
-                       <tr><td>&nbsp;</td>
-                       {% endif %}
-
-               {% endfor %}
-           </tr>   
-       {% endfor %}
-      
-    </table>
+  
      
     <!-- End of Page 8 -->
 
@@ -1172,9 +1176,9 @@
                 <th class="col1">Radiators</th>
                 <th class="col2">Component</th>
                 <th class="col3">Qty</th>
-                <th class="col4">Price</th>
-                <th class="col5">Ext Price</th>
-                <th class="col6">Cost</th>
+                <th class="col4">Unit £</th>
+                <th class="col5">Tot £</th>
+                <th class="col6">Cost £</th>
                 <th class="col7">Duration</th>
             </tr>
             {% for component_type,outer_value in form_data.13.items %}
@@ -1209,9 +1213,9 @@
                 <th class="col1">Radiator Styles</th>
                 <th class="col2">Component</th>
                 <th class="col3">Qty</th>
-                <th class="col4">Price</th>
-                <th class="col5">Ext Price</th>
-                <th class="col6">Cost</th>
+                <th class="col4">Unit £</th>
+                <th class="col5">Tot £</th>
+                <th class="col6">Cost £</th>
                 <th class="col7">Duration</th>
             </tr>
             {% for component_type,outer_value in form_data.16.items %}
@@ -1246,9 +1250,9 @@
                 <th class="col1">Radiator Locations</th>
                 <th class="col2">Component</th>
                 <th class="col3">Qty</th>
-                <th class="col4">Price</th>
-                <th class="col5">Ext Price</th>
-                <th class="col6">Cost</th>
+                <th class="col4">Unit £</th>
+                <th class="col5">Tot £</th>
+                <th class="col6">Cost £</th>
                 <th class="col7">Duration</th>
             </tr>
             {% for component_type,outer_value in form_data.17.items %}
@@ -1276,15 +1280,24 @@
         </table>
     {% endif %}
 
+
+ <!-- End of Page -->
+
+ <div class="break"></div>
+
+ <!-- New Page -->
+
+ <div class="page-start"><br><br><br><br><br></div>
+
     {% if 'Radiator(s) Required' in form_data.7.radiator_specification or 'Thermostatic Radiator Valves Only' in form_data.7.radiator_specification %}
     <table id="bom">
         <tr>
             <th class="col1">Radiator Valves</th>
             <th class="col2">Component</th>
              <th class="col3">Qty</th>
-             <th class="col4">Price</th>
-             <th class="col5">Ext Price</th>
-             <th class="col6">Cost</th>
+             <th class="col4">Unit £</th>
+             <th class="col5">Tot £</th>
+             <th class="col6">Cost £</th>
              <th class="col7">Duration</th>
         </tr>
         {% for component_type,outer_value in form_data.14.items %}
@@ -1318,9 +1331,9 @@
             <th class="col1">Towel Rails</th>
             <th class="col2">Component</th>
              <th class="col3">Qty</th>
-             <th class="col4">Price</th>
-             <th class="col5">Ext Price</th>
-             <th class="col6">Cost</th>
+             <th class="col4">Unit £</th>
+             <th class="col5">Tot £</th>
+             <th class="col6">Cost £</th>
              <th class="col7">Duration</th>
         </tr>
         {% for component_type,outer_value in form_data.15.items %}
@@ -1355,9 +1368,9 @@
             <th class="col1">Towel Rail Locations</th>
             <th class="col2">Component</th>
              <th class="col3">Qty</th>
-             <th class="col4">Price</th>
-             <th class="col5">Ext Price</th>
-             <th class="col6">Cost</th>
+             <th class="col4">Unit £</th>
+             <th class="col5">Tot £</th>
+             <th class="col6">Cost £</th>
              <th class="col7">Duration</th>
         </tr>
         {% for component_type,outer_value in form_data.18.items %}
@@ -1392,9 +1405,9 @@
             <th class="col1">Customer Supplied Radiators</th>
             <th class="col2">Component</th>
              <th class="col3">Qty</th>
-             <th class="col4">Price</th>
-             <th class="col5">Ext Price</th>
-             <th class="col6">Cost</th>
+             <th class="col4">Unit £</th>
+             <th class="col5">Tot £</th>
+             <th class="col6">Cost £</th>
              <th class="col7">Duration</th>
         </tr>
         {% for component_type,outer_value in form_data.15.items %}

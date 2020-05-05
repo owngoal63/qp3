@@ -280,7 +280,7 @@ def edit_profile_details(request):
 class ProductPriceList(ListView):
 	''' Invoke the django Generic Model form capability to display the ProductPrice information in a list ''' 
 	context_object_name = 'products_by_user'
-	paginate_by = 10
+	paginate_by = 30
 
 	def get_queryset(self):
 		filter_val = self.request.GET.get('filter', None)

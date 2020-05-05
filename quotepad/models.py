@@ -48,9 +48,6 @@ COMPONENT_BRAND_DROPDOWN = (
 	('Ideal','Ideal'),
 	('Glow Worm','Glow Worm'),
 	('Baxi','Baxi'),
-	('Hive','Hive'),
-	('Magnaclean','Magnaclean'),
-	('Grundfos','Grundfos'),
 	('Applicable for All','Applicable for All'),
 )
 

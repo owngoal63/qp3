@@ -4,10 +4,11 @@
 
 
 
-<div class="container product-details-container">
+<div class="container-fluid product-details-container">
     <div class="row">
         <div class="col-12">
             <h2>List of Products</h2>
+            <h4>{{request.GET.filter}}</h4>
         </div>
     </div>
 
@@ -17,23 +18,25 @@
     </div>
 
     <div class="row price-list-headings">
-        <div class="col-6">
-            <a href="/productpricelist/"><h4>Brand/Product</h4></a>
+        <div class="col-7">
+            <a href="/productpricelist/"><h5>Brand/Product</h5></a>
         </div>
         <div class="col-2">
-            <h4>Price/Cost</h4>
+            <h5>Price/Cost</h5>
         </div>
         <div class="col-1">
-            <h4>Image</h4>
+            <h5>Image</h5>
         </div>
-        <div class="col-3">
-            <h4>Action</h4>
+        <div class="col-2">
+            <h5>Action</h5>
         </div>
     </div>
 
-    <div class="row">
-        {% for prod in products_by_user %}
-        <div class="col-6">
+
+    {% for prod in products_by_user %}
+    <div class="row product-row">
+
+        <div class="col-7">
             <a href="/productpricelist/?filter={{prod.brand}}">{{ prod.brand }}</a> {{ prod.model_name }}
         </div>
 
@@ -46,14 +49,14 @@
             {% endif %}
         </div>
 
-        <div class="col-3">
+        <div class="col-2">
             <a href="{% url 'productpriceupdate' prod.pk  %}" class="btn btn-primary btn-sm" role="button">Edit</a>
             <a href="{% url 'productpricedelete' prod.pk  %}" class="btn btn-secondary btn-sm" role="button">Del</a>
         </div>
 
     </div>
 
-    <div class="row">
+    <!--<div class="row">-->
         {% empty %}
 
         <p class="text-muted product-list-sub-text">You have no products registered.</p>
@@ -74,9 +77,9 @@
                 <li class="page-item"><span class="page-link">&laquo;</span></li>
             {% endif %}
             {% for i in paginator.page_range %}
-                
+
                 <li class="page-item"><a class="page-link" href="?page={{ i }}{%if 'filter' in request.get_full_path %}&filter={{products_by_user.0.brand}}{%endif%}">{{ i }}</a></li>
-                
+
             {% endfor %}
             {% if page_obj.has_next %}
                 <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{%if 'filter' in request.get_full_path %}&filter={{products_by_user.0.brand}}{%endif%}">&raquo;</a></li>

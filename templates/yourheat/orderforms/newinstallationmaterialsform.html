@@ -40,89 +40,104 @@
     <div class = "row">
         <div class = "col-6">
             <div class="form-group">
+                <label>{% if wizard.form.alt_manufx.value %} Primary Boiler {% endif %}Programmer/Thermostat</label>{% if wizard.form.programmer_thermostat.field.required %} *{% endif %}
+                {{ wizard.form.programmer_thermostat }}
+            </div>
+        </div>
+        <div class = "col-6">
+            <div class="form-group">
+                <label>Alternative Boiler Programmer/Thermostat</label>{% if wizard.form.alt_programmer_thermostat.field.required %} *{% endif %}
+                {{ wizard.form.alt_programmer_thermostat }}
+            </div>
+        </div>
+    </div>
+    
+    <div class = "row">
+        <div class = "col-6">
+            <div class="form-group">
                 <label>{{ wizard.form.plume_components.label }}</label>{% if wizard.form.plume_components.field.required %} *{% endif %}
                 {{ wizard.form.plume_components }}
             </div>
         </div>
         <div class = "col-6">
             <div class="form-group">
-                <label>{{ wizard.form.programmer_thermostat.label }}</label>{% if wizard.form.programmer_thermostat.field.required %} *{% endif %}
-                {{ wizard.form.programmer_thermostat }}
+                <label>{{ wizard.form.additional_central_heating_components.label }}</label>{% if wizard.form.additional_central_heating_components.field.required %} *{% endif %}
+                {{ wizard.form.additional_central_heating_components }}
             </div>
         </div>
     </div>
     
     <div class = "row">
-        <div class = "col-6">
-            <div class="form-group">
-                <label>{{ wizard.form.additional_central_heating_components.label }}</label>{% if wizard.form.additional_central_heating_components.field.required %} *{% endif %}
-                {{ wizard.form.additional_central_heating_components }}
-            </div>
-        </div>
         <div class = "col-6">
             <div class="form-group">
                 <label>{{ wizard.form.central_heating_system_filter.label }}</label>{% if wizard.form.central_heating_system_filter.field.required %} *{% endif %}
                 {{ wizard.form.central_heating_system_filter }}
             </div>
         </div>
-    </div>
-    
-    <div class = "row">
         <div class = "col-6">
             <div class="form-group">
                 <label>{{ wizard.form.scale_reducer.label }}</label>{% if wizard.form.scale_reducer.field.required %} *{% endif %}
                 {{ wizard.form.scale_reducer }}
             </div>
         </div>
+    </div>
+    
+    <div class = "row">
         <div class = "col-6">
             <div class="form-group">
                 <label>{{ wizard.form.condensate_components.label }}</label>{% if wizard.form.condensate_components.field.required %} *{% endif %}
                 {{ wizard.form.condensate_components }}
             </div>
         </div>
-    </div>
-    
-    <div class = "row">
         <div class = "col-6">
             <div class="form-group">
                 <label>{{ wizard.form.additional_copper_required.label }}</label>{% if wizard.form.additional_copper_required.field.required %} *{% endif %}
                 {{ wizard.form.additional_copper_required }}
             </div>
         </div>
+    </div>
+    
+    <div class = "row">
         <div class = "col-6">
             <div class="form-group">
                 <label>{{ wizard.form.fittings_packs.label }}</label>{% if wizard.form.fittings_packs.field.required %} *{% endif %}
                 {{ wizard.form.fittings_packs }}
             </div>
         </div>
-    </div>
-    
-    <div class = "row">
         <div class = "col-6">
             <div class="form-group">
                 <label>{{ wizard.form.electrical_pack.label }}</label>{% if wizard.form.electrical_pack.field.required %} *{% endif %}
                 {{ wizard.form.electrical_pack }}
             </div>
         </div>
+    </div>
+    
+    <div class = "row">
         <div class = "col-6">
             <div class="form-group">
                 <label>{{ wizard.form.earth_spike_required.label }}</label>{% if wizard.form.earth_spike_required.field.required %} *{% endif %}
                 {{ wizard.form.earth_spike_required }}
             </div>
         </div>
-    </div>
-    
-    <div class = "row">
         <div class = "col-6">
             <div class="form-group">
                 <label>{{ wizard.form.filling_link.label }}</label>{% if wizard.form.filling_link.field.required %} *{% endif %}
                 {{ wizard.form.filling_link }}
             </div>
         </div>
+    </div>
+    
+    <div class = "row">
         <div class = "col-6">
             <div class="form-group">
                 <label>{{ wizard.form.building_pack_required.label }}</label>{% if wizard.form.building_pack_required.field.required %} *{% endif %}
                 {{ wizard.form.building_pack_required }}
+            </div>
+        </div>
+        <div class = "col-6">
+            <div class="form-group">
+                <label>{{ wizard.form.double_handed_lift_required.label }}</label>{% if wizard.form.double_handed_lift_required.field.required %} *{% endif %}
+                {{ wizard.form.double_handed_lift_required }}
             </div>
         </div>
     </div>
@@ -130,15 +145,13 @@
     <div class = "row">
         <div class = "col-6">
             <div class="form-group">
-                <label>{{ wizard.form.double_handed_lift_required.label }}</label>{% if wizard.form.double_handed_lift_required.field.required %} *{% endif %}
-                {{ wizard.form.double_handed_lift_required }}
-            </div>
-        </div>
-        <div class = "col-6">
-            <div class="form-group">
                 <label>{{ wizard.form.cylinder.label }}</label>{% if wizard.form.cylinder.field.required %} *{% endif %}
                 {{ wizard.form.cylinder }}
             </div>
+        </div>
+        <div class = "col-6">
+            <!-- Blank column  -->
+            &nbsp;  
         </div>
     </div>
 

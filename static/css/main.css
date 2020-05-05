@@ -1,532 +1,544 @@
 /* These classes are used throughout the application in order to make the look of the site consistent. */
 body {
-    font-size: 16px;
-    min-height: 70vh;
-  }
-  
-  main {
-    background-color: rgb(243, 241, 241);
-    margin-top: 5vh;
-    margin-bottom: 5vh;
-    margin-left: 5vw;
-    margin-right: 5vw;
-    padding-top: 10px;
-    padding-bottom: 10px;
-  }
+  font-size: 16px;
+  min-height: 70vh;
+}
+
+main {
+  background-color: rgb(243, 241, 241);
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+  margin-left: 5vw;
+  margin-right: 5vw;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
 
 a {
-    text-decoration: none ;
- }
+  text-decoration: none ;
+}
 
 a:hover {
-   color:black;
-   text-decoration:none;
-   cursor:pointer;
-  }
-  
-  .white-space {
-    min-height: 70vh;
-  }
-  
-  .navbar {
-    color: white;
-  }
-  
-  /* The dropdown class is utilised by the navbar to give options when clicking on the settings glyph. */
-  .dropdown {
-    list-style: none;
-    border: none;
-    margin-right: 30px;
-  }
-  
-  .container-fluid {
-    margin-top: 25px;
-    margin-bottom: 25px;
-  }
-  
-  .base-footer {
-    color: rgb(255, 255, 255);
-    padding-top: 20px;
-    min-height: 25vh
-  }
-  
-  h1 {
-    text-align: center;
-    font-size: 2rem;
-  }
+ color:black;
+ text-decoration:none;
+ cursor:pointer;
+}
 
-  h2 {
-    text-align: center;
-    font-size: 1.8rem;
-    color:rgb(80,80,80);
-  }
-  
-  .social-list {
-    list-style: none;
-  }
+.white-space {
+  min-height: 70vh;
+}
 
-  ul#id_7-radiator_specification li {
-    display:inline;
-    padding-left:10px;
-  }
+.navbar {
+  color: white;
+}
 
-  
-  /* Landing Page - These classes are used to style the landing page - designed to entice users to sign up to Quotepad */
-  .heading-section-landing {
-    font-size: 1.4rem;
-    text-align: center;
-    margin-bottom: 80px;
-  }
-  
-  .landing-info-col {
-    text-align: center;
-  }
-  
-  .landing-info-titles {
-    font-size: 1.4rem;
-  }
-  
-  .landing-info-icons {
-    font-size: 3rem;
-  }
-  
-  .process-section {
-    background-color: rgb(0, 0, 0);
-  }
-  
-  .process-list-col {
-    text-align: center;
-    background-color: rgb(62, 194, 207);
-  }
-  
-  .process-image-col {
-    text-align: center;
-  }
-  
-  .process-list {
-    list-style: none;
-    color: white;
-    margin-top: 50px;
-  }
-  
-  .process-list-item-heading {
-    font-size: 2rem;
-  }
-  
-  .btn-col {
-    text-align: center;
-    padding-bottom: 20px;
-    background-color: rgb(243, 241, 241);
-    ;
-  }
-  
-  .trustpilot-logo {
-    height: 100px;
-    margin-top: 50px;
-  
-  }
-  
-  .quote-row {
-    margin-top: 50px;
-  }
-  
-  /* These classes are used by the varios forms within Quotepad  */
-  
-  .quote-form-container {
-    background-color: rgb(246, 245, 242);
-    margin: 0 auto;
-  }
-  
-  .dashboard-container {
-    margin-top: 50px;
-    margin-bottom: 50px;
-  }
-  
-  .product-details-container {
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
+/* The dropdown class is utilised by the navbar to give options when clicking on the settings glyph. */
+.dropdown {
+  list-style: none;
+  border: none;
+  margin-right: 30px;
+}
 
-  .component-details-container {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    padding: 0px;
-  }
-  
-  .fa-image {
-    font-size: 30px;
-  }
-  
-  .price-list-headings {
-    margin-top: 30px;
-  }
-  
-  .product-list-sub-text {
-    margin-left: 15px;
-  }
+.container-fluid {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
 
-  /* .plume-row {
-    color:red;
-    font-weight:1.3rem;
-    padding:1px; 
-  } */
+.base-footer {
+  color: rgb(255, 255, 255);
+  padding-top: 20px;
+  min-height: 25vh
+}
 
-  .component-row {
-    padding:1px; 
-  }
+h1 {
+  text-align: center;
+  font-size: 2rem;
+}
+
+h2 {
+  text-align: center;
+  font-size: 1.8rem;
+  color:rgb(80,80,80);
+}
+
+h4 {
+  text-align: center;
+  font-size: 1.2rem;
+  color:darkslategray;
+}
+
+.social-list {
+  list-style: none;
+}
+
+ul#id_7-radiator_specification li {
+  display:inline;
+  padding-left:10px;
+}
 
 
-  .opt_extra-row {
-    padding:1px; 
-  }
-  
-  .edit-product-container {
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .blockquote {
-    color: rgb(255, 255, 255);
-    padding-bottom: 50px;
-  }
+/* Landing Page - These classes are used to style the landing page - designed to entice users to sign up to Quotepad */
+.heading-section-landing {
+  font-size: 1.4rem;
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.landing-info-col {
+  text-align: center;
+}
+
+.landing-info-titles {
+  font-size: 1.4rem;
+}
+
+.landing-info-icons {
+  font-size: 3rem;
+}
+
+.process-section {
+  background-color: rgb(0, 0, 0);
+}
+
+.process-list-col {
+  text-align: center;
+  background-color: rgb(62, 194, 207);
+}
+
+.process-image-col {
+  text-align: center;
+}
+
+.process-list {
+  list-style: none;
+  color: white;
+  margin-top: 50px;
+}
+
+.process-list-item-heading {
+  font-size: 2rem;
+}
+
+.btn-col {
+  text-align: center;
+  padding-bottom: 20px;
+  background-color: rgb(243, 241, 241);
+  ;
+}
+
+.trustpilot-logo {
+  height: 100px;
+  margin-top: 50px;
+
+}
+
+.quote-row {
+  margin-top: 50px;
+}
+
+/* These classes are used by the varios forms within Quotepad  */
+
+.quote-form-container {
+  background-color: rgb(246, 245, 242);
+  margin: 0 auto;
+}
+
+.dashboard-container {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.product-details-container {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 0px;
+}
+
+.component-details-container {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 0px;
+}
+
+.fa-image {
+  font-size: 30px;
+}
+
+.price-list-headings {
+  margin-top: 30px;
+  text-align: left;
+}
+
+.product-list-sub-text {
+  margin-left: 15px;
+}
+
+/* .plume-row {
+  color:red;
+  font-weight:1.3rem;
+  padding:1px;
+} */
+
+.product-row {
+  padding:1px;
+}
+
+.component-row {
+  padding:1px;
+}
+
+
+.opt_extra-row {
+  padding:1px;
+}
+
+.edit-product-container {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.blockquote {
+  color: rgb(255, 255, 255);
+  padding-bottom: 50px;
+}
 
 .form-cust-rad-qty {
-  position: relative;
-  left: 50px;
-  background-color: rgb(228, 228, 228);
-  visibility: hidden;
+position: relative;
+left: 50px;
+background-color: rgb(228, 228, 228);
+visibility: hidden;
 
-}  
+}
 
 .form-rad-group {
-  /* background-color: rgb(228, 228, 228); */
-  visibility: hidden;
+/* background-color: rgb(228, 228, 228); */
+visibility: hidden;
 }
 
 .form-rad-valve-group {
-  /* background-color: rgb(228, 228, 228); */
-  visibility: hidden;
+/* background-color: rgb(228, 228, 228); */
+visibility: hidden;
 }
 
 .form-towel-group {
-  /* background-color: rgb(228, 228, 228); */
-  visibility: hidden;
+/* background-color: rgb(228, 228, 228); */
+visibility: hidden;
 }
 
 .radiator-section-headings {
-  padding-bottom: 0px;  
-  margin:0px;
+padding-bottom: 0px;
+margin:0px;
 }
 
 .form-extras-group {
-  /* background-color: rgb(228, 228, 228); */
-  visibility: hidden;
+/* background-color: rgb(228, 228, 228); */
+visibility: hidden;
 }
 
 
 .input-disabled {
-  text-align: left;
-  background-color :rgb(246, 245, 242);
+text-align: left;
+background-color :rgb(246, 245, 242);
 }
 
 .input-int {
-  max-width: 60px;
-  text-align: right;
-  background-color : rgb(177, 243, 177);
+max-width: 60px;
+text-align: right;
+background-color : rgb(177, 243, 177);
 }
 
 .input-price {
-  max-width: 60px;
-  text-align: right;
-  background-color :rgb(246, 245, 242);
+max-width: 60px;
+text-align: right;
+background-color :rgb(246, 245, 242);
 }
 
 
-  
-  /* 
-  The responsive effects on the dashboard page are built using these cards, they are all utilised depending on the status of the user as they complete sections of Quotepad. */
-  .card {
-    color: rgb(255, 255, 255);
-    background-position: center;
-    background-size: cover;
-    padding: 20px;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  
-  .card-1 {
-    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(216, 94, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://static.thenounproject.com/png/88296-200.png);
-    background-image: linear-gradient(rgba(216, 94, 94, 0.671), rgba(230, 212, 212, 0.911)), url(https://static.thenounproject.com/png/88296-200.png);
-    background-position: center;
-    background-size: cover;
-    border: 1px solid red;
-  
-  }
-  
-  .card-2 {
-    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(216, 94, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://cdn.pixabay.com/photo/2017/02/22/14/18/business-2089532_960_720.png);
-    background-image: linear-gradient(rgba(216, 94, 94, 0.671), rgba(230, 212, 212, 0.911)), url(https://cdn.pixabay.com/photo/2017/02/22/14/18/business-2089532_960_720.png);
-    background-position: center;
-    background-size: cover;
-    border: 1px solid red;
-  }
-  
-  .card-3 {
-    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(216, 94, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://images.assetsdelivery.com/compings_v2/anartelman/anartelman1802/anartelman180200862.jpg);
-    background-image: linear-gradient(rgba(216, 94, 94, 0.671), rgba(230, 212, 212, 0.911)), url(https://images.assetsdelivery.com/compings_v2/anartelman/anartelman1802/anartelman180200862.jpg);
-    background-position: center;
-    background-size: cover;
-    border: 1px solid red;
-  }
-  
-  .card-4 {
-    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(216, 94, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://image.flaticon.com/icons/png/512/18/18227.png);
-    background-image: linear-gradient(rgba(216, 94, 94, 0.671), rgba(230, 212, 212, 0.911)), url(https://image.flaticon.com/icons/png/512/18/18227.png);
-    background-position: center;
-    background-size: cover;
-    border: 1px solid red;
-  }
-  
-  .card-5 {
-    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(216, 94, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://cdn0.iconfinder.com/data/icons/miscellaneous-1-2/128/subscribe_subscription_button_online-512.png);
-    background-image: linear-gradient(rgba(216, 94, 94, 0.671), rgba(230, 212, 212, 0.911)), url(https://cdn0.iconfinder.com/data/icons/miscellaneous-1-2/128/subscribe_subscription_button_online-512.png);
-    background-position: center;
-    background-size: cover;
-    border: 1px solid red;
-  }
-  
-  .card-6 {
-    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(216, 94, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://cdn1.iconfinder.com/data/icons/feedback-review-1/64/x-21-512.png);
-    background-image: linear-gradient(rgba(216, 94, 94, 0.671), rgba(230, 212, 212, 0.911)), url(https://cdn1.iconfinder.com/data/icons/feedback-review-1/64/x-21-512.png);
-    background-position: center;
-    background-size: cover;
-    border: 1px solid red;
-  }
-  
-  .card-1-complete {
-    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(251, 127, 51, 0.671)), to(rgba(255, 210, 41, 0.911))), url(https://static.thenounproject.com/png/88296-200.png);
-    background-image: linear-gradient(rgba(251, 127, 51, 0.671), rgba(255, 210, 41, 0.311)), url(https://static.thenounproject.com/png/88296-200.png);
-    background-position: center;
-    border: 1px solid rgb(251, 127, 51);
-    background-size: cover;
-  
-  }
-  
-  .card-2-complete {
-    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(104, 216, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://static.thenounproject.com/png/3927-200.png);
-    background-image: linear-gradient(rgba(251, 127, 51, 0.671), rgba(255, 210, 41, 0.311)), url(https://static.thenounproject.com/png/3927-200.png);
-    background-position: center;
-    background-size: cover;
-    border: 1px solid rgb(251, 127, 51);
-  }
-  
-  .card-3-complete {
-    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(104, 216, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://images.assetsdelivery.com/compings_v2/anartelman/anartelman1802/anartelman180200862.jpg);
-    background-image: linear-gradient(rgba(251, 127, 51, 0.671), rgba(255, 210, 41, 0.311)), url(https://images.assetsdelivery.com/compings_v2/anartelman/anartelman1802/anartelman180200862.jpg);
-    background-position: center;
-    background-size: cover;
-    border: 1px solid rgb(251, 127, 51);
-  }
-  
-  .card-4-complete {
-    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(104, 216, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://image.flaticon.com/icons/png/512/18/18227.png);
-    background-image: linear-gradient(rgba(251, 127, 51, 0.671), rgba(255, 210, 41, 0.311)), url(https://image.flaticon.com/icons/png/512/18/18227.png);
-    background-position: center;
-    background-size: cover;
-    border: 1px solid rgb(251, 127, 51);
-  }
-  
-  .card-5-complete {
-    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(104, 216, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://cdn0.iconfinder.com/data/icons/miscellaneous-1-2/128/subscribe_subscription_button_online-512.png);
-    background-image: linear-gradient(rgba(251, 127, 51, 0.671), rgba(255, 210, 41, 0.311)), url(https://cdn0.iconfinder.com/data/icons/miscellaneous-1-2/128/subscribe_subscription_button_online-512.png);
-    background-position: center;
-    background-size: cover;
-    border: 1px solid rgb(251, 127, 51);
-  }
-  
-  .card-6-complete {
-    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(104, 216, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://cdn1.iconfinder.com/data/icons/feedback-review-1/64/x-21-512.png);
-    background-image: linear-gradient(rgba(251, 127, 51, 0.671), rgba(255, 210, 41, 0.311)), url(https://cdn1.iconfinder.com/data/icons/feedback-review-1/64/x-21-512.png);
-    background-position: center;
-    background-size: cover;
-    border: 1px solid rgb(251, 127, 51);
-  }
-  
-  .card:hover {
-    -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
-  }
-  
-  .card-heardings {
-    font-size: 1.4rem;
-    background-color: rgba(0, 0, 0, 0.452);
-    margin-bottom: 50px;
-  }
-  
-  .card-text {
-    background-color: rgba(0, 0, 0, 0.541);
-    height: 150px;
-  }
-  
-  .lead {
-    text-align: center;
-  }
-  
-  #next-step-btn {
-    float: right;
-    margin-left:3px;
+
+/*
+The responsive effects on the dashboard page are built using these cards, they are all utilised depending on the status of the user as they complete sections of Quotepad. */
+.card {
+  color: rgb(255, 255, 255);
+  background-position: center;
+  background-size: cover;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+
+.card-1 {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(216, 94, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://static.thenounproject.com/png/88296-200.png);
+  background-image: linear-gradient(rgba(216, 94, 94, 0.671), rgba(230, 212, 212, 0.911)), url(https://static.thenounproject.com/png/88296-200.png);
+  background-position: center;
+  background-size: cover;
+  border: 1px solid red;
+
+}
+
+.card-2 {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(216, 94, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://cdn.pixabay.com/photo/2017/02/22/14/18/business-2089532_960_720.png);
+  background-image: linear-gradient(rgba(216, 94, 94, 0.671), rgba(230, 212, 212, 0.911)), url(https://cdn.pixabay.com/photo/2017/02/22/14/18/business-2089532_960_720.png);
+  background-position: center;
+  background-size: cover;
+  border: 1px solid red;
+}
+
+.card-3 {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(216, 94, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://images.assetsdelivery.com/compings_v2/anartelman/anartelman1802/anartelman180200862.jpg);
+  background-image: linear-gradient(rgba(216, 94, 94, 0.671), rgba(230, 212, 212, 0.911)), url(https://images.assetsdelivery.com/compings_v2/anartelman/anartelman1802/anartelman180200862.jpg);
+  background-position: center;
+  background-size: cover;
+  border: 1px solid red;
+}
+
+.card-4 {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(216, 94, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://image.flaticon.com/icons/png/512/18/18227.png);
+  background-image: linear-gradient(rgba(216, 94, 94, 0.671), rgba(230, 212, 212, 0.911)), url(https://image.flaticon.com/icons/png/512/18/18227.png);
+  background-position: center;
+  background-size: cover;
+  border: 1px solid red;
+}
+
+.card-5 {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(216, 94, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://cdn0.iconfinder.com/data/icons/miscellaneous-1-2/128/subscribe_subscription_button_online-512.png);
+  background-image: linear-gradient(rgba(216, 94, 94, 0.671), rgba(230, 212, 212, 0.911)), url(https://cdn0.iconfinder.com/data/icons/miscellaneous-1-2/128/subscribe_subscription_button_online-512.png);
+  background-position: center;
+  background-size: cover;
+  border: 1px solid red;
+}
+
+.card-6 {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(216, 94, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://cdn1.iconfinder.com/data/icons/feedback-review-1/64/x-21-512.png);
+  background-image: linear-gradient(rgba(216, 94, 94, 0.671), rgba(230, 212, 212, 0.911)), url(https://cdn1.iconfinder.com/data/icons/feedback-review-1/64/x-21-512.png);
+  background-position: center;
+  background-size: cover;
+  border: 1px solid red;
+}
+
+.card-1-complete {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(251, 127, 51, 0.671)), to(rgba(255, 210, 41, 0.911))), url(https://static.thenounproject.com/png/88296-200.png);
+  background-image: linear-gradient(rgba(251, 127, 51, 0.671), rgba(255, 210, 41, 0.311)), url(https://static.thenounproject.com/png/88296-200.png);
+  background-position: center;
+  border: 1px solid rgb(251, 127, 51);
+  background-size: cover;
+
+}
+
+.card-2-complete {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(104, 216, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://static.thenounproject.com/png/3927-200.png);
+  background-image: linear-gradient(rgba(251, 127, 51, 0.671), rgba(255, 210, 41, 0.311)), url(https://static.thenounproject.com/png/3927-200.png);
+  background-position: center;
+  background-size: cover;
+  border: 1px solid rgb(251, 127, 51);
+}
+
+.card-3-complete {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(104, 216, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://images.assetsdelivery.com/compings_v2/anartelman/anartelman1802/anartelman180200862.jpg);
+  background-image: linear-gradient(rgba(251, 127, 51, 0.671), rgba(255, 210, 41, 0.311)), url(https://images.assetsdelivery.com/compings_v2/anartelman/anartelman1802/anartelman180200862.jpg);
+  background-position: center;
+  background-size: cover;
+  border: 1px solid rgb(251, 127, 51);
+}
+
+.card-4-complete {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(104, 216, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://image.flaticon.com/icons/png/512/18/18227.png);
+  background-image: linear-gradient(rgba(251, 127, 51, 0.671), rgba(255, 210, 41, 0.311)), url(https://image.flaticon.com/icons/png/512/18/18227.png);
+  background-position: center;
+  background-size: cover;
+  border: 1px solid rgb(251, 127, 51);
+}
+
+.card-5-complete {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(104, 216, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://cdn0.iconfinder.com/data/icons/miscellaneous-1-2/128/subscribe_subscription_button_online-512.png);
+  background-image: linear-gradient(rgba(251, 127, 51, 0.671), rgba(255, 210, 41, 0.311)), url(https://cdn0.iconfinder.com/data/icons/miscellaneous-1-2/128/subscribe_subscription_button_online-512.png);
+  background-position: center;
+  background-size: cover;
+  border: 1px solid rgb(251, 127, 51);
+}
+
+.card-6-complete {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(104, 216, 94, 0.671)), to(rgba(230, 212, 212, 0.911))), url(https://cdn1.iconfinder.com/data/icons/feedback-review-1/64/x-21-512.png);
+  background-image: linear-gradient(rgba(251, 127, 51, 0.671), rgba(255, 210, 41, 0.311)), url(https://cdn1.iconfinder.com/data/icons/feedback-review-1/64/x-21-512.png);
+  background-position: center;
+  background-size: cover;
+  border: 1px solid rgb(251, 127, 51);
+}
+
+.card:hover {
+  -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+}
+
+.card-heardings {
+  font-size: 1.4rem;
+  background-color: rgba(0, 0, 0, 0.452);
+  margin-bottom: 50px;
+}
+
+.card-text {
+  background-color: rgba(0, 0, 0, 0.541);
+  height: 150px;
+}
+
+.lead {
+  text-align: center;
+}
+
+#next-step-btn {
+  float: right;
+  margin-left:3px;
+}
+
+#heat-loss-btn {
+  float: right;
+}
+
+/* classes for pretty checkbox input */
+
+.pretty {
+  position: relative;
+  margin: 1em;
+}
+.pretty input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  min-width: 1em;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  opacity: 0;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.pretty-inner {
+  box-sizing: border-box;
+  position: relative;
+}
+.pretty-inner label {
+  position: initial;
+  display: inline-block;
+  font-weight: 400;
+  margin: 0;
+  text-indent: 1.5em;
+  min-width: calc(1em + 2px);
+}
+.pretty-inner label:after,
+.pretty-inner label:before {
+  content: '';
+  width: calc(1em + 2px);
+  height: calc(1em + 2px);
+  display: block;
+  box-sizing: border-box;
+  border-radius: 0;
+  border: 1px solid transparent;
+  z-index: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: transparent;
+}
+.pretty-inner label:before {
+  border-color: #bdc3c7;
+}
+.pretty input:checked~.pretty-inner label:after {
+  background-color: #00bb82;
+  width: calc(1em - 6px);
+  height: calc(1em - 6px);
+  top: 4px;
+  left: 4px;
+}
+
+
+/* Add checkmark character style */
+.pretty input:checked~.pretty-inner.checkmark:after {
+  content: '\2713';
+  color: #fff;
+  position: absolute;
+  font-size: 0.65em;
+  left: 6px;
+  top: 3px;
+}
+
+/* End of pretty */
+
+.format_chkbox{
+  height: 20px;
+  width: 20px;
   }
 
-  #heat-loss-btn {
-    float: right; 
-  }
+/* CSS for Hitachi   */
+#products {
+  width: 100%;
+}
+#products td {
+  border-collapse: collapse;
+  padding: 10px;
+  width: 25%;
+}
 
-  /* classes for pretty checkbox input */
+#enabled {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  border-collapse: collapse;
+  color: #4D4D4D;
+  width: 100%;
+}
 
-  .pretty {
-    position: relative;
-    margin: 1em;
-  }
-  .pretty input {
-    position: absolute;
-    left: 0;
-    top: 0;
-    min-width: 1em;
-    width: 100%;
-    height: 100%;
-    z-index: 2;
-    opacity: 0;
-    margin: 0;
-    padding: 0;
-    cursor: pointer;
-  }
-  .pretty-inner {
-    box-sizing: border-box;
-    position: relative;
-  }
-  .pretty-inner label {
-    position: initial;
-    display: inline-block;
-    font-weight: 400;
-    margin: 0;
-    text-indent: 1.5em;
-    min-width: calc(1em + 2px);
-  }
-  .pretty-inner label:after,
-  .pretty-inner label:before {
-    content: '';
-    width: calc(1em + 2px);
-    height: calc(1em + 2px);
-    display: block;
-    box-sizing: border-box;
-    border-radius: 0;
-    border: 1px solid transparent;
-    z-index: 0;
-    position: absolute;
-    left: 0;
-    top: 0;
-    background-color: transparent;
-  }
-  .pretty-inner label:before {
-    border-color: #bdc3c7;
-  }
-  .pretty input:checked~.pretty-inner label:after {
-    background-color: #00bb82;
-    width: calc(1em - 6px);
-    height: calc(1em - 6px);
-    top: 4px;
-    left: 4px;
-  }
-  
-  
-  /* Add checkmark character style */
-  .pretty input:checked~.pretty-inner.checkmark:after {
-    content: '\2713';
-    color: #fff;
-    position: absolute;
-    font-size: 0.65em;
-    left: 6px;
-    top: 3px;
-  }
+#enabled td{
+  border: 1px solid #D9D9D9;
+  padding: 5px;
+  text-align: center;
+}
 
-  /* End of pretty */
+#enabled tr:nth-child(even){background-color: #D9D9D9;}
 
-  .format_chkbox{
-    height: 20px;
-    width: 20px;
-    }
+#enabled tr:hover {background-color: #B3B3B3;}
 
-  /* CSS for Hitachi   */
-  #products {
-    width: 100%;
-  }
-  #products td {
-    border-collapse: collapse;
-    padding: 10px;
-    width: 25%;
-  }
-  
-  #enabled {
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    font-size: 12px;
-    border-collapse: collapse;
-    color: #4D4D4D;
-    width: 100%;
-  }
+#enabled th {
+  border: 1px solid #D9D9D9;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 8px;
+  padding-right: 8px;
+  text-align: center;
+  background-color: #B1000E;
+  color: white;
+}
 
-  #enabled td{
-    border: 1px solid #D9D9D9;
-    padding: 5px;
-    text-align: center;
-  }
+#disabled {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  border-collapse: collapse;
+  color: #4D4D4D;
+  width: 100%;
+  opacity: 0.2;
+}
 
-  #enabled tr:nth-child(even){background-color: #D9D9D9;}
+#disabled td{
+  border: 1px solid #D9D9D9;
+  padding: 5px;
+  text-align: center;
+}
 
-  #enabled tr:hover {background-color: #B3B3B3;}
+#disabled tr:nth-child(even){background-color: #D9D9D9;}
 
-  #enabled th {
-    border: 1px solid #D9D9D9;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    padding-left: 8px;
-    padding-right: 8px;
-    text-align: center;
-    background-color: #B1000E;
-    color: white;
-  }
+#disabled th {
+  border: 1px solid #D9D9D9;
+  padding-top: 8px;
+  padding-bottom:8px;
+  padding-left: 8px;
+  padding-right: 8px;
+  text-align: center;
+  background-color: #B1000E;
+  color: white;
+}
 
-  #disabled {
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    font-size: 12px;
-    border-collapse: collapse;
-    color: #4D4D4D;
-    width: 100%;
-    opacity: 0.2;
-  }
-
-  #disabled td{
-    border: 1px solid #D9D9D9;
-    padding: 5px;
-    text-align: center;
-  }
-
-  #disabled tr:nth-child(even){background-color: #D9D9D9;}
-
-  #disabled th {
-    border: 1px solid #D9D9D9;
-    padding-top: 8px;
-    padding-bottom:8px;
-    padding-left: 8px;
-    padding-right: 8px;
-    text-align: center;
-    background-color: #B1000E;
-    color: white;
-  }
-
-  #value {
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    font-size: 24px;
-    color: #4D4D4D;
-  }
+#value {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  color: #4D4D4D;
+}
 

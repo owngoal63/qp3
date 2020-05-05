@@ -262,26 +262,26 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			# Get the radiator Duration
 			if 'Radiator(s) Required' in radiators_step_data.getlist('7-radiator_specification'):
 				for x in range(1, 13):
-					if radiators_step_data.get('7-radiator_' + str(x)):
-						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-radiator_' + str(x)), component_type='Radiator', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
-					if radiators_step_data.get('7-radiator_style_' + str(x)):
-						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-radiator_style_' + str(x)), component_type='Radiator Style', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
-					if radiators_step_data.get('7-location_' + str(x)):
-						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-location_' + str(x)), component_type='Radiator Location', user=settings.YH_MASTER_PROFILE_ID).est_time_duration	
+					if radiators_step_data.get('7-rad_' + str(x)):
+						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-rad_' + str(x)), component_type='Radiator', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+					if radiators_step_data.get('7-sty_' + str(x)):
+						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-sty_' + str(x)), component_type='Radiator Style', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+					if radiators_step_data.get('7-loc_' + str(x)):
+						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-loc_' + str(x)), component_type='Radiator Location', user=settings.YH_MASTER_PROFILE_ID).est_time_duration	
 
 			# Get the Thermostatic radiator value Duration
 			if 'Radiator(s) Required' in radiators_step_data.getlist('7-radiator_specification') or 'Thermostatic Radiator Valves Only' in radiators_step_data.getlist('7-radiator_specification') :
 				for x in range(1, 13):
-					if radiators_step_data.get('7-radiator_valve_' + str(x)):
-						component_duration_total = component_duration_total + (ProductComponent.objects.get(component_name = radiators_step_data.get('7-radiator_valve_' + str(x)), component_type='Thermostatic Radiator Valve', user=settings.YH_MASTER_PROFILE_ID).est_time_duration * int(radiators_step_data.get('7-radiator_valve_quantity_' + str(x))))
+					if radiators_step_data.get('7-val_' + str(x)):
+						component_duration_total = component_duration_total + (ProductComponent.objects.get(component_name = radiators_step_data.get('7-val_' + str(x)), component_type='Thermostatic Radiator Valve', user=settings.YH_MASTER_PROFILE_ID).est_time_duration * int(radiators_step_data.get('7-vaq_' + str(x))))
 
 			# Get the Towel Rail Duration
 			if 'Towel Rail(s) Required' in radiators_step_data.getlist('7-radiator_specification'):
 				for x in range(1, 5):
-					if radiators_step_data.get('7-towel_rail_' + str(x)):
-						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-towel_rail_' + str(x)), component_type='Towel Rail', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
-					if radiators_step_data.get('7-towel_rail_location_' + str(x)):
-						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-towel_rail_location_' + str(x)), component_type='Towel Rail Location', user=settings.YH_MASTER_PROFILE_ID).est_time_duration	
+					if radiators_step_data.get('7-tow_' + str(x)):
+						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-tow_' + str(x)), component_type='Towel Rail', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+					if radiators_step_data.get('7-trl_' + str(x)):
+						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-trl_' + str(x)), component_type='Towel Rail Location', user=settings.YH_MASTER_PROFILE_ID).est_time_duration	
 
 			# Get the customer Supplied Radiator Duration ( now removed from form )
 			#if 'Customer to Provide Radiators' in radiators_step_data.getlist('7-radiator_specification'):
@@ -437,7 +437,7 @@ class BoilerFormWizardView_yh(SessionWizardView):
 				else:
 					components_list = new_installation_step_data.getlist('6-alt_gas_flue_components')
 				components = []
-				alt_component_price_total = 0	
+				#alt_component_price_total = 0	
 				for i in components_list:
 					if new_system_configuration_step_data.get('4-new_fuel_type','') == "Oil":
 						alt_component_price_total = alt_component_price_total + ProductComponent.objects.get(component_name=i, component_type='Oil Flue Component', brand=alt_brand, user=settings.YH_MASTER_PROFILE_ID).price
@@ -461,15 +461,26 @@ class BoilerFormWizardView_yh(SessionWizardView):
 				new_materials_comp_dict['Plume Components'] = components
 				print('Plume Component', ProductComponent.objects.get(component_name=i, component_type='Plume Component', user=settings.YH_MASTER_PROFILE_ID).price)
 
-			# Get the programmer_thermostat Components Prices
+			# Get the programmer_thermostat Components Prices ( !!!! different logic here !!!!!)
 			components_list = new_installation_step_data.getlist('6-programmer_thermostat')
 			components = []
 			for i in components_list:
+				primary_component_price_total = primary_component_price_total + ProductComponent.objects.get(component_name=i, component_type='Programmer Thermostat', user=settings.YH_MASTER_PROFILE_ID).price
 				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Programmer Thermostat', user=settings.YH_MASTER_PROFILE_ID).price
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Programmer Thermostat', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 				components.append(dict(component_attrib_build(i, 'Programmer Thermostat', settings.YH_MASTER_PROFILE_ID)))
 				new_materials_comp_dict['Programmer/Thermostat'] = components
 				print('Programmer Thermostat', ProductComponent.objects.get(component_name=i, component_type='Programmer Thermostat', user=settings.YH_MASTER_PROFILE_ID).price)
+
+			# Get the alternative programmer_thermostat Components Prices ( !!!! different logic here !!!!!)
+			components_list = new_installation_step_data.getlist('6-alt_programmer_thermostat')
+			components = []
+			for i in components_list:
+				alt_component_price_total = alt_component_price_total + ProductComponent.objects.get(component_name=i, component_type='Programmer Thermostat', user=settings.YH_MASTER_PROFILE_ID).price
+				#component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Programmer Thermostat', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+				components.append(dict(component_attrib_build(i, 'Programmer Thermostat', settings.YH_MASTER_PROFILE_ID)))
+				new_materials_comp_dict['Alt Programmer/Thermostat'] = components
+				print('Alternative Programmer Thermostat', ProductComponent.objects.get(component_name=i, component_type='Programmer Thermostat', user=settings.YH_MASTER_PROFILE_ID).price)	
 
 			# Get the Additional Central Heating System Components Prices
 			components_list = new_installation_step_data.getlist('6-additional_central_heating_components')
@@ -617,67 +628,67 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			if 'Radiator(s) Required' in radiators_step_data.getlist('7-radiator_specification'):
 				for x in range(1, 13):
 					components = []
-					if radiators_step_data.get('7-radiator_' + str(x)):
-						component_price_total = component_price_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-radiator_' + str(x)), component_type='Radiator', user=settings.YH_MASTER_PROFILE_ID).price
-						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-radiator_' + str(x)), component_type='Radiator', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
-						components.append(dict(component_attrib_build(radiators_step_data.get('7-radiator_' + str(x)),'Radiator', settings.YH_MASTER_PROFILE_ID)))
+					if radiators_step_data.get('7-rad_' + str(x)):
+						component_price_total = component_price_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-rad_' + str(x)), component_type='Radiator', user=settings.YH_MASTER_PROFILE_ID).price
+						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-rad_' + str(x)), component_type='Radiator', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+						components.append(dict(component_attrib_build(radiators_step_data.get('7-rad_' + str(x)),'Radiator', settings.YH_MASTER_PROFILE_ID)))
 						radiators_comp_dict['Radiator ' + str(x)] = components
-						print('Radiator', ProductComponent.objects.get(component_name = radiators_step_data.get('7-radiator_' + str(x)), component_type='Radiator', user=settings.YH_MASTER_PROFILE_ID).price)
+						print('Radiator', ProductComponent.objects.get(component_name = radiators_step_data.get('7-rad_' + str(x)), component_type='Radiator', user=settings.YH_MASTER_PROFILE_ID).price)
 
 			# Get the radiator style prices
 			if 'Radiator(s) Required' in radiators_step_data.getlist('7-radiator_specification'):
 				for x in range(1, 13):
 					components = []
-					if radiators_step_data.get('7-radiator_style_' + str(x)):
-						component_price_total = component_price_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-radiator_style_' + str(x)), component_type='Radiator Style', user=settings.YH_MASTER_PROFILE_ID).price
-						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-radiator_style_' + str(x)), component_type='Radiator Style', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
-						components.append(dict(component_attrib_build(radiators_step_data.get('7-radiator_style_' + str(x)),'Radiator Style', settings.YH_MASTER_PROFILE_ID)))
+					if radiators_step_data.get('7-sty_' + str(x)):
+						component_price_total = component_price_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-sty_' + str(x)), component_type='Radiator Style', user=settings.YH_MASTER_PROFILE_ID).price
+						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-sty_' + str(x)), component_type='Radiator Style', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+						components.append(dict(component_attrib_build(radiators_step_data.get('7-sty_' + str(x)),'Radiator Style', settings.YH_MASTER_PROFILE_ID)))
 						radiator_styles_comp_dict['Radiator Style ' + str(x)] = components
-						print('Radiator Style', ProductComponent.objects.get(component_name = radiators_step_data.get('7-radiator_style_' + str(x)), component_type='Radiator Style', user=settings.YH_MASTER_PROFILE_ID).price)	
+						print('Radiator Style', ProductComponent.objects.get(component_name = radiators_step_data.get('7-sty_' + str(x)), component_type='Radiator Style', user=settings.YH_MASTER_PROFILE_ID).price)	
 
 			# Get the radiator location prices
 			if 'Radiator(s) Required' in radiators_step_data.getlist('7-radiator_specification'):
 				for x in range(1, 13):
 					components = []
-					if radiators_step_data.get('7-location_' + str(x)):
-						component_price_total = component_price_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-location_' + str(x)), component_type='Radiator Location', user=settings.YH_MASTER_PROFILE_ID).price
-						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-location_' + str(x)), component_type='Radiator Location', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
-						components.append(dict(component_attrib_build(radiators_step_data.get('7-location_' + str(x)),'Radiator Location', settings.YH_MASTER_PROFILE_ID)))
+					if radiators_step_data.get('7-loc_' + str(x)):
+						component_price_total = component_price_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-loc_' + str(x)), component_type='Radiator Location', user=settings.YH_MASTER_PROFILE_ID).price
+						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-loc_' + str(x)), component_type='Radiator Location', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+						components.append(dict(component_attrib_build(radiators_step_data.get('7-loc_' + str(x)),'Radiator Location', settings.YH_MASTER_PROFILE_ID)))
 						radiator_locations_comp_dict['Radiator Location ' + str(x)] = components
-						print('Radiator Location', ProductComponent.objects.get(component_name = radiators_step_data.get('7-location_' + str(x)), component_type='Radiator Location', user=settings.YH_MASTER_PROFILE_ID).price)				
+						print('Radiator Location', ProductComponent.objects.get(component_name = radiators_step_data.get('7-loc_' + str(x)), component_type='Radiator Location', user=settings.YH_MASTER_PROFILE_ID).price)				
 
 			# Get the Thermostatic radiator value prices
 			if 'Radiator(s) Required' in radiators_step_data.getlist('7-radiator_specification') or 'Thermostatic Radiator Valves Only' in radiators_step_data.getlist('7-radiator_specification') :
 				for x in range(1, 13):
 					components = []
-					if radiators_step_data.get('7-radiator_valve_' + str(x)):
-						component_price_total = component_price_total + (ProductComponent.objects.get(component_name = radiators_step_data.get('7-radiator_valve_' + str(x)), component_type='Thermostatic Radiator Valve', user=settings.YH_MASTER_PROFILE_ID).price * int(radiators_step_data.get('7-radiator_valve_quantity_' + str(x))))
-						component_duration_total = component_duration_total + (ProductComponent.objects.get(component_name = radiators_step_data.get('7-radiator_valve_' + str(x)), component_type='Thermostatic Radiator Valve', user=settings.YH_MASTER_PROFILE_ID).est_time_duration * int(radiators_step_data.get('7-radiator_valve_quantity_' + str(x))))
-						components.append(dict(component_attrib_build(radiators_step_data.get('7-radiator_valve_' + str(x)),'Thermostatic Radiator Valve', settings.YH_MASTER_PROFILE_ID, int(radiators_step_data.get('7-radiator_valve_quantity_' + str(x))))))
+					if radiators_step_data.get('7-val_' + str(x)):
+						component_price_total = component_price_total + (ProductComponent.objects.get(component_name = radiators_step_data.get('7-val_' + str(x)), component_type='Thermostatic Radiator Valve', user=settings.YH_MASTER_PROFILE_ID).price * int(radiators_step_data.get('7-vaq_' + str(x))))
+						component_duration_total = component_duration_total + (ProductComponent.objects.get(component_name = radiators_step_data.get('7-val_' + str(x)), component_type='Thermostatic Radiator Valve', user=settings.YH_MASTER_PROFILE_ID).est_time_duration * int(radiators_step_data.get('7-vaq_' + str(x))))
+						components.append(dict(component_attrib_build(radiators_step_data.get('7-val_' + str(x)),'Thermostatic Radiator Valve', settings.YH_MASTER_PROFILE_ID, int(radiators_step_data.get('7-vaq_' + str(x))))))
 						radiator_valves_comp_dict['Radiator Valve ' + str(x)] = components
-						print('Thermostatic Radiator Valve', ProductComponent.objects.get(component_name = radiators_step_data.get('7-radiator_valve_' + str(x)), component_type='Thermostatic Radiator Valve', user=settings.YH_MASTER_PROFILE_ID).price) 
+						print('Thermostatic Radiator Valve', ProductComponent.objects.get(component_name = radiators_step_data.get('7-val_' + str(x)), component_type='Thermostatic Radiator Valve', user=settings.YH_MASTER_PROFILE_ID).price * int(radiators_step_data.get('7-vaq_' + str(x)))) 
 
 			# Get the Towel Rail prices
 			if 'Towel Rail(s) Required' in radiators_step_data.getlist('7-radiator_specification'):
 				for x in range(1, 5):
 					components = []
-					if radiators_step_data.get('7-towel_rail_' + str(x)):
-						component_price_total = component_price_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-towel_rail_' + str(x)), component_type='Towel Rail', user=settings.YH_MASTER_PROFILE_ID).price
-						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-towel_rail_' + str(x)), component_type='Towel Rail', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
-						components.append(dict(component_attrib_build(radiators_step_data.get('7-towel_rail_' + str(x)),'Towel Rail', settings.YH_MASTER_PROFILE_ID)))
+					if radiators_step_data.get('7-tow_' + str(x)):
+						component_price_total = component_price_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-tow_' + str(x)), component_type='Towel Rail', user=settings.YH_MASTER_PROFILE_ID).price
+						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-tow_' + str(x)), component_type='Towel Rail', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+						components.append(dict(component_attrib_build(radiators_step_data.get('7-tow_' + str(x)),'Towel Rail', settings.YH_MASTER_PROFILE_ID)))
 						towel_rails_comp_dict['Towel Rail ' + str(x)] = components
-						print('Towel Rail', ProductComponent.objects.get(component_name = radiators_step_data.get('7-towel_rail_' + str(x)), component_type='Towel Rail', user=settings.YH_MASTER_PROFILE_ID).price)
+						print('Towel Rail', ProductComponent.objects.get(component_name = radiators_step_data.get('7-tow_' + str(x)), component_type='Towel Rail', user=settings.YH_MASTER_PROFILE_ID).price)
 
 			# Get the Towel Rail prices
 			if 'Towel Rail(s) Required' in radiators_step_data.getlist('7-radiator_specification'):
 				for x in range(1, 5):
 					components = []
-					if radiators_step_data.get('7-towel_rail_location_' + str(x)):
-						component_price_total = component_price_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-towel_rail_location_' + str(x)), component_type='Towel Rail Location', user=settings.YH_MASTER_PROFILE_ID).price
-						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-towel_rail_location_' + str(x)), component_type='Towel Rail Location', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
-						components.append(dict(component_attrib_build(radiators_step_data.get('7-towel_rail_location_' + str(x)),'Towel Rail Location', settings.YH_MASTER_PROFILE_ID)))
+					if radiators_step_data.get('7-trl_' + str(x)):
+						component_price_total = component_price_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-trl_' + str(x)), component_type='Towel Rail Location', user=settings.YH_MASTER_PROFILE_ID).price
+						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-trl_' + str(x)), component_type='Towel Rail Location', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+						components.append(dict(component_attrib_build(radiators_step_data.get('7-trl_' + str(x)),'Towel Rail Location', settings.YH_MASTER_PROFILE_ID)))
 						towel_rail_locations_comp_dict['Towel Rail Location ' + str(x)] = components
-						print('Towel Rail Location', ProductComponent.objects.get(component_name = radiators_step_data.get('7-towel_rail_location_' + str(x)), component_type='Towel Rail Location', user=settings.YH_MASTER_PROFILE_ID).price)			
+						print('Towel Rail Location', ProductComponent.objects.get(component_name = radiators_step_data.get('7-trl_' + str(x)), component_type='Towel Rail Location', user=settings.YH_MASTER_PROFILE_ID).price)			
 
 			# Get the customer Supplied Radiator prices ( now removed from form)
 			#if 'Customer to Provide Radiators' in radiators_step_data.getlist('7-radiator_specification'):
@@ -1019,14 +1030,17 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 		return HttpResponseRedirect('/quoteemailed/')
 
 	else:   # HTMLOutput
+		include_report = True	# Internal Copy with Supplementary Reporting pages
 		return render(request, sourceHtml, {
 			'form_data': file_form_data,
-			'idx': idx,
+			'idx':idx,
 			'frecords': frecords,
+			'alt_product_record': alt_product_record,
 			'product_record': product_record,
 			'img_record': img_record,
-			'workload_cost': workload_cost,
-			'total_quote_price': total_quote_price})        
+			'alt_img_record': alt_img_record,
+			'optional_extra_extended_prices': optional_extra_extended_prices,
+			'include_report': include_report})        
 	
 @login_required
 def edit_profile_details(request):
