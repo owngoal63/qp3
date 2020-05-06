@@ -17,7 +17,7 @@ from formtools.wizard.views import SessionWizardView
 
 # imports associated with xhtml2pdf
 from django.http import HttpResponseRedirect, HttpResponse, FileResponse
-from quotepad.utils import pdf_generation, pdf_generation_to_file, convertHtmlToPdf, convertHtmlToPdf2, component_attrib_build, send_pdf_email_using_SendGrid
+from quotepad.utils import pdf_generation, pdf_generation_to_file, convertHtmlToPdf, convertHtmlToPdf2, component_attrib_build, component_attrib_build_exVat, send_pdf_email_using_SendGrid
 import datetime
 from pathlib import Path, PureWindowsPath
 import os, os.path, errno
@@ -341,6 +341,35 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			global special_parts_comp_dict
 			special_parts_comp_dict = {}
 
+			# ExVat Comp Dict
+
+			global install_requirments_comp_dict_exVat
+			install_requirments_comp_dict_exVat = {}
+
+			global new_materials_comp_dict_exVat
+			new_materials_comp_dict_exVat = {}
+
+			global radiators_comp_dict_exVat
+			radiators_comp_dict_exVat = {}
+
+			global radiator_styles_comp_dict_exVat
+			radiator_styles_comp_dict_exVat = {}
+
+			global radiator_locations_comp_dict_exVat
+			radiator_locations_comp_dict_exVat = {}
+
+			global radiator_valves_comp_dict_exVat
+			radiator_valves_comp_dict_exVat = {}
+
+			global towel_rails_comp_dict_exVat
+			towel_rails_comp_dict_exVat = {}
+
+			global towel_rail_locations_comp_dict_exVat
+			towel_rail_locations_comp_dict_exVat = {}
+
+			global special_parts_comp_dict_exVat
+			special_parts_comp_dict_exVat = {}
+
 			#global customer_supplied_radiator_comp_dict
 			#customer_supplied_radiator_comp_dict = {}
 			
@@ -353,20 +382,26 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			# Get the Chemical System Treatment Prices
 			components_list = new_installation_step_data.getlist('5-chemical_system_treatment')
 			components = []
+			components_exVat = []
 			for i in components_list:
 				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Chemical System Treatment', user=settings.YH_MASTER_PROFILE_ID).price
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Chemical System Treatment', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 				components.append(dict(component_attrib_build(i, 'Chemical System Treatment', settings.YH_MASTER_PROFILE_ID)))
+				components_exVat.append(dict(component_attrib_build_exVat(i, 'Chemical System Treatment', settings.YH_MASTER_PROFILE_ID)))
+				install_requirments_comp_dict_exVat['Chemical System Treatment'] = components_exVat
 				install_requirments_comp_dict['Chemical System Treatment'] = components
 				print('Chemical System Treatment', ProductComponent.objects.get(component_name=i, component_type='Chemical System Treatment', user=settings.YH_MASTER_PROFILE_ID).price)
 
 			# Get the Fuel Supply Length Prices
 			components_list = new_installation_step_data.getlist('5-fuel_supply_length')
 			components = []
+			components_exVat = []
 			for i in components_list:
 				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Fuel Supply Length', user=settings.YH_MASTER_PROFILE_ID).price
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Fuel Supply Length', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 				components.append(dict(component_attrib_build(i, 'Fuel Supply Length', settings.YH_MASTER_PROFILE_ID)))
+				components_exVat.append(dict(component_attrib_build_exVat(i, 'Fuel Supply Length', settings.YH_MASTER_PROFILE_ID)))
+				install_requirments_comp_dict_exVat['Fuel Supply Length'] = components_exVat
 				install_requirments_comp_dict['Fuel Supply Length'] = components
 				print('Fuel Supply Length', ProductComponent.objects.get(component_name=i, component_type='Fuel Supply Length', user=settings.YH_MASTER_PROFILE_ID).price)
 
@@ -374,30 +409,39 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			# Get the Scaffolding Required Prices
 			components_list = new_installation_step_data.getlist('5-scaffolding_required')
 			components = []
+			components_exVat = []
 			for i in components_list:
 				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Scaffolding', user=settings.YH_MASTER_PROFILE_ID).price
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Scaffolding', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 				components.append(dict(component_attrib_build(i, 'Scaffolding', settings.YH_MASTER_PROFILE_ID)))
+				components_exVat.append(dict(component_attrib_build_exVat(i, 'Scaffolding', settings.YH_MASTER_PROFILE_ID)))
+				install_requirments_comp_dict_exVat['Scaffolding Required'] = components_exVat
 				install_requirments_comp_dict['Scaffolding Required'] = components
 				print('Scaffolding', ProductComponent.objects.get(component_name=i, component_type='Scaffolding', user=settings.YH_MASTER_PROFILE_ID).price)
 		
 			# Get the Electrical Work Prices
 			components_list = new_installation_step_data.getlist('5-electrical_work_required')
 			components = []
+			components_exVat = []
 			for i in components_list:
 				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Electrical Work', user=settings.YH_MASTER_PROFILE_ID).price
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Electrical Work', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 				components.append(dict(component_attrib_build(i, 'Electrical Work', settings.YH_MASTER_PROFILE_ID)))
+				components_exVat.append(dict(component_attrib_build_exVat(i, 'Electrical Work', settings.YH_MASTER_PROFILE_ID)))
+				install_requirments_comp_dict_exVat['Electrical Work Required'] = components_exVat
 				install_requirments_comp_dict['Electrical Work Required'] = components
 				print('Electrical Work', ProductComponent.objects.get(component_name=i, component_type='Electrical Work', user=settings.YH_MASTER_PROFILE_ID).price)
 
 			# Get the Parking Prices
 			components_list = new_installation_step_data.getlist('5-parking_requirements')
 			components = []
+			components_exVat = []
 			for i in components_list:
 				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Parking', user=settings.YH_MASTER_PROFILE_ID).price
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Parking', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 				components.append(dict(component_attrib_build(i, 'Parking', settings.YH_MASTER_PROFILE_ID)))
+				components_exVat.append(dict(component_attrib_build_exVat(i, 'Parking', settings.YH_MASTER_PROFILE_ID)))
+				install_requirments_comp_dict_exVat['Parking Requirements'] = components_exVat
 				install_requirments_comp_dict['Parking Requirements'] = components
 				print('Parking', ProductComponent.objects.get(component_name=i, component_type='Parking', user=settings.YH_MASTER_PROFILE_ID).price)	
 			
@@ -412,13 +456,16 @@ class BoilerFormWizardView_yh(SessionWizardView):
 				components_list = new_installation_step_data.getlist('6-oil_flue_components')
 			else:
 				components_list = new_installation_step_data.getlist('6-gas_flue_components')
-			components = []	
+			components = []
+			components_exVat = []
 			for i in components_list:
 				if new_system_configuration_step_data.get('4-new_fuel_type','') == "Oil":
 					primary_component_price_total = primary_component_price_total + ProductComponent.objects.get(component_name=i, component_type='Oil Flue Component', brand=brand, user=settings.YH_MASTER_PROFILE_ID).price
 					component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Oil Flue Component', brand=brand, user=settings.YH_MASTER_PROFILE_ID).price
 					component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Oil Flue Component', brand=brand, user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 					components.append(dict(component_attrib_build(i, 'Oil Flue Component', settings.YH_MASTER_PROFILE_ID, 1, brand)))
+					components_exVat.append(dict(component_attrib_build_exVat(i, 'Oil Flue Component', settings.YH_MASTER_PROFILE_ID, 1, brand)))
+					new_materials_comp_dict_exVat['Oil Flue Components'] = components_exVat
 					new_materials_comp_dict['Oil Flue Components'] = components
 					print('Oil Flue Component', ProductComponent.objects.get(component_name=i,  component_type='Oil Flue Component', brand=brand, user=settings.YH_MASTER_PROFILE_ID).price)
 				else:
@@ -426,6 +473,8 @@ class BoilerFormWizardView_yh(SessionWizardView):
 					component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Gas Flue Component', brand=brand, user=settings.YH_MASTER_PROFILE_ID).price
 					component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Gas Flue Component', brand=brand, user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 					components.append(dict(component_attrib_build(i, 'Gas Flue Component', settings.YH_MASTER_PROFILE_ID, 1, brand)))
+					components_exVat.append(dict(component_attrib_build_exVat(i, 'Gas Flue Component', settings.YH_MASTER_PROFILE_ID, 1, brand)))
+					new_materials_comp_dict_exVat['Gas Flue Components'] = components_exVat
 					new_materials_comp_dict['Gas Flue Components'] = components
 					print('Gas Flue Component', ProductComponent.objects.get(component_name=i,  component_type='Gas Flue Component', brand=brand, user=settings.YH_MASTER_PROFILE_ID).price)
 
@@ -437,16 +486,21 @@ class BoilerFormWizardView_yh(SessionWizardView):
 				else:
 					components_list = new_installation_step_data.getlist('6-alt_gas_flue_components')
 				components = []
+				components_exVat = []
 				#alt_component_price_total = 0	
 				for i in components_list:
 					if new_system_configuration_step_data.get('4-new_fuel_type','') == "Oil":
 						alt_component_price_total = alt_component_price_total + ProductComponent.objects.get(component_name=i, component_type='Oil Flue Component', brand=alt_brand, user=settings.YH_MASTER_PROFILE_ID).price
 						components.append(dict(component_attrib_build(i, 'Oil Flue Component', settings.YH_MASTER_PROFILE_ID, 1, alt_brand)))
+						components_exVat.append(dict(component_attrib_build_exVat(i, 'Oil Flue Component', settings.YH_MASTER_PROFILE_ID, 1, alt_brand)))
+						new_materials_comp_dict_exVat['Alt Oil Flue Components'] = components_exVat
 						new_materials_comp_dict['Alt Oil Flue Components'] = components
 						print('Alt Oil Flue Components', ProductComponent.objects.get(component_name=i,  component_type='Oil Flue Component', brand=alt_brand, user=settings.YH_MASTER_PROFILE_ID).price)
 					else:
 						alt_component_price_total = alt_component_price_total + ProductComponent.objects.get(component_name=i, component_type='Gas Flue Component', brand=alt_brand, user=settings.YH_MASTER_PROFILE_ID).price
 						components.append(dict(component_attrib_build(i, 'Gas Flue Component', settings.YH_MASTER_PROFILE_ID, 1, alt_brand)))
+						components_exVat.append(dict(component_attrib_build_exVat(i, 'Gas Flue Component', settings.YH_MASTER_PROFILE_ID, 1, alt_brand)))
+						new_materials_comp_dict_exVat['Alt Gas Flue Components'] = components_exVat
 						new_materials_comp_dict['Alt Gas Flue Components'] = components
 						print('Alt Gas Flue Components', ProductComponent.objects.get(component_name=i,  component_type='Gas Flue Component', brand=alt_brand, user=settings.YH_MASTER_PROFILE_ID).price)
 
@@ -454,161 +508,196 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			# Get the Plume Components Prices
 			components_list = new_installation_step_data.getlist('6-plume_components')
 			components = []
+			components_exVat = []
 			for i in components_list:
 				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Plume Component', user=settings.YH_MASTER_PROFILE_ID).price
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Plume Component', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 				components.append(dict(component_attrib_build(i, 'Plume Component', settings.YH_MASTER_PROFILE_ID)))
+				components_exVat.append(dict(component_attrib_build_exVat(i, 'Plume Component', settings.YH_MASTER_PROFILE_ID)))
+				new_materials_comp_dict_exVat['Plume Components'] = components_exVat
 				new_materials_comp_dict['Plume Components'] = components
 				print('Plume Component', ProductComponent.objects.get(component_name=i, component_type='Plume Component', user=settings.YH_MASTER_PROFILE_ID).price)
 
 			# Get the programmer_thermostat Components Prices ( !!!! different logic here !!!!!)
 			components_list = new_installation_step_data.getlist('6-programmer_thermostat')
 			components = []
+			components_exVat = []
 			for i in components_list:
 				primary_component_price_total = primary_component_price_total + ProductComponent.objects.get(component_name=i, component_type='Programmer Thermostat', user=settings.YH_MASTER_PROFILE_ID).price
 				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Programmer Thermostat', user=settings.YH_MASTER_PROFILE_ID).price
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Programmer Thermostat', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 				components.append(dict(component_attrib_build(i, 'Programmer Thermostat', settings.YH_MASTER_PROFILE_ID)))
+				components_exVat.append(dict(component_attrib_build_exVat(i, 'Programmer Thermostat', settings.YH_MASTER_PROFILE_ID)))
+				new_materials_comp_dict_exVat['Programmer/Thermostat'] = components_exVat
 				new_materials_comp_dict['Programmer/Thermostat'] = components
 				print('Programmer Thermostat', ProductComponent.objects.get(component_name=i, component_type='Programmer Thermostat', user=settings.YH_MASTER_PROFILE_ID).price)
 
 			# Get the alternative programmer_thermostat Components Prices ( !!!! different logic here !!!!!)
 			components_list = new_installation_step_data.getlist('6-alt_programmer_thermostat')
 			components = []
+			components_exVat = []
 			for i in components_list:
 				alt_component_price_total = alt_component_price_total + ProductComponent.objects.get(component_name=i, component_type='Programmer Thermostat', user=settings.YH_MASTER_PROFILE_ID).price
 				#component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Programmer Thermostat', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 				components.append(dict(component_attrib_build(i, 'Programmer Thermostat', settings.YH_MASTER_PROFILE_ID)))
+				components_exVat.append(dict(component_attrib_build_exVat(i, 'Programmer Thermostat', settings.YH_MASTER_PROFILE_ID)))
+				new_materials_comp_dict_exVat['Alt Programmer/Thermostat'] = components_exVat
 				new_materials_comp_dict['Alt Programmer/Thermostat'] = components
 				print('Alternative Programmer Thermostat', ProductComponent.objects.get(component_name=i, component_type='Programmer Thermostat', user=settings.YH_MASTER_PROFILE_ID).price)	
 
 			# Get the Additional Central Heating System Components Prices
 			components_list = new_installation_step_data.getlist('6-additional_central_heating_components')
 			components = []
+			components_exVat = []
 			for i in components_list:
 				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Additional Central Heating Component', user=settings.YH_MASTER_PROFILE_ID).price
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Additional Central Heating Component', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 				components.append(dict(component_attrib_build(i,'Additional Central Heating Component', settings.YH_MASTER_PROFILE_ID)))
+				components_exVat.append(dict(component_attrib_build_exVat(i, 'Additional Central Heating Component', settings.YH_MASTER_PROFILE_ID)))
+				new_materials_comp_dict_exVat['Additional Central Heating Components'] = components_exVat
 				new_materials_comp_dict['Additional Central Heating Components'] = components
 				print('Additional Central Heating Component', ProductComponent.objects.get(component_name=i, component_type='Additional Central Heating Component', user=settings.YH_MASTER_PROFILE_ID).price)
 
 			# Get the Central Heating System Filter Components Prices
 			components_list = new_installation_step_data.getlist('6-central_heating_system_filter')
 			components = []
+			components_exVat = []
 			for i in components_list:
 				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Central Heating System Filter', user=settings.YH_MASTER_PROFILE_ID).price
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Central Heating System Filter', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 				components.append(dict(component_attrib_build(i,'Central Heating System Filter', settings.YH_MASTER_PROFILE_ID)))
+				components_exVat.append(dict(component_attrib_build_exVat(i, 'Central Heating System Filter', settings.YH_MASTER_PROFILE_ID)))
+				new_materials_comp_dict_exVat['Central Heating System Filter'] = components_exVat
 				new_materials_comp_dict['Central Heating System Filter'] = components
 				print('Central Heating System Filter', ProductComponent.objects.get(component_name=i, component_type='Central Heating System Filter', user=settings.YH_MASTER_PROFILE_ID).price)			
 
 			# Get the Scale reducer Components Prices
 			components_list = new_installation_step_data.getlist('6-scale_reducer')
 			components = []
+			components_exVat = []
 			for i in components_list:
 				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Scale Reducer', user=settings.YH_MASTER_PROFILE_ID).price
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Scale Reducer', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 				components.append(dict(component_attrib_build(i,'Scale Reducer', settings.YH_MASTER_PROFILE_ID)))
+				components_exVat.append(dict(component_attrib_build_exVat(i, 'Scale Reducer', settings.YH_MASTER_PROFILE_ID)))
+				new_materials_comp_dict_exVat['Scale Reducer'] = components_exVat
 				new_materials_comp_dict['Scale Reducer'] = components
 				print('Scale Reducer', ProductComponent.objects.get(component_name=i, component_type='Scale Reducer', user=settings.YH_MASTER_PROFILE_ID).price)
 
 			# Get the Condensate Components Prices
 			components_list = new_installation_step_data.getlist('6-condensate_components')
 			components = []
+			components_exVat = []
 			for i in components_list:
 				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Condenstate Component', user=settings.YH_MASTER_PROFILE_ID).price
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Condenstate Component', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 				components.append(dict(component_attrib_build(i,'Condenstate Component', settings.YH_MASTER_PROFILE_ID)))
+				components_exVat.append(dict(component_attrib_build_exVat(i, 'Condenstate Component', settings.YH_MASTER_PROFILE_ID)))
+				new_materials_comp_dict_exVat['Condenstate Components'] = components_exVat
 				new_materials_comp_dict['Condensate Components'] = components
 				print('Condenstate Component', ProductComponent.objects.get(component_name=i, component_type='Condenstate Component', user=settings.YH_MASTER_PROFILE_ID).price)		
 
 			# Get the Additional Copper Prices
 			components_list = new_installation_step_data.getlist('6-additional_copper_required')
 			components = []
+			components_exVat = []
 			for i in components_list:
 				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Additional Copper', user=settings.YH_MASTER_PROFILE_ID).price
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Additional Copper', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 				components.append(dict(component_attrib_build(i,'Additional Copper', settings.YH_MASTER_PROFILE_ID)))
+				components_exVat.append(dict(component_attrib_build_exVat(i, 'Additional Copper', settings.YH_MASTER_PROFILE_ID)))
+				new_materials_comp_dict_exVat['Additional Copper'] = components_exVat
 				new_materials_comp_dict['Additional Copper'] = components
 				print('Additional Copper', ProductComponent.objects.get(component_name=i, component_type='Additional Copper', user=settings.YH_MASTER_PROFILE_ID).price)		
 
 			# Get the Fitting Packs Prices
 			components_list = new_installation_step_data.getlist('6-fittings_packs')
 			components = []
+			components_exVat = []
 			for i in components_list:
 				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Fitting Pack', user=settings.YH_MASTER_PROFILE_ID).price
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Fitting Pack', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 				components.append(dict(component_attrib_build(i,'Fitting Pack', settings.YH_MASTER_PROFILE_ID)))
+				components_exVat.append(dict(component_attrib_build_exVat(i, 'Fitting Pack', settings.YH_MASTER_PROFILE_ID)))
+				new_materials_comp_dict_exVat['Fitting Pack'] = components_exVat
 				new_materials_comp_dict['Fittings Pack'] = components
 				print('Fitting Pack', ProductComponent.objects.get(component_name=i, component_type='Fitting Pack', user=settings.YH_MASTER_PROFILE_ID).price)		
 
 			# Get the Electrical Packs Prices
 			components_list = new_installation_step_data.getlist('6-electrical_pack')
 			components = []
+			components_exVat = []
 			for i in components_list:
 				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Electrical Pack', user=settings.YH_MASTER_PROFILE_ID).price
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Electrical Pack', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 				components.append(dict(component_attrib_build(i,'Electrical Pack', settings.YH_MASTER_PROFILE_ID)))
+				components_exVat.append(dict(component_attrib_build_exVat(i, 'Electrical Pack', settings.YH_MASTER_PROFILE_ID)))
+				new_materials_comp_dict_exVat['Electrical Pack'] = components_exVat
 				new_materials_comp_dict['Electrical Pack'] = components
 				print('Electrical Pack', ProductComponent.objects.get(component_name=i, component_type='Electrical Pack', user=settings.YH_MASTER_PROFILE_ID).price)		
 
 			# Get the Earth Spike Prices
 			components_list = new_installation_step_data.getlist('6-earth_spike_required')
 			components = []
+			components_exVat = []
 			for i in components_list:
 				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Earth Spike', user=settings.YH_MASTER_PROFILE_ID).price
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Earth Spike', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 				components.append(dict(component_attrib_build(i,'Earth Spike', settings.YH_MASTER_PROFILE_ID)))
+				components_exVat.append(dict(component_attrib_build_exVat(i, 'Earth Spike', settings.YH_MASTER_PROFILE_ID)))
+				new_materials_comp_dict_exVat['Earth Spike'] = components_exVat
 				new_materials_comp_dict['Earth Spike'] = components
 				print('Earth Spike', ProductComponent.objects.get(component_name=i, component_type='Earth Spike', user=settings.YH_MASTER_PROFILE_ID).price)		
 
 			# Get the Filling Link Prices
 			components_list = new_installation_step_data.getlist('6-filling_link')
 			components = []
+			components_exVat = []
 			for i in components_list:
 				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Filling Link', user=settings.YH_MASTER_PROFILE_ID).price
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Filling Link', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 				components.append(dict(component_attrib_build(i,'Filling Link', settings.YH_MASTER_PROFILE_ID)))
+				components_exVat.append(dict(component_attrib_build_exVat(i, 'Filling Link', settings.YH_MASTER_PROFILE_ID)))
+				new_materials_comp_dict_exVat['Filling Link'] = components_exVat
 				new_materials_comp_dict['Filling Link'] = components
 				print('Filling Link', ProductComponent.objects.get(component_name=i, component_type='Filling Link', user=settings.YH_MASTER_PROFILE_ID).price)		
-
-			# Get the Special Lift Prices
-			#components_list = new_installation_step_data.getlist('6-special_lift_requirements')
-			#components = []
-			#for i in components_list:
-			#	component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='', user=settings.YH_MASTER_PROFILE_ID).price
-			#	component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
-			#	components.append(dict(component_attrib_build(i, settings.YH_MASTER_PROFILE_ID)))
-			#	new_materials_comp_dict['Special Lift'] = components
-			#	print(ProductComponent.objects.get(component_name=i, component_type='', user=settings.YH_MASTER_PROFILE_ID).price)		
 
 			# Get the Double Handed Lift Prices
 			components_list = new_installation_step_data.getlist('6-double_handed_lift_required')
 			components = []
+			components_exVat = []
 			for i in components_list:
 				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Double Handed Lift', user=settings.YH_MASTER_PROFILE_ID).price
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Double Handed Lift', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 				components.append(dict(component_attrib_build(i,'Double Handed Lift', settings.YH_MASTER_PROFILE_ID)))
+				components_exVat.append(dict(component_attrib_build_exVat(i, 'Double Handed Lift', settings.YH_MASTER_PROFILE_ID)))
+				new_materials_comp_dict_exVat['Double Handed Lift'] = components_exVat
 				new_materials_comp_dict['Double Handed Lift'] = components
 				print('Double Handed Lift', ProductComponent.objects.get(component_name=i, component_type='Double Handed Lift', user=settings.YH_MASTER_PROFILE_ID).price)		
 
 			# Get the Building Pack Prices
 			components_list = new_installation_step_data.getlist('6-building_pack_required')
 			components = []
+			components_exVat = []
 			for i in components_list:
 				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Building Pack', user=settings.YH_MASTER_PROFILE_ID).price
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Building Pack', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 				components.append(dict(component_attrib_build(i,'Building Pack', settings.YH_MASTER_PROFILE_ID)))
+				components_exVat.append(dict(component_attrib_build_exVat(i, 'Building Pack', settings.YH_MASTER_PROFILE_ID)))
+				new_materials_comp_dict_exVat['Building Pack'] = components_exVat
 				new_materials_comp_dict['Building Pack'] = components
 				print('Building Pack', ProductComponent.objects.get(component_name=i, component_type='Building Pack', user=settings.YH_MASTER_PROFILE_ID).price)
 
 			# Get the Cylinder Prices
 			components_list = new_installation_step_data.getlist('6-cylinder')
 			components = []
+			components_exVat = []
 			for i in components_list:
 				component_price_total = component_price_total + ProductComponent.objects.get(component_name=i, component_type='Cylinder', user=settings.YH_MASTER_PROFILE_ID).price
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Cylinder', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 				components.append(dict(component_attrib_build(i,'Cylinder', settings.YH_MASTER_PROFILE_ID)))
+				components_exVat.append(dict(component_attrib_build_exVat(i, 'Cylinder', settings.YH_MASTER_PROFILE_ID)))
+				new_materials_comp_dict_exVat['Cylinder'] = components_exVat
 				new_materials_comp_dict['Cylinder'] = components
 				print('Cylinder', ProductComponent.objects.get(component_name=i, component_type='Cylinder', user=settings.YH_MASTER_PROFILE_ID).price)
 
@@ -628,66 +717,84 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			if 'Radiator(s) Required' in radiators_step_data.getlist('7-radiator_specification'):
 				for x in range(1, 13):
 					components = []
+					components_exVat = []
 					if radiators_step_data.get('7-rad_' + str(x)):
 						component_price_total = component_price_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-rad_' + str(x)), component_type='Radiator', user=settings.YH_MASTER_PROFILE_ID).price
 						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-rad_' + str(x)), component_type='Radiator', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 						components.append(dict(component_attrib_build(radiators_step_data.get('7-rad_' + str(x)),'Radiator', settings.YH_MASTER_PROFILE_ID)))
+						components_exVat.append(dict(component_attrib_build_exVat(radiators_step_data.get('7-rad_' + str(x)),'Radiator', settings.YH_MASTER_PROFILE_ID)))
 						radiators_comp_dict['Radiator ' + str(x)] = components
+						radiators_comp_dict_exVat['Radiator ' + str(x)] = components_exVat
 						print('Radiator', ProductComponent.objects.get(component_name = radiators_step_data.get('7-rad_' + str(x)), component_type='Radiator', user=settings.YH_MASTER_PROFILE_ID).price)
 
 			# Get the radiator style prices
 			if 'Radiator(s) Required' in radiators_step_data.getlist('7-radiator_specification'):
 				for x in range(1, 13):
 					components = []
+					components_exVat = []
 					if radiators_step_data.get('7-sty_' + str(x)):
 						component_price_total = component_price_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-sty_' + str(x)), component_type='Radiator Style', user=settings.YH_MASTER_PROFILE_ID).price
 						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-sty_' + str(x)), component_type='Radiator Style', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 						components.append(dict(component_attrib_build(radiators_step_data.get('7-sty_' + str(x)),'Radiator Style', settings.YH_MASTER_PROFILE_ID)))
+						components_exVat.append(dict(component_attrib_build_exVat(radiators_step_data.get('7-sty_' + str(x)),'Radiator Style', settings.YH_MASTER_PROFILE_ID)))
 						radiator_styles_comp_dict['Radiator Style ' + str(x)] = components
+						radiator_styles_comp_dict_exVat['Radiator Style ' + str(x)] = components_exVat
 						print('Radiator Style', ProductComponent.objects.get(component_name = radiators_step_data.get('7-sty_' + str(x)), component_type='Radiator Style', user=settings.YH_MASTER_PROFILE_ID).price)	
 
 			# Get the radiator location prices
 			if 'Radiator(s) Required' in radiators_step_data.getlist('7-radiator_specification'):
 				for x in range(1, 13):
 					components = []
+					components_exVat = []
 					if radiators_step_data.get('7-loc_' + str(x)):
 						component_price_total = component_price_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-loc_' + str(x)), component_type='Radiator Location', user=settings.YH_MASTER_PROFILE_ID).price
 						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-loc_' + str(x)), component_type='Radiator Location', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 						components.append(dict(component_attrib_build(radiators_step_data.get('7-loc_' + str(x)),'Radiator Location', settings.YH_MASTER_PROFILE_ID)))
+						components_exVat.append(dict(component_attrib_build_exVat(radiators_step_data.get('7-loc_' + str(x)),'Radiator Location', settings.YH_MASTER_PROFILE_ID)))
 						radiator_locations_comp_dict['Radiator Location ' + str(x)] = components
+						radiator_locations_comp_dict_exVat['Radiator Location ' + str(x)] = components_exVat
 						print('Radiator Location', ProductComponent.objects.get(component_name = radiators_step_data.get('7-loc_' + str(x)), component_type='Radiator Location', user=settings.YH_MASTER_PROFILE_ID).price)				
 
 			# Get the Thermostatic radiator value prices
 			if 'Radiator(s) Required' in radiators_step_data.getlist('7-radiator_specification') or 'Thermostatic Radiator Valves Only' in radiators_step_data.getlist('7-radiator_specification') :
 				for x in range(1, 13):
 					components = []
+					components_exVat = []
 					if radiators_step_data.get('7-val_' + str(x)):
 						component_price_total = component_price_total + (ProductComponent.objects.get(component_name = radiators_step_data.get('7-val_' + str(x)), component_type='Thermostatic Radiator Valve', user=settings.YH_MASTER_PROFILE_ID).price * int(radiators_step_data.get('7-vaq_' + str(x))))
 						component_duration_total = component_duration_total + (ProductComponent.objects.get(component_name = radiators_step_data.get('7-val_' + str(x)), component_type='Thermostatic Radiator Valve', user=settings.YH_MASTER_PROFILE_ID).est_time_duration * int(radiators_step_data.get('7-vaq_' + str(x))))
 						components.append(dict(component_attrib_build(radiators_step_data.get('7-val_' + str(x)),'Thermostatic Radiator Valve', settings.YH_MASTER_PROFILE_ID, int(radiators_step_data.get('7-vaq_' + str(x))))))
+						components_exVat.append(dict(component_attrib_build_exVat(radiators_step_data.get('7-val_' + str(x)),'Thermostatic Radiator Valve', settings.YH_MASTER_PROFILE_ID, int(radiators_step_data.get('7-vaq_' + str(x))))))
 						radiator_valves_comp_dict['Radiator Valve ' + str(x)] = components
+						radiator_valves_comp_dict_exVat['Radiator Valve ' + str(x)] = components_exVat
 						print('Thermostatic Radiator Valve', ProductComponent.objects.get(component_name = radiators_step_data.get('7-val_' + str(x)), component_type='Thermostatic Radiator Valve', user=settings.YH_MASTER_PROFILE_ID).price * int(radiators_step_data.get('7-vaq_' + str(x)))) 
 
 			# Get the Towel Rail prices
 			if 'Towel Rail(s) Required' in radiators_step_data.getlist('7-radiator_specification'):
 				for x in range(1, 5):
 					components = []
+					components_exVat = []
 					if radiators_step_data.get('7-tow_' + str(x)):
 						component_price_total = component_price_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-tow_' + str(x)), component_type='Towel Rail', user=settings.YH_MASTER_PROFILE_ID).price
 						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-tow_' + str(x)), component_type='Towel Rail', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 						components.append(dict(component_attrib_build(radiators_step_data.get('7-tow_' + str(x)),'Towel Rail', settings.YH_MASTER_PROFILE_ID)))
+						components_exVat.append(dict(component_attrib_build_exVat(radiators_step_data.get('7-tow_' + str(x)),'Towel Rail', settings.YH_MASTER_PROFILE_ID)))
 						towel_rails_comp_dict['Towel Rail ' + str(x)] = components
+						towel_rails_comp_dict_exVat['Towel Rail ' + str(x)] = components_exVat
 						print('Towel Rail', ProductComponent.objects.get(component_name = radiators_step_data.get('7-tow_' + str(x)), component_type='Towel Rail', user=settings.YH_MASTER_PROFILE_ID).price)
 
-			# Get the Towel Rail prices
+			# Get the Towel Rail Location prices
 			if 'Towel Rail(s) Required' in radiators_step_data.getlist('7-radiator_specification'):
 				for x in range(1, 5):
 					components = []
+					components_exVat = []
 					if radiators_step_data.get('7-trl_' + str(x)):
 						component_price_total = component_price_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-trl_' + str(x)), component_type='Towel Rail Location', user=settings.YH_MASTER_PROFILE_ID).price
 						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-trl_' + str(x)), component_type='Towel Rail Location', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 						components.append(dict(component_attrib_build(radiators_step_data.get('7-trl_' + str(x)),'Towel Rail Location', settings.YH_MASTER_PROFILE_ID)))
+						components_exVat.append(dict(component_attrib_build_exVat(radiators_step_data.get('7-trl_' + str(x)),'Towel Rail Location', settings.YH_MASTER_PROFILE_ID)))
 						towel_rail_locations_comp_dict['Towel Rail Location ' + str(x)] = components
+						towel_rail_locations_comp_dict_exVat['Towel Rail Location ' + str(x)] = components_exVat
 						print('Towel Rail Location', ProductComponent.objects.get(component_name = radiators_step_data.get('7-trl_' + str(x)), component_type='Towel Rail Location', user=settings.YH_MASTER_PROFILE_ID).price)			
 
 			# Get the customer Supplied Radiator prices ( now removed from form)
@@ -704,35 +811,50 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			# Get the Special Parts Prices
 			if new_installation_step_data.get('6-special_part_1',''):
 				components = []
+				components_exVat = []
 				component_price_total = component_price_total + Decimal(new_installation_step_data.get('6-special_part_qty_1')) * Decimal(new_installation_step_data.get('6-special_part_price_1'))
 				component_duration_total = component_duration_total + Decimal(new_installation_step_data.get('6-special_part_duration_1'))
 				component = {new_installation_step_data.get('6-special_part_1',''): [Decimal(new_installation_step_data.get('6-special_part_qty_1')), Decimal(new_installation_step_data.get('6-special_part_price_1')), Decimal(new_installation_step_data.get('6-special_part_qty_1')) * Decimal(new_installation_step_data.get('6-special_part_price_1')), 'N/A', Decimal(new_installation_step_data.get('6-special_part_duration_1'))]}
+				component_exVat = {new_installation_step_data.get('6-special_part_1',''): [Decimal(new_installation_step_data.get('6-special_part_qty_1')), round(Decimal(new_installation_step_data.get('6-special_part_price_1')) / Decimal(1.20),2), round(Decimal(new_installation_step_data.get('6-special_part_qty_1')) * (Decimal(new_installation_step_data.get('6-special_part_price_1')) / Decimal(1.20)),2), 'N/A', Decimal(new_installation_step_data.get('6-special_part_duration_1'))]}
 				components.append(dict(component))
+				components_exVat.append(dict(component_exVat))
 				special_parts_comp_dict['Special Part 1'] = components
+				special_parts_comp_dict_exVat['Special Part 1'] = components_exVat
 				print('Special Part 1', Decimal(new_installation_step_data.get('6-special_part_qty_1')) * Decimal(new_installation_step_data.get('6-special_part_price_1')))
 			if new_installation_step_data.get('6-special_part_2',''):
 				components = []
+				components_exVat = []
 				component_price_total = component_price_total + Decimal(new_installation_step_data.get('6-special_part_qty_2')) * Decimal(new_installation_step_data.get('6-special_part_price_2'))
 				component_duration_total = component_duration_total + Decimal(new_installation_step_data.get('6-special_part_duration_2'))
 				component = {new_installation_step_data.get('6-special_part_2',''): [Decimal(new_installation_step_data.get('6-special_part_qty_2')), Decimal(new_installation_step_data.get('6-special_part_price_2')), Decimal(new_installation_step_data.get('6-special_part_qty_2')) * Decimal(new_installation_step_data.get('6-special_part_price_2')), 'N/A', Decimal(new_installation_step_data.get('6-special_part_duration_2'))]}
+				component_exVat = {new_installation_step_data.get('6-special_part_2',''): [Decimal(new_installation_step_data.get('6-special_part_qty_2')), round(Decimal(new_installation_step_data.get('6-special_part_price_2')) / Decimal(1.20),2), round(Decimal(new_installation_step_data.get('6-special_part_qty_2')) * (Decimal(new_installation_step_data.get('6-special_part_price_2')) / Decimal(1.20)),2), 'N/A', Decimal(new_installation_step_data.get('6-special_part_duration_2'))]}
 				components.append(dict(component))
+				components_exVat.append(dict(component_exVat))
 				special_parts_comp_dict['Special Part 2'] = components
+				special_parts_comp_dict_exVat['Special Part 2'] = components_exVat
 				print('Special Part 2', Decimal(new_installation_step_data.get('6-special_part_qty_2')) * Decimal(new_installation_step_data.get('6-special_part_price_2')))	
 			if new_installation_step_data.get('6-special_part_3',''):
 				components = []
+				components_exVat = []
 				component_price_total = component_price_total + Decimal(new_installation_step_data.get('6-special_part_qty_3')) * Decimal(new_installation_step_data.get('6-special_part_price_3'))
 				component_duration_total = component_duration_total + Decimal(new_installation_step_data.get('6-special_part_duration_3'))
 				component = {new_installation_step_data.get('6-special_part_3',''): [Decimal(new_installation_step_data.get('6-special_part_qty_3')), Decimal(new_installation_step_data.get('6-special_part_price_3')), Decimal(new_installation_step_data.get('6-special_part_qty_3')) * Decimal(new_installation_step_data.get('6-special_part_price_3')), 'N/A', Decimal(new_installation_step_data.get('6-special_part_duration_3'))]}
+				component_exVat = {new_installation_step_data.get('6-special_part_3',''): [Decimal(new_installation_step_data.get('6-special_part_qty_3')), round(Decimal(new_installation_step_data.get('6-special_part_price_3')) / Decimal(1.20),2), round(Decimal(new_installation_step_data.get('6-special_part_qty_3')) * (Decimal(new_installation_step_data.get('6-special_part_price_3')) / Decimal(1.20)),2), 'N/A', Decimal(new_installation_step_data.get('6-special_part_duration_3'))]}
 				components.append(dict(component))
+				components_exVat.append(dict(component_exVat))
 				special_parts_comp_dict['Special Part 3'] = components
+				special_parts_comp_dict_exVat['Special Part 3'] = components_exVat
 				print('Special Part 3', Decimal(new_installation_step_data.get('6-special_part_qty_3')) * Decimal(new_installation_step_data.get('6-special_part_price_3')))	
 
 			# Calculate Workload cost (Add to install_requirments_comp_dict)
 			workload_requirements_step_data = self.storage.get_step_data('8')
 			estimated_duration = workload_requirements_step_data.get('8-estimated_duration')
 			components = []
+			components_exVat = []
 			component_price_total = component_price_total + ProductComponent.objects.get(component_name=estimated_duration, component_type='Estimated Duration', user=settings.YH_MASTER_PROFILE_ID).price
 			components.append(dict(component_attrib_build(estimated_duration, 'Estimated Duration', settings.YH_MASTER_PROFILE_ID)))
+			components_exVat.append(dict(component_attrib_build_exVat(estimated_duration, 'Estimated Duration', settings.YH_MASTER_PROFILE_ID)))
+			install_requirments_comp_dict_exVat['Estimated Duration'] = components_exVat
 			install_requirments_comp_dict['Estimated Duration'] = components
 			estimated_duration_cost = ProductComponent.objects.get(component_name=estimated_duration, component_type='Estimated Duration', user=settings.YH_MASTER_PROFILE_ID).price
 			print('Estimated Duration Price', estimated_duration_cost)
@@ -837,7 +959,7 @@ class BoilerFormWizardView_yh(SessionWizardView):
 				#file.write(str(stringAfterReplace) + "\n")	
 			else:	
 				file.write(str(line) + "\n")
-		# Write all the component dictionaries to the file
+		# Write all the component dictionaries to the file ( inclusive of VAT)
 		file.write(str(install_requirments_comp_dict) + "\n")
 		file.write(str(new_materials_comp_dict) + "\n")
 		file.write(str(special_parts_comp_dict) + "\n")
@@ -854,7 +976,16 @@ class BoilerFormWizardView_yh(SessionWizardView):
 		idx_master = Profile.objects.get(user = settings.YH_MASTER_PROFILE_ID)
 		idx_master.current_quote_number = idx_master.current_quote_number + 1
 		idx_master.save()
-		file.write("{'quote_number': " + str(idx_master.current_quote_number) + ",'house_heat_loss_value': " + str(heat_loss_value) + "} \n")	
+		file.write("{'quote_number': " + str(idx_master.current_quote_number) + ",'house_heat_loss_value': " + str(heat_loss_value) + "} \n")
+		file.write(str(install_requirments_comp_dict_exVat) + "\n")
+		file.write(str(new_materials_comp_dict_exVat) + "\n")
+		file.write(str(special_parts_comp_dict_exVat) + "\n")
+		file.write(str(radiators_comp_dict_exVat) + "\n")
+		file.write(str(radiator_valves_comp_dict_exVat) + "\n")
+		file.write(str(towel_rails_comp_dict_exVat) + "\n")
+		file.write(str(radiator_styles_comp_dict_exVat) + "\n")
+		file.write(str(radiator_locations_comp_dict_exVat) + "\n")
+		file.write(str(towel_rail_locations_comp_dict_exVat) + "\n")
 		file.close()
 
 		print(a_break)

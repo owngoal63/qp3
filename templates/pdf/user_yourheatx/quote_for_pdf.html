@@ -1006,7 +1006,7 @@
 
      <table>    
         <tr>
-            <td class="tech-title">Components Summary Details</td>
+            <td class="tech-title">Components Summary Details (Inc VAT)</td>
         </tr>
         <tr>
             <td class="tech-attrib">(for internal Yourheat use only) &nbsp;|&nbsp; Quotation Date: {% now "jS F Y H:i" %} &nbsp;|&nbsp; Produced By: {{idx.first_name}} {{idx.last_name}}</td>
@@ -1434,6 +1434,402 @@
       
     </table>
     {% endif %}
+
+    <div class="break"></div>
+
+    <div class="page-start"><br><br><br><br></div>
+
+    <!-- Exclusive of VAT Tables  -->
+
+    <table>    
+        <tr>
+            <td class="tech-title">Components Summary Details (Ex VAT)</td>
+        </tr>
+     </table>
+     <br>    
+
+     <table id="bom">
+         <tr>
+             <th class="col1 exvat">Installation Requirements</th>
+             <th class="col2 exvat">Component</th>
+             <th class="col3 exvat">Qty</th>
+             <th class="col4 exvat">Unit £</th>
+             <th class="col5 exvat">Tot £</th>
+             <th class="col6 exvat">Cost £</th>
+             <th class="col7 exvat">Duration</th>
+         </tr>
+         {% for component_type,outer_value in form_data.20.items %}
+
+         <tr>
+             <td>{{ component_type }}</td>
+                {% for elem in outer_value %}
+                    {% for comp_name,comp_param in elem.items %}
+                        <td>{{ comp_name }}</td>
+                        {% for param in comp_param %}
+                            <td>{{param}}</td>
+                        {% endfor %}
+                        {% if outer_value|length > 1  %}
+                            </tr>
+                        {% endif %}
+                        
+                        {% endfor %}
+                        {% if forloop.counter != outer_value|length %}
+                        <tr><td>&nbsp;</td>
+                        {% endif %}
+
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        
+     </table>
+
+     <table id="bom">
+        <tr>
+            <th class="col1 exvat">New Installation Materials</th>
+             <th class="col2 exvat">Component {% if alt_product_record %}(Primary Boiler){% endif %}</th>
+             <th class="col3 exvat">Qty</th>
+             <th class="col4 exvat">Unit £</th>
+             <th class="col5 exvat">Tot £</th>
+             <th class="col6 exvat">Cost £</th>
+             <th class="col7 exvat">Duration</th>
+        </tr>
+        {% for component_type,outer_value in form_data.21.items %}
+        {% if component_type != "Alt Gas Flue Components" and component_type != "Alt Oil Flue Components" and component_type != "Alt Programmer/Thermostat" %}
+        <tr>
+            <td>{{ component_type }}</td>
+               {% for elem in outer_value %}
+                   {% for comp_name,comp_param in elem.items %}
+                       <td>{{ comp_name }}</td>
+                       {% for param in comp_param %}
+                           <td>{{param}}</td>
+                       {% endfor %}
+                       {% if outer_value|length > 1  %}
+                           </tr>
+                       {% endif %}
+                       
+                       {% endfor %}
+                       {% if forloop.counter != outer_value|length %}
+                       <tr><td>&nbsp;</td>
+                       {% endif %}
+
+               {% endfor %}
+           </tr>
+        {% endif %}   
+       {% endfor %}
+       
+    </table>
+
+     <!-- Special Parts  -->
+     <table id="bom">
+        <tr>
+            <th class="col1 exvat">Special Parts</th>
+            <th class="col2 exvat">Component</th>
+             <th class="col3 exvat">Qty</th>
+             <th class="col4 exvat">Unit £</th>
+             <th class="col5 exvat">Tot £</th>
+             <th class="col6 exvat">Cost £</th>
+             <th class="col7 exvat">Duration</th>
+        </tr>
+        {% for component_type,outer_value in form_data.22.items %}
+        <tr>
+            <td>{{ component_type }}</td>
+               {% for elem in outer_value %}
+                   {% for comp_name,comp_param in elem.items %}
+                       <td>{{ comp_name }}</td>
+                       {% for param in comp_param %}
+                           <td>{{param}}</td>
+                       {% endfor %}
+                       {% if outer_value|length > 1  %}
+                           </tr>
+                       {% endif %}
+                       
+                       {% endfor %}
+                       {% if forloop.counter != outer_value|length %}
+                       <tr><td>&nbsp;</td>
+                       {% endif %}
+
+               {% endfor %}
+           </tr>   
+       {% endfor %}
+      
+    </table>
+
+    {% if alt_product_record %}
+    <br>
+     <table id="bom">
+        <tr>
+            <th class="col1 alt">New Installation Materials</th>
+             <th class="col2 alt">Component (Secondary Boiler)</th>
+             <th class="col3 alt">Qty</th>
+             <th class="col4 alt">Unit £</th>
+             <th class="col5 alt">Tot £</th>
+             <th class="col6 alt">Cost £</th>
+             <th class="col7 alt">Duration</th>
+        </tr>
+        {% for component_type,outer_value in form_data.21.items %}
+        {% if component_type == "Alt Gas Flue Components" or component_type == "Alt Oil Flue Components" or component_type == "Alt Programmer/Thermostat" %}
+        <tr>
+            <td>{{ component_type }}</td>
+               {% for elem in outer_value %}
+                   {% for comp_name,comp_param in elem.items %}
+                       <td>{{ comp_name }}</td>
+                       {% for param in comp_param %}
+                           <td>{{param}}</td>
+                       {% endfor %}
+                       {% if outer_value|length > 1  %}
+                           </tr>
+                       {% endif %}
+                       
+                       {% endfor %}
+                       {% if forloop.counter != outer_value|length %}
+                       <tr><td>&nbsp;</td>
+                       {% endif %}
+
+               {% endfor %}
+           </tr>
+        {% endif %}   
+       {% endfor %}
+       
+    </table>
+
+    {% endif %}
+
+    <!-- End of Page -->
+
+    <div class="break"></div>
+
+    <!-- New Page (BOM - Radiators) -->
+  
+    <div class="page-start"><br><br><br><br><br></div>
+
+    {% if 'Radiator(s) Required' in form_data.7.radiator_specification %}
+        <table id="bom">
+            <tr>
+                <th class="col1 exvat">Radiators</th>
+                <th class="col2 exvat">Component</th>
+                <th class="col3 exvat">Qty</th>
+                <th class="col4 exvat">Unit £</th>
+                <th class="col5 exvat">Tot £</th>
+                <th class="col6 exvat">Cost £</th>
+                <th class="col7 exvat">Duration</th>
+            </tr>
+            {% for component_type,outer_value in form_data.23.items %}
+            <tr>
+                <td>{{ component_type }}</td>
+                {% for elem in outer_value %}
+                    {% for comp_name,comp_param in elem.items %}
+                        <td>{{ comp_name }}</td>
+                        {% for param in comp_param %}
+                            <td>{{param}}</td>
+                        {% endfor %}
+                        {% if outer_value|length > 1  %}
+                            </tr>
+                        {% endif %}
+                        
+                        {% endfor %}
+                        {% if forloop.counter != outer_value|length %}
+                        <tr><td>&nbsp;</td>
+                        {% endif %}
+
+                {% endfor %}
+            </tr>
+
+        {% endfor %}
+        </table>
+    {% endif %}
+
+        <!-- Radiator Styles  -->
+        {% if 'Radiator(s) Required' in form_data.7.radiator_specification %}
+        <table id="bom">
+            <tr>
+                <th class="col1 exvat">Radiator Styles</th>
+                <th class="col2 exvat">Component</th>
+                <th class="col3 exvat">Qty</th>
+                <th class="col4 exvat">Unit £</th>
+                <th class="col5 exvat">Tot £</th>
+                <th class="col6 exvat">Cost £</th>
+                <th class="col7 exvat">Duration</th>
+            </tr>
+            {% for component_type,outer_value in form_data.26.items %}
+            <tr>
+                <td>{{ component_type }}</td>
+                {% for elem in outer_value %}
+                    {% for comp_name,comp_param in elem.items %}
+                        <td>{{ comp_name }}</td>
+                        {% for param in comp_param %}
+                            <td>{{param}}</td>
+                        {% endfor %}
+                        {% if outer_value|length > 1  %}
+                            </tr>
+                        {% endif %}
+                        
+                        {% endfor %}
+                        {% if forloop.counter != outer_value|length %}
+                        <tr><td>&nbsp;</td>
+                        {% endif %}
+
+                {% endfor %}
+            </tr>
+
+        {% endfor %}
+        </table>
+    {% endif %}
+
+     <!-- Radiator Locations  -->
+     {% if 'Radiator(s) Required' in form_data.7.radiator_specification %}
+     <table id="bom">
+         <tr>
+             <th class="col1 exvat">Radiator Locations</th>
+             <th class="col2 exvat">Component</th>
+             <th class="col3 exvat">Qty</th>
+             <th class="col4 exvat">Unit £</th>
+             <th class="col5 exvat">Tot £</th>
+             <th class="col6 exvat">Cost £</th>
+             <th class="col7 exvat">Duration</th>
+         </tr>
+         {% for component_type,outer_value in form_data.27.items %}
+         <tr>
+             <td>{{ component_type }}</td>
+             {% for elem in outer_value %}
+                 {% for comp_name,comp_param in elem.items %}
+                     <td>{{ comp_name }}</td>
+                     {% for param in comp_param %}
+                         <td>{{param}}</td>
+                     {% endfor %}
+                     {% if outer_value|length > 1  %}
+                         </tr>
+                     {% endif %}
+                     
+                     {% endfor %}
+                     {% if forloop.counter != outer_value|length %}
+                     <tr><td>&nbsp;</td>
+                     {% endif %}
+
+             {% endfor %}
+         </tr>
+
+     {% endfor %}
+     </table>
+ {% endif %}
+
+<!-- End of Page -->
+
+<div class="break"></div>
+
+<!-- New Page -->
+
+<div class="page-start"><br><br><br><br><br></div>
+
+   {% if 'Radiator(s) Required' in form_data.7.radiator_specification or 'Thermostatic Radiator Valves Only' in form_data.7.radiator_specification %}
+   <table id="bom">
+       <tr>
+           <th class="col1 exvat">Radiator Valves</th>
+           <th class="col2 exvat">Component</th>
+            <th class="col3 exvat">Qty</th>
+            <th class="col4 exvat">Unit £</th>
+            <th class="col5 exvat">Tot £</th>
+            <th class="col6 exvat">Cost £</th>
+            <th class="col7 exvat">Duration</th>
+       </tr>
+       {% for component_type,outer_value in form_data.24.items %}
+       <tr>
+           <td>{{ component_type }}</td>
+              {% for elem in outer_value %}
+                  {% for comp_name,comp_param in elem.items %}
+                      <td>{{ comp_name }}</td>
+                      {% for param in comp_param %}
+                          <td>{{param}}</td>
+                      {% endfor %}
+                      {% if outer_value|length > 1  %}
+                          </tr>
+                      {% endif %}
+                      
+                      {% endfor %}
+                      {% if forloop.counter != outer_value|length %}
+                      <tr><td>&nbsp;</td>
+                      {% endif %}
+
+              {% endfor %}
+          </tr>
+
+      {% endfor %}
+   </table>
+   {% endif %}
+   
+   {% if 'Towel Rail(s) Required' in form_data.7.radiator_specification %}
+   <table id="bom">
+       <tr>
+           <th class="col1 exvat">Towel Rails</th>
+           <th class="col2 exvat">Component</th>
+            <th class="col3 exvat">Qty</th>
+            <th class="col4 exvat">Unit £</th>
+            <th class="col5 exvat">Tot £</th>
+            <th class="col6 exvat">Cost £</th>
+            <th class="col7 exvat">Duration</th>
+       </tr>
+       {% for component_type,outer_value in form_data.25.items %}
+       <tr>
+           <td>{{ component_type }}</td>
+              {% for elem in outer_value %}
+                  {% for comp_name,comp_param in elem.items %}
+                      <td>{{ comp_name }}</td>
+                      {% for param in comp_param %}
+                          <td>{{param}}</td>
+                      {% endfor %}
+                      {% if outer_value|length > 1  %}
+                          </tr>
+                      {% endif %}
+                      
+                      {% endfor %}
+                      {% if forloop.counter != outer_value|length %}
+                      <tr><td>&nbsp;</td>
+                      {% endif %}
+
+              {% endfor %}
+          </tr>   
+      {% endfor %}
+     
+   </table>
+   {% endif %}
+
+   <!-- Towel Rail Locations  -->
+   {% if 'Towel Rail(s) Required' in form_data.7.radiator_specification %}
+   <table id="bom">
+       <tr>
+           <th class="col1 exvat">Towel Rail Locations</th>
+           <th class="col2 exvat">Component</th>
+            <th class="col3 exvat">Qty</th>
+            <th class="col4 exvat">Unit £</th>
+            <th class="col5 exvat">Tot £</th>
+            <th class="col6 exvat">Cost £</th>
+            <th class="col7 exvat">Duration</th>
+       </tr>
+       {% for component_type,outer_value in form_data.28.items %}
+       <tr>
+           <td>{{ component_type }}</td>
+              {% for elem in outer_value %}
+                  {% for comp_name,comp_param in elem.items %}
+                      <td>{{ comp_name }}</td>
+                      {% for param in comp_param %}
+                          <td>{{param}}</td>
+                      {% endfor %}
+                      {% if outer_value|length > 1  %}
+                          </tr>
+                      {% endif %}
+                      
+                      {% endfor %}
+                      {% if forloop.counter != outer_value|length %}
+                      <tr><td>&nbsp;</td>
+                      {% endif %}
+
+              {% endfor %}
+          </tr>   
+      {% endfor %}
+     
+   </table>
+   {% endif %}
+
+
     
      <!-- End of Page -->
 

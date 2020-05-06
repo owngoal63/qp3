@@ -1748,7 +1748,7 @@ class FinanceForm_yh(forms.Form):
 		super(FinanceForm_yh, self).__init__(*args, **kwargs)
 		self.fields['total_cost'].disabled = True
 		self.fields['total_cost'].initial = self.total_quote_price
-		self.fields['deposit_amount'].initial = (float(self.total_quote_price) * 30) / 100
+		self.fields['deposit_amount'].initial = round((float(self.total_quote_price) * 30) / 100, 2)
 		self.fields['deposit_amount'].decimal_places = 2
 		self.fields['deposit_amount_thirty_percent'].initial = (float(self.total_quote_price) * 30) / 100
 		self.fields['interest_free_12m_deposit_amount'].initial = (float(self.total_quote_price) * 30) / 100

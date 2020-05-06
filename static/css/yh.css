@@ -587,6 +587,11 @@ p.account-details {
     color: white;
 }
 
+#bom th.exvat {
+    background-color: darkblue  ;
+    color: white;
+}
+
   #SalutAndRef {
     border-collapse: collapse;
     width: 100%;

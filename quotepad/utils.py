@@ -14,6 +14,8 @@ from sendgrid.helpers.mail import (Mail, Attachment, FileContent, FileName, File
 import base64
 import json
 
+from decimal import *
+
 #Added for Weasyprint
 from django.template.loader import render_to_string
 from weasyprint import HTML, CSS
@@ -139,19 +141,50 @@ def component_attrib_build(component_name, component_type, user, qty=1, brand=No
 		#print(component_type)
 		#print(brand)
 		price = ProductComponent.objects.get(component_name=component_name, component_type=component_type, brand=brand, user=user).price
+		#price_exVat = round(price / Decimal(1.20),2)
 		ext_price = price * qty
+		#ext_price_exVat = round(ext_price / Decimal(1.20),2)
 		cost = ProductComponent.objects.get(component_name=component_name, component_type=component_type, brand=brand, user=user).cost
+		#cost_exVat = round(cost / Decimal(1.20),2)
 		duration = ProductComponent.objects.get(component_name=component_name, component_type=component_type, brand=brand, user=user).est_time_duration
 		ext_duration = duration * qty
 	else:
 		#print(component_type)
 		price = ProductComponent.objects.get(component_name=component_name, component_type=component_type, user=user).price
+		#price_exVat = round(price / Decimal(1.20),2)
 		ext_price = price * qty
+		#ext_price_exVat = round(ext_price / Decimal(1.20),2)
 		cost = ProductComponent.objects.get(component_name=component_name, component_type=component_type, user=user).cost
+		#cost_exVat = round(cost / Decimal(1.20),2)
 		duration = ProductComponent.objects.get(component_name=component_name, component_type=component_type, user=user).est_time_duration
 		ext_duration = duration * qty
 
 	return {component_name: [qty, price, ext_price, cost, ext_duration]}
+
+def component_attrib_build_exVat(component_name, component_type, user, qty=1, brand=None):
+	if brand:
+		#print(component_type)
+		#print(brand)
+		price = ProductComponent.objects.get(component_name=component_name, component_type=component_type, brand=brand, user=user).price
+		price_exVat = round(price / Decimal(1.20),2)
+		ext_price = price * qty
+		ext_price_exVat = round(ext_price / Decimal(1.20),2)
+		cost = ProductComponent.objects.get(component_name=component_name, component_type=component_type, brand=brand, user=user).cost
+		cost_exVat = round(cost / Decimal(1.20),2)
+		duration = ProductComponent.objects.get(component_name=component_name, component_type=component_type, brand=brand, user=user).est_time_duration
+		ext_duration = duration * qty
+	else:
+		#print(component_type)
+		price = ProductComponent.objects.get(component_name=component_name, component_type=component_type, user=user).price
+		price_exVat = round(price / Decimal(1.20),2)
+		ext_price = price * qty
+		ext_price_exVat = round(ext_price / Decimal(1.20),2)
+		cost = ProductComponent.objects.get(component_name=component_name, component_type=component_type, user=user).cost
+		cost_exVat = round(cost / Decimal(1.20),2)
+		duration = ProductComponent.objects.get(component_name=component_name, component_type=component_type, user=user).est_time_duration
+		ext_duration = duration * qty
+
+	return {component_name: [qty, price_exVat, ext_price_exVat, cost_exVat, ext_duration]}
 
 def send_pdf_email_using_SendGrid(sender, receiver, mail_subject, mail_content, pdf_attachment, txt_attachment=None, cc_email=None):
 	
