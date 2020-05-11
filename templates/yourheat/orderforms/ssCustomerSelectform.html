@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h4>Select a Customer</h4>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button class="btn btn-primary" type="submit">Send to Quoteform</button>
+
+        <a href="{% url 'boilerform_yh' %}" class="btn btn-secondary">Cancel</a>
+
+    </form>
+    <br>
+</div>
+{% endblock content %}

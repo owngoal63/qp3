@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from quotepad.models import Document, Profile, ProductPrice, ProductComponent, OptionalExtra
 from django.forms import ModelMultipleChoiceField, ModelChoiceField
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.conf import settings
 
 # For Editing the template
 from django.conf import settings
@@ -1326,13 +1327,18 @@ class FormStepOne_yh(forms.Form):
 		super(FormStepOne_yh, self).__init__(*args, **kwargs)
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
-	customer_title = forms.ChoiceField(choices=CUSTOMER_TITLE_DROPDOWN)
+	if settings.YH_SS_INTEGRATION:		
+		customer_title = forms.CharField(max_length=20)		# Allow freeform populate from Smartsheet
+	else:	
+		customer_title = forms.ChoiceField(choices=CUSTOMER_TITLE_DROPDOWN)		# Provide Dropdown if not Smartsheet
 	customer_first_name = forms.CharField(max_length=100)
 	customer_last_name = forms.CharField(max_length=100)
 	customer_primary_phone = forms.CharField(max_length=100)
 	customer_secondary_phone = forms.CharField(max_length=100, required = False)
 	customer_email = forms.EmailField()
-	owner_tenant_or_landlord = forms.ChoiceField(choices=OWNER_TENANT_OR_LANDLORD_DROPDOWN) 
+	owner_tenant_or_landlord = forms.ChoiceField(choices=OWNER_TENANT_OR_LANDLORD_DROPDOWN)
+	if settings.YH_SS_INTEGRATION:
+		smartsheet_id = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
 	
 class FormStepTwo_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
@@ -1761,9 +1767,11 @@ class FinanceForm_yh(forms.Form):
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
 
-	
+class ssCustomerSelectForm(forms.Form):
+	customers_for_quote = forms.ChoiceField(required = False, choices=[])
 
-
-	
-	
+	def __init__(self, *args, **kwargs):
+		customer_choices = kwargs.pop('customer_choices')
+		super().__init__(*args, **kwargs)
+		self.fields['customers_for_quote'].choices = customer_choices
 

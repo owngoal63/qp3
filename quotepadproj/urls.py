@@ -28,7 +28,7 @@ from quotepad.views import generate_quote_from_file, edit_quote_template, list_q
 from quotepad.views import BoilerFormWizardView_yh,generate_quote_from_file_yh, FinanceFormWizardView_yh
 from quotepad.forms import FormStepOne_yh, FormStepTwo_yh, FormStepThree_yh, FormStepFour_yh, FormStepFive_yh, FormStepSix_yh, FormStepSeven_yh, FormStepEight_yh, FormStepNine_yh, FinanceForm_yh
 from quotepad.views import quote_generated_yh, list_quote_archive_yh, upload_for_reprint_yh
-from quotepad.views import get_smartsheet
+from quotepad.views import get_smartsheet, ssCustomerSelect, quote_sent_to_Smartsheet_yh
 
 urlpatterns = [
     
@@ -104,6 +104,9 @@ urlpatterns = [
     path('editcurrentquotedata/', edit_quote_data, name = 'editcurrentquotedata'),
 
     path('getsmartsheet/', get_smartsheet, name='getsmartsheet'),
+    path('ssCustomerSelect/', login_required(ssCustomerSelect.as_view()), name='ssCustomerSelect'),
+    path('quote_sent_to_Smartsheet_yh/', quote_sent_to_Smartsheet_yh, name = 'quotesenttoSmartsheet_yh'),
+    
 
 
 	path('', include('payments.urls')),

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h4>Quote Updated on Smartsheet</h4>
+    <a class="btn btn-secondary" href="/home/">Return to Dashboard</a>
+
+</div>
+
+<script>
+    all_good("Quote processing", "The quote details have been updated on Smartsheet.", "home/")
+</script>
+
+{% endblock %}

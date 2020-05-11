@@ -278,6 +278,24 @@ def ss_get_customers_data_for_survey_from_report(access_token, sheet_name, repor
 		colMap[col.title] = col.id
 		colMapRev[col.id] = col.title
 
+	# Dictionary to translate SS column names to Quotepad ones
+	coltransdict = {
+  		"Link to Survey": "Link to Survey",
+  		"Customer Status": "Customer Status",
+  		"Customer ID": "smartsheet_id",
+		"Title": "customer_title",
+		"First Name": "customer_first_name",
+		"Surname": "customer_last_name",
+		"Email": "customer_email",
+		"Address Line 1": "street_address",
+		"Postcode": "postcode",
+		"Mobile": "customer_primary_phone",
+		"Landline": "customer_secondary_phone",
+		"Opportunity Lost": "Opportunity Lost",
+		"Surveyor": "Surveyor",
+		"Quotation Date": "Quotation Date",
+		}	
+
 
 	# Get all the reports for the sheet
 	all_reports = ss.Reports.list_reports(include_all=True)
@@ -304,20 +322,18 @@ def ss_get_customers_data_for_survey_from_report(access_token, sheet_name, repor
 	for MyRow in reportjson["rows"]:
 		file.write("{")
 		
-		for MyCell in MyRow["cells"]:
-			#print(colMapRev.get(MyCell.get("columnId")),MyCell.get("value"))
-			#print("{'" + str(colMapRev.get(MyCell.get("columnId"))) + "': '" + str(MyCell.get("value")) + "'}")
-			#CustomersForSurvey.append(dict("{'" + str(colMapRev.get(MyCell.get("columnId"))) + "': '" + str(MyCell.get("value")) + "'}"))
-			file.write("'" + str(colMapRev.get(MyCell.get("columnId"))) + "': '" + str(MyCell.get("value")) +"', ")
+		for index, MyCell in enumerate(MyRow["cells"]):
+			file.write('"' + coltransdict.get(str(colMapRev.get(MyCell.get("columnId")))) + '": "' + str(MyCell.get("value")) + '"')
+			if index < len(MyRow["cells"]) - 1:		# Print comma delimiter for all but last element
+				file.write(', ')
 		file.write("}\n")	
-
-	#print(MyReportsjson)
+	file.flush()
 	file.close
-	#print("done")
+	print("Smartsheet extract data done")
 
 	return
 
-def ss_update_data(access_token, sheet_name, column_ids, conditional_field_name, conditional_field_value, update_field_name, update_field_value):
+def ss_update_data(access_token, sheet_name, conditional_field_name, conditional_field_value, update_data):
 
 	# Instantiate smartsheet and specify access token value.
 	ss = smartsheet.Smartsheet(access_token)
@@ -338,27 +354,57 @@ def ss_update_data(access_token, sheet_name, column_ids, conditional_field_name,
 		colMap[col.title] = col.id
 		colMapRev[col.id] = col.title
 
+	# Get just the columns needed for the condition and the update data to optimise processing
+	column_ids = []
+	column_ids.append(colMap.get(conditional_field_name))
+	for data_element in update_data:
+		for key in data_element:
+			column_ids.append(colMap.get(key))
+
 	# Get the Sheet from Smartsheet
 	sheet = ss.Sheets.get_sheet(sheet_id, column_ids=column_ids)
 	# Covert data to a JSON object
 	sheetjson = json.loads(str(sheet))
 
-	# Build new cell value
-	new_cell = smartsheet.models.Cell()
-	new_cell.column_id = colMap.get(update_field_name)
-	new_cell.value = update_field_value
-	new_cell.strict = False
-
-	# Loop through rows and columns and update the appropriate cells
+	# Loop through rows and columns to get the update row id
+	update_row = smartsheet.models.Row()
 	for MyRow in sheetjson["rows"]:
-		new_row = smartsheet.models.Row()
-
+		row_continue = True
 		for MyCell in MyRow["cells"]:
-
 			if colMapRev.get(MyCell.get("columnId")) == conditional_field_name and MyCell.get("value") == conditional_field_value:
-				new_row.id = MyRow["id"]
-				new_row.cells.append(new_cell)
-				updated_row = ss.Sheets.update_rows(sheet_id,[new_row])
+				update_row.id = MyRow["id"]
+				row_continue = False
+				break
+		if not row_continue:
+			break	# Once update row has been found break out of both loops
+
+	for data_element in update_data:
+		for key in data_element:
+			update_cell = smartsheet.models.Cell()
+			update_cell.column_id = colMap.get(key)
+			update_cell.value = data_element[key]
+			update_cell.strict = False
+			update_row.cells.append(update_cell)
+	print("SS Updated Row details",update_row)
+	updated_row = ss.Sheets.update_rows(sheet_id,[update_row])
+
+
+	# Below code works but above is more efficient
+	# for MyCell in row_to_update["cells"]:
+	# 	for data_element in append_data:
+	# 		for key in data_element:
+	# 			print(key,data_element[key])
+	# 			print("Col Map rev",colMapRev.get(MyCell.get("columnId")))
+	# 			if colMapRev.get(MyCell.get("columnId")) == key:
+	# 				print("update")
+	# 				update_row.cells = []
+	# 				update_cell.column_id = colMap.get(key)
+	# 				update_cell.value = data_element[key]
+	# 				update_row.cells.append(update_cell)
+	# 				print(update_row)
+	
+	# 				updated_row = ss.Sheets.update_rows(sheet_id,[update_row])
+
 
 	return
 
@@ -444,13 +490,5 @@ def ss_attach_pdf(access_token, sheet_name, conditional_field_name, conditional_
 				)
 
 	return			
-
-
-
-
-
-
-
-
 
 

@@ -9,10 +9,15 @@
 
     <p>Your quote has been generated and is available to view and email to the customer.</p>
 
-        <a href="{% url 'generate_quote_from_file_yh' 'PDFOutput' 'currentquote' %}" target="_blank">View Current Quote</a><br>
-        <a href="{% url 'generate_quote_from_file_yh' 'EmailOutput' 'currentquote' %}">Email Current Quote to customer</a><br><br>
-
-
+    <hr>
+        <a class="btn boilerbtn btn-primary" href="{% url 'generate_quote_from_file_yh' 'PDFOutput' 'currentquote' %}" target="_blank">View Current Quote</a><br><br>
+        <a class="btn boilerbtn btn-primary" href="{% url 'generate_quote_from_file_yh' 'EmailOutput' 'currentquote' %}">Email Current Quote to customer</a><br>
+        {% if YH_SS_INTEGRATION %}
+            <hr>
+            <p>You can also update the Smartsheet record for this customer with the completed quote.</p>
+            <a class="btn boilerbtn btn-warning" href="{% url 'generate_quote_from_file_yh' 'UpdateSmartsheet' 'currentquote' %}">Update Smartsheet with current Quote</a><br>
+        {% endif %}    
+    <hr>
     <a class="btn btn-secondary" href="/home/">Return to Dashboard</a>
 
 </div>

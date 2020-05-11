@@ -101,6 +101,9 @@ def quotepad_template_help(request):
 # Functions associated with user authentication
 @login_required
 def home(request):
+	# Initialise session variable used by YH to store selected Smartsheet customer 
+	request.session['selected_customer_index'] = -1
+
 	''' Function to render home page and check on whether to use a generic pdf_template file or a user specific one '''
 	usr_pdf_template_file = Path(settings.BASE_DIR + "/templates/pdf/{}/boilerform_pdf.html".format(request.user.username))
 	print(usr_pdf_template_file)

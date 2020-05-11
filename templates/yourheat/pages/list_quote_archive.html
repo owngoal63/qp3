@@ -10,8 +10,8 @@
     {% if pdf_file == "current_quote.txt" %}
         <h4>Current Quote</h4>
         
-            <a href="{% url 'generate_quote_from_file_yh' 'PDFOutput' 'currentquote' %}" target="_blank">View Current Quote</a><br>
-            <a href="{% url 'generate_quote_from_file_yh' 'EmailOutput' 'currentquote' %}">Email Current Quote to customer</a><br><br>
+        <a class="btn boilerbtn btn-primary" href="{% url 'generate_quote_from_file_yh' 'PDFOutput' 'currentquote' %}" target="_blank">View Current Quote</a><br><br>
+        <a class="btn boilerbtn btn-primary" href="{% url 'generate_quote_from_file_yh' 'EmailOutput' 'currentquote' %}">Email Current Quote to customer</a><br>
 
         <hr>
         <h4>Historical Quotes for {{request.user}}</h4>

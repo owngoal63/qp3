@@ -76,6 +76,13 @@ ul#id_7-radiator_specification li {
   padding-left:10px;
 }
 
+.disp_inline {
+  display:inline;
+}
+
+.float_right {
+  float:right;
+}
 
 /* Landing Page - These classes are used to style the landing page - designed to entice users to sign up to Quotepad */
 .heading-section-landing {

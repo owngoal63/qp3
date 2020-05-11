@@ -9,7 +9,7 @@
     {% csrf_token %}
     <!--This section requires an if block for every step in the process-->
     {% if wizard.steps.step1 == 1 %}
-        <h3>CUSTOMER DETAILS</h3>
+        <h3 class = "disp_inline">CUSTOMER DETAILS</h3>
     {% endif %}
     {% if wizard.steps.step1 == 2 %}
         <h3>PROPERTY DETAILS</h3>
@@ -35,6 +35,10 @@
     {% if wizard.steps.step1 == 9 %}
         <h3>WORKLOAD DETAILS</h3>
     {% endif %}
+
+    {% if wizard.steps.step1 == 1 and YH_SS_INTEGRATION %}
+        <a class="btn boilerbtn btn-warning disp_inline float_right" href="/ssCustomerSelect/">Download Customer from Smartsheet</a>
+    {% endif %}    
     
     <h5>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</h5>
     
