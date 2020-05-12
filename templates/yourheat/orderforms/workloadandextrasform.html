@@ -26,10 +26,31 @@
                 <label>{{ wizard.form.estimated_duration.label }} * <b>({{wizard.form.component_duration_total.value}} hrs )</b></label>
                 {{ wizard.form.estimated_duration }}
             </div>
+           
+        </div>
+    </div>
+    <div class="row">    
+        <div class = "col-6">
+            <div class="form-group">
+                <label>{{ wizard.form.description_of_works.label }} *</label>
+                {{ wizard.form.description_of_works }}
+            </div>
+        </div>
+        <div class = "col-6">    
+            <div class="form-group">
+                <label>{{ wizard.form.surveyors_notes.label }} *</label>
+                {{ wizard.form.surveyors_notes }}
+            </div>
+        </div>
+
+    </div>
+
+    <div class = "row">
+        <div class = "col-12">
             <div class="form-check">
                 <label class="form-check-label">{{ wizard.form.optional_extras.label }}</label>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ wizard.form.optional_extras }}
-                    <div class="form-extras-group"> 
+                    <div class="form-group form-extras-group"> 
                         <table>
                             <tr>
                                 <td>Product and Price</td>
@@ -78,28 +99,17 @@
                         </table>
                         
                     </div>
-                
-            </div>
-        </div>
-        <div class = "col-6">
-            <div class="form-group">
-                <label>{{ wizard.form.description_of_works.label }} *</label>
-                {{ wizard.form.description_of_works }}
-            </div>
-            <div class="form-group">
-                <label>{{ wizard.form.surveyors_notes.label }} *</label>
-                {{ wizard.form.surveyors_notes }}
-            </div>
-        </div>
 
-    </div>
-
-    
-{% endif %}
+        </div>
         
+    </div>
+    
+    {% endif %}
+    
     <div class = "row">
         <div class="col-12">
             <div class="boilerformbtns">
+                <br>
                 {% if wizard.steps.prev %}
                 <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.first }}" class="boilerbtn">First step</button>
                 <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.prev }}" class="boilerbtn">Previous step</button>
