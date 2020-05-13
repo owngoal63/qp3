@@ -7,12 +7,15 @@ admin.site.register(Profile)
 
 class ProductPriceAdmin(ImportExportModelAdmin):
     #resource_class = ProductPriceResource
-    pass
+    list_display=('user', 'brand', 'fuel_type', 'boiler_type', 'model_name')
+    search_fields = ('model_name', )
+
 
 admin.site.register(ProductPrice, ProductPriceAdmin)
 
 class ProductComponentAdmin(ImportExportModelAdmin):
-    pass
+    list_display=('user', 'brand', 'component_type', 'component_name')
+    search_fields = ('component_name', )
 
 admin.site.register(ProductComponent, ProductComponentAdmin)
 
@@ -20,4 +23,7 @@ class DocumntAdmin(ImportExportModelAdmin):
     pass
 
 admin.site.register(Document, DocumntAdmin)
+
+#class ProductPriceAdmin(admin.ModelAdmin):
+
 
