@@ -346,9 +346,9 @@ class ProductComponentList(ListView):
 		filter_val = self.request.GET.get('filter', None)
 		print(filter_val)
 		if filter_val:
-			return ProductComponent.objects.filter(user=self.request.user, component_type=filter_val).order_by('component_type','brand','id')
+			return ProductComponent.objects.filter(user=self.request.user, component_type=filter_val).order_by('component_type','brand','component_name')
 		else:
-			return ProductComponent.objects.filter(user=self.request.user).order_by('component_type','brand','id')
+			return ProductComponent.objects.filter(user=self.request.user).order_by('component_type','brand','component_name')
 
 @login_required
 def ProductComponentCreate(request):
