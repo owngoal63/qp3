@@ -21,6 +21,9 @@ from django.template.loader import render_to_string
 from weasyprint import HTML, CSS
 from weasyprint.fonts import FontConfiguration
 
+# To allow OR conditions on object filters
+from django.db.models import Q
+
 #Added for Smartsheet API
 import smartsheet
 
@@ -140,13 +143,13 @@ def component_attrib_build(component_name, component_type, user, qty=1, brand=No
 	if brand:
 		#print(component_type)
 		#print(brand)
-		price = ProductComponent.objects.get(component_name=component_name, component_type=component_type, brand=brand, user=user).price
+		price = ProductComponent.objects.get(Q(brand='Applicable for All') | Q(brand=brand), component_name=component_name, component_type=component_type, user=user).price
 		#price_exVat = round(price / Decimal(1.20),2)
 		ext_price = price * qty
 		#ext_price_exVat = round(ext_price / Decimal(1.20),2)
-		cost = ProductComponent.objects.get(component_name=component_name, component_type=component_type, brand=brand, user=user).cost
+		cost = ProductComponent.objects.get(Q(brand='Applicable for All') | Q(brand=brand), component_name=component_name, component_type=component_type,user=user).cost
 		#cost_exVat = round(cost / Decimal(1.20),2)
-		duration = ProductComponent.objects.get(component_name=component_name, component_type=component_type, brand=brand, user=user).est_time_duration
+		duration = ProductComponent.objects.get(Q(brand='Applicable for All') | Q(brand=brand), component_name=component_name, component_type=component_type, user=user).est_time_duration
 		ext_duration = duration * qty
 	else:
 		#print(component_type)
@@ -165,13 +168,13 @@ def component_attrib_build_exVat(component_name, component_type, user, qty=1, br
 	if brand:
 		#print(component_type)
 		#print(brand)
-		price = ProductComponent.objects.get(component_name=component_name, component_type=component_type, brand=brand, user=user).price
+		price = ProductComponent.objects.get(Q(brand='Applicable for All') | Q(brand=brand), component_name=component_name, component_type=component_type, user=user).price
 		price_exVat = round(price / Decimal(1.20),2)
 		ext_price = price * qty
 		ext_price_exVat = round(ext_price / Decimal(1.20),2)
-		cost = ProductComponent.objects.get(component_name=component_name, component_type=component_type, brand=brand, user=user).cost
+		cost = ProductComponent.objects.get(Q(brand='Applicable for All') | Q(brand=brand), component_name=component_name, component_type=component_type, user=user).cost
 		cost_exVat = round(cost / Decimal(1.20),2)
-		duration = ProductComponent.objects.get(component_name=component_name, component_type=component_type, brand=brand, user=user).est_time_duration
+		duration = ProductComponent.objects.get(Q(brand='Applicable for All') | Q(brand=brand), component_name=component_name, component_type=component_type, user=user).est_time_duration
 		ext_duration = duration * qty
 	else:
 		#print(component_type)
