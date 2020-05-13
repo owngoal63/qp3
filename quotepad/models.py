@@ -130,6 +130,10 @@ class ProductPrice(models.Model):
 	product_image   =   models.ForeignKey(Document, null=True, blank=True, on_delete=models.SET_NULL,)
 	guarantee       =   models.CharField(max_length=100, choices=PRODUCT_GUARANTEE_DROPDOWN)
 
+	class Meta:
+		constraints = [
+			models.UniqueConstraint(fields=['user', 'brand', 'fuel_type', 'boiler_type', 'model_name'], name='unique_product')
+		]
 
 	def __str__(self):
 		return "%s / %s - £%s" % (self.model_name, self.product_code, self.price)  
@@ -144,6 +148,12 @@ class ProductComponent(models.Model):
 	cost            	=   models.DecimalField(max_digits=10, decimal_places=2, default=0)
 	est_time_duration	=	models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
+	class Meta:
+		constraints = [
+			models.UniqueConstraint(fields=['user', 'brand', 'component_type', 'component_name'], name='unique_component')
+		]
+
+
 	def __str__(self):
 		return self.component_name
 
@@ -152,6 +162,11 @@ class OptionalExtra(models.Model):
 	user			=   models.ForeignKey(User, on_delete=models.CASCADE)
 	product_name  	=   models.CharField(max_length=200)
 	price           =   models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+	class Meta:
+		constraints = [
+			models.UniqueConstraint(fields=['user', 'product_name'], name='unique_optional_extra')
+		]
 
 	def __str__(self):
 		#return "%s - £%s" % (self.product_name,  self.price)
