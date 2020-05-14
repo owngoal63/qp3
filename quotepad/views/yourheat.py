@@ -1226,7 +1226,7 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 		# Generate the email, attach the pdf and send out
 		fd = file_form_data
 		mail_subject = 'Your Personal Boiler Replacement Quotation'
-		msg=""
+		msg = "<img src='" + settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png'><br>"
 		msg = msg + "<p style='font-family:arial, font-size:12px'>Thank you for your time today and attached is a copy of your Fixed Price Quotation - I hope Surveyor {} {} looked after you well and answered all your questions.</p>".format(idx.first_name, idx.last_name)
 		msg = msg + "<p style='font-family:arial, font-size:12px'>It is quite common to have a few more questions following receipt of the quotation so please feel free to contact {} on {}, who will be able answer these for you. Alternatively, you are welcome to contact the office direct on telephone number 01732 622990 or email <a href='mailto:info@yourheat.co.uk'>info@yourheat.co.uk</a> for any additional support.</p>".format(idx.first_name, idx.telephone)
 		msg = msg + "<p style='font-family:arial, font-size:12px'>The team here will be in touch with you again very shortly to ensure that you have everything you need.</p>"
