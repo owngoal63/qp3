@@ -47,7 +47,7 @@ CURRENT_BOILER_TYPE_DROPDOWN = (
 	('','Select One'),
 	('Combi','Combi'),
 	('Conventional Wall Hung','Conventional Wall Hung'),
-	('Conventional Flor Standing','Conventional Flor Standing'),
+	('Conventional Floor Standing','Conventional Floor Standing'),
 	('System','System'),
 	('Back Boiler','Back Boiler'),
 	('Water Heater','Water Heater'),
@@ -864,6 +864,7 @@ HEAT_LOSS_HOUSE_TYPE_DROPDOWN = (
 	(0.05,"1950 - 1984"),
 	(0.04,"Pre 1950"),
 )
+
 
 
 ''' Section for defining the multiple forms that will be used for the boiler quote (FormWizard library) '''
@@ -1773,5 +1774,24 @@ class ssCustomerSelectForm(forms.Form):
 	def __init__(self, *args, **kwargs):
 		customer_choices = kwargs.pop('customer_choices')
 		super().__init__(*args, **kwargs)
+		for field in self: 
+			field.field.widget.attrs['class'] = 'form-control'
 		self.fields['customers_for_quote'].choices = customer_choices
+
+class ssPostSurveyQuestionsForm(forms.Form):
+	def __init__(self, *args, **kwargs):
+		super(ssPostSurveyQuestionsForm, self).__init__(*args, **kwargs)
+		for field in self: 
+			field.field.widget.attrs['class'] = 'form-control'
+	smartsheet_id = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	customer_first_name = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	customer_last_name = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	postcode = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	reason_for_quote = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':5, 'cols':60}))
+	why_you_quoted_what_you_quoted = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':5, 'cols':60}))
+	why_customer_did_not_go_ahead_on_day = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':5, 'cols':60}))
+	important_to_customer = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':5, 'cols':60, 'placeholder': 'Useful info, finance, servicing etc'}))
+
+
+
 
