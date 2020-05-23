@@ -1,9 +1,11 @@
 from django.contrib import admin
-from .models import Document, Profile, ProductPrice, ProductComponent
+from .models import Document, Profile, ProductPrice, ProductComponent, OptionalExtra, CustomerComm
 from import_export.admin import ImportExportModelAdmin
 
 
 admin.site.register(Profile)
+admin.site.register(OptionalExtra)
+admin.site.register(CustomerComm)
 
 class ProductPriceAdmin(ImportExportModelAdmin):
     #resource_class = ProductPriceResource
