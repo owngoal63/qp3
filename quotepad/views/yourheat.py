@@ -3,6 +3,7 @@ from django.views.generic import View, ListView, CreateView, UpdateView, DeleteV
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib import messages
+from django.template.loader import render_to_string
 
 from decimal import *
 
@@ -18,7 +19,8 @@ from formtools.wizard.views import SessionWizardView
 # imports associated with xhtml2pdf
 from django.http import HttpResponseRedirect, HttpResponse, FileResponse
 from quotepad.utils import pdf_generation, pdf_generation_to_file, convertHtmlToPdf, convertHtmlToPdf2, component_attrib_build, component_attrib_build_exVat, send_pdf_email_using_SendGrid
-import datetime
+#import datetime
+from datetime import datetime
 from pathlib import Path, PureWindowsPath
 import os, os.path, errno
 
@@ -30,15 +32,20 @@ from django.dispatch import receiver
 from django.contrib.auth.signals import user_logged_in
 from django.contrib.auth.models import User, Group
 
-from quotepad.models import Profile, ProductPrice, Document, OptionalExtra, ProductComponent
+from quotepad.models import Profile, ProductPrice, Document, OptionalExtra, ProductComponent, CustomerComm
 from quotepad.forms import ProfileForm, UserProfileForm, ProductPriceForm, EditQuoteTemplateForm
 
 # To allow OR conditions on object filters
 from django.db.models import Q
 
 #Added for Smartsheet
-from quotepad.utils import ss_get_customers_data_for_survey_from_report, ss_update_data, ss_append_data, ss_attach_pdf
+from quotepad.utils import ss_get_data_from_report, ss_update_data, ss_append_data, ss_attach_pdf, ss_get_data_from_sheet, ss_add_comments
 from quotepad.forms import ssCustomerSelectForm, ssPostSurveyQuestionsForm
+
+@login_required
+def emails_sent_to_customers_yh(request):
+	''' Function to render the emails sent page '''
+	return render(request,'yourheat/pages/emails_sent_to_customers.html')
 
 @login_required
 def quote_sent_to_Smartsheet_yh(request):
@@ -93,6 +100,126 @@ def pdf_view(request, pdf_file):
 #	def done(self, form_list, **kwargs):
 	#	return HttpResponseRedirect('/quotegenerated/')
 
+def ss_customer_comms_yh(request):
+	''' Function to display landpage for customer comms'''
+	ss_customer_id = request.GET.get('customerid', None)
+	ss_customer_name = request.GET.get('customername', None)
+	print(ss_customer_id)
+
+	return render(request, 'yourheat/pages/customer_comms_landing_page.html', {'customer_id': ss_customer_id, 'customer_name': ss_customer_name})
+
+
+@login_required	  
+def ss_list_customers_for_comms_yh(request, comms_name, customer_id=None):
+	''' Function to display list of customers for communications based upon Smartsheet data '''
+
+	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(request.user.username, comms_name))
+
+	if customer_id:		# customer_id has been passed so get individual record from sheet
+		ss_get_data_from_sheet(
+			settings.YH_SS_ACCESS_TOKEN,
+			settings.YH_SS_SHEET_NAME,
+			['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'Installation Date', 'Quotation Date', 'Engineer', 'Boiler Brand'],
+			'Customer ID',
+			customer_id,
+			data_filename
+		)
+		data_source_is_report = False		# Boolean to pass to HTML page to determine instructions
+	else:	# customer_id has NOT been passed so get records from predefined SS report
+		ss_get_data_from_report(
+				settings.YH_SS_ACCESS_TOKEN,
+				settings.YH_SS_SHEET_NAME,
+				comms_name,
+				data_filename
+		)
+		data_source_is_report = True		# Boolean to pass to HTML page to determine instructions
+
+	# Open the text file with the Smartsheet data 
+	with open(data_filename) as file:
+			comms_data = []
+			for line in file:
+				comms_data.append(eval(line))
+
+	# Check if record has already been sent and add details to dict
+	for index, line in enumerate(comms_data):
+		if CustomerComm.objects.filter(customer_id = line.get('smartsheet_id'), comms_id = comms_name ).exists():
+			comms_data[index]["already_sent"] = True
+		else:
+			comms_data[index]["already_sent"] = False
+
+	#print(comms_data)
+	#print(stop)			
+	return render(request, 'yourheat/pages/list_comms_data.html', {'comms_data': comms_data, 'report_name': comms_name, 'data_source_is_report': data_source_is_report })
+
+@login_required	  
+def ss_generate_customer_comms_yh(request, comms_name):
+	''' Function to generate communication emails to send to customers based upon Smartsheet data '''
+	
+	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(request.user.username, comms_name))
+	html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/{}.html".format(settings.YH_MASTER_PROFILE_USERNAME, comms_name))
+	
+	#ss_get_data_from_report(
+	#		settings.YH_SS_ACCESS_TOKEN,
+	#		settings.YH_SS_SHEET_NAME,
+	#		comms_name,
+	#		data_filename
+	#	)
+
+	# Open the text file with the Smartsheet data 
+	with open(data_filename) as file:
+			file_form_data = []
+			for line in file:
+				file_form_data.append(eval(line))
+
+	for line in file_form_data:
+		#print(line.get('customer_title'))
+
+		if CustomerComm.objects.filter(customer_id = line.get('smartsheet_id'), comms_id = comms_name ).exists():
+			print(line.get('smartsheet_id'), comms_name, ' already exists - do not resend.' )
+		else:	
+			# Add record and send
+			if settings.YH_SS_TRACK_COMMS_SENT:
+				CustComm = CustomerComm(user = request.user ,customer_id = line.get('smartsheet_id') , comms_id = comms_name )
+				CustComm.save()
+
+			# Add the image logo url to the dictionary
+			line["image_logo"] = settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png"
+			# Add the dictionary entry engineer_name  from the engineer_email address with some string manipulation
+			at_pos = line["engineer_email"].find('@')
+			line["engineer_name"] = ((line["engineer_email"].replace('.',' '))[0:at_pos]).title()
+			# Add the dictionary entry engineer_first_name
+			at_pos = line["engineer_name"].find(' ')
+			line["engineer_first_name"] = (line["engineer_name"])[0:at_pos]
+			# Change the installation_date format
+			line["installation_date"] = datetime.strptime(line["installation_date"], "%Y-%m-%d")
+			line["quotation_date"] = datetime.strptime(line["quotation_date"], "%Y-%m-%d")
+			html_content = render_to_string(html_email_filename, line)
+			# Drop the Comms from the comms_name for the Email subject line
+			at_pos = comms_name.find('Comms')
+			mail_subject = 'Your Heat - ' + comms_name[0:at_pos]
+
+			if settings.YH_TEST_EMAIL:
+					email = EmailMessage(mail_subject, html_content, 'info@yourheat.co.uk' , [line.get('customer_email')])
+					email.content_subtype = "html"  # Main content is now text/html
+					email.send()
+
+		#else:	(TBD needs to be fixed below)
+		#	send_pdf_email_using_SendGrid('quotes@yourheat.co.uk', idx_master.email, mail_subject, msg, outputFilename, quote_form_filename )
+
+			if settings.YH_SS_INTEGRATION:		# Update Comments
+				ss_add_comments(
+				settings.YH_SS_ACCESS_TOKEN,
+				settings.YH_SS_SHEET_NAME,
+				'Customer ID',
+				line.get('smartsheet_id'),
+				[comms_name + " email sent."]
+			)
+
+
+	#print(stop)
+	return HttpResponseRedirect('/emailsSentToCustomers_yh/')
+	
+
 class ssPostSurveyQuestions(FormView):
 
 	form_class = ssPostSurveyQuestionsForm
@@ -121,21 +248,23 @@ class ssPostSurveyQuestions(FormView):
 		update_data = []
 		ss_customer_id = form.cleaned_data['smartsheet_id']
 
-		customer_comms = "Reason for quote:" + form.cleaned_data['reason_for_quote'] + " " + u"\u2022"
-		customer_comms = customer_comms + " Why you quoted what you quoted:" + form.cleaned_data['why_you_quoted_what_you_quoted'] + " " + u"\u2022"
-		customer_comms = customer_comms + " Why customer did not go ahead on day:" + form.cleaned_data['why_customer_did_not_go_ahead_on_day'] + " " + u"\u2022"
-		customer_comms = customer_comms + " Important to customer:" + form.cleaned_data['important_to_customer']
+		# Create list of customer comments
+		customer_comms = []
+		customer_comms.append("Reason for quote: " + form.cleaned_data['reason_for_quote'])
+		customer_comms.append("Why you quoted what you quoted: " + form.cleaned_data['why_you_quoted_what_you_quoted'])
+		customer_comms.append("Why customer did not go ahead on day: " + form.cleaned_data['why_customer_did_not_go_ahead_on_day'])
+		customer_comms.append("Important to customer: " + form.cleaned_data['important_to_customer'])
 
-		update_data.append({"Customer Comms": customer_comms })
+		#update_data.append({"Customer Comms": customer_comms })
 
-		if settings.YH_SS_INTEGRATION:		# Update Customer Status
-				ss_update_data(
-					settings.YH_SS_ACCESS_TOKEN,
-					settings.YH_SS_SHEET_NAME,
-					"Customer ID",
-					ss_customer_id,
-					update_data
-				)
+		if settings.YH_SS_INTEGRATION:		# Update Comments
+				ss_add_comments(
+				settings.YH_SS_ACCESS_TOKEN,
+				settings.YH_SS_SHEET_NAME,
+				'Customer ID',
+				form.cleaned_data["smartsheet_id"],
+				customer_comms
+			)
 		return HttpResponseRedirect('/quote_sent_to_Smartsheet_yh/')
 
 class ssCustomerSelect(FormView):
@@ -148,7 +277,7 @@ class ssCustomerSelect(FormView):
 		self.request.session['selected_customer_index'] = -1
 
 		# Call the function to Populate the text file from the Smartsheet Report
-		ss_get_customers_data_for_survey_from_report(
+		ss_get_data_from_report(
 			settings.YH_SS_ACCESS_TOKEN,
 			settings.YH_SS_SHEET_NAME,
 			settings.YH_SS_SURVEY_REPORT,
@@ -1193,13 +1322,16 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			'include_report': include_report})
 		# Generate the email, attach the pdf and send out
 		fd = file_form_data
-		msg=""
+		msg = "<img src='" + settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png'><br>"
 		msg = msg + "<p>Hi {}. Attached is the Quote and Internal Report for <b>{} {} {}</b>.</p>".format(idx_master.first_name, fd[0]['customer_title'], fd[0]['customer_first_name'], fd[0]['customer_last_name'])
 		msg = msg + "<p>Customer Phone No: {}<p>".format(str(fd[0]['customer_primary_phone']))
 		msg = msg + "<p>Customer Email: <a href='mailto:{}'>{}</a><p>".format(fd[0]['customer_email'], fd[0]['customer_email'])
 		msg = msg + "<p>You can contact the surveyor, {} on {} or <a href='mailto:{}'>{}</a><p>.</p>".format(idx.first_name, str(idx.telephone), idx.email, idx.email)
-		
-		mail_subject = 'Boiler Installation Quote Number: {} Customer: {} {} Surveyor: {} {}'.format(fd[19]['quote_number'], fd[0]['customer_first_name'], fd[0]['customer_last_name'], idx.first_name, idx.last_name)
+
+		if settings.YH_SS_INTEGRATION:
+			mail_subject = 'Boiler Installation Quote Number: {} Smartsheet ID: {} Customer: {} {} Surveyor: {} {}'.format(fd[19]['quote_number'], fd[0]['smartsheet_id'], fd[0]['customer_first_name'], fd[0]['customer_last_name'], idx.first_name, idx.last_name)
+		else:
+			mail_subject = 'Boiler Installation Quote Number: {} Customer: {} {} Surveyor: {} {}'.format(fd[19]['quote_number'], fd[0]['customer_first_name'], fd[0]['customer_last_name'], idx.first_name, idx.last_name)
 
 		if settings.YH_TEST_EMAIL:
 			email = EmailMessage(mail_subject, msg, idx.email, [idx_master.email])
@@ -1227,7 +1359,7 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 		fd = file_form_data
 		mail_subject = 'Your Personal Boiler Replacement Quotation'
 		msg = "<img src='" + settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png'><br>"
-		msg = msg + "<p style='font-family:arial, font-size:12px'>Thank you for your time today and attached is a copy of your Fixed Price Quotation - I hope Surveyor {} {} looked after you well and answered all your questions.</p>".format(idx.first_name, idx.last_name)
+		msg = msg + "<p style='font-family:arial, font-size:12px'>Thank you for your time today, attached is a copy of your Fixed Price Quotation - I hope Surveyor {} {} looked after you well and answered all your questions.</p>".format(idx.first_name, idx.last_name)
 		msg = msg + "<p style='font-family:arial, font-size:12px'>It is quite common to have a few more questions following receipt of the quotation so please feel free to contact {} on {}, who will be able answer these for you. Alternatively, you are welcome to contact the office direct on telephone number 01732 622990 or email <a href='mailto:info@yourheat.co.uk'>info@yourheat.co.uk</a> for any additional support.</p>".format(idx.first_name, idx.telephone)
 		msg = msg + "<p style='font-family:arial, font-size:12px'>The team here will be in touch with you again very shortly to ensure that you have everything you need.</p>"
 		msg = msg + "<p style='font-family:arial, font-size:12px'>For more information about us, please visit <a href='https://yourheat.co.uk/'>https://yourheat.co.uk/</a></p>"
@@ -1289,7 +1421,7 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 						for elem2 in inner_value:
 							print("\t\t\t\t\t",elem2)		
 
-			print(parts_list_a)
+			#print(parts_list_a)
 			#print(stop)
 
 			# Build the update dictionary
@@ -1310,7 +1442,7 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			update_data.append({"New Fuel": str(file_form_data[4].get('new_fuel_type'))})
 			update_data.append({"New Boiler Type": str(file_form_data[4].get('new_boiler_type'))})
 			update_data.append({"Boiler Brand": str(file_form_data[4].get("boiler_manufacturer"))})
-			update_data.append({"Parts List": parts_list_a})
+			update_data.append({"Parts List": parts_list})
 
 
 			if settings.YH_SS_INTEGRATION:		# Update Customer Status
@@ -1384,7 +1516,30 @@ def upload_for_reprint_yh(request):
 
 def get_smartsheet(request):
 
-	ss_get_customers_data_for_survey_from_report(
+	ss_add_comments(
+		settings.YH_SS_ACCESS_TOKEN,
+		settings.YH_SS_SHEET_NAME,
+		'Customer ID',
+		'GRH-119-01',
+		['Test Comment 1', 'Test Comment 2', 'Test Comment 3', 'Test Comment 4']
+	)
+
+	comms_name = 'Installation Notification Comms'
+	
+	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(request.user.username, comms_name))
+
+	ss_get_data_from_sheet(
+		settings.YH_SS_ACCESS_TOKEN,
+		settings.YH_SS_SHEET_NAME,
+		['Customer Status', 'Customer ID', 'First Name', 'Surname', 'Email', 'Installation Date', 'Quotation Date', 'Engineer', 'Boiler Brand'],
+		'Customer ID',
+		'GRH-123-01',
+		data_filename
+	)
+
+	print(stop)
+
+	ss_get_data_from_report(
 		settings.YH_SS_ACCESS_TOKEN,
 		settings.YH_SS_SHEET_NAME,
 		settings.YH_SS_SURVEY_REPORT,
@@ -1649,7 +1804,4 @@ def get_smartsheet(request):
 	print(stop)
 
 	
-
-
-
 	return HttpResponseRedirect('/home/')
