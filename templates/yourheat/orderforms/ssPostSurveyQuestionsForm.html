@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h4>Post Survey Customer Questionnaire</h4>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.smartsheet_id.label}}</label>
+                    {{ form.smartsheet_id }}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.postcode.label}}</label>
+                    {{ form.postcode}}
+                </div>
+            </div>
+        </div>
+
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.customer_first_name.label}}</label>
+                    {{ form.customer_first_name }}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.customer_last_name.label}}</label>
+                    {{ form.customer_last_name}}
+                </div>
+            </div>
+        </div>
+
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.reason_for_quote.label}}</label>{% if form.reason_for_quote.field.required %} *{% endif %}
+                    {{ form.reason_for_quote }}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.why_you_quoted_what_you_quoted.label}}</label>{% if form.why_you_quoted_what_you_quoted.field.required %} *{% endif %}
+                    {{ form.why_you_quoted_what_you_quoted }}
+                </div>
+            </div>
+        </div>
+
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.why_customer_did_not_go_ahead_on_day.label}}</label>{% if form.why_customer_did_not_go_ahead_on_day.field.required %} *{% endif %}
+                    {{ form.why_customer_did_not_go_ahead_on_day }}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.important_to_customer.label}}</label>{% if form.important_to_customer.field.required %} *{% endif %}
+                    {{ form.important_to_customer }}
+                   
+                </div>
+            </div>
+        </div>
+
+        <button class="btn boilerbtn btn-warning" type="submit">Update Smartsheet</button>
+
+        <a href="{% url 'boilerform_yh' %}" class="btn btn-secondary">Cancel</a>
+
+    </form>
+    <br>
+</div>
+{% endblock content %}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    body {background-color:rgb(240, 240, 240);}
+    .box {position:relative; width:80%; height:80%; background-color:white; margin:0 auto; border:1px solid rgb(225, 225, 225); top:20px}
+    .boxx2 {position:relative; width:80%; height:28%; background-color:rgb(240, 240, 240); border:1px solid rgb(225, 225, 225); margin:0 auto; top:40px; padding:5px;}
+    .box2 {position:relative; width:80%; height:28%; background-color:white; border:3px solid orange; border-top-left-radius: 20px; border-bottom-right-radius: 20px; margin:0 auto; top:40px; padding:5px;}
+    .all_text {font-family:verdana; font-size:14px; text-align: justify}
+    .body_text {position: relative; width:80%; margin:0 auto;}
+    #final-strap-line {text-align: center; color: rgb(251,126,51);}
+    #final-strap-text {font-family:verdana; font-style: italic; font-size: 18px; font-weight: 900;}
+    </style>
+
+    <title>Customer Comms</title>
+</head>
+<body>
+<div class='box'>
+    <div class='box2'>
+        <p style='text-align:center'><img src='{{ image_logo }}'></p>
+        <p style='text-align:center; font-family:verdana; font-size:18px'><b>About your boiler quote</b></p>
+    </div>
+<br><br>
+<div class="body_text">    
+<p class="all_text">Dear {{ customer_title }} {{ customer_last_name }},</p>
+
+<p class="all_text">
+    Our surveyor is looking forward to visiting you to provide a free, no-obligation quote to replace your boiler.
+    {{ engineer_name }} is booked to arrive at your property on {{quotation_date|date:"D j F Y"}} between 08:00-10:00
+</p>
+
+<p class="all_text">
+    If you do have any questions prior to our visit, please don't hesitate to reply to this email, 
+    or call on 01732 622 990.
+</p>
+
+<p class="all_text">
+    Warm Regards, The Your Heat Team
+</p>
+
+<div id="final-strap-line">
+    <p id="final-strap-text">Your Heat - Our Priority, Always.</p>
+</div>
+
+<p class="all_text">
+    Telephone: 01732 622 990 Email: <a href='mailto:service@yourheat.co.uk'>service@yourheat.co.uk</a> Website: <a href='https://yourheat.co.uk/'>https://yourheat.co.uk/</a>
+</p>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load quotepad_extras %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class = "col-12">
+            <h4>Individual Mailing Communications</h4>
+        </div>
+     
+    </div>
+    <div class="row">
+        <div class = "col-12">
+            Customer Name: {{ customer_name }}<br>
+            Customer ID: {{ customer_id }}
+        </div>  
+    </div>
+
+    <hr>
+    <div class="row comms-row">
+        <div class = "col-4">
+            <a class="btn boilerbtn btn-warning" href="{% url 'ssListCustomersForComms_yh' 'Survey Booked Comms' customer_id  %}">Survey Booked Comms</a>
+        </div>
+        <div class = "col-8">    
+            <i>Dear ____, Our surveyor is looking forward to visiting you to provide a free, no-obligation quote...</i>
+        </div>
+    </div>   
+    <div class="row comms-row">
+        <div class = "col-4">
+            <a class="btn boilerbtn btn-warning" href="{% url 'ssListCustomersForComms_yh' 'Boiler Quotation Comms' customer_id  %}">Boiler Quotation Follow-up Comms</a>
+        </div>
+        <div class = "col-8">    
+            <i>Dear ____, We've been trying to contact you to discuss the quotation we gave you recently...</i>
+        </div>
+    </div>        
+    <div class="row comms-row">
+        <div class = "col-4">      
+            <a class="btn boilerbtn btn-warning" href="{% url 'ssListCustomersForComms_yh' 'Our Priority Comms' customer_id  %}">Our Priority Comms</a>
+        </div>
+        <div class = "col-8">  
+            <i>Dear ____, We tried calling today to discuss the quotation we gave on...</i>
+        </div>
+    </div>
+    <div class="row comms-row">
+        <div class = "col-4">              
+            <a class="btn boilerbtn btn-warning" href="{% url 'ssListCustomersForComms_yh' 'Installation Notification Comms' customer_id  %}">Installation Notification Comms</a>
+        </div>
+        <div class = "col-8">
+            <i>Dear ____, Thank you for choosing Your Heat as your trusted boiler installation specialist...</i>
+        </div>
+    </div>
+    <div class="row comms-row">
+        <div class = "col-4">                      
+            <a class="btn boilerbtn btn-warning" href="{% url 'ssListCustomersForComms_yh' 'Free Boiler Service Comms' customer_id  %}">Free Boiler Service Comms</a>
+        </div>
+        <div class = "col-8">    
+            <i>Dear ____, Thank you for choosing Your Heat to look after the installation of your new boiler...</i>
+        </div>
+    </div>        
+    <div class="row comms-row">
+        <div class = "col-4">            
+            <a class="btn btn-secondary" href="/home/">Cancel</a>
+        </div>
+        <div class = "col-8">
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

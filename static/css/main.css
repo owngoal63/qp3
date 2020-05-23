@@ -67,6 +67,12 @@ h4 {
   color:darkslategray;
 }
 
+
+h7 {
+  text-align: left;
+  font-size: 0.8rem;
+}
+
 .social-list {
   list-style: none;
 }
@@ -185,6 +191,10 @@ ul#id_7-radiator_specification li {
   font-weight:1.3rem;
   padding:1px;
 } */
+
+.comms-row {
+  padding:5px;
+}
 
 .product-row {
   padding:1px;
