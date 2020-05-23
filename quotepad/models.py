@@ -171,3 +171,17 @@ class OptionalExtra(models.Model):
 	def __str__(self):
 		#return "%s - £%s" % (self.product_name,  self.price)
 		return self.product_name  
+
+class CustomerComm(models.Model):
+	user			=   models.ForeignKey(User, on_delete=models.CASCADE)
+	customer_id		= 	models.CharField(max_length=50)
+	comms_id		= 	models.CharField(max_length=100)
+	delivery_date	=	models.DateTimeField(auto_now_add=True)
+
+	class Meta:
+		constraints = [
+			models.UniqueConstraint(fields=['user', 'customer_id', 'comms_id'], name='unique_customer_comms')
+		]
+
+	def __str__(self):
+		return "%s / %s" % (self.customer_id, self.comms_id)
