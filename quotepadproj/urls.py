@@ -25,10 +25,10 @@ from quotepad.views import generate_quote_from_file, edit_quote_template, list_q
 #from quotepad.views import customer_order
 
 # Imports for Yourheat
-from quotepad.views import BoilerFormWizardView_yh,generate_quote_from_file_yh, FinanceFormWizardView_yh
+from quotepad.views import BoilerFormWizardView_yh,generate_quote_from_file_yh
 from quotepad.forms import FormStepOne_yh, FormStepTwo_yh, FormStepThree_yh, FormStepFour_yh, FormStepFive_yh, FormStepSix_yh, FormStepSeven_yh, FormStepEight_yh, FormStepNine_yh, FinanceForm_yh
 from quotepad.views import quote_generated_yh, list_quote_archive_yh, upload_for_reprint_yh
-from quotepad.views import get_smartsheet, ssCustomerSelect, quote_sent_to_Smartsheet_yh
+from quotepad.views import get_smartsheet, ssCustomerSelect, quote_sent_to_Smartsheet_yh, ssPostSurveyQuestions, ss_generate_customer_comms_yh, ss_list_customers_for_comms_yh, emails_sent_to_customers_yh, ss_customer_comms_yh
 
 urlpatterns = [
     
@@ -106,8 +106,13 @@ urlpatterns = [
     path('getsmartsheet/', get_smartsheet, name='getsmartsheet'),
     path('ssCustomerSelect/', login_required(ssCustomerSelect.as_view()), name='ssCustomerSelect'),
     path('quote_sent_to_Smartsheet_yh/', quote_sent_to_Smartsheet_yh, name = 'quotesenttoSmartsheet_yh'),
+    path('emailsSentToCustomers_yh/', emails_sent_to_customers_yh, name = 'emailsSentToCustomers_yh'),
+    path('ssPostSurveyQuestions/', login_required(ssPostSurveyQuestions.as_view()), name='ssPostSurveyQuestions'),
+    path('ssGenerateCustomerComms_yh/<str:comms_name>/', ss_generate_customer_comms_yh, name = 'ssGenerateCustomerComms_yh'),
+    path('ssListCustomersForComms_yh/<str:comms_name>/', ss_list_customers_for_comms_yh, name = 'ssListCustomersForComms_yh'),
+    path('ssListCustomersForComms_yh/<str:comms_name>/<str:customer_id>/', ss_list_customers_for_comms_yh, name = 'ssListCustomersForComms_yh'),
+    path('ssCustomerComms_yh/', ss_customer_comms_yh, name = 'ssCustomerComms_yh'),
     
-
 
 	path('', include('payments.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
