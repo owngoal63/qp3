@@ -18,7 +18,7 @@ from formtools.wizard.views import SessionWizardView
 
 # imports associated with xhtml2pdf
 from django.http import HttpResponseRedirect, HttpResponse, FileResponse
-from quotepad.utils import pdf_generation, pdf_generation_to_file, convertHtmlToPdf, convertHtmlToPdf2, component_attrib_build, component_attrib_build_exVat, send_pdf_email_using_SendGrid
+from quotepad.utils import pdf_generation, pdf_generation_to_file, convertHtmlToPdf, convertHtmlToPdf2, component_attrib_build, component_attrib_build_exVat, send_pdf_email_using_SendGrid, send_email_using_SendGrid
 #import datetime
 from datetime import datetime
 from pathlib import Path, PureWindowsPath
@@ -39,7 +39,7 @@ from quotepad.forms import ProfileForm, UserProfileForm, ProductPriceForm, EditQ
 from django.db.models import Q
 
 #Added for Smartsheet
-from quotepad.utils import ss_get_data_from_report, ss_update_data, ss_append_data, ss_attach_pdf, ss_get_data_from_sheet, ss_add_comments
+from quotepad.smartsheet_integration import ss_get_data_from_report, ss_update_data, ss_append_data, ss_attach_pdf, ss_get_data_from_sheet, ss_add_comments
 from quotepad.forms import ssCustomerSelectForm, ssPostSurveyQuestionsForm
 
 @login_required
@@ -202,9 +202,8 @@ def ss_generate_customer_comms_yh(request, comms_name):
 					email = EmailMessage(mail_subject, html_content, 'info@yourheat.co.uk' , [line.get('customer_email')])
 					email.content_subtype = "html"  # Main content is now text/html
 					email.send()
-
-		#else:	(TBD needs to be fixed below)
-		#	send_pdf_email_using_SendGrid('quotes@yourheat.co.uk', idx_master.email, mail_subject, msg, outputFilename, quote_form_filename )
+			else:	
+				send_email_using_SendGrid('info@yourheat.co.uk', line.get('customer_email'), mail_subject, html_content )
 
 			if settings.YH_SS_INTEGRATION:		# Update Comments
 				ss_add_comments(
@@ -215,8 +214,6 @@ def ss_generate_customer_comms_yh(request, comms_name):
 				[comms_name + " email sent."]
 			)
 
-
-	#print(stop)
 	return HttpResponseRedirect('/emailsSentToCustomers_yh/')
 	
 
@@ -1379,7 +1376,6 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 
 		# ss_update_data code to go here !!!!!!!	
 
-
 		return HttpResponseRedirect('/quoteemailed/')
 
 	elif outputformat == "UpdateSmartsheet":
@@ -1453,7 +1449,6 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 					ss_customer_id,
 					update_data
 				)
-			#print(stop)
 
 			if settings.YH_SS_INTEGRATION:
 				ss_attach_pdf(
@@ -1463,7 +1458,7 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 					ss_customer_id,
 					outputFilename
 				)
-			#print(stop)
+
 		return HttpResponseRedirect('/quote_sent_to_Smartsheet_yh/')		
 
 	else:   # HTMLOutput
@@ -1515,62 +1510,54 @@ def upload_for_reprint_yh(request):
 	return render(request, 'yourheat/pages/upload_for_reprint.html')
 
 def get_smartsheet(request):
+	''' dummy function to test Smartsheet Integrations '''
 
-	ss_add_comments(
-		settings.YH_SS_ACCESS_TOKEN,
-		settings.YH_SS_SHEET_NAME,
-		'Customer ID',
-		'GRH-119-01',
-		['Test Comment 1', 'Test Comment 2', 'Test Comment 3', 'Test Comment 4']
-	)
+	# ss_add_comments(
+	# 	settings.YH_SS_ACCESS_TOKEN,
+	# 	settings.YH_SS_SHEET_NAME,
+	# 	'Customer ID',
+	# 	'GRH-119-01',
+	# 	['Test Comment 1', 'Test Comment 2', 'Test Comment 3', 'Test Comment 4']
+	# )
 
-	comms_name = 'Installation Notification Comms'
+
+	# ss_get_data_from_sheet(
+	# 	settings.YH_SS_ACCESS_TOKEN,
+	# 	settings.YH_SS_SHEET_NAME,
+	# 	['Customer Status', 'Customer ID', 'First Name', 'Surname', 'Email', 'Installation Date', 'Quotation Date', 'Engineer', 'Boiler Brand'],
+	# 	'Customer ID',
+	# 	'GRH-123-01',
+	# 	data_filename
+	# )
+
+
+	# ss_get_data_from_report(
+	# 	settings.YH_SS_ACCESS_TOKEN,
+	# 	settings.YH_SS_SHEET_NAME,
+	# 	settings.YH_SS_SURVEY_REPORT,
+	# 	Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/ss_custdata.txt".format(request.user.username))
+	# )
+
 	
-	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(request.user.username, comms_name))
-
-	ss_get_data_from_sheet(
-		settings.YH_SS_ACCESS_TOKEN,
-		settings.YH_SS_SHEET_NAME,
-		['Customer Status', 'Customer ID', 'First Name', 'Surname', 'Email', 'Installation Date', 'Quotation Date', 'Engineer', 'Boiler Brand'],
-		'Customer ID',
-		'GRH-123-01',
-		data_filename
-	)
-
-	print(stop)
-
-	ss_get_data_from_report(
-		settings.YH_SS_ACCESS_TOKEN,
-		settings.YH_SS_SHEET_NAME,
-		settings.YH_SS_SURVEY_REPORT,
-		Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/ss_custdata.txt".format(request.user.username))
-	)
-
-	#return HttpResponseRedirect('/home/')
-	print(stop)
+	# ss_update_data(
+	# 	settings.YH_SS_ACCESS_TOKEN,
+	# 	settings.YH_SS_SHEET_NAME,
+	# 	[],
+	# 	"Customer Status",
+	# 	"10 Fresh Lead",
+	# 	"Landline",
+	# 	"0141 889 9999"
+	# )
 
 
-	ss_update_data(
-		settings.YH_SS_ACCESS_TOKEN,
-		settings.YH_SS_SHEET_NAME,
-		[],
-		"Customer Status",
-		"10 Fresh Lead",
-		"Landline",
-		"0141 889 9999"
-	)
+	# ss_attach_pdf(
+	# 	settings.YH_SS_ACCESS_TOKEN,
+	# 	settings.YH_SS_SHEET_NAME,
+	# 	"Customer ID",
+	# 	"GRH-126-01",
+	# 	Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/Quote_YH_Lindsay00068.pdf".format(request.user.username))
+	# )
 
-	print(stop)
-
-	ss_attach_pdf(
-		settings.YH_SS_ACCESS_TOKEN,
-		settings.YH_SS_SHEET_NAME,
-		"Customer ID",
-		"GRH-126-01",
-		Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/Quote_YH_Lindsay00068.pdf".format(request.user.username))
-	)
-
-	print(stop)
 
 	#ss_append_data(
 	#	settings.YH_SS_ACCESS_TOKEN,
@@ -1578,230 +1565,4 @@ def get_smartsheet(request):
 	#	[{'First Name':'Bart'},{'Surname':'Simpson'},{'Address Line 1':'Springfield'}],	
 	#)
 
-
-	# Instantiate smartsheet and specify access token value.
-	ss = smartsheet.Smartsheet(settings.YH_SS_ACCESS_TOKEN)
-
-	# Get the id of the Sheet required
-	sheet_name = settings.YH_SS_SHEET_NAME
-	search_results = ss.Search.search(sheet_name).results
-	sheet_id = next(result.object_id for result in search_results if result.object_type == 'sheet')
-
-	# Get all the columns for the sheet
-
-	#sheet_that_I_want = ss.Sheets.get_sheet(sheet_id)
-	#print(sheet_that_I_want)
-
-	#ss = smartsheet.Smartsheet('rix4kc3qoulzw42y4ukuqyfxfe')
-
-	# Get all the columns for the sheet
-	all_columns = ss.Sheets.get_columns(sheet_id, include_all=True)
-	columns = all_columns.data
-
-	# Create two reference dictionaries that will be useful in the subsequent code
-	# colMap {column-name: column-id } and colMapRev { column-id: column-name }
-	colMap = {}
-	colMapRev = {}
-	for col in columns:
-		colMap[col.title] = col.id
-		colMapRev[col.id] = col.title
-
-
-	# ----------------- Add Rows ----------------------------------------
-	# Specify cell values for one row
-	#field_names = ['First Name', 'Surname', 'Address Line 1' ]
-	#field_values = ['Homer', 'Simpson', 'Springfield']
-
-	#append_data = [{'First Name':'Homer'},{'Surname':'Simpson'},{'Address Line 1':'Springfield'}]
-
-	#row_a = smartsheet.models.Row()
-	#row_a.to_bottom = True
-
-	#for data_element in append_data:
-	#	for key in data_element:
-	#		print(key,data_element[key])
-	#		row_a.cells.append({
-  	#			'column_id': colMap.get(key),
-  	#			'value': data_element[key]
-	#		})
-			
-	# Add rows to sheet
-	#response = ss.Sheets.add_rows(
-  	#sheet_id,       # sheet_id
-  	#[row_a])
-
-	#print(stop)
-
-	#row_a = smartsheet.models.Row()
-	#row_a.to_bottom = True
-	#row_a.cells.append({
-  	#	'column_id': colMap.get('Surname'),
-  	#	'value': 'Campbell'
-	#})
-
-	#row_a.cells.append({
-  	#'column_id': colMap.get('First Name'),
-  	#'value': 'James',
-  	#'strict': True
-	#})
-
-	# Specify cell values for another row
-	#row_b = smartsheet.models.Row()
-	#row_b.to_top = True
-	#row_b.cells.append({
-	#  'column_id': 7960873114331012,
-	#  'value': True
-	#})
-
-	#row_b.cells.append({
-	#  'column_id': 642523719853956
-	#  'value': 'New Status',
-	#  'strict': False
-	#})
-
-	# Add rows to sheet
-	#response = ss.Sheets.add_rows(
-  	#sheet_id,       # sheet_id
-  	#[row_a])
-
-	# ---------------------- End of Add Rows ----------------------------
-		
-
-	# -------------------- Add attachment ------------------------------
-	#print(colMap)	
-
-	#print("++++++++++")
-	#print(colMap.get('Surname'))
-	#print("++++++++++")
-
-	# Create an array of ColumnIds to limit the returned dataset
-	col_ids = []
-	#col_ids.append(colMap.get('Customer Status'))
-	col_ids.append(colMap.get('Customer ID'))
-	#col_ids.append(colMap.get('First Name'))
-	#col_ids.append(colMap.get('Surname'))
-	#col_ids.append(colMap.get('Address Line 1'))
-	#col_ids.append(colMap.get('Postcode'))
-	#col_ids.append(colMap.get('Mobile'))
-	#col_ids.append(colMap.get('Landline'))
-	#col_ids.append(colMap.get('Email'))
-
-
-	#print(col_ids)
-
-	#customer_dict = {}
-	#customers = []
-
-	MySheet = ss.Sheets.get_sheet(sheet_id, column_ids=col_ids)
-
-	MySheetjson = json.loads(str(MySheet))
-
-	#print(MySheetjson["accessLevel"])
-
-	#attachFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/Quote_{}_{}{}.pdf".format(request.user.username)
-	attachFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/Quote_YH_Lindsay00069.pdf".format(request.user.username))
-
-	for MyRow in MySheetjson["rows"]:
-		for MyCell in MyRow["cells"]:
-			if colMapRev.get(MyCell.get("columnId")) == "Customer ID" and MyCell.get("value") == "GRH-125-01":
-				print("found it", MyRow["id"])
-				updated_attachment = ss.Attachments.attach_file_to_row(
-  					sheet_id,       # sheet_id
-  					MyRow["id"],       # row_id
-  					('Quote_YH_Lindsay00069.pdf', 
-					open(attachFilename, 'rb'), 
-					'application/pdf')
-				)
-			
-			
-	print(stop)		
-
-	# -------------------- Reports ----------------------------
-	MyReports = ss.Reports.list_reports(include_all=True)
-	reports = MyReports.data
-
-	reportMap = {}
-	reportMapRev = {}
-	# For each column, print Id and Title.
-	for rep in reports:
-		reportMap[rep.name] = rep.id
-		reportMapRev[rep.id] = rep.name
-
-	#print(reportMapRev)
-
-	#print("")
-
-	#print(reportMap)
-
-	#print("")
-
-	report = ss.Reports.get_report(reportMap.get("20.0 All Booked Surveys"))
-
-	#print(report)
-
-	#print("")
-
-	MyReportjson = json.loads(str(report))
-
-	CustomersForSurvey = []
-
-	current_data_filename =  Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/ss_custdata.txt")
-	file = open(current_data_filename, 'w') #write to file
-
-	for MyRow in MyReportjson["rows"]:
-		file.write("{")
-		
-		for MyCell in MyRow["cells"]:
-			#print(colMapRev.get(MyCell.get("columnId")),MyCell.get("value"))
-			#print("{'" + str(colMapRev.get(MyCell.get("columnId"))) + "': '" + str(MyCell.get("value")) + "'}")
-			#CustomersForSurvey.append(dict("{'" + str(colMapRev.get(MyCell.get("columnId"))) + "': '" + str(MyCell.get("value")) + "'}"))
-			file.write("'" + str(colMapRev.get(MyCell.get("columnId"))) + "': '" + str(MyCell.get("value")) +"', ")
-		file.write("}\n")	
-
-	#print(MyReportsjson)
-	file.close
-	print("done")
-
-	
-	#print(stop)
-
-	# ------------------ Update a cell in SS ------------------------
-	#print("MySheet", MySheet)
-	#print(MySheet.get("accessLevel"))
-	print("-------------------- Update ---------------------------------")
-
-	MySheetjson = json.loads(str(MySheet))
-
-	# Build new cell value
-	new_cell = smartsheet.models.Cell()
-	new_cell.column_id = colMap.get('Landline')
-	new_cell.value = "0141 883 8944"
-	new_cell.strict = False
-
-	
-
-	for MyRow in MySheetjson["rows"]:
-		#print(MyRow.sheetId)
-		#if MyRow.cells[1].value == "10 Fresh Lead":
-		#print(MyRow["cells"])
-
-		# Build the row to update
-		new_row = smartsheet.models.Row()
-
-		for MyCell in MyRow["cells"]:
-			#print(myCell)
-			if colMapRev.get(MyCell.get("columnId")) == "Customer Status" and MyCell.get("value") == "10 Fresh Lead":
-				print(colMapRev.get(MyCell.get("columnId")), MyCell.get("columnId"), MyCell.get("value"))
-				#print("Row ID to update", MyRow["id"])
-				new_row.id = MyRow["id"]
-				new_row.cells.append(new_cell)
-				updated_row = ss.Sheets.update_rows(sheet_id,[new_row])
-		print("")
-
-	# -------------------- Add attachment -------------------------------------
-	
-
-	print(stop)
-
-	
 	return HttpResponseRedirect('/home/')
