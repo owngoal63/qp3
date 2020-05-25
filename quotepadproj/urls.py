@@ -109,6 +109,7 @@ urlpatterns = [
     path('emailsSentToCustomers_yh/', emails_sent_to_customers_yh, name = 'emailsSentToCustomers_yh'),
     path('ssPostSurveyQuestions/', login_required(ssPostSurveyQuestions.as_view()), name='ssPostSurveyQuestions'),
     path('ssGenerateCustomerComms_yh/<str:comms_name>/', ss_generate_customer_comms_yh, name = 'ssGenerateCustomerComms_yh'),
+    path('ssGenerateCustomerComms_yh/<str:comms_name>/<str:customer_id>/', ss_generate_customer_comms_yh, name = 'ssGenerateCustomerComms_yh'),
     path('ssListCustomersForComms_yh/<str:comms_name>/', ss_list_customers_for_comms_yh, name = 'ssListCustomersForComms_yh'),
     path('ssListCustomersForComms_yh/<str:comms_name>/<str:customer_id>/', ss_list_customers_for_comms_yh, name = 'ssListCustomersForComms_yh'),
     path('ssCustomerComms_yh/', ss_customer_comms_yh, name = 'ssCustomerComms_yh'),

@@ -152,18 +152,21 @@ def ss_list_customers_for_comms_yh(request, comms_name, customer_id=None):
 	return render(request, 'yourheat/pages/list_comms_data.html', {'comms_data': comms_data, 'report_name': comms_name, 'data_source_is_report': data_source_is_report })
 
 @login_required	  
-def ss_generate_customer_comms_yh(request, comms_name):
+def ss_generate_customer_comms_yh(request, comms_name, customer_id=None):
 	''' Function to generate communication emails to send to customers based upon Smartsheet data '''
 	
 	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(request.user.username, comms_name))
 	html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/{}.html".format(settings.YH_MASTER_PROFILE_USERNAME, comms_name))
 	
-	#ss_get_data_from_report(
-	#		settings.YH_SS_ACCESS_TOKEN,
-	#		settings.YH_SS_SHEET_NAME,
-	#		comms_name,
-	#		data_filename
-	#	)
+	if customer_id:		# customer_id has been passed so get individual record from sheet
+		ss_get_data_from_sheet(
+			settings.YH_SS_ACCESS_TOKEN,
+			settings.YH_SS_SHEET_NAME,
+			['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'Installation Date', 'Quotation Date', 'Engineer', 'Boiler Brand'],
+			'Customer ID',
+			customer_id,
+			data_filename
+		)
 
 	# Open the text file with the Smartsheet data 
 	with open(data_filename) as file:

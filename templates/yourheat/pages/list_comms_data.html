@@ -74,7 +74,10 @@
     <div class = "col-2">
         {% if customer_comms.already_sent %}<del>{% endif %}
         <h7>{{ customer_comms.brand }}</h7>
-        {% if customer_comms.already_sent %}</del>{% endif %}
+        {% if customer_comms.already_sent %}</del>
+        {% else %}
+        <a class="btn boilerbtn" href="{% url 'ssGenerateCustomerComms_yh' report_name customer_comms.smartsheet_id  %}"><i class="fas fa-envelope-square"></i></a>
+        {% endif %}
     </div>
 </div>      <!-- row -->
         

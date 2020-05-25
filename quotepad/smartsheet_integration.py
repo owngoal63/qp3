@@ -285,7 +285,7 @@ def ss_append_data(access_token, sheet_name, append_data):
 
 	for data_element in append_data:
 		for key in data_element:
-			print(key,data_element[key])
+			#print(key,data_element[key])
 			new_row.cells.append({
 				'column_id': colMap.get(key),
 				'value': data_element[key]
@@ -385,7 +385,7 @@ def ss_add_comments(access_token, sheet_name, conditional_field_name, conditiona
 	# Covert data to a JSON object
 	sheetjson = json.loads(str(sheet))
 
-	print(sheetjson)
+	#print(sheetjson)
 
 	# Loop through rows and columns to get the row id for the comment
 	for MyRow in sheetjson["rows"]:
@@ -397,7 +397,7 @@ def ss_add_comments(access_token, sheet_name, conditional_field_name, conditiona
 				break
 		if not row_continue:
 			break	# Once update row has been found break out of both loops
-	print(filter_row_id)
+	#print(filter_row_id)
 
 	# Loop through comments list and create a comment for each
 	for comment_data in comment_data_list:

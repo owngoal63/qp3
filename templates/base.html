@@ -85,19 +85,21 @@
         <li class="nav-item">
           <a class="nav-link" href="/optionalextralist">Optional Extras<span class="sr-only">(current)</span></a>
         </li>
+        {% if YH_SS_INTEGRATION %}
         <span class="nav-item dropdown">
           <a class="nav-link dropdown dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
           Customer Comms
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="/ssListCustomersForComms_yh/Installation%20Notification%20Comms/">Survey Booked Notification</a>
-            <a class="dropdown-item" href="/ssListCustomersForComms_yh/Installation%20Notification%20Comms/">Installation Notification</a>
-            <a class="dropdown-item" href="/ssListCustomersForComms_yh/Installation%20Notification%20Comms/">Quote Follow-up Notification</a>
-            <a class="dropdown-item" href="/ssListCustomersForComms_yh/Installation%20Notification%20Comms/">Boiler Service Notification</a>
-            <a class="dropdown-item" href="/ssListCustomersForComms_yh/Installation%20Notification%20Comms/">Bespoke Offers Notification</a>
+            <a class="dropdown-item" href="/ssListCustomersForComms_yh/Survey%20Booked%20Comms/">Survey Booked Comms</a>
+            <a class="dropdown-item" href="/ssListCustomersForComms_yh/Installation%20Notification%20Comms/">Installation Notification Comms</a>
+            <a class="dropdown-item" href="/ssListCustomersForComms_yh/Boiler%20Quotation%20Comms/">Boiler Quotation Comms</a>
+            <a class="dropdown-item" href="/ssListCustomersForComms_yh/Our%20Priority%20Comms/">Our Priority Comms</a>
+            <a class="dropdown-item" href="/ssListCustomersForComms_yh/Free%20Boiler%20Service%20Comms/">Free Boiler Service</a>
           </div>
         </span>
+        {% endif %}
         {% endif %}
         {% if request.session.created_quote %}
           {% if request.user|has_group:"WESTCHEM" %}
