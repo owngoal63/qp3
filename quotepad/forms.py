@@ -1352,7 +1352,10 @@ class FormStepTwo_yh(forms.Form):
 	house_name_or_number = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'size':60}))
 	street_address = forms.CharField(max_length=100)
 	city = forms.CharField(max_length=100)
-	county = forms.CharField(max_length=100)
+	if settings.YH_SS_INTEGRATION:
+		county = forms.CharField(max_length=100, required=False)
+	else:	
+		county = forms.CharField(max_length=100)
 	postcode = forms.CharField(max_length=100)
 	property_type = forms.ChoiceField(choices=PROPERTY_TYPE_DROPDOWN)	
 	alternative_billing_address = forms.ChoiceField(choices=ALTERNATIVE_BILLING_ADDRESS_DROPDOWN)		
