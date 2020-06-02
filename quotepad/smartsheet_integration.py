@@ -37,46 +37,61 @@ def ss_get_data_from_sheet(access_token, sheet_name, column_names, conditional_f
 		col_ids.append(colMap.get(column_name))
 
 
-	# Dictionary to translate SS column names to Quotepad ones
+	# Dictionary to translate SS column names to Quotepad ones ( Test Smartsheet )
+	# coltransdict = {
+  	# 	"Link to Survey": "Link to Survey",
+  	# 	"Customer Status": "customer_status",
+  	# 	"Customer ID": "smartsheet_id",
+	# 	"Title": "customer_title",
+	# 	"First Name": "customer_first_name",
+	# 	"Surname": "customer_last_name",
+	# 	"Email": "customer_email",
+	# 	"Address Line 1": "street_address",
+	# 	"Postcode": "postcode",
+	# 	"Mobile": "customer_primary_phone",
+	# 	"Landline": "customer_secondary_phone",
+	# 	"Opportunity Lost": "Opportunity Lost",
+	# 	"Surveyor": "Surveyor",
+	# 	"Quotation Date": "quotation_date",
+	# 	"Installation Date":"installation_date",
+	# 	"Engineer": "engineer_email",
+	# 	"Boiler Brand": "brand",
+
+	# 	}
+
+	# Dictionary to translate SS column names to Quotepad ones ( Live Smartsheet )
 	coltransdict = {
-  		"Link to Survey": "Link to Survey",
+  		#"Link to Survey": "Link to Survey",
   		"Customer Status": "customer_status",
   		"Customer ID": "smartsheet_id",
 		"Title": "customer_title",
 		"First Name": "customer_first_name",
 		"Surname": "customer_last_name",
 		"Email": "customer_email",
-		"Address Line 1": "street_address",
+		"House Name or Number": "house_name_or_number",
+		"Street Address": "street_address",
+		"City": "city",
+		"County": "county",
 		"Postcode": "postcode",
-		"Mobile": "customer_primary_phone",
-		"Landline": "customer_secondary_phone",
-		"Opportunity Lost": "Opportunity Lost",
+		"Preferred Contact Number": "customer_primary_phone",
+		#"Preferred Contact Number": "customer_secondary_phone",
+		#"Opportunity Lost": "Opportunity Lost",
 		"Surveyor": "Surveyor",
-		"Quotation Date": "quotation_date",
+		"Survey Date": "quotation_date",
+		#"Quotation Date": "quotation_date",
 		"Installation Date":"installation_date",
-		"Engineer": "engineer_email",
-		"Boiler Brand": "brand",
-
-		}	
+		"Engineer Appointed": "engineer_email",
+		"Boiler Manufacturer": "brand",
+		}		
 
 	# Get the Sheet from Smartsheet - limit it to only the requested columns
 	sheet = ss.Sheets.get_sheet(sheet_id, column_ids=col_ids)
 	# Covert data to a JSON object
 	sheetjson = json.loads(str(sheet))
-
-	#for MyRow in sheetjson["rows"]:
-		#pass
-		#print(MyRow)
-	#	for MyCell in MyRow["cells"]:
-	#		if colMapRev.get(MyCell.get("columnId")) == conditional_field_name and MyCell.get("value") == conditional_field_value:
-	#			print(MyCell)
-				#pass
-
-	# Open file for writing in user folder
-	#file = open(file_output, 'w')
-
+	
 	# Loop through rows and columns to write data to file
 	#filter_row = smartsheet.models.Row()
+	filter_row = None
 	for MyRow in sheetjson["rows"]:
 		row_continue = True
 		for MyCell in MyRow["cells"]:
@@ -87,6 +102,12 @@ def ss_get_data_from_sheet(access_token, sheet_name, column_names, conditional_f
 				break
 		if not row_continue:
 			break	# Once update row has been found break out of both loops
+
+	if not filter_row:
+		print("No rows in Smartsheet dataset")
+		# Create empty file so no records will be passed
+		open(file_output, "w+").close()
+		return
 
 	# Open file for writing in user folder
 	file = open(file_output, 'w')
@@ -115,6 +136,7 @@ def ss_get_data_from_report(access_token, sheet_name, report_name, file_output):
 		# Instantiate smartsheet and specify access token value.
 		ss = smartsheet.Smartsheet(access_token)
 
+
 	# Get the id for the Sheet name
 	search_results = ss.Search.search(sheet_name).results
 	sheet_id = next(result.object_id for result in search_results if result.object_type == 'sheet')
@@ -131,27 +153,52 @@ def ss_get_data_from_report(access_token, sheet_name, report_name, file_output):
 		colMap[col.title] = col.id
 		colMapRev[col.id] = col.title
 
-	# Dictionary to translate SS column names to Quotepad ones
+	# Dictionary to translate SS column names to Quotepad ones ( Test Smartsheet )
+	# coltransdict = {
+  	# 	"Link to Survey": "Link to Survey",
+  	# 	"Customer Status": "customer_status",
+  	# 	"Customer ID": "smartsheet_id",
+	# 	"Title": "customer_title",
+	# 	"First Name": "customer_first_name",
+	# 	"Surname": "customer_last_name",
+	# 	"Email": "customer_email",
+	# 	"Address Line 1": "street_address",
+	# 	"Postcode": "postcode",
+	# 	"Mobile": "customer_primary_phone",
+	# 	"Landline": "customer_secondary_phone",
+	# 	"Opportunity Lost": "Opportunity Lost",
+	# 	"Surveyor": "Surveyor",
+	# 	"Quotation Date": "quotation_date",
+	# 	"Installation Date":"installation_date",
+	# 	"Engineer": "engineer_email",
+	# 	"Boiler Brand": "brand",
+
+	# 	}
+
+	# Dictionary to translate SS column names to Quotepad ones ( Live Smartsheet )
 	coltransdict = {
-  		"Link to Survey": "Link to Survey",
+  		#"Link to Survey": "Link to Survey",
   		"Customer Status": "customer_status",
   		"Customer ID": "smartsheet_id",
 		"Title": "customer_title",
 		"First Name": "customer_first_name",
 		"Surname": "customer_last_name",
 		"Email": "customer_email",
-		"Address Line 1": "street_address",
+		"House Name or Number": "house_name_or_number",
+		"Street Address": "street_address",
+		"City": "city",
+		"County": "county",
 		"Postcode": "postcode",
-		"Mobile": "customer_primary_phone",
-		"Landline": "customer_secondary_phone",
-		"Opportunity Lost": "Opportunity Lost",
+		"Preferred Contact Number": "customer_primary_phone",
+		#"Preferred Contact Number": "customer_secondary_phone",
+		#"Opportunity Lost": "Opportunity Lost",
 		"Surveyor": "Surveyor",
-		"Quotation Date": "quotation_date",
+		"Survey Date": "quotation_date",
+		#"Quotation Date": "quotation_date",
 		"Installation Date":"installation_date",
-		"Engineer": "engineer_email",
-		"Boiler Brand": "brand",
-
-		}	
+		"Engineer Appointed": "engineer_email",
+		"Boiler Manufacturer": "brand",
+		}		
 
 
 	# Get all the reports for the sheet
@@ -171,6 +218,11 @@ def ss_get_data_from_report(access_token, sheet_name, report_name, file_output):
 	report = ss.Reports.get_report(reportMap.get(report_name))
 	# Covert data to a JSON object
 	reportjson = json.loads(str(report))
+	if reportjson.get("totalRowCount") == 0:		# Check if json dataset is empty
+		print("No rows in Smartsheet dataset")
+		# Create empty file so no records will be passed
+		open(file_output, "w+").close()
+		return
 
 	# Open file for writing in user folder
 	file = open(file_output, 'w')
@@ -178,7 +230,7 @@ def ss_get_data_from_report(access_token, sheet_name, report_name, file_output):
 	# Loop through rows and columns to write data to file
 	for MyRow in reportjson["rows"]:
 		file.write("{")
-		
+		#print(MyRow)
 		for index, MyCell in enumerate(MyRow["cells"]):
 			file.write('"' + coltransdict.get(str(colMapRev.get(MyCell.get("columnId")))) + '": "' + str(MyCell.get("value")) + '"')
 			if index < len(MyRow["cells"]) - 1:		# Print comma delimiter for all but last element

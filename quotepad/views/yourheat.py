@@ -119,7 +119,7 @@ def ss_list_customers_for_comms_yh(request, comms_name, customer_id=None):
 		ss_get_data_from_sheet(
 			settings.YH_SS_ACCESS_TOKEN,
 			settings.YH_SS_SHEET_NAME,
-			['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'Installation Date', 'Quotation Date', 'Engineer', 'Boiler Brand'],
+			['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'Installation Date', 'Survey Date',  'Surveyor', 'Engineer Appointed', 'Boiler Manufacturer'],
 			'Customer ID',
 			customer_id,
 			data_filename
@@ -162,7 +162,7 @@ def ss_generate_customer_comms_yh(request, comms_name, customer_id=None):
 		ss_get_data_from_sheet(
 			settings.YH_SS_ACCESS_TOKEN,
 			settings.YH_SS_SHEET_NAME,
-			['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'Installation Date', 'Quotation Date', 'Engineer', 'Boiler Brand'],
+			['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'Installation Date', 'Survey Date', 'Surveyor', 'Engineer Appointed', 'Boiler Manufacturer'],
 			'Customer ID',
 			customer_id,
 			data_filename
@@ -194,8 +194,10 @@ def ss_generate_customer_comms_yh(request, comms_name, customer_id=None):
 			at_pos = line["engineer_name"].find(' ')
 			line["engineer_first_name"] = (line["engineer_name"])[0:at_pos]
 			# Change the installation_date format
-			line["installation_date"] = datetime.strptime(line["installation_date"], "%Y-%m-%d")
-			line["quotation_date"] = datetime.strptime(line["quotation_date"], "%Y-%m-%d")
+			if line["installation_date"] != "None":
+				line["installation_date"] = datetime.strptime(line["installation_date"], "%Y-%m-%d")
+			if line["quotation_date"] != "None":
+				line["quotation_date"] = datetime.strptime(line["quotation_date"], "%Y-%m-%d")
 			html_content = render_to_string(html_email_filename, line)
 			# Drop the Comms from the comms_name for the Email subject line
 			at_pos = comms_name.find('Comms')
@@ -1406,43 +1408,93 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 
 			# This might also need to be included in the email condition
 
-			# Create the parts list as a long string varaiable
-			comp_dict = file_form_data[10]
-			parts_list = ""
-			for outer_key, outer_value in comp_dict.items():
-				print("\t", outer_key)
-				for elem in outer_value:
-					print("\t\t", elem)
-					for inner_key, inner_value in elem.items():
-						print("\t\t\t", inner_key)
-						parts_list = parts_list + inner_key + " Qty: " + str(inner_value[0]) + ", "
-						print("\t\t\t\t",inner_value)
-						for elem2 in inner_value:
-							print("\t\t\t\t\t",elem2)		
+			# Create the parts lists as long string varaiables
+			parts_list_a = ""
+			parts_list_b = ""
+			
+			for comp_dict in [file_form_data[10], file_form_data[11]]:
+				for outer_key, outer_value in comp_dict.items():
+					print("\t", outer_key)
+					for elem in outer_value:
+						print("\t\t", elem)
+						for inner_key, inner_value in elem.items():
+							print("\t\t\t", inner_key)
+							if outer_key == "Oil Flue Components" or outer_key == "Gas Flue Components" or outer_key == "Programmer/Thermostat":
+								parts_list_a = parts_list_a + outer_key + ": " + inner_key + "\n"
+							elif outer_key == "Alt Oil Flue Components" or outer_key == "Alt Gas Flue Components" or outer_key == "Alt Programmer/Thermostat":
+								parts_list_b = parts_list_b + outer_key + ": " + inner_key + "\n"
+							else:
+								parts_list_a = parts_list_a + outer_key + ": " + inner_key + "\n"
+								parts_list_b = parts_list_b + outer_key + ": " + inner_key + "\n"
+							print("\t\t\t\t",inner_value)
+							for elem2 in inner_value:
+								print("\t\t\t\t\t",elem2)
+
+			# Special Parts
+			for x in range(1,4):
+				if file_form_data[6].get('special_part_' + str(x)) and file_form_data[6].get('special_part_qty_' +str(x)):
+					parts_list_a = parts_list_a + "Special Part: " + file_form_data[6].get('special_part_' + str(x)) + " Qty: " + str(file_form_data[6].get('special_part_qty_' +str(x))) +"\n"
+					parts_list_b = parts_list_b + "Special Part: " + file_form_data[6].get('special_part_' + str(x)) + " Qty: " + str(file_form_data[6].get('special_part_qty_' +str(x))) +"\n"
+
+			# Radiators
+			for x in range(1,13):
+				if file_form_data[7].get('rad_' + str(x)) and file_form_data[7].get('sty_' +str(x)):
+					parts_list_a = parts_list_a + "Radiator: " + file_form_data[7].get('rad_' + str(x)) + " / " + file_form_data[7].get('sty_' +str(x)) +"\n"
+					parts_list_b = parts_list_b + "Radiator: " + file_form_data[7].get('rad_' + str(x)) + " / " + file_form_data[7].get('sty_' +str(x)) +"\n"
+
+			# Valves
+			for x in range(1,13):
+				if file_form_data[7].get('val_' + str(x)) and file_form_data[7].get('vaq_' +str(x)):
+					parts_list_a = parts_list_a + "Valve(s): " + file_form_data[7].get('val_' + str(x)) + " Qty: " + file_form_data[7].get('vaq_' +str(x)) +"\n"
+					parts_list_b = parts_list_b + "Valve(s): " + file_form_data[7].get('val_' + str(x)) + " Qty: " + file_form_data[7].get('vaq_' +str(x)) +"\n"
+
+			# Towel Rails
+			for x in range(1,5):
+				if file_form_data[7].get('tow_' + str(x)):
+					parts_list_a = parts_list_a + "Towel Rail: " + file_form_data[7].get('tow_' + str(x)) + "\n" 
+					parts_list_b = parts_list_b + "Towel Rail: " + file_form_data[7].get('tow_' + str(x)) + "\n" 
 
 			#print(parts_list_a)
+			#print(parts_list_b)
 			#print(stop)
+
+			# Optional Extras as a long string variable
+			optional_extras = ""
+			for x in range(1,11):
+				if file_form_data[8].get('extra_' + str(x)) and file_form_data[8].get('extra_qty_' +str(x)):
+					optional_extras = optional_extras + file_form_data[8].get('extra_' + str(x)) + " Qty:" + str(file_form_data[8].get('extra_qty_' + str(x))) + "\n"
+
 
 			# Build the update dictionary
 			update_data = []
 			# Updates For Live Site
-			#update_data.append({"Customer Status": "Open Opportunity"})
-			#update_data.append({"Price Option A (Inc VAT)": str(file_form_data[9].get('total_cost'))})
-			#update_data.append({"Price Option B (Inc VAT)": str(file_form_data[9].get('alt_total_cost'))})
-			#update_data.append({"Option A Parts List": parts_list_a})
-			#update_data.append({"Option B Parts List": parts_list_b})
-			# Updates For Test Site
-			update_data.append({"Customer Status": "30 Open Opportunity"})
-			update_data.append({"Price (Inc VAT)": str(file_form_data[9].get('total_cost'))})
-			update_data.append({"Deposit %": "0.3"})
-			update_data.append({"Deposit Amount": str(file_form_data[9].get('deposit_amount_thirty_percent'))})
-			update_data.append({"Current Boiler Type": str(file_form_data[2].get('current_boiler_type'))})
-			update_data.append({"Current Fuel": str(file_form_data[2].get('current_fuel_type'))})
-			update_data.append({"New Fuel": str(file_form_data[4].get('new_fuel_type'))})
-			update_data.append({"New Boiler Type": str(file_form_data[4].get('new_boiler_type'))})
-			update_data.append({"Boiler Brand": str(file_form_data[4].get("boiler_manufacturer"))})
-			update_data.append({"Parts List": parts_list})
+			update_data.append({"Customer Status": "3. Sales Opportunity"})
+			update_data.append({"Price Option A (Inc VAT)": str(file_form_data[9].get('total_cost'))})
+			update_data.append({"Price Option B (Inc VAT)": str(file_form_data[9].get('alt_total_cost'))})
+			update_data.append({"Deposit Option A %": "0.3"})
+			update_data.append({"Deposit Option B %": "0.3"})
+			update_data.append({"Option A Parts List": parts_list_a})
+			update_data.append({"Option B Parts List": parts_list_b})
+			update_data.append({"Option A / Install Days Required": file_form_data[8].get('estimated_duration')})
+			update_data.append({"Option B / Install Days Required": file_form_data[8].get('estimated_duration')})
+			if file_form_data[8].get('optional_extras'):	# If True post 1 to Smartsheet checkbox
+				update_data.append({"Optional Extras": "1"})
+				update_data.append({"Optional Extras Offered": optional_extras })
+			else:		# If False post 0 to Smartsheet checkbox
+				update_data.append({"Optional Extras": "0"})
+			update_data.append({"Boiler Manufacturer":  file_form_data[4].get('boiler_manufacturer')})
 
+			# Updates For Test Site
+			#update_data.append({"Customer Status": "30 Open Opportunity"})
+			#update_data.append({"Price (Inc VAT)": str(file_form_data[9].get('total_cost'))})
+			#update_data.append({"Deposit %": "0.3"})
+			#update_data.append({"Deposit Amount": str(file_form_data[9].get('deposit_amount_thirty_percent'))})
+			#update_data.append({"Current Boiler Type": str(file_form_data[2].get('current_boiler_type'))})
+			#update_data.append({"Current Fuel": str(file_form_data[2].get('current_fuel_type'))})
+			#update_data.append({"New Fuel": str(file_form_data[4].get('new_fuel_type'))})
+			#update_data.append({"New Boiler Type": str(file_form_data[4].get('new_boiler_type'))})
+			#update_data.append({"Boiler Brand": str(file_form_data[4].get("boiler_manufacturer"))})
+			#update_data.append({"Parts List": parts_list})
 
 			if settings.YH_SS_INTEGRATION:		# Update Customer Status
 				ss_update_data(
@@ -1452,6 +1504,8 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 					ss_customer_id,
 					update_data
 				)
+
+			#print(stop)	
 
 			if settings.YH_SS_INTEGRATION:
 				ss_attach_pdf(
