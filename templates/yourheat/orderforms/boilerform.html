@@ -289,7 +289,23 @@ return;
 
 return;
 
+    }
+
+ // Fuel supply requirements Toggle
+ if (event.target.id == 'id_5-fuel_supply_requirements') {
+    
+    if (event.target.value == "Current Supply deemed satisfactory") {
+        document.getElementById("id_5-fuel_supply_length").disabled=true;
+        document.getElementById("id_5-fuel_supply_length").required = false;
     }    
+    else {
+        document.getElementById("id_5-fuel_supply_length").removeAttribute("disabled");
+        document.getElementById("id_5-fuel_supply_length").required = true;
+    }
+
+return;
+
+    }
 
 }, false);
 
