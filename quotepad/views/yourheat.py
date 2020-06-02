@@ -282,7 +282,7 @@ class ssCustomerSelect(FormView):
 		ss_get_data_from_report(
 			settings.YH_SS_ACCESS_TOKEN,
 			settings.YH_SS_SHEET_NAME,
-			settings.YH_SS_SURVEY_REPORT,
+			settings.YH_SS_SURVEY_REPORT + " " + self.request.user.username,
 			Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/ss_custdata.txt".format(self.request.user.username))
 		)
 
