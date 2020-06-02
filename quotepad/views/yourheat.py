@@ -190,14 +190,17 @@ def ss_generate_customer_comms_yh(request, comms_name, customer_id=None):
 			# Add the dictionary entry engineer_name  from the engineer_email address with some string manipulation
 			at_pos = line["engineer_email"].find('@')
 			line["engineer_name"] = ((line["engineer_email"].replace('.',' '))[0:at_pos]).title()
+			# Add the dictionary entry engineer_name  from the surveyor_email address with some string manipulation
+			at_pos = line["surveyor_email"].find('@')
+			line["surveyor_name"] = ((line["surveyor_email"].replace('.',' '))[0:at_pos]).title()
 			# Add the dictionary entry engineer_first_name
 			at_pos = line["engineer_name"].find(' ')
 			line["engineer_first_name"] = (line["engineer_name"])[0:at_pos]
 			# Change the installation_date format
 			if line["installation_date"] != "None":
 				line["installation_date"] = datetime.strptime(line["installation_date"], "%Y-%m-%d")
-			if line["quotation_date"] != "None":
-				line["quotation_date"] = datetime.strptime(line["quotation_date"], "%Y-%m-%d")
+			if line["survey_date"] != "None":
+				line["survey_date"] = datetime.strptime(line["survey_date"], "%Y-%m-%d")
 			html_content = render_to_string(html_email_filename, line)
 			# Drop the Comms from the comms_name for the Email subject line
 			at_pos = comms_name.find('Comms')

@@ -219,6 +219,10 @@ ul#id_7-radiator_specification li {
   padding-bottom: 50px;
 }
 
+.critical_ss_fields {
+  color:darkred;
+}
+
 .form-cust-rad-qty {
 position: relative;
 left: 50px;
