@@ -19,8 +19,8 @@ from formtools.wizard.views import SessionWizardView
 # imports associated with xhtml2pdf
 from django.http import HttpResponseRedirect, HttpResponse, FileResponse
 from quotepad.utils import pdf_generation, pdf_generation_to_file, convertHtmlToPdf, convertHtmlToPdf2, component_attrib_build, component_attrib_build_exVat, send_pdf_email_using_SendGrid, send_email_using_SendGrid
-#import datetime
-from datetime import datetime
+import datetime
+#from datetime import datetime
 from pathlib import Path, PureWindowsPath
 import os, os.path, errno
 
@@ -198,9 +198,9 @@ def ss_generate_customer_comms_yh(request, comms_name, customer_id=None):
 			line["engineer_first_name"] = (line["engineer_name"])[0:at_pos]
 			# Change the installation_date format
 			if line["installation_date"] != "None":
-				line["installation_date"] = datetime.strptime(line["installation_date"], "%Y-%m-%d")
+				line["installation_date"] = datetime.datetime.strptime(line["installation_date"], "%Y-%m-%d")
 			if line["survey_date"] != "None":
-				line["survey_date"] = datetime.strptime(line["survey_date"], "%Y-%m-%d")
+				line["survey_date"] = datetime.datetime.strptime(line["survey_date"], "%Y-%m-%d")
 			html_content = render_to_string(html_email_filename, line)
 			# Drop the Comms from the comms_name for the Email subject line
 			at_pos = comms_name.find('Comms')
@@ -1188,11 +1188,17 @@ class BoilerFormWizardView_yh(SessionWizardView):
 		file.write(str(towel_rail_locations_comp_dict) + "\n")
 		#file.write(str(customer_supplied_radiator_comp_dict) + "\n")
 
-		# Get and write the quote Number to the file ( and add the heat loss value)
-		idx_master = Profile.objects.get(user = settings.YH_MASTER_PROFILE_ID)
-		idx_master.current_quote_number = idx_master.current_quote_number + 1
-		idx_master.save()
-		file.write("{'quote_number': " + str(idx_master.current_quote_number) + ",'house_heat_loss_value': " + str(heat_loss_value) + "} \n")
+		if settings.YH_SS_INTEGRATION:	# Use the Smartsheet Reference no as the Quotepad No.
+			smartsheet_id = [form.cleaned_data for form in form_list][0].get('smartsheet_id')
+			str_length = len(smartsheet_id)
+			smartsheet_id = (smartsheet_id[3:str_length])
+			file.write("{'quote_number': " + str(smartsheet_id) + ",'house_heat_loss_value': " + str(heat_loss_value) + "} \n")
+		else:							# Get and write the QP Profile quote Number to the file
+			idx_master = Profile.objects.get(user = settings.YH_MASTER_PROFILE_ID)
+			idx_master.current_quote_number = idx_master.current_quote_number + 1
+			idx_master.save()
+			file.write("{'quote_number': " + str(idx_master.current_quote_number) + ",'house_heat_loss_value': " + str(heat_loss_value) + "} \n")
+
 		# Write all the component dictionaries to the file ( exclusive of VAT)
 		file.write(str(install_requirments_comp_dict_exVat) + "\n")
 		file.write(str(new_materials_comp_dict_exVat) + "\n")
@@ -1308,10 +1314,11 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 		return HttpResponse(pdf, content_type='application/pdf')
 
 	elif outputformat == "EmailOutput":
+		fd = file_form_data
 		# Get customer lastname
 		customer_last_name = (file_form_data[0].get('customer_last_name'))
 		# Assign file name to store generated PDF
-		outputFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/Quote_{}_{}{}.pdf".format(request.user.username,idx_master.quote_prefix,customer_last_name.replace(" ","_"),f"{idx_master.current_quote_number:05}")) # pad with leading zeros (5 positions)
+		outputFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/Quote_{}_{}{}.pdf".format(request.user.username,idx_master.quote_prefix,customer_last_name.replace(" ","_"),f"{fd[19]['quote_number']:06}")) # pad with leading zeros (5 positions)
 		# Generate the PDF and write to disk ( Internal Report Copy )
 		# Set Flag to generate the quote and include the supplementary internal report output
 		include_report = True	# Internal Copy with Supplementary Reporting pages
@@ -1326,7 +1333,6 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			'optional_extra_extended_prices': optional_extra_extended_prices,
 			'include_report': include_report})
 		# Generate the email, attach the pdf and send out
-		fd = file_form_data
 		msg = "<img src='" + settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png'><br>"
 		msg = msg + "<p>Hi {}. Attached is the Quote and Internal Report for <b>{} {} {}</b>.</p>".format(idx_master.first_name, fd[0]['customer_title'], fd[0]['customer_first_name'], fd[0]['customer_last_name'])
 		msg = msg + "<p>Customer Phone No: {}<p>".format(str(fd[0]['customer_primary_phone']))
@@ -1384,17 +1390,18 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 
 		# ss_update_data code to go here !!!!!!!	
 
-		return HttpResponseRedirect('/quoteemailed/')
+		return HttpResponseRedirect('/quoteemailed_yh/')
 
 	elif outputformat == "UpdateSmartsheet":
 		if settings.YH_SS_INTEGRATION:
+			fd = file_form_data
 			# Get the Smartsheet Customer ID from the data file
 			ss_customer_id = file_form_data[0].get('smartsheet_id')
 			print("Smartsheet Customer ID", ss_customer_id)
 			# Get customer lastname
 			customer_last_name = (file_form_data[0].get('customer_last_name'))
 			# Assign file name to store generated PDF
-			outputFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/Quote_{}_{}{}.pdf".format(request.user.username,idx_master.quote_prefix,customer_last_name.replace(" ","_"),f"{idx_master.current_quote_number:05}")) # pad with leading zeros (5 positions)
+			outputFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/Quote_{}_{}{}.pdf".format(request.user.username,idx_master.quote_prefix,customer_last_name.replace(" ","_"),f"{fd[19]['quote_number']:06}")) # pad with leading zeros (5 positions)
 			# Generate the PDF and write to disk ( Internal Report Copy )
 			# Set Flag to generate the quote and include the supplementary internal report output
 			include_report = True	# Internal Copy with Supplementary Reporting pages
@@ -1465,7 +1472,9 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			optional_extras = ""
 			for x in range(1,11):
 				if file_form_data[8].get('extra_' + str(x)) and file_form_data[8].get('extra_qty_' +str(x)):
-					optional_extras = optional_extras + file_form_data[8].get('extra_' + str(x)) + " Qty:" + str(file_form_data[8].get('extra_qty_' + str(x))) + "\n"
+					optional_extra_obj = OptionalExtra.objects.get(product_name = file_form_data[8].get('extra_' + str(x)))
+					optional_extra_price = optional_extra_obj.price
+					optional_extras = optional_extras + file_form_data[8].get('extra_' + str(x)) + " (£" + str(optional_extra_price) + ") Qty:" + str(file_form_data[8].get('extra_qty_' + str(x))) + "\n"
 
 
 			# Build the update dictionary
@@ -1486,6 +1495,8 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			else:		# If False post 0 to Smartsheet checkbox
 				update_data.append({"Optional Extras": "0"})
 			update_data.append({"Boiler Manufacturer":  file_form_data[4].get('boiler_manufacturer')})
+			update_data.append({"Surveyor Notes": file_form_data[8].get('surveyors_notes')})
+			update_data.append({"First Sales Call Due": str((datetime.datetime.now() + datetime.timedelta(days=1)).strftime('%d-%b-%Y'))})
 
 			# Updates For Test Site
 			#update_data.append({"Customer Status": "30 Open Opportunity"})
@@ -1499,25 +1510,27 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			#update_data.append({"Boiler Brand": str(file_form_data[4].get("boiler_manufacturer"))})
 			#update_data.append({"Parts List": parts_list})
 
-			if settings.YH_SS_INTEGRATION:		# Update Customer Status
-				ss_update_data(
-					settings.YH_SS_ACCESS_TOKEN,
-					settings.YH_SS_SHEET_NAME,
-					"Customer ID",
-					ss_customer_id,
-					update_data
-				)
+			# Update Customer Status
+			# if settings.YH_SS_INTEGRATION:		
+			# 	ss_update_data(
+			# 		settings.YH_SS_ACCESS_TOKEN,
+			# 		settings.YH_SS_SHEET_NAME,
+			# 		"Customer ID",
+			# 		ss_customer_id,
+			# 		update_data
+			# 	)
 
 			#print(stop)	
 
-			if settings.YH_SS_INTEGRATION:
-				ss_attach_pdf(
-					settings.YH_SS_ACCESS_TOKEN,
-					settings.YH_SS_SHEET_NAME,
-					"Customer ID",
-					ss_customer_id,
-					outputFilename
-				)
+			# Add Quote PDF to Attachments
+			# if settings.YH_SS_INTEGRATION:
+			# 	ss_attach_pdf(
+			# 		settings.YH_SS_ACCESS_TOKEN,
+			# 		settings.YH_SS_SHEET_NAME,
+			# 		"Customer ID",
+			# 		ss_customer_id,
+			# 		outputFilename
+			# 	)
 
 		return HttpResponseRedirect('/quote_sent_to_Smartsheet_yh/')		
 
@@ -1568,6 +1581,19 @@ def upload_for_reprint_yh(request):
 
 
 	return render(request, 'yourheat/pages/upload_for_reprint.html')
+
+@login_required
+def quote_ready_yh(request):
+	''' Function to render the quote_ready page '''
+	# request.session['created_quote'] = True
+	# created_quote_group = Group.objects.get(name = 'created_quote')
+	# request.user.groups.add(created_quote_group)
+	return render(request,'yourheat/pages/quote_ready.html')
+
+@login_required
+def quote_emailed_yh(request):
+	''' Function to render the quote_emailed page '''
+	return render(request,'yourheat/pages/quote_emailed.html')	
 
 def get_smartsheet(request):
 	''' dummy function to test Smartsheet Integrations '''
