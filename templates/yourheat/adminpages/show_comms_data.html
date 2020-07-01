@@ -1,0 +1,48 @@
+{% extends "yourheat/adminpages/base.html" %}
+{% load quotepad_extras %}
+
+{% block content %}
+
+<div class = "container-fluid component-details-container">
+
+<h2>{{ report_name }}</h2>
+{% if data_source_is_report %}
+    <h5>Customer Status Criteria: {{comms_data.0.customer_status}}</h5>
+{% endif %}    
+<hr>
+
+{% for customer_comms in comms_data %}
+
+<table>
+    <th>Smartsheet Field</th><th>Value</th>
+    {% for key, value in customer_comms.items %}
+    <tr>
+    <td>{{key}}:&nbsp;&nbsp;</td>
+    <td>{{value}}<td> 
+    </tr>
+    {% endfor %}
+</table>
+
+
+{% empty %}
+<p>No customer details to send.</p>
+
+{% endfor %}
+        
+<hr>
+<p>The above record has been sourced from Smartsheet</p>
+<p>Please check that the details are correct for this communication and if not, close this window/tab and make corrections in Smartsheet.</p>
+<p>If all the necessary information is correct, click the send email button below.</p>
+
+<br>
+
+<div class="row">
+    <div class = "col-12">
+    <a class="btn boilerbtn btn-primary" href="{% url 'GenerateCustomerComms' report_name comms_data.0.smartsheet_id %}">Send Email(s)</a>
+    <a class="btn btn-secondary" href="/ProcessingCancelled/">Cancel</a>
+    </div>
+</div>
+
+</div>
+
+{% endblock %}

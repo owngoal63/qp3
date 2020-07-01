@@ -1,0 +1,147 @@
+{% extends "yourheat/pages/base.html" %}
+{% load static %}
+{% load quotepad_extras %}
+
+{% block content %}
+
+<div class="container home-hub">
+ 
+    <div class="row">
+        <div class="col-3">
+            <button id = '{% if request.session.email_to_customer and request.session.attach_photos and request.session.office_handover and request.session.send_to_smartsheet and request.session.office_handover %}new-quotation{% else %}new-quotation-but-not-complete{% endif %}'
+             class='{% if request.session.email_to_customer and request.session.attach_photos and request.session.office_handover and request.session.send_to_smartsheet and request.session.office_handover %}xdone{% else %}not-done{% endif %} '><i class="fas fa-folder-plus"></i> NEW QUOTATION</button>   
+        </div>
+        <div class="col-6">
+            <h1>Customer Dashboard</h1>    
+        </div>
+        <div class="col-3">
+            <a href="/listquotearchive_yh/"><button id = 'previous-quotes' class='float-right'><i class="fas fa-file-pdf"></i> PREVIOUS QUOTES</button></a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <hr>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div id="customer-details">
+                <table>
+                    <tr>
+                        <td rowspan="2">
+                            <i class="fas fa-address-card fa-3x ad-card-color"></i>
+                        </td>
+                        <td>
+                            &nbsp;
+                        </td>
+                        <td>
+                        {{customer_id}} {{customer_title}}  {{customer_first_name}} {{customer_last_name}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            &nbsp;
+                        </td>    
+                        <td>{{customer_email}}</td>
+                    </tr>
+                </table>
+            </div>   
+        </div>
+        <div class="col-6">
+            <a href="/QuoteAccepted"><button id = 'accept-quotation' class='{%if request.session.view_current_quote%}done{%else%}notdone{%endif%}'><i class="fas fa-user-check"></i> ACCEPT QUOTATION</button></a>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-4">
+            <a href="/generatequotefromfile_yh/PDFOutput/currentquote" target="_blank"><button type="button" id = 'view-current-quote' class='{%if request.session.view_current_quote%}done{%else%}notdone{%endif%} float-right'><i class="fas fa-eye"></i> VIEW CURRENT QUOTE</button></a>
+        </div>
+        <div class="col-4 d-flex justify-content-center">
+            <a href="/generatequotefromfile_yh/EmailOutput/currentquote"><button id = 'email-to-customer' class='{%if request.session.email_to_customer%}done{%else%}notdone{%endif%}'><i class="fas fa-share-square"></i> EMAIL QUOTE TO CUSTOMER</button></a>
+        </div>
+        <div class="col-4">
+            <a href="/generatequotefromfile_yh/UpdateSmartsheet/currentquote"><button id = 'send-to-smartsheet' class='{%if request.session.send_to_smartsheet%}done{%else%}notdone{%endif%} float-left'><i class="fas fa-arrow-circle-up"></i> SEND CURRENT QUOTE TO SMARTSHEET</button></a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            <a href="/ssGetPhotosForUpload"><button id = 'attach-photos' class='{%if request.session.attach_photos%}done{%else%}notdone{%endif%} float-right'><i class="fas fa-camera"></i> ATTACH PHOTOS</button></a>
+        </div>
+        <div class="col-6">
+            <a href="/ssPostSurveyQuestions"><button id = 'office-handover' class='{%if request.session.office_handover%}done{%else%}notdone{%endif%} float-left'><i class="fas fa-handshake"></i> OFFICE HANDOVER</button></a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <hr>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-3">
+            <a class = "hub-home" href="https://yourheat.co.uk/boiler-finance/"  target="_blank"><button id = 'finance-demo'><i class="fas fa-money-check"></i> FINANCE DEMO</button></a>
+        </div>
+        <div class="col-3">
+            <a class = "hub-home" href="https://www.creditmaster2.co.uk/"  target="_blank"><button id = 'link-to-hitachi'><i class="fas fa-external-link-alt"></i> LINK TO HITACHI</button></a>
+        </div>
+        <div class="col-3">
+            <a class = "hub-home" href="https://yourheat.co.uk/care-plan-pricing/"  target="_blank"><button id = 'view-plans' class='float-right'><i class="fas fa-map"></i> VIEW YOUR HEAT PLANS</button></a>
+        </div>
+        <div class="col-3">
+            <a href="/PreviewRecommendAFriend/{{customer_id}}"><button id = 'recommend-a-friend' class='float-right'><i class="fas fa-users"></i> RECOMMEND A FRIEND</button></a>
+        </div>
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+
+const btns = document.querySelectorAll('button')
+
+btns.forEach(btn => {
+
+btn.addEventListener('click', event => {
+     console.log( event.target.id );
+     if (event.target.id == 'new-quotation-but-not-complete') {
+        are_you_sure("Are you sure? - not all actions are complete.", "This option will generate a new quote overwriting the current customer data. Are you sure that you have completed all the actions for the current customer? ", "boilerform_yh/")
+     }
+     if (event.target.id == 'new-quotation') {
+        //are_you_sure("Are you sure", "This option will generate a new quote overwriting the current customer data. Are you sure that you have completed all the updates for the current customer? ", "boilerform_yh/")
+        window.location.replace("/boilerform_yh/");
+     }
+     if (event.target.id == 'view-current-quote') {
+        var element = document.getElementById("view-current-quote");
+        element.classList.remove("notdone");
+        element.classList.add("done");
+        window.open("/generatequotefromfile_yh/PDFOutput/currentquote");
+     }
+    //  if (event.target.id == 'email-to-customer') { 
+    //     var element = document.getElementById("email-to-customer");
+    //     element.classList.remove("notdone");
+    //     element.classList.add("done");
+    //     window.location.replace("/generatequotefromfile_yh/EmailOutput/currentquote");
+    //  }
+    //  if (event.target.id == 'attach-photos') { 
+    //     var element = document.getElementById("attach-photos");
+    //     element.classList.remove("notdone");
+    //     element.classList.add("done");
+    //     window.location.replace("/ssGetPhotosForUpload");
+    //  }
+    //  if (event.target.id == 'office-handover') { 
+    //     var element = document.getElementById("office-handover");
+    //     element.classList.remove("notdone");
+    //     element.classList.add("done");
+    //     window.location.replace("/ssPostSurveyQuestions");
+    //  }
+});
+
+});
+
+
+</script>
+
+
+{% endblock %}

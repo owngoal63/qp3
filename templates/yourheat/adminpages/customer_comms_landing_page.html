@@ -1,0 +1,98 @@
+{% extends "yourheat/adminpages/base.html" %}
+{% load static %}
+{% load quotepad_extras %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class = "col-12">
+            <h4>Customer Operations Administration</h4>
+        </div>
+     
+    </div>
+    <div class="row">
+        <div class = "col-4"  style="color:rgb(0,48,89)">
+            &nbsp;&nbsp;<i class="fas fa-address-card"></i>
+            <strong>{{ customer_name }}</strong><br>
+            &nbsp;&nbsp;<img src="{% static 'images/smartsheet_tick_transparent.png' %}">
+            <strong>{{ customer_id }}</strong>
+        </div>  
+        <div class = "col-4">
+            <a class="btn boilerbtn {% if customer_status != '1' %} btn-secondary disabled {% else %} btn-primary {% endif %} " href="{% url 'GetSurveyAppointment' customer_id %}">Schedule Survey Calendar Booking</a>
+        </div> 
+        <div class = "col-4">
+            <a class="btn boilerbtn {% if customer_status != '4' %} boilerbtn btn-secondary disabled {% else %} btn-primary {% endif %}" href="{% url 'GetInstallationAppointment' customer_id %}">Schedule Installation Calendar Booking</a>
+        </div>  
+    </div>
+
+    <hr>
+    <div class = "col-12">
+        <h4>Mailing Communications</h4>
+    </div>
+    <div class="row comms-row">
+        <div class = "col-4">
+            <a class="btn boilerbtn btn-warning" href="{% url 'ListCustomersForComms' 'Survey Booked Comms' customer_id  %}">Resend Survey Booked Comms</a>
+        </div>
+        <div class = "col-8">    
+            <i>Dear ____, Our surveyor is looking forward to visiting you to provide a free, no-obligation quote...</i><br>
+            <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [ Surveyor Name ] [ Survey Date ] [ Survey Time ]</p>
+        </div>
+    </div>   
+    <div class="row comms-row">
+        <div class = "col-4">
+            <a class="btn boilerbtn btn-warning" href="{% url 'ListCustomersForComms' 'Boiler Quotation Comms' customer_id  %}">Boiler Quotation Follow-up Comms</a>
+        </div>
+        <div class = "col-8">    
+            <i>Dear ____, We've been trying to contact you to discuss the quotation we gave you recently...</i>
+            <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name]</p>
+        </div>
+    </div>        
+    <div class="row comms-row">
+        <div class = "col-4">      
+            <a class="btn boilerbtn btn-warning" href="{% url 'ListCustomersForComms' 'Our Priority Comms' customer_id  %}">Our Priority Comms</a>
+        </div>
+        <div class = "col-8">  
+            <i>Dear ____, We tried calling today to discuss the quotation we gave on...</i>
+            <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [Survey Date]</p>
+        </div>
+    </div>
+    <div class="row comms-row">
+        <div class = "col-4">              
+            <a class="btn boilerbtn btn-warning" href="{% url 'ListCustomersForComms' 'Installation Notification Comms' customer_id  %}">Resend Installation Notification Comms</a>
+        </div>
+        <div class = "col-8">
+            <i>Dear ____, Thank you for choosing Your Heat as your trusted boiler installation specialist...</i>
+            <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [Installation Date] [Brand] [Engineer Name]</p>
+        </div>
+    </div>
+    <div class="row comms-row">
+        <div class = "col-4">                      
+            <a class="btn boilerbtn btn-warning" href="{% url 'ListCustomersForComms' 'Free Boiler Service Comms' customer_id  %}">Free Boiler Service Comms</a>
+        </div>
+        <div class = "col-8">    
+            <i>Dear ____, Thank you for choosing Your Heat to look after the installation of your new boiler...</i>
+            <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [Customer ID]</p>
+        </div>
+    </div>        
+    <div class="row comms-row">
+        <div class = "col-4">                      
+            <a class="btn boilerbtn btn-warning" href="{% url 'GetSurveyAppointment' customer_id %}">Schedule Calendar Booking</a>
+        </div>
+        <div class = "col-8">    
+            <i>Dear ____, Thank you for choosing Your Heat to look after the installation of your new boiler...</i>
+            <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [Customer ID]</p>
+        </div>
+    </div>     
+    <div class="row comms-row">
+        <div class = "col-4">            
+            <a class="btn btn-secondary" href="/ProcessingCancelled/">Cancel</a>
+        </div>
+        <div class = "col-8">
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

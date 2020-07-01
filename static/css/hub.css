@@ -1,0 +1,213 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins&display=swap');
+
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    /* background:#ebf5fc; */
+    background:#faf2e0;
+    /* background-color: rgb(246, 245, 242); */
+    /* background-image: url("https://www.freepik.com/free-vector/abstract-orange-black-dotted-pattern-banner_6613636.htm"); */
+    /* background-image: url('img_girl.jpg'); */
+
+    /* <a href="https://www.freepik.com/free-photos-vectors/background">Background vector created by Harryarts - www.freepik.com</a> */
+    /* https://www.freepik.com/free-photos-vectors/background */
+}
+
+#customer-details {
+    /* border-radius: 5px;
+    border: none;
+    box-shadow: inset 0 0 5px; */
+    background-color: rgb(247, 244, 244);
+    padding:5px;
+    border-radius: 5px;
+    width:500px;
+    border: 1px solid transparent;
+    border-top: none;
+    border-bottom: 1px solid #DDD;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.39), 0 -1px 1px #FFF, 0 1px 0 #FFF;
+} 
+
+h1 {
+    text-align: center;
+    font-weight: 600;
+    /* font-family: 'Courier New', Courier, monospace; */
+    color: rgb(13, 38, 48);
+    
+}
+
+.dropdown {
+    padding: 20px;
+}
+
+.container-main {
+    /* background-color: rgb(247, 244, 244); */
+    /* background-color: #faf2e0; */
+    background-color: rgb(246, 245, 242);
+    border: 1px solid grey;
+    border-radius: 10px;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    padding:5px;
+}
+
+.container {
+    /* position:relative; */
+    /* display:flex;
+    justify-content:space-around;
+    align-items:center;
+    flex-wrap:wrap;
+    width: 100px; */
+    /* display: inline-block;
+    display: inline; */
+
+}
+
+.home-hub {
+    border: 3px solid grey;
+    border-radius: 10px;
+    padding:5px;
+}
+
+.container .card {
+    width:200px;
+    height:70px;
+    /* margin:20px; */
+    padding: 5px;
+    display: block;
+    margin-bottom: 15px;
+    justify-content: space-around;
+    display: inline-block;
+    
+    /* background:#ebf5fc; */
+    background:#faf2e0;
+    
+    border-radius: 20px;
+    box-shadow: -6px -6px 20px rgba(255,255,255,1),
+                6px 6px 20px rgba(0,0,0, .2);
+}
+
+.container .card:hover { 
+    box-shadow: inset -6px -6px 10px rgba(255,255,255,0.5),
+                inset 6px 6px 20px rgba(0,0,0, 0.05);
+
+}
+
+/* .container .card .imgBx { 
+    position:relative;
+    text-align:center;
+} */
+
+/* .container .card .imgBx i { 
+    max-width:120px;
+    
+} */
+
+.container .card .contentBx {
+    position: relative;
+    /* margin-top: 20px; */
+    text-align: center;
+}
+
+.container .card .contentBx h4 { 
+    /* color:#32a3b1; */
+    color:#FB7F33;
+    font-weight:700;
+    font-size: 1em;
+    /* letter-spacing:2px; */
+    
+}
+
+.container-main #customer-details .row {
+    display: flex;
+    justify-content: space-around;
+}
+
+.container-main #customer-details .col1 {
+    position: relative; 
+}
+
+.container-main #customer-details .col1 {
+    position: relative; 
+}
+
+
+
+
+.row {
+
+    display: flex;
+    justify-content: space-around;
+}
+
+.row2 {
+    margin-top: 50px;
+
+    display: flex;
+    justify-content: space-around;
+}
+
+.col1 {
+    position: relative;
+    top: 50px;
+}
+
+.col3 {
+    position: relative;
+    top: 50px;
+}
+
+.col2 {
+    align-content: center;
+}
+
+button {
+    display: block;
+    border-radius: 5px;
+    border: none;
+    margin-bottom: 10px;
+    background-color: rgb(13, 38, 48);
+    color: white;
+    border: 1px solid rgb(71, 97, 153);
+    width :200px;
+    height: 60px;
+    font-weight: 500;
+    padding: 5px;
+}
+
+.notdone {
+    background-color: rgb(104, 107, 109);
+    color: white;
+    border: 1px solid rgb(71, 97, 153);
+}
+
+.done {
+    background-color: rgb(47, 131, 21);
+    color: white;
+    border: 1px solid rgb(71, 97, 153);
+}
+
+button:hover {
+    color: yellow;
+    border: 2px solid white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+}
+.big {
+    height: 150px;
+    width: 150px;
+    position: relative;
+}
+
+.ad-card-color {
+    color: #2A739E;
+}
+
+a {
+    color: inherit;
+}
+
+.hub-home:hover {
+    color:white;
+}

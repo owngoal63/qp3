@@ -20,30 +20,21 @@
 <div class='box'>
     <div class='box2'>
         <p style='text-align:center'><img src='http://www.qpcentral.co.uk/static/images/YourHeatLogo-Transparent.png'></p>
-        <p style='text-align:center; font-family:verdana; font-size:18px'><b>About your boiler quote</b></p>
+        <p style='text-align:center; font-family:verdana; font-size:18px'><b>Our "Recommend a Friend" Opportunity</b></p>
     </div>
 <br><br>
 <div class="body_text">    
 <p class="all_text">Dear {{ customer_title }} {{ customer_last_name }},</p>
 
 <p class="all_text">
-    Our surveyor is looking forward to visiting you to provide a free, no-obligation quote to replace your boiler.
-    {{ surveyor_name }} is booked to arrive at your property on {{survey_date|date:"D j F Y"}}
-    {% if survey_time == 'Anytime' %}
-        .
-    {% elif survey_time == 'Anytime AM' %}
-        before 12 noon.
-    {% elif survey_time == 'Anytime PM' %}
-        after 12 noon.
-    {% else %}
-        between {{survey_time}}.
-    {% endif %}    
-
+    Thanks again for choosing Your Heat as your Boiler Installation partner. As a thanks for your business, 
+    we would like to offer you the opportunity to receive a £50 Amazon voucher if you know someone who would 
+    also like a boiler installed by us.
 </p>
 
 <p class="all_text">
-    If you do have any questions prior to our visit, please don't hesitate to reply to this email, 
-    or call on 01732 622 990.
+    If you do have to do is click on this link <a href="https://www.yourheat.co.uk">www.yourheat.co.uk</a> and provide their contact details and we will manage the rest.
+    If your suggestion goes ahead with us, we will send you the £50 voucher in the post.
 </p>
 
 <p class="all_text">

@@ -22,8 +22,8 @@ body {
     height:40px;
 }
 
-.img--checkatrade {
-    width:100px;
+.img--oftec {
+    width:40px;
 }
 
 .img--worcester-bosch {
@@ -610,29 +610,35 @@ p.account-details {
 
 #header {
     width: 100%;
+    /* background-color: darkturquoise; */
 }
 
 #header td.col1 {
-    width:50%;
+    width:45%;
     text-align: left;
 }
 
 #header td.col2 {
-    width:15%;
-    text-align: center;
+    width:10%;
+    text-align: left;
 }
 
 #header td.col3 {
-    width:15%;
-    text-align: right;
+    width:10%;
+    text-align: left;
 }
 
 #header td.col4 {
-    width:10%;
+    width:15%;
     text-align: right;
 }
 
 #header td.col5 {
+    width:10%;
+    text-align: right;
+}
+
+#header td.col6 {
     width:10%;
     text-align: left;
 }

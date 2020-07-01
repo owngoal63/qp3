@@ -27,8 +27,15 @@ from quotepad.views import generate_quote_from_file, edit_quote_template, list_q
 # Imports for Yourheat
 from quotepad.views import BoilerFormWizardView_yh,generate_quote_from_file_yh, quote_ready_yh, quote_emailed_yh
 from quotepad.forms import FormStepOne_yh, FormStepTwo_yh, FormStepThree_yh, FormStepFour_yh, FormStepFive_yh, FormStepSix_yh, FormStepSeven_yh, FormStepEight_yh, FormStepNine_yh, FinanceForm_yh
-from quotepad.views import quote_generated_yh, list_quote_archive_yh, upload_for_reprint_yh
-from quotepad.views import get_smartsheet, ssCustomerSelect, quote_sent_to_Smartsheet_yh, ssPostSurveyQuestions, ss_generate_customer_comms_yh, ss_list_customers_for_comms_yh, emails_sent_to_customers_yh, ss_customer_comms_yh
+from quotepad.views import quote_generated_yh, list_quote_archive_yh, upload_for_reprint_yh, QuoteAccepted
+from quotepad.views import get_smartsheet, ssCustomerSelect, quote_sent_to_Smartsheet_yh, ssPostSurveyQuestions, ss_generate_customer_comms_yh, ss_list_customers_for_comms_yh, emails_sent_to_customers_yh, ss_customer_comms_yh, ssGetPhotosForUpload, photos_sent_to_smartsheet_yh
+
+# Imports for Yourheat admin
+from quotepad.views import admin_home, customer_comms, list_customers_for_comms, generate_customer_comms, emails_sent_to_customers, confirm_calendar_appointment, get_survey_appointment, get_installation_appointment
+from quotepad.views import processing_cancelled
+
+# Imports for Hub
+from quotepad.views import hub_home, recommend_a_friend, preview_recommend_a_friend, email_recommend_a_friend, confirmation_page
 
 urlpatterns = [
     
@@ -115,7 +122,32 @@ urlpatterns = [
     path('ssCustomerComms_yh/', ss_customer_comms_yh, name = 'ssCustomerComms_yh'),
     path('quoteready_yh/', quote_ready_yh, name = 'quote_ready_yh'),
     path('quoteemailed_yh/', quote_emailed_yh, name = 'quote_emailed_yh'),
+    path('ssGetPhotosForUpload/', login_required(ssGetPhotosForUpload.as_view()), name='ssGetPhotosForUpload'),
+    path('photosSentToSmartsheet_yh/', photos_sent_to_smartsheet_yh, name = 'photosSentToSmartsheet_yh'),
+    path('QuoteAccepted/', login_required(QuoteAccepted.as_view()), name='QuoteAccepted'),
+
+    # Patterns for Hub
+    path('HubHome/', hub_home, name = 'HubHome'),
+    path('RecommendAFriend/', recommend_a_friend, name = 'RecommendAFriend'),
+    path('PreviewRecommendAFriend/<str:customer_id>/', preview_recommend_a_friend, name = 'PreviewRecommendAFriend'),
+    path('EmailRecommendAFriend/', email_recommend_a_friend, name = 'EmailRecommendAFriend'),
+    path('ConfirmationPage/<str:header>/<str:popup_title>/<str:popup_message>/<str:next_page>', confirmation_page, name = 'ConfirmationPage'),
     
 
+    # Patterns in views/yh_admin.py
+    path('adminhome/', admin_home, name = 'adminhome'),
+    path('CustomerComms/', customer_comms, name = 'CustomerComms'),
+    path('ListCustomersForComms/<str:comms_name>/<str:customer_id>/', list_customers_for_comms, name = 'ListCustomersForComms'),
+    path('ListCustomersForComms/<str:comms_name>/', list_customers_for_comms, name = 'ListCustomersForComms'),
+    path('GenerateCustomerComms/<str:comms_name>/<str:customer_id>/', generate_customer_comms, name = 'GenerateCustomerComms'),
+    path('GenerateCustomerComms/<str:comms_name>/', generate_customer_comms, name = 'GenerateCustomerComms'),
+    path('EmailsSentToCustomers/', emails_sent_to_customers, name = 'EmailsSentToCustomers'),
+    path('ConfirmCalendarAppointment/<str:comms_name>/<str:customer_id>/', confirm_calendar_appointment, name = 'ConfirmCalendarAppointment'),
+    path('GetSurveyAppointment/<str:customer_id>/', get_survey_appointment.as_view(), name='GetSurveyAppointment'),
+    path('GetSurveyAppointment/', get_survey_appointment.as_view(), name='GetSurveyAppointment'),
+    path('GetInstallationAppointment/<str:customer_id>/', get_installation_appointment.as_view(), name='GetInstallationAppointment'),
+    path('ProcessingCancelled/', processing_cancelled, name='ProcessingCancelled'),
+
+    
 	path('', include('payments.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

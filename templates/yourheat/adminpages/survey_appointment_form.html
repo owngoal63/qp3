@@ -1,0 +1,332 @@
+{% extends "yourheat/adminpages/base.html" %}
+
+{% block content %}
+<div class="container">
+    <h4>Survey Appointment Details</h4>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <div class = "row">
+            <div class = "col-4">
+                <div class="form-group">
+                    <label>{{form.surveyor.label}}</label>
+                    {{ form.surveyor }}
+                    
+                </div>
+            </div>
+            <div class = "col-4">
+                <div class="form-group">
+                    <label>Survey Date and Start Time</label>
+                    {{ form.survey_date_and_time}}
+                </div>
+            </div>
+            <div class = "col-4">
+                <div class="form-group">
+                    <label>{{form.time_override.label}}</label>
+                    {{ form.time_override}}
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.smartsheet_id.label}}</label>
+                    {{ form.smartsheet_id }}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.customer_title.label}}</label>
+                    {{ form.customer_title}}
+                </div>
+            </div>
+        </div>
+
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.customer_first_name.label}}</label>
+                    {{ form.customer_first_name }}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.customer_last_name.label}}</label>
+                    {{ form.customer_last_name}}
+                </div>
+            </div>
+        </div>
+
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.customer_primary_phone.label}}</label>
+                    {{ form.customer_primary_phone }}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.customer_email.label}}</label>
+                    {{ form.customer_email}}
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.house_name_or_number.label}}</label>
+                    {{ form.house_name_or_number }}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.street_address.label}}</label>
+                    {{ form.street_address}}
+                </div>
+            </div>
+        </div>
+
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.city.label}}</label>
+                    {{ form.city }}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.county.label}}</label>
+                    {{ form.county}}
+                </div>
+            </div>
+        </div>
+
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.postcode.label}}</label>
+                    {{ form.postcode }}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                   
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.current_boiler_status.label}}</label>
+                    {{ form.current_boiler_status }}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.current_system.label}}</label>
+                    {{ form.current_system }}
+                </div>
+            </div>
+        </div>
+
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.system_wanted.label}}</label>
+                    {{ form.system_wanted}}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.fuel_type.label}}</label>
+                    {{ form.fuel_type}}
+                </div>
+            </div>
+        </div>
+
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.property_type.label}}</label>
+                    {{ form.property_type }}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.number_of_bedrooms.label}}</label>
+                    {{ form.number_of_bedrooms }}
+                </div>
+            </div>
+        </div>
+
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.number_of_bathrooms.label}}</label>
+                    {{ form.number_of_bathrooms}}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.hot_water_cylinder.label}}</label>
+                    {{ form.hot_water_cylinder}}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+        <div class = "row">
+            <div class = "col-4">
+                <div class="form-group">
+                    <label>{{form.website_premium_package_quote.label}}</label>
+                    {{ form.website_premium_package_quote }}
+                    
+                </div>
+            </div>
+            <div class = "col-4">
+                <div class="form-group">
+                    <label>{{form.website_standard_package_quote.label}}</label>
+                    {{ form.website_standard_package_quote}}
+                </div>
+            </div>
+            <div class = "col-4">
+                <div class="form-group">
+                    <label>{{form.website_economy_package_quote.label}}</label>
+                    {{ form.website_economy_package_quote}}
+                </div>
+            </div>
+        </div>
+        
+        <div class = "row">
+            <div class = "col-12">
+                <div class="form-group">
+                    <label>{{form.additional_information.label}}</label>
+                    {{ form.additional_information }}
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.lead_booker.label}}</label>
+                    {{ form.lead_booker }}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.customer_confirmed.label}}</label>
+                    {{ form.customer_confirmed}}
+                </div>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.survey_attendee.label}}</label>
+                    {{ form.survey_attendee }}
+                    {{form.survey_other_attendee}}
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.brand_preference.label}}</label>
+                    {{ form.brand_preference}}
+                </div>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.current_boiler_location.label}}</label>
+                    {{ form.current_boiler_location }}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.location_of_new_boiler.label}}</label>
+                    {{ form.location_of_new_boiler}}
+                </div>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.parking_and_access.label}}</label>
+                    {{ form.parking_and_access }}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.customer_interested_in_bring_forward.label}}</label>
+                    {{ form.customer_interested_in_bring_forward}}
+                </div>
+            </div>
+        </div>
+
+        <button class="btn boilerbtn btn-warning" type="submit">Generate Appointment</button>
+
+        <a href="{% url 'ProcessingCancelled' %}" class="btn btn-secondary">Cancel</a>
+
+    </form>
+    <br>
+</div>
+
+<script type="text/javascript">
+
+//     document.addEventListener('input', function (event) {
+    
+//         if (event.target.id == 'id_survey_attendee') {
+//             if (event.target.value == "Other") {
+//                 document.getElementById("id_survey_other_attendee").style.visibility = "visible";
+//             }
+//             else {
+//                 document.getElementById("id_survey_other_attendee").style.visibility = "hidden";
+//             }
+//         }
+//     return;    
+
+// }, false); 
+    
+$(function () {
+      $('[data-toggle="popover"]').popover()
+    })
+    
+    $('.popover-dismiss').popover({
+      trigger: 'focus'
+    })
+
+    attendee_handler();
+    
+    function attendee_handler() {
+    
+    var survey_attendee = document.getElementById('id_survey_attendee');
+     
+    if (survey_attendee.value == 'Other') {
+        document.getElementById("id_survey_other_attendee").style.visibility = "visible";
+    } else {
+        document.getElementById("id_survey_other_attendee").style.visibility = "hidden";
+    }
+    
+    }
+    
+</script>    
+{% endblock content %}

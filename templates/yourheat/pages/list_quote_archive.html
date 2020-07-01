@@ -5,17 +5,10 @@
 
 <div class="container">
 
+<h4>Previous Quotes for {{request.user}}</h4>
 {% for pdf_file in pdf_files %}
 
-    {% if pdf_file == "current_quote.txt" %}
-        <h4>Current Quote</h4>
-        
-        <a class="btn boilerbtn btn-primary" href="{% url 'generate_quote_from_file_yh' 'PDFOutput' 'currentquote' %}" target="_blank">View Current Quote</a><br><br>
-        <a class="btn boilerbtn btn-primary" href="{% url 'generate_quote_from_file_yh' 'EmailOutput' 'currentquote' %}">Email Current Quote to customer</a><br>
-
-        <hr>
-        <h4>Historical Quotes for {{request.user}}</h4>
-    {% else %}
+    {% if pdf_file != "current_quote.txt" and pdf_file != "customer_comms" and pdf_file != "ss_custdata.txt" %}
         <a href="{% url 'pdfview' pdf_file %}" target="_blank">{{ pdf_file }}</a><br>
     {% endif %}
     
@@ -25,7 +18,7 @@
 {% endfor %}
 
 <br>
-<a class="btn btn-secondary" href="/home/">Return to Dashboard</a>
+<a class="btn btn-secondary" href="/HubHome/">Return to Main Menu</a>
 
 </div>
 

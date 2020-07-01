@@ -563,3 +563,19 @@ The responsive effects on the dashboard page are built using these cards, they a
   color: #4D4D4D;
 }
 
+.img-logo-admin {
+  width:190px;
+  background-color:rgb(243, 241, 241);
+  position: relative;
+  height:100%;
+  border-radius: 4px;
+  padding: 3px;
+  box-shadow: rgb(59, 59, 59) 4px 4px 4px;
+}
+
+.disabled {
+  pointer-events: none;
+  cursor: default;
+  opacity: 0.6;
+}
+

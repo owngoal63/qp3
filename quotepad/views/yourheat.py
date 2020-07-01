@@ -39,13 +39,39 @@ from quotepad.forms import ProfileForm, UserProfileForm, ProductPriceForm, EditQ
 from django.db.models import Q
 
 #Added for Smartsheet
-from quotepad.smartsheet_integration import ss_get_data_from_report, ss_update_data, ss_append_data, ss_attach_pdf, ss_get_data_from_sheet, ss_add_comments
-from quotepad.forms import ssCustomerSelectForm, ssPostSurveyQuestionsForm
+from quotepad.smartsheet_integration import ss_get_data_from_report, ss_update_data, ss_append_data, ss_attach_pdf, ss_get_data_from_sheet, ss_add_comments, ss_attach_list_of_image_files
+from quotepad.forms import ssCustomerSelectForm, ssPostSurveyQuestionsForm, ssGetPhotosForUploadForm, QuoteAcceptedForm
+
+@login_required
+def hub_home(request):
+	''' Function to render the Hub Home page '''
+
+	quote_form_filename =  Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/current_quote.txt".format(request.user.username))
+	with open(quote_form_filename) as file:
+		file_form_data = []
+		for line in file:
+			#print(line)
+			file_form_data.append(eval(line))
+
+	customer_id = file_form_data[0].get("smartsheet_id")
+	customer_title = file_form_data[0].get("customer_title")
+	customer_first_name = file_form_data[0].get("customer_first_name")
+	customer_last_name = file_form_data[0].get("customer_last_name")
+	customer_email = file_form_data[0].get("customer_email")		
+
+
+	#return render(request,'yourheat/pages/hub_home.html')
+	return render(request, 'yourheat/pages/hub_home.html', {'customer_id': customer_id,'customer_title': customer_title,'customer_first_name': customer_first_name,'customer_last_name': customer_last_name,'customer_email': customer_email })
 
 @login_required
 def emails_sent_to_customers_yh(request):
 	''' Function to render the emails sent page '''
 	return render(request,'yourheat/pages/emails_sent_to_customers.html')
+
+@login_required
+def photos_sent_to_smartsheet_yh(request):
+	''' Function to render the photos sent page '''
+	return render(request,'yourheat/pages/photos_sent_to_smartsheet.html')
 
 @login_required
 def quote_sent_to_Smartsheet_yh(request):
@@ -72,10 +98,15 @@ def quote_generated_yh(request):
 @login_required
 def list_quote_archive_yh(request):
 	''' Function to render the page required to display previously generated quotes '''
-	folder = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/".format(request.user.username))
+	#folder = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/".format(request.user.username))
 	#path="C:\\somedirectory"  # insert the path to your directory   
-	pdf_files =os.listdir(folder)   
-	return render(request, 'yourheat/pages/list_quote_archive.html', {'pdf_files': pdf_files})
+	# pdf_files =os.listdir(folder)
+	path = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/".format(request.user.username))
+	name_list = os.listdir(path)
+	full_list = [os.path.join(path,i) for i in name_list]
+	time_sorted_list = sorted(full_list, key=os.path.getmtime, reverse=True)
+	filename_list = [os.path.basename(i) for i in time_sorted_list]
+	return render(request, 'yourheat/pages/list_quote_archive.html', {'pdf_files': filename_list})
 
 @login_required
 def pdf_view(request, pdf_file):
@@ -270,7 +301,112 @@ class ssPostSurveyQuestions(FormView):
 				form.cleaned_data["smartsheet_id"],
 				customer_comms
 			)
-		return HttpResponseRedirect('/quote_sent_to_Smartsheet_yh/')
+
+		self.request.session["office_handover"] = True	
+		#return HttpResponseRedirect('/quote_sent_to_Smartsheet_yh/')
+		return HttpResponseRedirect('/ConfirmationPage/Office Handover Confirmation/Office Handover/The updates have been sent to Smartsheet as comments./HubHome')
+
+class QuoteAccepted(FormView):
+
+	form_class = QuoteAcceptedForm
+	template_name = "yourheat/orderforms/QuoteAcceptedForm.html"
+
+	def get_initial(self):
+		initial = super().get_initial()
+		quote_form_filename =  Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/current_quote.txt".format(self.request.user.username))
+		with open(quote_form_filename) as file:
+			file_form_datax = []
+			for line in file:
+				#print(line)
+				file_form_datax.append(eval(line))
+		
+		file_form_data = file_form_datax
+		initial['smartsheet_id'] = file_form_data[0].get("smartsheet_id")
+		initial['customer_first_name'] = file_form_data[0].get("customer_first_name")
+		initial['customer_last_name'] = file_form_data[0].get("customer_last_name")
+		initial['postcode'] = file_form_data[1].get("postcode")
+		initial['days_required_for_installation'] = file_form_data[8].get("estimated_duration")
+
+		# Get Primary and Alternate Boilers
+		product = file_form_data[5].get('product_choice')
+		product_name = ProductPrice.objects.get(id=product).model_name
+		product_brand = ProductPrice.objects.get(id=product).brand
+		initial["primary_product_choice"] = product_brand + " " + product_name
+
+		alt_product = file_form_data[5].get('alt_product_choice')
+		if alt_product:
+			alt_product_name = ProductPrice.objects.get(id=alt_product).model_name
+			alt_product_brand = ProductPrice.objects.get(id=alt_product).brand
+			initial['alternative_product_choice'] = alt_product_brand + " " + alt_product_name
+		
+		# Optional Extras as a long string variable
+		optional_extras = ""
+		for x in range(1,11):
+			if file_form_data[8].get('extra_' + str(x)) and file_form_data[8].get('extra_qty_' +str(x)):
+				optional_extra_obj = OptionalExtra.objects.get(product_name = file_form_data[8].get('extra_' + str(x)))
+				optional_extra_price = optional_extra_obj.price
+				optional_extras = optional_extras + file_form_data[8].get('extra_' + str(x)) + " (£" + str(optional_extra_price) + ") Qty:" + str(file_form_data[8].get('extra_qty_' + str(x))) + "\n"
+		initial["optional_extras"] = optional_extras
+
+		return initial
+
+	def form_valid(self, form):
+
+		# Get the user profile object
+		idx = Profile.objects.get(user = self.request.user)
+
+		# Build the contents of the email
+		mail_subject = 'Quote Accepted Notification'
+		msg = "<img src='" + settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png'><br>"
+		msg = msg + "<p style='font-family:arial, font-size:12px'>Great news {} {} has had a quotation accepted.</p>".format(idx.first_name, idx.last_name)
+		msg = msg + "<p style='font-family:arial, font-size:12px'>Below are the details:</p>"
+		msg = msg + "<p style='font-family:arial, font-size:12px'>Customer ID: {} <br>".format(form.cleaned_data['smartsheet_id'])
+		msg = msg + "Customer Name: {} {}<br><br>".format(form.cleaned_data['customer_first_name'], form.cleaned_data['customer_last_name'])
+		msg = msg + "Boiler Options Offered : A-{} | B-{}<br>".format(form.cleaned_data['primary_product_choice'], form.cleaned_data['alternative_product_choice'])
+		msg = msg + "Selected Boiler Option: {} <br><br>".format(form.cleaned_data['selected_option'])
+		msg = msg + "Payment Method: {} <br>".format(form.cleaned_data['payment_method'])
+		msg = msg + "Finance: {} <br>".format(form.cleaned_data['finance'])
+		msg = msg + "Current Boiler Status: {} <br>".format(form.cleaned_data['current_boiler_status'])
+		msg = msg + "Days Required for Installation: {} <br>".format(form.cleaned_data['days_required_for_installation'])
+		msg = msg + "Optional Extras: {} <br>".format(form.cleaned_data['optional_extras'])
+		msg = msg + "</p>"
+
+		if settings.YH_TEST_EMAIL:
+			email = EmailMessage(mail_subject, msg, idx.email, settings.YH_QUOTE_ACCEPTED_EMAILS)
+			email.content_subtype = "html"  # Main content is now text/html
+			email.send()
+
+		else:
+			send_email_using_SendGrid('info@yourheat.co.uk', emailnames, mail_subject, msg )
+
+
+
+
+		# Build the update dictionary
+		# update_data = []
+		# ss_customer_id = form.cleaned_data['smartsheet_id']
+
+		# Create list of customer comments
+		# customer_comms = []
+		# customer_comms.append("Reason for quote: " + form.cleaned_data['reason_for_quote'])
+		# customer_comms.append("Why you quoted what you quoted: " + form.cleaned_data['why_you_quoted_what_you_quoted'])
+		# customer_comms.append("Why customer did not go ahead on day: " + form.cleaned_data['why_customer_did_not_go_ahead_on_day'])
+		# customer_comms.append("Important to customer: " + form.cleaned_data['important_to_customer'])
+
+		#update_data.append({"Customer Comms": customer_comms })
+
+		# if settings.YH_SS_INTEGRATION:		# Update Comments
+		# 		ss_add_comments(
+		# 		settings.YH_SS_ACCESS_TOKEN,
+		# 		settings.YH_SS_SHEET_NAME,
+		# 		'Customer ID',
+		# 		form.cleaned_data["smartsheet_id"],
+		# 		customer_comms
+		# 	)
+
+		self.request.session["accept_quotation"] = True	
+		#return HttpResponseRedirect('/quote_sent_to_Smartsheet_yh/')
+		return HttpResponseRedirect('/ConfirmationPage/Quote Accepted Confirmation/Quote Accepted Notification/The Yourheat Management team have been notified by email./HubHome')		
 
 class ssCustomerSelect(FormView):
 
@@ -337,8 +473,20 @@ class BoilerFormWizardView_yh(SessionWizardView):
 				with open(cfile, encoding='utf-8', errors='replace') as txtfile:
 					all_lines = txtfile.readlines()
 					init_dict = json.loads(all_lines[selected_customer_index])
+					#Convert house number with a .0 postfix to an integer with string manipulation
+					at_pos = init_dict.get("house_name_or_number").find('.0')
+					if at_pos > 0:
+						init_dict["house_name_or_number"] = init_dict.get("house_name_or_number")[0:at_pos]
+					else:	
+						init_dict['house_name_or_number'] = init_dict.get("house_name_or_number")
+					# Check for any "NONE" fields coming from Smartsheet and replace with ''
+					for key, value in init_dict.items():
+						if value == 'None':
+							init_dict[key] = ''
+				#print(init_dict)
+				#print(stop)
 
-		print(init_dict)
+		#print(init_dict.get("house_name_or_number"))
 		return init_dict
 
 	def get_template_names(self):
@@ -1191,7 +1339,10 @@ class BoilerFormWizardView_yh(SessionWizardView):
 		if settings.YH_SS_INTEGRATION:	# Use the Smartsheet Reference no as the Quotepad No.
 			smartsheet_id = [form.cleaned_data for form in form_list][0].get('smartsheet_id')
 			str_length = len(smartsheet_id)
-			smartsheet_id = (smartsheet_id[3:str_length])
+			if str_length > 0:
+				smartsheet_id = (smartsheet_id[3:str_length])
+			else:
+				smartsheet_id = 0	
 			file.write("{'quote_number': " + str(smartsheet_id) + ",'house_heat_loss_value': " + str(heat_loss_value) + "} \n")
 		else:							# Get and write the QP Profile quote Number to the file
 			idx_master = Profile.objects.get(user = settings.YH_MASTER_PROFILE_ID)
@@ -1212,9 +1363,23 @@ class BoilerFormWizardView_yh(SessionWizardView):
 		file.close()
 
 		#print(a_break)
+		# Set all session variables for Hub screen buttons ( Reset state )
+		request.session["create_quotation"] = True
+		request.session["view_current_quote"] = False
+		request.session["email_to_customer"] = False
+		request.session["send_to_smartsheet"] = False
+		request.session["accept_quotation"] = False
+		request.session["attach_photos"] = False
+		request.session["office_handover"] = False
+		request.session["recommend_a_friend"] = False
+		request.session["view_plans"] = False
+		request.session["finance_demo"] = False
+		request.session["link_to_hitachi"] = False
+		request.session["previous_quotes"] = False
 
-		return HttpResponseRedirect('/quotegenerated_yh/')
-
+		#return HttpResponseRedirect('/quotegenerated_yh/')
+		return HttpResponseRedirect('/ConfirmationPage/Quote Generation Confirmation/Customer Quote/The Customer quote has been generated and is ready for further actions./HubHome')
+		
 @login_required	  
 def generate_quote_from_file_yh(request, outputformat, quotesource):
 	''' Function to generate the using either a generic template or a user specific one '''
@@ -1311,6 +1476,7 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			'optional_extra_extended_prices': optional_extra_extended_prices,
 			'include_report': include_report})
 
+		request.session["view_current_quote"] = True
 		return HttpResponse(pdf, content_type='application/pdf')
 
 	elif outputformat == "EmailOutput":
@@ -1318,7 +1484,8 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 		# Get customer lastname
 		customer_last_name = (file_form_data[0].get('customer_last_name'))
 		# Assign file name to store generated PDF
-		outputFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/Quote_{}_{}{}.pdf".format(request.user.username,idx_master.quote_prefix,customer_last_name.replace(" ","_"),f"{fd[19]['quote_number']:06}")) # pad with leading zeros (5 positions)
+		#outputFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/Quote_{}_{}{}.pdf".format(request.user.username,idx_master.quote_prefix,customer_last_name.replace(" ","_"),f"{fd[19]['quote_number']:06}")) # pad with leading zeros (5 positions)
+		outputFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/CustomerQuoteForInternalUse_{}_{}.pdf".format(request.user.username,customer_last_name.replace(" ","_"),fd[0]['smartsheet_id']))
 		# Generate the PDF and write to disk ( Internal Report Copy )
 		# Set Flag to generate the quote and include the supplementary internal report output
 		include_report = True	# Internal Copy with Supplementary Reporting pages
@@ -1354,6 +1521,7 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			send_pdf_email_using_SendGrid('quotes@yourheat.co.uk', idx_master.email, mail_subject, msg, outputFilename, quote_form_filename )
 
 		# Generate the PDF and write to disk ( Customer Copy )
+		outputFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/CustomerQuoteForCustomer_{}_{}.pdf".format(request.user.username,customer_last_name.replace(" ","_"),fd[0]['smartsheet_id']))
 		# Set Flag to generate the quote and include the supplementary internal report output
 		include_report = False	# Customer Copy no Report
 		pdf_generation_to_file(sourceHtml, outputFilename, {
@@ -1390,22 +1558,24 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 
 		# ss_update_data code to go here !!!!!!!	
 
-		return HttpResponseRedirect('/quoteemailed_yh/')
+		request.session["email_to_customer"] = True
+		#return HttpResponseRedirect('/quoteemailed_yh/')
+		return HttpResponseRedirect('/ConfirmationPage/Customer Email Confirmation/Customer Email/The quote has been emailed to the customer/HubHome')
 
 	elif outputformat == "UpdateSmartsheet":
 		if settings.YH_SS_INTEGRATION:
 			fd = file_form_data
 			# Get the Smartsheet Customer ID from the data file
 			ss_customer_id = file_form_data[0].get('smartsheet_id')
-			print("Smartsheet Customer ID", ss_customer_id)
+			#print("Smartsheet Customer ID", ss_customer_id)
 			# Get customer lastname
 			customer_last_name = (file_form_data[0].get('customer_last_name'))
 			# Assign file name to store generated PDF
-			outputFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/Quote_{}_{}{}.pdf".format(request.user.username,idx_master.quote_prefix,customer_last_name.replace(" ","_"),f"{fd[19]['quote_number']:06}")) # pad with leading zeros (5 positions)
+			outputFilename_Internal = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/CustomerQuoteForInternalUse_{}_{}.pdf".format(request.user.username,customer_last_name.replace(" ","_"),fd[0]['smartsheet_id']))
 			# Generate the PDF and write to disk ( Internal Report Copy )
-			# Set Flag to generate the quote and include the supplementary internal report output
+			# Set Flag to generate the quote and include the supplementary internal report output			
 			include_report = True	# Internal Copy with Supplementary Reporting pages
-			pdf_generation_to_file(sourceHtml, outputFilename, {
+			pdf_generation_to_file(sourceHtml, outputFilename_Internal, {
 				'form_data': file_form_data,
 				'idx':idx,
 				'frecords': frecords,
@@ -1416,19 +1586,60 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 				'optional_extra_extended_prices': optional_extra_extended_prices,
 				'include_report': include_report})
 
+			# Assign file name to store generated PDF
+			outputFilename_Customer = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/CustomerQuoteForCustomer_{}_{}.pdf".format(request.user.username,customer_last_name.replace(" ","_"),fd[0]['smartsheet_id']))
+			# Generate the PDF and write to disk ( Internal Report Copy )
+			# Set Flag to generate the quote and include the supplementary internal report output			
+			include_report = False	# Customer Copy with not Supplementary Reporting pages
+			pdf_generation_to_file(sourceHtml, outputFilename_Customer, {
+				'form_data': file_form_data,
+				'idx':idx,
+				'frecords': frecords,
+				'alt_product_record': alt_product_record,
+				'product_record': product_record,
+				'img_record': img_record,
+				'alt_img_record': alt_img_record,
+				'optional_extra_extended_prices': optional_extra_extended_prices,
+				'include_report': include_report})
+
+			# Add Quote PDFs to Smartsheet Attachments
+			if settings.YH_SS_INTEGRATION:
+				ss_attach_pdf(
+					settings.YH_SS_ACCESS_TOKEN,
+					settings.YH_SS_SHEET_NAME,
+					"Customer ID",
+					ss_customer_id,
+					outputFilename_Internal,
+					outputFilename_Customer
+				)	
+
+			#print(stop)
 			# This might also need to be included in the email condition
 
 			# Create the parts lists as long string varaiables
 			parts_list_a = ""
 			parts_list_b = ""
+
+			# Get Primary and Alternate Boilers
+			product = file_form_data[5].get('product_choice')
+			product_name = ProductPrice.objects.get(id=product).model_name
+			product_brand = ProductPrice.objects.get(id=product).brand
+			parts_list_a = parts_list_a + "Boiler: " + product_brand + " " + product_name + "\n"
+
+			alt_product = file_form_data[5].get('alt_product_choice')
+			if alt_product:
+				alt_product_name = ProductPrice.objects.get(id=alt_product).model_name
+				alt_product_brand = ProductPrice.objects.get(id=alt_product).brand
+				parts_list_b = parts_list_b + "Alt Boiler: " + alt_product_brand + " " + alt_product_name + "\n"
+			
 			
 			for comp_dict in [file_form_data[10], file_form_data[11]]:
 				for outer_key, outer_value in comp_dict.items():
-					print("\t", outer_key)
+					#print("\t", outer_key)
 					for elem in outer_value:
-						print("\t\t", elem)
+						#print("\t\t", elem)
 						for inner_key, inner_value in elem.items():
-							print("\t\t\t", inner_key)
+							#print("\t\t\t", inner_key)
 							if outer_key == "Oil Flue Components" or outer_key == "Gas Flue Components" or outer_key == "Programmer/Thermostat":
 								parts_list_a = parts_list_a + outer_key + ": " + inner_key + "\n"
 							elif outer_key == "Alt Oil Flue Components" or outer_key == "Alt Gas Flue Components" or outer_key == "Alt Programmer/Thermostat":
@@ -1436,9 +1647,9 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 							else:
 								parts_list_a = parts_list_a + outer_key + ": " + inner_key + "\n"
 								parts_list_b = parts_list_b + outer_key + ": " + inner_key + "\n"
-							print("\t\t\t\t",inner_value)
-							for elem2 in inner_value:
-								print("\t\t\t\t\t",elem2)
+							#print("\t\t\t\t",inner_value)
+							#for elem2 in inner_value:
+								#print("\t\t\t\t\t",elem2)
 
 			# Special Parts
 			for x in range(1,4):
@@ -1480,15 +1691,16 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			# Build the update dictionary
 			update_data = []
 			# Updates For Live Site
-			update_data.append({"Customer Status": "3. Sales Opportunity"})
+			# update_data.append({"Customer Status": "3. Sales Opportunity"})	 now removed due to implementation of Smartsheet formula
 			update_data.append({"Price Option A (Inc VAT)": str(file_form_data[9].get('total_cost'))})
-			update_data.append({"Price Option B (Inc VAT)": str(file_form_data[9].get('alt_total_cost'))})
 			update_data.append({"Deposit Option A %": "0.3"})
-			update_data.append({"Deposit Option B %": "0.3"})
 			update_data.append({"Option A Parts List": parts_list_a})
-			update_data.append({"Option B Parts List": parts_list_b})
 			update_data.append({"Option A / Install Days Required": file_form_data[8].get('estimated_duration')})
-			update_data.append({"Option B / Install Days Required": file_form_data[8].get('estimated_duration')})
+			if alt_product:
+				update_data.append({"Price Option B (Inc VAT)": str(file_form_data[9].get('alt_total_cost'))})
+				update_data.append({"Deposit Option B %": "0.3"})
+				update_data.append({"Option B Parts List": parts_list_b})
+				update_data.append({"Option B / Install Days Required": file_form_data[8].get('estimated_duration')})
 			if file_form_data[8].get('optional_extras'):	# If True post 1 to Smartsheet checkbox
 				update_data.append({"Optional Extras": "1"})
 				update_data.append({"Optional Extras Offered": optional_extras })
@@ -1511,28 +1723,20 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			#update_data.append({"Parts List": parts_list})
 
 			# Update Customer Status
-			# if settings.YH_SS_INTEGRATION:		
-			# 	ss_update_data(
-			# 		settings.YH_SS_ACCESS_TOKEN,
-			# 		settings.YH_SS_SHEET_NAME,
-			# 		"Customer ID",
-			# 		ss_customer_id,
-			# 		update_data
-			# 	)
+			if settings.YH_SS_INTEGRATION:		
+				ss_update_data(
+					settings.YH_SS_ACCESS_TOKEN,
+					settings.YH_SS_SHEET_NAME,
+					"Customer ID",
+					ss_customer_id,
+					update_data
+				)
 
-			#print(stop)	
+			#print(stop)
+			request.session["send_to_smartsheet"] = True
 
-			# Add Quote PDF to Attachments
-			# if settings.YH_SS_INTEGRATION:
-			# 	ss_attach_pdf(
-			# 		settings.YH_SS_ACCESS_TOKEN,
-			# 		settings.YH_SS_SHEET_NAME,
-			# 		"Customer ID",
-			# 		ss_customer_id,
-			# 		outputFilename
-			# 	)
-
-		return HttpResponseRedirect('/quote_sent_to_Smartsheet_yh/')		
+		# return HttpResponseRedirect('/quote_sent_to_Smartsheet_yh/')
+		return HttpResponseRedirect('/ConfirmationPage/Smartsheet Update Confirmation/Smartsheet Update/The Quote details have been sent to Smartsheet/HubHome')		
 
 	else:   # HTMLOutput
 		include_report = True	# Internal Copy with Supplementary Reporting pages
@@ -1652,3 +1856,134 @@ def get_smartsheet(request):
 	#)
 
 	return HttpResponseRedirect('/home/')
+
+class ssGetPhotosForUpload(FormView):
+
+	form_class = ssGetPhotosForUploadForm
+	template_name = "yourheat/pages/upload_photos.html"
+	#success_url = "/photosSentToSmartsheet_yh/"
+
+	def get_initial(self):
+		initial = super().get_initial()
+		# Get the Smartsheet ID from the current customer quote data file
+		quote_form_filename =  Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/current_quote.txt".format(self.request.user.username))
+		with open(quote_form_filename) as file:
+			file_form_data = []
+			for line in file:
+				file_form_data.append(eval(line))
+		initial['smartsheet_id'] = file_form_data[0].get("smartsheet_id")
+		return initial
+
+	def form_valid(self, form):
+		# Initialise list of Files for upload to Smartsheet
+		attach_file_list = []
+		for file_obj in self.request.FILES.getlist("files"):
+			attach_file_list.append(Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/{}".format(self.request.user.username, file_obj.name)))
+			def process(f):
+				with open(Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/{}".format(self.request.user.username, file_obj.name)), 'wb+') as destination:
+					for chunk in f.chunks():
+						destination.write(chunk)
+			process(file_obj)
+			
+		# Send Files to be attached to Smartsheet
+		if settings.YH_SS_INTEGRATION:
+					ss_attach_list_of_image_files(
+						settings.YH_SS_ACCESS_TOKEN,
+						settings.YH_SS_SHEET_NAME,
+						"Customer ID",
+						form.cleaned_data['smartsheet_id'],
+						attach_file_list
+					)
+
+		# Delete Uploaded Files from System Storage
+		for del_file in attach_file_list:
+			os.remove(del_file)
+
+		self.request.session["attach_photos"] = True	
+
+		# return HttpResponseRedirect("/photosSentToSmartsheet_yh/")
+		return HttpResponseRedirect('/ConfirmationPage/Photos Sent Confirmation/Onsite Photos/The Photos have been sent as attachments to Smartsheet/HubHome')		
+
+
+@login_required
+def recommend_a_friend(request):
+	''' Function to render the Recommend a friend comms'''
+
+	# Get the html email
+	comms_name = "Recommend A Friend"
+	html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/{}.html".format(settings.YH_MASTER_PROFILE_USERNAME, comms_name))
+
+	quote_form_filename =  Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/current_quote.txt".format(request.user.username))
+	with open(quote_form_filename) as file:
+		file_form_data = []
+		for line in file:
+			file_form_data.append(eval(line))
+
+	customer_id = file_form_data[0].get("smartsheet_id")
+	customer_title = file_form_data[0].get("customer_title")
+	customer_first_name = file_form_data[0].get("customer_first_name")
+	customer_last_name = file_form_data[0].get("customer_last_name")
+	customer_email = file_form_data[0].get("customer_email")		
+
+
+	return render(request, html_email_filename, {'customer_id': customer_id,'customer_title': customer_title,'customer_first_name': customer_first_name,'customer_last_name': customer_last_name,'customer_email': customer_email })
+
+@login_required
+def preview_recommend_a_friend(request, customer_id):
+	''' Function to provide preview and Email for Recommend a Friend'''
+
+	return render(request, 'yourheat/pages/preview_recommend_a_friend.html', {'customer_id': customer_id })
+
+
+
+@login_required
+def email_recommend_a_friend(request):
+	''' Function to email the Recommend a friend communication'''
+
+	# Get the html email
+	comms_name = "Recommend A Friend"
+	html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/{}.html".format(settings.YH_MASTER_PROFILE_USERNAME, comms_name))
+
+	quote_form_filename =  Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/current_quote.txt".format(request.user.username))
+	with open(quote_form_filename) as file:
+		file_form_data = []
+		for line in file:
+			file_form_data.append(eval(line))
+
+	customer_id = file_form_data[0].get("smartsheet_id")
+	customer_title = file_form_data[0].get("customer_title")
+	customer_first_name = file_form_data[0].get("customer_first_name")
+	customer_last_name = file_form_data[0].get("customer_last_name")
+	customer_email = file_form_data[0].get("customer_email")	
+
+	html_content = render_to_string(html_email_filename, {'customer_id': customer_id,'customer_title': customer_title,'customer_first_name': customer_first_name,'customer_last_name': customer_last_name,'customer_email': customer_email })
+	
+	# Add the comms name to the Email subject line
+	mail_subject = 'Your Heat - ' + comms_name
+
+	if settings.YH_TEST_EMAIL:
+			email = EmailMessage(mail_subject, html_content, 'info@yourheat.co.uk' , [customer_email])
+			email.content_subtype = "html"  # Main content is now text/html
+			email.send()
+	else:	
+		send_email_using_SendGrid('info@yourheat.co.uk', customer_email, mail_subject, html_content )
+
+	#print(stop)	
+
+	if settings.YH_SS_INTEGRATION:		# Update Comments
+		ss_add_comments(
+		settings.YH_SS_ACCESS_TOKEN,
+		settings.YH_SS_SHEET_NAME,
+		'Customer ID',
+		customer_id,
+		[comms_name + " email sent."]
+	)	
+
+	return HttpResponseRedirect('/ConfirmationPage/Recommend A Friend Confirmation/Recommend a Friend Email/The Email has been sent to the customer/HubHome')
+
+@login_required
+def confirmation_page(request, header, popup_title, popup_message, next_page):
+	''' Function to display a standard confirmation page with parameters '''
+
+	return render(request, 'yourheat/pages/confirmation_page.html', {'header': header, 'popup_title': popup_title, 'popup_message': popup_message, 'next_page': next_page })	
+

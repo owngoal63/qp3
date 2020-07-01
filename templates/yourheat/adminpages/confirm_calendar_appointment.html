@@ -1,0 +1,26 @@
+{% extends "yourheat/adminpages/base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h4>Calendar Appointment Created</h4>
+    <br>
+    <!-- <h4><b>You should now close this window/tab</b></h4> -->
+
+    {% if comms_name == 'Survey Booked Comms' %}
+        <a class="btn boilerbtn btn-warning" href="{% url 'ListCustomersForComms' comms_name customer_id  %}">Email Survey Booked Comms to Customer</a>
+    {% endif %}
+    
+    {% if comms_name == 'Installation Notification Comms' %}
+        <a class="btn boilerbtn btn-warning" href="{% url 'ListCustomersForComms' comms_name customer_id  %}">Email Installation Notification Comms to Customer</a>
+    {% endif %}
+    
+
+</div>
+
+<script>
+    all_good_no_redirect("Calendar Appointment", "The appointment has been created in the calendar.")
+</script>
+
+{% endblock %}

@@ -6,6 +6,7 @@ from import_export.admin import ImportExportModelAdmin
 admin.site.register(Profile)
 admin.site.register(OptionalExtra)
 admin.site.register(CustomerComm)
+admin.site.register(Document)
 
 class ProductPriceAdmin(ImportExportModelAdmin):
     #resource_class = ProductPriceResource
@@ -21,10 +22,10 @@ class ProductComponentAdmin(ImportExportModelAdmin):
 
 admin.site.register(ProductComponent, ProductComponentAdmin)
 
-class DocumntAdmin(ImportExportModelAdmin):
-    pass
+#class DocumentAdmin(ImportExportModelAdmin):
+#    pass
 
-admin.site.register(Document, DocumntAdmin)
+#admin.site.register(Document, DocumentAdmin)
 
 #class ProductPriceAdmin(admin.ModelAdmin):
 

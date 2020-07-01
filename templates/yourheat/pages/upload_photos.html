@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+
+<h2>Photo Transfer to Smartsheet</h2>
+
+<br>
+
+<form method="post" enctype="multipart/form-data"> {% csrf_token %}
+
+    <div class = "row">
+        <div class = "col-6">
+            <div class="form-group">
+                {{ form.smartsheet_id.label}} *<br>
+                {{ form.smartsheet_id }}
+            </div>
+        </div>
+    </div>
+    <div class = "row">
+        <div class = "col-6">
+            Photos required:<br>
+            <ul>
+                <li>Facing boiler (from 2m)</li>
+                <li>Pipework below boiler</li>
+                <li>Pipework above boiler</li>
+                <li>Flue termination (outside)</li>
+                <li>Condense termination point</li>
+                <li>Gas meter</li>
+                <li>Airing Cupboard (if applicable)</li>
+                <li>All Controls</li>
+                <li>Useful images</li>
+            </ul>
+        </div>
+    </div>
+    <div class = "row">
+        <div class = "col-5">
+            <input class="btn boilerbtn btn-primary" type="file" name="files" multiple/>
+        </div>
+        
+        <div class = "col-4">
+            <button class="btn boilerbtn btn-warning" type="submit">Upload Photos to Smartsheet</button>
+        </div>
+        <div class = "col-3">
+            <a class="btn btn-secondary" href="/HubHome/">Cancel</a>
+        </div>
+    </div>
+</form>
+
+</div>
+{% endblock %}

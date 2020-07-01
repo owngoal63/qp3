@@ -1,0 +1,117 @@
+{% extends "yourheat/adminpages/base.html" %}
+{% load quotepad_extras %}
+
+{% block content %}
+
+<div class = "container-fluid component-details-container">
+
+<h2>{{ report_name }}</h2>
+{% if data_source_is_report %}
+    <h4>Customer Status Criteria: {{comms_data.0.customer_status}}</h4>
+{% endif %}    
+<hr>
+
+<div class = "row component-row">
+    <div class = "col-1">
+    <h7>Cust ID</h7>
+    </div>
+    <div class = "col-2">
+    <h7>Name</h7>
+    </div>
+    <div class = "col-2">
+    <h7>Email</h7>
+    </div>
+    <div class = "col-1">
+    <h7>Survey Date</h7>
+    </div>
+    <div class = "col-1">
+    <h7>Install Date</h7>
+    </div>
+    <div class = "col-3">
+        <h7>Surveyor / Engineer</h7>
+    </div>
+    <div class = "col-2">
+        <h7>Brand</h7>
+    </div>
+</div>
+
+{% for customer_comms in comms_data %}
+
+<div class = "row">
+    <div class = "col-1">
+        <h7>
+            {% if customer_comms.already_sent %}<del>{% endif %}
+            {{ customer_comms.smartsheet_id }}</h7>
+            {% if customer_comms.already_sent %}</del>{% endif %}
+    </div>
+    <div class = "col-2">
+    <h7>
+        {% if customer_comms.already_sent %}<del>{% endif %}
+        {{ customer_comms.customer_title }} {{ customer_comms.customer_first_name }} {{ customer_comms.customer_last_name }}
+        {% if customer_comms.already_sent %}</del>{% endif %}
+    </h7>
+    </div>
+    <div class = "col-2">
+        {% if customer_comms.already_sent %}<del>{% endif %}
+        <h7>{{ customer_comms.customer_email|truncatechars:25 }}</h7>
+        {% if customer_comms.already_sent %}</del>{% endif %}
+    </div>
+    <div class = "col-1">
+        {% if customer_comms.already_sent %}<del>{% endif %}
+        <h7>{{ customer_comms.survey_date }}</h7>
+        {% if customer_comms.already_sent %}</del>{% endif %}
+    </div>
+    <div class = "col-1">
+        {% if customer_comms.already_sent %}<del>{% endif %}
+        <h7>{{ customer_comms.installation_date }}</h7>
+        {% if customer_comms.already_sent %}</del>{% endif %}
+    </div>    
+    <div class = "col-3">
+        {% if customer_comms.already_sent %}<del>{% endif %}
+        <h7>{{ customer_comms.surveyor_email|truncatechars:25 }} / {{ customer_comms.engineer_email|truncatechars:25 }}</h7>
+        {% if customer_comms.already_sent %}</del>{% endif %}
+    </div>
+    <div class = "col-2">
+        {% if customer_comms.already_sent %}<del>{% endif %}
+        <h7>{{ customer_comms.brand }}</h7>
+        {% if customer_comms.already_sent %}</del>
+        {% else %}
+        <a class="btn boilerbtn" href="{% url 'GenerateCustomerComms' report_name customer_comms.smartsheet_id  %}"><i class="fas fa-envelope-square"></i></a>
+        {% endif %}
+    </div>
+</div>      <!-- row -->
+        
+        {% empty %}
+        <p>No customer details to send.</p>
+        
+{% endfor %}
+        
+<hr>
+
+<!-- {{% if data_source_is_report %}
+    <p>The above record set has been sourced from the Smartsheet Report: <b>{ report_name }}</b>.</p>
+{{% endif %}    
+<p>Emails will be sent to the customer(s) unless they have already received this communication (marked by <del>strikethrough</del>).<br>
+{{% if data_source_is_report %}
+    Please check that the above details are correct with all information completed and if not, please correct in Smartsheet and re-run the query again.<br>
+{{% else %}    
+    Please check that the above details are correct with all information completed and if not,
+    click the cancel button, correct in Smartsheet and click the Customer Comms link to return to this page.<br>
+{{% endif %} -->
+<br>
+<!-- Once all the data is correct click the <b>Send Email(s)</b> button below.</p>        
+
+
+<div class="row">
+    <div class = "col-12">
+    <a class="btn boilerbtn btn-primary" href="{% url 'ssGenerateCustomerComms_yh' report_name %}">Send Email(s)</a>
+    {{% if data_source_is_report %}
+        <a class="btn boilerbtn btn-warning" href="{{% url 'ssListCustomersForComms_yh' report_name %}">Re-run Smartsheet Data Transfer</a>
+    {{% endif %}    
+    <a class="btn btn-secondary" href="/home/">Cancel</a>
+    </div>
+</div> -->
+
+</div>
+
+{% endblock %}

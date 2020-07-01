@@ -9,9 +9,10 @@
     {% for frecord in frecords %}
 
         <hr>
-        <img src="{{frecord.document.url}}"  height="100" style="border:1px solid grey" ><br>
+        <img src="{{media_url}}{{frecord.document}}"  height="100" style="border:1px solid grey" ><br>
         Description: {{frecord.description}}   | uploaded on: {{frecord.uploaded_at}}<br>
         Image Url: {{frecord.document}}<br>
+        Product: {{ frecord.productprice__model_name }}
         <p>PDF unique ID: <b>frecords.{{forloop.revcounter0}}.document.url</b></p>
 
         {% empty %}

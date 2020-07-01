@@ -5,6 +5,7 @@ from quotepad.models import Document, Profile, ProductPrice, ProductComponent, O
 from django.forms import ModelMultipleChoiceField, ModelChoiceField
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.conf import settings
+import datetime
 
 # For Editing the template
 from django.conf import settings
@@ -865,7 +866,158 @@ HEAT_LOSS_HOUSE_TYPE_DROPDOWN = (
 	(0.04,"Pre 1950"),
 )
 
+# Dropdowns for Survey Apointment Form
 
+LEAD_BOOKER_DROPDOWN = (
+	('','Select One'),
+	('Sarah Dance', 'Sarah Dance'),	
+	('Tom Hewitt', 'Tom Hewitt'),	
+	('Tom Driscoll', 'Tom Driscoll'),	
+	('Grace Barrett', 'Grace Barrett'),	
+	('Anna Bishop-Apsey', 'Anna Bishop-Apsey'),	
+	('Jeremy Tomkinson', 'Jeremy Tomkinson'),	
+)
+
+CUSTOMER_CONFIRMED_DROPDOWN = (
+	('','Select One'),
+	('Yes by phone', 'Yes by phone'),
+	('Yes by email', 'Yes by email'),
+	('Yes by text', 'Yes by text'),
+	('Unable to contact', 'Unable to contact'),	
+)
+
+SURVEY_ATTENDEE_DROPDOWN = (
+	('','Select One'),
+	('Home Owner', 'Home Owner'),
+	('Tenant', 'Tenant'),
+	('Other', 'Other'),	
+)
+
+BRAND_PREFERENCE_DROPDOWN = (
+	('','Select One'),
+	('Open to options','Open to options'),
+	('Worcester Bosch','Worcester Bosch'),
+	('Worcester Bosch 2000','Worcester Bosch 2000'),
+	('Worcester Bosch Lifestyle','Worcester Bosch Lifestyle'),
+	('Vaillant','Vaillant'),
+	('Ideal','Ideal'),
+	('Glow Worm','Glow Worm'),
+	('Baxi','Baxi'),	
+)
+
+CURRENT_BOILER_LOCATION_DROPDOWN = (
+	('','Select One'),
+	('Kitchen','Kitchen'),
+	('Bathroom','Bathroom'),
+	('Bedroom','Bedroom'),
+	('Utility','Utility'),
+	('Airing Cupboard','Airing Cupboard'),
+	('Lounge','Lounge'),
+	('Utility Room','Utility Room'),
+	('WC','WC'),
+	('Pantry','Pantry'),
+	('Basement','Basement'),
+	('Loft','Loft'),
+	('Garage','Garage'),
+	('Outdoor Room','Outdoor Room'),
+	('Other','Other'),
+	('N/A','N/A'),
+)
+
+LOCATION_OF_NEW_BOILER_DROPDOWN = (
+	('','Select One'),
+	('Existing Location','Existing Location'),
+	('Relocate in current room','Relocate in current room'),
+	('Kitchen','Kitchen'),
+	('Bathroom','Bathroom'),
+	('Bedroom','Bedroom'),
+	('Utility','Utility'),
+	('Airing Cupboard','Airing Cupboard'),
+	('Lounge','Lounge'),
+	('Utility Room','Utility Room'),
+	('WC','WC'),
+	('Pantry','Pantry'),
+	('Basement','Basement'),
+	('Loft','Loft'),
+	('Garage','Garage'),
+	('Outdoor Room','Outdoor Room'),
+	('Other','Other'),
+)
+
+PARKING_AND_ACCESS_DROPDOWN = (
+	('','Select One'),
+	('Street', 'Street'),	
+)
+
+BRING_FORWARD_DROPDOWN = (
+	('','Select One'),
+	('No', 'No'),	
+	('Yes', 'Yes'),	
+)
+
+SURVEYOR_DROPDOWN = (
+	('','Select One'),
+	('tom.hewitt@yourheat.co.uk', 'Tom Hewitt'),
+	('ivan.painter@yourheat.co.uk', 'Ivan Painter'),
+	('jeremy.tomkinson@yourheat.co.uk', 'Jeremy Tomkinson'),
+	('lee.hewitt@yourheat.co.uk', 'Lee Hewitt'),
+	('tom.driscoll@yourheat.co.uk', 'Tom Driscoll'),	
+)
+
+ENGINEER_DROPDOWN = (
+	('','Select One'),
+	('dan.flattery@yourheat.co.uk', 'Dan Flattery'),
+	('kevin.harvey@yourheat.co.uk', 'Kevin Harvey'),
+	('jeremy.tomkinson@yourheat.co.uk', 'Jeremy Tomkinson'),
+	('ben.pike@yourheat.co.uk', 'Ben Pike'),
+	('dave.easton@yourheat.co.uk', 'Dave Easton'),	
+)
+
+TIME_OVERRIDE_DROPDOWN = (
+	('No override','No override'),
+	('Anytime', 'Anytime'),
+	('Anytime AM', 'Anytime AM'),
+	('Anytime PM', 'Anytime PM')
+)
+
+''' Dropdowns for QuoteAcceptedForm '''
+SELECTED_OPTION_DROPDOWN = (
+	('A','A'),
+	('B', 'B'),
+)
+
+PAYMENT_METHOD_DROPDOWN = (
+	('Card','Card'),
+	('BACS', 'BACS'),
+	('Finance', 'Finance'),
+)
+
+FINANCE_DROPDOWN = (
+	('Pass','Pass'),
+	('Referred', 'Referred'),
+	('Cash', 'Cash'),
+)
+
+URGENCY_DROPDOWN = (
+	('ASAP','ASAP'),
+	('Within a week', 'Within a week'),
+	('Within a month', 'Within a month'),
+	('Within 3 months', 'Within 3 months'),
+	('Flexible', 'Flexible'),
+)
+
+CURRENT_BOILER_STATUS_DROPDOWN = (
+	('Not working','Not working'),
+	('Intermittent', 'Intermittent'),
+	('Working', 'Working'),
+)
+
+TIME_OVERRIDE_DROPDOWN = (
+	('No override','No override'),
+	('Anytime', 'Anytime'),
+	('Anytime AM', 'Anytime AM'),
+	('Anytime PM', 'Anytime PM')
+)
 
 ''' Section for defining the multiple forms that will be used for the boiler quote (FormWizard library) '''
 
@@ -1339,7 +1491,9 @@ class FormStepOne_yh(forms.Form):
 	customer_email = forms.EmailField()
 	owner_tenant_or_landlord = forms.ChoiceField(choices=OWNER_TENANT_OR_LANDLORD_DROPDOWN)
 	if settings.YH_SS_INTEGRATION:
-		smartsheet_id = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+		#smartsheet_id = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+		smartsheet_id = forms.CharField(max_length=100)
+	
 	
 class FormStepTwo_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
@@ -1545,12 +1699,12 @@ class FormStepSeven_yh(forms.Form):
 	special_part_qty_1 = forms.IntegerField(required=False, validators = [MinValueValidator(0)])
 	special_part_qty_2 = forms.IntegerField(required=False, validators = [MinValueValidator(0)])
 	special_part_qty_3 = forms.IntegerField(required=False, validators = [MinValueValidator(0)])
-	special_part_price_1 = forms.DecimalField(required=False, max_digits=7, decimal_places=2)
-	special_part_price_2 = forms.DecimalField(required=False, max_digits=7, decimal_places=2)
-	special_part_price_3 = forms.DecimalField(required=False, max_digits=7, decimal_places=2)
-	special_part_duration_1 = forms.DecimalField(required=False, max_digits=7, decimal_places=2)
-	special_part_duration_2 = forms.DecimalField(required=False, max_digits=7, decimal_places=2)
-	special_part_duration_3 = forms.DecimalField(required=False, max_digits=7, decimal_places=2)
+	special_part_price_1 = forms.DecimalField(required=False, max_digits=7, decimal_places=2, initial=0)
+	special_part_price_2 = forms.DecimalField(required=False, max_digits=7, decimal_places=2, initial=0)
+	special_part_price_3 = forms.DecimalField(required=False, max_digits=7, decimal_places=2, initial=0)
+	special_part_duration_1 = forms.DecimalField(required=False, max_digits=7, decimal_places=2, initial=0)
+	special_part_duration_2 = forms.DecimalField(required=False, max_digits=7, decimal_places=2, initial=0)
+	special_part_duration_3 = forms.DecimalField(required=False, max_digits=7, decimal_places=2, initial=0)
 	
 class FormStepEight_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
@@ -1794,6 +1948,144 @@ class ssPostSurveyQuestionsForm(forms.Form):
 	why_you_quoted_what_you_quoted = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':5, 'cols':60}))
 	why_customer_did_not_go_ahead_on_day = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':5, 'cols':60}))
 	important_to_customer = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':5, 'cols':60, 'placeholder': 'Useful info, finance, servicing etc'}))
+
+class ssSurveyAppointmentForm(forms.Form):
+	def __init__(self, *args, **kwargs):
+		super(ssSurveyAppointmentForm, self).__init__(*args, **kwargs)
+		for field in self: 
+			field.field.widget.attrs['class'] = 'form-control'
+
+	surveyor = forms.ChoiceField(choices=SURVEYOR_DROPDOWN)
+	#survey_date = forms.DateField(input_formats=settings.DATE_INPUT_FORMATS)
+	survey_date_and_time = forms.DateTimeField(initial=datetime.datetime.now().strftime('%d/%m/%Y %H:00'), input_formats=['%d/%m/%Y %H:%M'])
+	time_override = forms.ChoiceField(required=False, choices=TIME_OVERRIDE_DROPDOWN)
+
+	smartsheet_id = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	customer_title = forms.CharField(max_length=20)		
+	customer_first_name = forms.CharField(max_length=100)
+	customer_last_name = forms.CharField(max_length=100)
+	customer_primary_phone = forms.CharField(max_length=100)
+	#customer_secondary_phone = forms.CharField(max_length=100, required = False)
+	customer_email = forms.EmailField()
+	house_name_or_number = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'size':60}))
+	street_address = forms.CharField(max_length=100)
+	city = forms.CharField(max_length=100)
+	county = forms.CharField(max_length=100, required=False)
+	postcode = forms.CharField(max_length=100)
+	current_boiler_status = forms.CharField(max_length=100)
+	fuel_type = forms.CharField(max_length=100)
+	current_system = forms.CharField(max_length=100)
+	system_wanted = forms.CharField(max_length=100)
+	property_type = forms.CharField(max_length=100)
+	number_of_bedrooms = forms.CharField(max_length=100)
+	number_of_bathrooms = forms.CharField(max_length=100)
+	hot_water_cylinder = forms.CharField(max_length=100)
+	website_premium_package_quote = forms.CharField(max_length=20)
+	website_standard_package_quote = forms.CharField(max_length=20)
+	website_economy_package_quote = forms.CharField(max_length=20)
+	additional_information = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':3, 'cols':60}))
+	#-------- Above fields are populated from Smartsheet - Below by user -------------
+	lead_booker = forms.ChoiceField(choices=LEAD_BOOKER_DROPDOWN)
+	customer_confirmed = forms.ChoiceField(choices=CUSTOMER_CONFIRMED_DROPDOWN)
+	survey_attendee = forms.ChoiceField(choices=SURVEY_ATTENDEE_DROPDOWN, widget=forms.Select(attrs = {'onchange' : "attendee_handler();"}))
+	survey_other_attendee = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={ 'placeholder': 'Details on [Other] if selected above'}))
+	brand_preference = forms.ChoiceField(choices=BRAND_PREFERENCE_DROPDOWN)
+	current_boiler_location = forms.ChoiceField(choices=CURRENT_BOILER_LOCATION_DROPDOWN)
+	location_of_new_boiler = forms.ChoiceField(choices=LOCATION_OF_NEW_BOILER_DROPDOWN)
+	parking_and_access = forms.ChoiceField(choices=PARKING_AND_ACCESS_DROPDOWN)
+	customer_interested_in_bring_forward = forms.ChoiceField(choices=BRING_FORWARD_DROPDOWN)
+
+class ssInstallationAppointmentForm(forms.Form):
+	def __init__(self, *args, **kwargs):
+		super(ssInstallationAppointmentForm, self).__init__(*args, **kwargs)
+		for field in self: 
+			field.field.widget.attrs['class'] = 'form-control'
+
+	engineer = forms.ChoiceField(choices=ENGINEER_DROPDOWN)
+	#installation_date = forms.DateField(input_formats=settings.DATE_INPUT_FORMATS,widget=forms.TextInput(attrs={ 'placeholder': 'DD-MM-YYYY'}))
+	installation_date = forms.DateField(initial=datetime.datetime.now().strftime('%d/%m/%Y'), input_formats=['%d/%m/%Y'])
+	#widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address', 'disabled': 'disabled'})
+	surveyor = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	#installation_date_and_time = forms.DateTimeField(initial=datetime.datetime.now().strftime('%d/%m/%Y %H:00'), input_formats=['%d/%m/%Y %H:%M'])
+	installation_days_required = forms.FloatField()
+	smartsheet_id = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	customer_title = forms.CharField(max_length=20)		
+	customer_first_name = forms.CharField(max_length=100)
+	customer_last_name = forms.CharField(max_length=100)
+	customer_primary_phone = forms.CharField(max_length=100)
+	#customer_secondary_phone = forms.CharField(max_length=100, required = False)
+	customer_email = forms.EmailField()
+	house_name_or_number = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'size':60}))
+	street_address = forms.CharField(max_length=100)
+	city = forms.CharField(max_length=100)
+	county = forms.CharField(max_length=100, required=False)
+	postcode = forms.CharField(max_length=100)
+	#current_boiler_status = forms.CharField(max_length=100)
+	agreed_boiler_option = forms.CharField(max_length=100)
+	boiler_brand = forms.CharField(max_length=100)
+	#fuel_type = forms.CharField(max_length=100)
+	#current_system = forms.CharField(max_length=100)
+	#system_wanted = forms.CharField(max_length=100)
+	#property_type = forms.CharField(max_length=100)
+	#number_of_bedrooms = forms.CharField(max_length=100)
+	#number_of_bathrooms = forms.CharField(max_length=100)
+	#hot_water_cylinder = forms.CharField(max_length=100)
+	#website_premium_package_quote = forms.CharField(max_length=20)
+	#website_standard_package_quote = forms.CharField(max_length=20)
+	#website_economy_package_quote = forms.CharField(max_length=20)
+	additional_information = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':3, 'cols':60}))
+	#-------- Above fields are populated from Smartsheet - Below by user -------------
+	#lead_booker = forms.ChoiceField(choices=LEAD_BOOKER_DROPDOWN)
+	#customer_confirmed = forms.ChoiceField(choices=CUSTOMER_CONFIRMED_DROPDOWN)
+	#survey_attendee = forms.ChoiceField(choices=SURVEY_ATTENDEE_DROPDOWN)
+	#brand_preference = forms.ChoiceField(choices=BRAND_PREFERENCE_DROPDOWN)
+	#current_boiler_location = forms.ChoiceField(choices=CURRENT_BOILER_LOCATION_DROPDOWN)
+	#location_of_new_boiler = forms.ChoiceField(choices=LOCATION_OF_NEW_BOILER_DROPDOWN)
+	#parking_and_access = forms.ChoiceField(choices=PARKING_AND_ACCESS_DROPDOWN)
+	#customer_interested_in_bring_forward = forms.ChoiceField(choices=BRING_FORWARD_DROPDOWN)
+	surveyor_notes	= forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':3, 'cols':60}))
+
+class ssGetPhotosForUploadForm(forms.Form):
+	def __init__(self, *args, **kwargs):
+		super(ssGetPhotosForUploadForm, self).__init__(*args, **kwargs)
+		for field in self: 
+			field.field.widget.attrs['class'] = 'form-control'
+	smartsheet_id = forms.CharField(max_length=100, required=True)
+	#customer_first_name = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	#customer_last_name = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+
+class QuoteAcceptedForm(forms.Form):
+	def __init__(self, *args, **kwargs):
+		super(QuoteAcceptedForm, self).__init__(*args, **kwargs)
+		for field in self: 
+			field.field.widget.attrs['class'] = 'form-control'
+	smartsheet_id = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	customer_first_name = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	customer_last_name = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	postcode = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	selected_option = forms.ChoiceField(choices=SELECTED_OPTION_DROPDOWN)
+	payment_method = forms.ChoiceField(choices=PAYMENT_METHOD_DROPDOWN)
+	finance = forms.ChoiceField(choices=FINANCE_DROPDOWN)
+	urgency = forms.ChoiceField(choices=URGENCY_DROPDOWN)
+	current_boiler_status = forms.ChoiceField(choices=CURRENT_BOILER_STATUS_DROPDOWN)
+	days_required_for_installation = forms.CharField(max_length=20, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	optional_extras = forms.CharField(max_length=2000, required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':5, 'cols':60}))
+	primary_product_choice = forms.CharField(max_length=200, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	alternative_product_choice = forms.CharField(max_length=200, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+
 
 
 

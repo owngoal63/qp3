@@ -1,9 +1,14 @@
 from django.http import HttpResponse
 from django.conf import settings
 
+from pathlib import Path
+import os.path
+
 #Added for Smartsheet API
 import json
 import smartsheet
+from urllib.request import urlretrieve
+#import urllib2
 
 def ss_get_data_from_sheet(access_token, sheet_name, column_names, conditional_field_name, conditional_field_value, file_output):
 
@@ -76,19 +81,35 @@ def ss_get_data_from_sheet(access_token, sheet_name, column_names, conditional_f
 		"Preferred Contact Number": "customer_primary_phone",
 		#"Preferred Contact Number": "customer_secondary_phone",
 		#"Opportunity Lost": "Opportunity Lost",
-		"Surveyor": "Surveyor",
-		"Survey Date": "quotation_date",
+		"Surveyor": "surveyor_email",
+		"Survey Date": "survey_date",
+		"Survey Time": "survey_time",
+		"Surveyor Notes": "surveyor_notes",
 		#"Quotation Date": "quotation_date",
 		"Installation Date":"installation_date",
 		"Engineer Appointed": "engineer_email",
 		"Boiler Manufacturer": "brand",
-		}		
+		"Existing Boiler Status": "current_boiler_status",
+		"Website Fuel Type": "fuel_type",
+		"Existing Boiler": "current_system",
+		"Requested Boiler Type": "system_wanted",
+		"Website Property type": "property_type",
+		"Website Number of Bedrooms": "number_of_bedrooms",
+		"Website Number of Bathrooms": "number_of_bathrooms",
+		"Website Hot Water Cylinder": "hot_water_cylinder",
+		"Website Premium Package": "website_premium_package_quote",
+		"Website Standard Package": "website_standard_package_quote",
+		"Website Economy Package": "website_economy_package_quote",
+		"Lead Summary Notes": "additional_information",
+		"Agreed Boiler Option": "agreed_boiler_option",
+		"Option A / Install Days Required": "installation_days_required"
+		}
 
 	# Get the Sheet from Smartsheet - limit it to only the requested columns
 	sheet = ss.Sheets.get_sheet(sheet_id, column_ids=col_ids)
 	# Covert data to a JSON object
 	sheetjson = json.loads(str(sheet))
-	
+
 	# Loop through rows and columns to write data to file
 	#filter_row = smartsheet.models.Row()
 	filter_row = None
@@ -98,6 +119,7 @@ def ss_get_data_from_sheet(access_token, sheet_name, column_names, conditional_f
 			#print(coltransdict.get(str(colMapRev.get(MyCell.get("columnId")))), str(MyCell.get("value")))
 			if colMapRev.get(MyCell.get("columnId")) == conditional_field_name and MyCell.get("value") == conditional_field_value:
 				filter_row = MyRow
+				filter_row_id = filter_row.get("id")
 				row_continue = False
 				break
 		if not row_continue:
@@ -115,14 +137,44 @@ def ss_get_data_from_sheet(access_token, sheet_name, column_names, conditional_f
 	# Loop through columns in the filtered row and write dictionary to file
 	file.write("{")
 	for index, MyCell in enumerate(filter_row["cells"]):
-		file.write('"' + coltransdict.get(str(colMapRev.get(MyCell.get("columnId")))) + '": "' + str(MyCell.get("value")) + '"')
+		file.write('"' + coltransdict.get(str(colMapRev.get(MyCell.get("columnId")))) + '": "' + str(MyCell.get("value")).replace('\n', ' ') + '"')
+		#print(str(MyCell.get("value")).replace('\n', ' ') + "-----")
 		if index < len(filter_row["cells"]) - 1:		# Print comma delimiter for all but last element
 				file.write(', ')
-	file.write("}\n")	
+	file.write("}\n")
 	file.flush()
 	file.close
 
-	print("Smartsheet extract data done")			
+	# Get File attachment
+	response = ss.Attachments.list_row_attachments(
+  			sheet_id,       	# sheet_id 
+  			filter_row_id,       # row_id 
+  			include_all=True
+			  )
+	attachments = response.data
+	attachmentsjson = json.loads(str(response))
+	
+	if attachmentsjson.get("totalCount") > 0:		#Execute only if there is an attachment on the record 
+		for attachment in attachmentsjson["data"]:
+
+			attachment_obj = ss.Attachments.get_attachment(
+				sheet_id,       # sheet_id
+				attachment.get("id"))       # attachment_id
+			attachmentjson = json.loads(str(attachment_obj))
+			#print("attachmentx",attachment_obj)
+			#print(attachmentjson.get("url"))
+			#print(attachmentjson.get("name"))
+
+			# Write the smartsheet PDF attachment to an 
+			if conditional_field_name == 'Customer ID' and attachmentjson.get("name") == 'Quote - Office use only.pdf':
+				myurl = attachmentjson.get("url")
+				data_filename = Path(settings.BASE_DIR + "/static/yourheat/quotes_for_installs/{}.pdf".format(conditional_field_value))
+				#http://127.0.0.1:8000/static/yourheat/quotes_for_installs/YH-55.pdf
+				urlretrieve(myurl, data_filename)
+	else:
+		print("No Attachment on this record")			
+
+	print("Smartsheet extract data done")
 
 	return
 
@@ -192,13 +244,14 @@ def ss_get_data_from_report(access_token, sheet_name, report_name, file_output):
 		"Preferred Contact Number": "customer_primary_phone",
 		#"Preferred Contact Number": "customer_secondary_phone",
 		#"Opportunity Lost": "Opportunity Lost",
-		"Surveyor": "Surveyor",
-		"Survey Date": "quotation_date",
+		"Surveyor": "surveyor_email",
+		"Survey Date": "survey_date",
+		"Survey Time": "survey_time",
 		#"Quotation Date": "quotation_date",
 		"Installation Date":"installation_date",
 		"Engineer Appointed": "engineer_email",
 		"Boiler Manufacturer": "brand",
-		}		
+		}
 
 
 	# Get all the reports for the sheet
@@ -207,7 +260,7 @@ def ss_get_data_from_report(access_token, sheet_name, report_name, file_output):
 
 	reportMap = {}
 	reportMapRev = {}
-	
+
 	# Create two reference dictionaries that will be useful in the subsequent code
 	# reportMap {report-name: report-id } and reportMapRev { report-id: report-name }
 	for rep in reports:
@@ -235,7 +288,7 @@ def ss_get_data_from_report(access_token, sheet_name, report_name, file_output):
 			file.write('"' + coltransdict.get(str(colMapRev.get(MyCell.get("columnId")))) + '": "' + str(MyCell.get("value")) + '"')
 			if index < len(MyRow["cells"]) - 1:		# Print comma delimiter for all but last element
 				file.write(', ')
-		file.write("}\n")	
+		file.write("}\n")
 	file.flush()
 	file.close
 	print("Smartsheet extract data done")
@@ -342,7 +395,7 @@ def ss_append_data(access_token, sheet_name, append_data):
 				'column_id': colMap.get(key),
 				'value': data_element[key]
 			})
-		
+
 	# Add rows to sheet
 	response = ss.Sheets.add_rows(
 		sheet_id,       # sheet_id
@@ -350,7 +403,7 @@ def ss_append_data(access_token, sheet_name, append_data):
 
 	return
 
-def ss_attach_pdf(access_token, sheet_name, conditional_field_name, conditional_field_value, attachFilename):
+def ss_attach_pdf(access_token, sheet_name, conditional_field_name, conditional_field_value, attachFilename, attachFilename2 = None):
 
 	if settings.YH_SS_PRODUCTION_SITE:
 		# Initialize client proxy.server:3128 and provide access token
@@ -391,12 +444,19 @@ def ss_attach_pdf(access_token, sheet_name, conditional_field_name, conditional_
 				updated_attachment = ss.Attachments.attach_file_to_row(
   					sheet_id,       # sheet_id
   					MyRow["id"],       # row_id
-  					('Customer Quote.pdf', 
-					open(attachFilename, 'rb'), 
+  					('Quote - Office use only.pdf',
+					open(attachFilename, 'rb'),
 					'application/pdf')
 				)
-
-	return			
+				if attachFilename2:		# Optional Attach second file if provided as parameter
+					updated_attachment = ss.Attachments.attach_file_to_row(
+  						sheet_id,       # sheet_id
+  						MyRow["id"],       # row_id
+  						('Quote - Customer copy.pdf',
+						open(attachFilename2, 'rb'),
+						'application/pdf')
+					)
+	return
 
 
 def ss_add_comments(access_token, sheet_name, conditional_field_name, conditional_field_value, comment_data_list):
@@ -455,8 +515,8 @@ def ss_add_comments(access_token, sheet_name, conditional_field_name, conditiona
 	for comment_data in comment_data_list:
 		#Create a new comment on the row
 		response = ss.Discussions.create_discussion_on_row(
-			sheet_id,          
-			filter_row_id,       
+			sheet_id,
+			filter_row_id,
 			smartsheet.models.Discussion({
 				'comment': smartsheet.models.Comment({
 				'text': comment_data
@@ -469,7 +529,7 @@ def ss_add_comments(access_token, sheet_name, conditional_field_name, conditiona
   	# 	sheet_id,
   	# 	filter_row_id,
   	# 	include_all=True)
-	# discussionjson = json.loads(str(row_discussions))	  
+	# discussionjson = json.loads(str(row_discussions))
 	# discussions = row_discussions.data
 
 	# for discussion in discussionjson["data"]:
@@ -481,7 +541,7 @@ def ss_add_comments(access_token, sheet_name, conditional_field_name, conditiona
 	# print("discussion id", discussion_id)
 
 # 	response = ss.Discussions.add_comment_to_discussion(
-#   		sheet_id,       
+#   		sheet_id,
 #   		discussion_id,
 #   		smartsheet.models.Comment({'text': comment_data })
 # )
@@ -489,3 +549,56 @@ def ss_add_comments(access_token, sheet_name, conditional_field_name, conditiona
 	#print(stop)
 
 	return
+
+def ss_attach_list_of_image_files(access_token, sheet_name, conditional_field_name, conditional_field_value, attachList):
+
+	if settings.YH_SS_PRODUCTION_SITE:
+		# Initialize client proxy.server:3128 and provide access token
+		proxies = {'https': 'https://proxy.server:3128'}
+		ss = smartsheet.Smartsheet(proxies=proxies, access_token=access_token)
+	else:	# just provide access token
+		# Instantiate smartsheet and specify access token value.
+		ss = smartsheet.Smartsheet(access_token)
+
+	# Get the id for the Sheet name
+	search_results = ss.Search.search(sheet_name).results
+	sheet_id = next(result.object_id for result in search_results if result.object_type == 'sheet')
+
+	# Get all the columns for the sheet
+	all_columns = ss.Sheets.get_columns(sheet_id, include_all=True)
+	columns = all_columns.data
+
+	# Create two reference dictionaries that will be useful in the subsequent code
+	# colMap {column-name: column-id } and colMapRev { column-id: column-name }
+	colMap = {}
+	colMapRev = {}
+	for col in columns:
+		colMap[col.title] = col.id
+		colMapRev[col.id] = col.title
+
+	# Create an array of ColumnIds to limit the returned dataset
+	col_ids = []
+	col_ids.append(colMap.get(conditional_field_name))
+
+	# Get the Sheet Data and convert to json
+	MySheet = ss.Sheets.get_sheet(sheet_id, column_ids=col_ids)
+	MySheetjson = json.loads(str(MySheet))
+
+	for MyRow in MySheetjson["rows"]:
+		for MyCell in MyRow["cells"]:
+			if colMapRev.get(MyCell.get("columnId")) == conditional_field_name and MyCell.get("value") == conditional_field_value:
+				#print("found it", MyRow["id"])
+				for attach_file in attachList:
+					if Path(attach_file).suffix == '.png':
+						mime_type = 'image/png'
+					else:
+						mime_type = 'image/jpeg'
+
+					updated_attachment = ss.Attachments.attach_file_to_row(
+						sheet_id,       # sheet_id
+						MyRow["id"],       # row_id
+						(os.path.basename(attach_file),
+						open(attach_file, 'rb'),
+						mime_type)
+					)
+	return	

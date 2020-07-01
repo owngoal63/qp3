@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h4>Quote Accepted Details</h4>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.smartsheet_id.label}}</label>
+                    {{ form.smartsheet_id }}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.postcode.label}}</label>
+                    {{ form.postcode}}
+                </div>
+            </div>
+        </div>
+
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.customer_first_name.label}}</label>
+                    {{ form.customer_first_name }}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.customer_last_name.label}}</label>
+                    {{ form.customer_last_name}}
+                </div>
+            </div>
+        </div>
+
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.primary_product_choice.label}} - Option: A</label>
+                    {{ form.primary_product_choice }}
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.alternative_product_choice.label}} - Option: B</label>
+                    {{ form.alternative_product_choice }}
+                </div>
+            </div>
+        </div>
+<!-- ------------------  -->
+
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.selected_option.label}}</label>{% if form.selected_option.field.required %} *{% endif %}
+                    {{form.product_choices}}{{ form.selected_option }}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.payment_method.label}}</label>{% if form.payment_method.field.required %} *{% endif %}
+                    {{ form.payment_method }}
+                </div>
+            </div>
+        </div>
+
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.finance.label}}</label>{% if form.finance.field.required %} *{% endif %}
+                    {{ form.finance }}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.urgency.label}}</label>{% if form.urgency.field.required %} *{% endif %}
+                    {{ form.urgency }}
+                   
+                </div>
+            </div>
+        </div>
+
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.current_boiler_status.label}}</label>{% if form.current_boiler_status.field.required %} *{% endif %}
+                    {{ form.current_boiler_status }}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+              
+            </div>
+        </div>
+
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.days_required_for_installation.label}}</label>
+                    {{ form.days_required_for_installation }}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.optional_extras.label}}</label>
+                    {{ form.optional_extras }}
+                   
+                </div>
+            </div>
+        </div>
+
+        <button class="btn boilerbtn btn-warning" type="submit">Email Quote Accepted Details</button>
+
+        <a href="{% url 'HubHome' %}" class="btn btn-secondary">Cancel</a>
+
+    </form>
+    <br>
+</div>
+{% endblock content %}

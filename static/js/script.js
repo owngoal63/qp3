@@ -4,6 +4,17 @@ function all_good_no_redirect(headertext,maintext) {
     return Swal.fire(headertext, maintext, "success")
 }
 
+function all_good_close_window(headertext, maintext) {
+    Swal.fire({
+        title: headertext,
+        text: maintext,
+        confirmButtonText: 'OK'
+      }).then((result) => {
+          console.log("close")
+          window.close();
+      })
+}
+
 function not_all_good_no_redirect(headertext,maintext) {
     return Swal.fire(headertext, maintext, "error")
 }
@@ -23,6 +34,20 @@ function not_all_good(headertext, maintext, nexturl) {
         text: maintext,
         type: "error"}).then(function(){
             window.location = base_url + nexturl;
+        });
+}
+
+function are_you_sure(headertext, maintext, nexturl) {
+    return Swal.fire({
+        title: headertext,
+        text: maintext,
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        type: "warning"}).then((result) =>
+        {
+            if(result.value) {
+            window.location = base_url + nexturl;
+            }
         });
 }
 

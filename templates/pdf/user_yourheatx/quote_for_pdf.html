@@ -13,12 +13,11 @@
     <table id ="header">
         <tr>
             <td class="col1"><img class="img--logo" src="{{frecords.0.document.url}}"></td>
-            <!-- <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td> -->
-            
-            <td class="col2"><img class="img--worcester-bosch" src="{{frecords.5.document.url}}">&nbsp; &nbsp;</td>
-            <td class="col3"><img class="img--bosch"  src="{{frecords.6.document.url}}">&nbsp; &nbsp;</td>
-            <td class="col4"><img class="img--gassafe"  src="{{frecords.7.document.url}}">&nbsp;
-            <td class="col5"><div class="gas-safe-number">Gas Safe Number<br>570636</div></td>
+            <td class="col2"><img class="img--oftec" src="{{frecords.2.document.url}}"></td>            
+            <td class="col3"><img class="img--worcester-bosch" src="{{frecords.5.document.url}}"></td>
+            <td class="col4"><img class="img--bosch"  src="{{frecords.6.document.url}}"></td>
+            <td class="col5"><img class="img--gassafe"  src="{{frecords.7.document.url}}">&nbsp;
+            <td class="col6"><div class="gas-safe-number">Gas Safe Number<br>570636</div></td>
         </tr>
     </table>
     <br>
@@ -1278,16 +1277,16 @@
 
         {% endfor %}
         </table>
+        <!-- End of Page -->
+       
+        <div class="break"></div>
+       
+        <!-- New Page -->
+       
+        <div class="page-start"><br><br><br><br><br></div>
     {% endif %}
 
 
- <!-- End of Page -->
-
- <div class="break"></div>
-
- <!-- New Page -->
-
- <div class="page-start"><br><br><br><br><br></div>
 
     {% if 'Radiator(s) Required' in form_data.7.radiator_specification or 'Thermostatic Radiator Valves Only' in form_data.7.radiator_specification %}
     <table id="bom">
@@ -1398,46 +1397,11 @@
     </table>
     {% endif %}
     
-    <!-- This can now be removed  -->
-    {% if 'Customer to Provide Radiators' in form_data.7.radiator_specification %}
-    <table id="bom">
-        <tr>
-            <th class="col1">Customer Supplied Radiators</th>
-            <th class="col2">Component</th>
-             <th class="col3">Qty</th>
-             <th class="col4">Unit £</th>
-             <th class="col5">Tot £</th>
-             <th class="col6">Cost £</th>
-             <th class="col7">Duration</th>
-        </tr>
-        {% for component_type,outer_value in form_data.15.items %}
-        <tr>
-            <td>{{ component_type }}</td>
-               {% for elem in outer_value %}
-                   {% for comp_name,comp_param in elem.items %}
-                       <td>{{ comp_name }}</td>
-                       {% for param in comp_param %}
-                           <td>{{param}}</td>
-                       {% endfor %}
-                       {% if outer_value|length > 1  %}
-                           </tr>
-                       {% endif %}
-                       
-                       {% endfor %}
-                       {% if forloop.counter != outer_value|length %}
-                       <tr><td>&nbsp;</td>
-                       {% endif %}
+    {% if 'Radiator(s) Required' in form_data.7.radiator_specification or 'Thermostatic Radiator Valves Only' in form_data.7.radiator_specification or 'Towel Rail(s) Required' in form_data.7.radiator_specification%}
+        <div class="break"></div>
 
-               {% endfor %}
-           </tr>   
-       {% endfor %}
-      
-    </table>
+        <div class="page-start"><br><br><br><br></div>
     {% endif %}
-
-    <div class="break"></div>
-
-    <div class="page-start"><br><br><br><br></div>
 
     <!-- Exclusive of VAT Tables  -->
 
@@ -1710,15 +1674,15 @@
 
      {% endfor %}
      </table>
+     <!-- End of Page -->
+     
+     <div class="break"></div>
+     
+     <!-- New Page -->
+     
+     <div class="page-start"><br><br><br><br><br></div>
  {% endif %}
 
-<!-- End of Page -->
-
-<div class="break"></div>
-
-<!-- New Page -->
-
-<div class="page-start"><br><br><br><br><br></div>
 
    {% if 'Radiator(s) Required' in form_data.7.radiator_specification or 'Thermostatic Radiator Valves Only' in form_data.7.radiator_specification %}
    <table id="bom">
@@ -1829,15 +1793,11 @@
    </table>
    {% endif %}
 
+   {% if 'Radiator(s) Required' in form_data.7.radiator_specification or 'Thermostatic Radiator Valves Only' in form_data.7.radiator_specification or 'Towel Rail(s) Required' in form_data.7.radiator_specification%}
+   <div class="break"></div>
 
-    
-     <!-- End of Page -->
-
-     <div class="break"></div>
-
-     <!-- Page - Final Summary Page -->
-   
-     <div class="page-start"><br><br><br><br><br></div>
+   <div class="page-start"><br><br><br><br></div>
+    {% endif %}
     
     <div class="tech-details">
         <table>

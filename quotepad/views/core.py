@@ -236,6 +236,27 @@ def model_form_upload(request):
 def show_uploaded_files(request):
 	''' Function to render the uploaded image files provided by the user  '''
 	frecords = Document.objects.filter(user=request.user.username).order_by('-uploaded_at')
+	#frecordsx = Document.objects.get(user=request.user.username, description = "Greenstar 15i")
+	#frecordsx.productprice
+	#print(frecords.productprice_set.all())
+	#print(frecords.values())
+	#print(request.user.id)
+	#frecords = Document.objects.filter(productprice__user = int(request.user.id)).values('id', 'user','description', 'document', 'uploaded_at','productprice__model_name').order_by('-uploaded_at')
+	#for x in frecords:
+	#	print(x. get("id"))
+	#x = Document.objects.filter(productprice__user = int(request.user.id))
+	#xx = ProductPrice.objects.filter(document__user = int(request.user.id) )
+	#print(xx)
+	#for y in xx:
+	#	print(y.model_name)
+		#yy = y.product_image
+	#	yy = y.document_set.all()
+		#for z in yy:
+		#	print(z)
+	#for y in x:
+		#print("Image",y.get("description"), "Model Name", y.get("productprice__model_name"))
+		#print(y)
+		#print("Image",y.description, "Model Name", y.Document__productprice__model_name)
 	return render(request, 'show_uploaded_files.html', {'frecords': frecords, 'media_url':settings.MEDIA_URL})
 
 @login_required
