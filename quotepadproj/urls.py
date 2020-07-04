@@ -25,10 +25,10 @@ from quotepad.views import generate_quote_from_file, edit_quote_template, list_q
 #from quotepad.views import customer_order
 
 # Imports for Yourheat
-from quotepad.views import BoilerFormWizardView_yh,generate_quote_from_file_yh, quote_ready_yh, quote_emailed_yh
+from quotepad.views import BoilerFormWizardView_yh,generate_quote_from_file_yh
 from quotepad.forms import FormStepOne_yh, FormStepTwo_yh, FormStepThree_yh, FormStepFour_yh, FormStepFive_yh, FormStepSix_yh, FormStepSeven_yh, FormStepEight_yh, FormStepNine_yh, FinanceForm_yh
-from quotepad.views import quote_generated_yh, list_quote_archive_yh, upload_for_reprint_yh, QuoteAccepted
-from quotepad.views import get_smartsheet, ssCustomerSelect, quote_sent_to_Smartsheet_yh, ssPostSurveyQuestions, ss_generate_customer_comms_yh, ss_list_customers_for_comms_yh, emails_sent_to_customers_yh, ss_customer_comms_yh, ssGetPhotosForUpload, photos_sent_to_smartsheet_yh
+from quotepad.views import list_quote_archive_yh, upload_for_reprint_yh, QuoteAccepted
+from quotepad.views import ssCustomerSelect, ssPostSurveyQuestions, ss_customer_comms_yh, ssGetPhotosForUpload
 
 # Imports for Yourheat admin
 from quotepad.views import admin_home, customer_comms, list_customers_for_comms, generate_customer_comms, emails_sent_to_customers, confirm_calendar_appointment, get_survey_appointment, get_installation_appointment
@@ -105,25 +105,25 @@ urlpatterns = [
     path('boilerform_yh/', login_required(BoilerFormWizardView_yh.as_view([FormStepOne_yh,FormStepTwo_yh,FormStepThree_yh, FormStepFour_yh, FormStepFive_yh, FormStepSix_yh, FormStepSeven_yh, FormStepEight_yh, FormStepNine_yh, FinanceForm_yh])), name = 'boilerform_yh'),
     path('generatequotefromfile_yh/<str:outputformat>/<str:quotesource>', generate_quote_from_file_yh, name = 'generate_quote_from_file_yh'),
     #path('financeform/', FinanceFormWizardView_yh.as_view([FinanceForm_yh]), name = 'finance_form'),
-    path('quotegenerated_yh/', quote_generated_yh, name = 'quote_generated_yh'),
+    #path('quotegenerated_yh/', quote_generated_yh, name = 'quote_generated_yh'),
     path('listquotearchive_yh/', list_quote_archive_yh, name = 'listquotearchive_yh'),
     path('uploadforreprint_yh/', upload_for_reprint_yh, name = 'uploadforreprint_yh'),
     path('editcurrentquotedata/', edit_quote_data, name = 'editcurrentquotedata'),
 
-    path('getsmartsheet/', get_smartsheet, name='getsmartsheet'),
+    #path('getsmartsheet/', get_smartsheet, name='getsmartsheet'),
     path('ssCustomerSelect/', login_required(ssCustomerSelect.as_view()), name='ssCustomerSelect'),
-    path('quote_sent_to_Smartsheet_yh/', quote_sent_to_Smartsheet_yh, name = 'quotesenttoSmartsheet_yh'),
-    path('emailsSentToCustomers_yh/', emails_sent_to_customers_yh, name = 'emailsSentToCustomers_yh'),
+    #path('quote_sent_to_Smartsheet_yh/', quote_sent_to_Smartsheet_yh, name = 'quotesenttoSmartsheet_yh'),
+    #path('emailsSentToCustomers_yh/', emails_sent_to_customers_yh, name = 'emailsSentToCustomers_yh'),
     path('ssPostSurveyQuestions/', login_required(ssPostSurveyQuestions.as_view()), name='ssPostSurveyQuestions'),
-    path('ssGenerateCustomerComms_yh/<str:comms_name>/', ss_generate_customer_comms_yh, name = 'ssGenerateCustomerComms_yh'),
-    path('ssGenerateCustomerComms_yh/<str:comms_name>/<str:customer_id>/', ss_generate_customer_comms_yh, name = 'ssGenerateCustomerComms_yh'),
-    path('ssListCustomersForComms_yh/<str:comms_name>/', ss_list_customers_for_comms_yh, name = 'ssListCustomersForComms_yh'),
-    path('ssListCustomersForComms_yh/<str:comms_name>/<str:customer_id>/', ss_list_customers_for_comms_yh, name = 'ssListCustomersForComms_yh'),
+    #path('ssGenerateCustomerComms_yh/<str:comms_name>/', ss_generate_customer_comms_yh, name = 'ssGenerateCustomerComms_yh'),
+    #path('ssGenerateCustomerComms_yh/<str:comms_name>/<str:customer_id>/', ss_generate_customer_comms_yh, name = 'ssGenerateCustomerComms_yh'),
+    #path('ssListCustomersForComms_yh/<str:comms_name>/', ss_list_customers_for_comms_yh, name = 'ssListCustomersForComms_yh'),
+    #path('ssListCustomersForComms_yh/<str:comms_name>/<str:customer_id>/', ss_list_customers_for_comms_yh, name = 'ssListCustomersForComms_yh'),
     path('ssCustomerComms_yh/', ss_customer_comms_yh, name = 'ssCustomerComms_yh'),
-    path('quoteready_yh/', quote_ready_yh, name = 'quote_ready_yh'),
-    path('quoteemailed_yh/', quote_emailed_yh, name = 'quote_emailed_yh'),
+    #path('quoteready_yh/', quote_ready_yh, name = 'quote_ready_yh'),
+    #path('quoteemailed_yh/', quote_emailed_yh, name = 'quote_emailed_yh'),
     path('ssGetPhotosForUpload/', login_required(ssGetPhotosForUpload.as_view()), name='ssGetPhotosForUpload'),
-    path('photosSentToSmartsheet_yh/', photos_sent_to_smartsheet_yh, name = 'photosSentToSmartsheet_yh'),
+    #path('photosSentToSmartsheet_yh/', photos_sent_to_smartsheet_yh, name = 'photosSentToSmartsheet_yh'),
     path('QuoteAccepted/', login_required(QuoteAccepted.as_view()), name='QuoteAccepted'),
 
     # Patterns for Hub

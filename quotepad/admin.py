@@ -29,4 +29,11 @@ admin.site.register(ProductComponent, ProductComponentAdmin)
 
 #class ProductPriceAdmin(admin.ModelAdmin):
 
+class OptionalExtraAdmin(ImportExportModelAdmin):
+    list_display=('user', 'product_name', 'price')
+    search_fields = ('product_name', )
+
+
+admin.site.register(OptionalExtra, OptionalExtraAdmin)
+
 

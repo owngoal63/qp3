@@ -63,44 +63,41 @@ def hub_home(request):
 	#return render(request,'yourheat/pages/hub_home.html')
 	return render(request, 'yourheat/pages/hub_home.html', {'customer_id': customer_id,'customer_title': customer_title,'customer_first_name': customer_first_name,'customer_last_name': customer_last_name,'customer_email': customer_email })
 
-@login_required
-def emails_sent_to_customers_yh(request):
-	''' Function to render the emails sent page '''
-	return render(request,'yourheat/pages/emails_sent_to_customers.html')
+# @login_required
+# def emails_sent_to_customers_yh(request):
+# 	''' Function to render the emails sent page '''
+# 	return render(request,'yourheat/pages/emails_sent_to_customers.html')
 
-@login_required
-def photos_sent_to_smartsheet_yh(request):
-	''' Function to render the photos sent page '''
-	return render(request,'yourheat/pages/photos_sent_to_smartsheet.html')
+# @login_required
+# def photos_sent_to_smartsheet_yh(request):
+# 	''' Function to render the photos sent page '''
+# 	return render(request,'yourheat/pages/photos_sent_to_smartsheet.html')
 
-@login_required
-def quote_sent_to_Smartsheet_yh(request):
-	''' Function to render the quote_sent_to_Smartsheet page '''
-	return render(request,'yourheat/pages/quote_sent_to_Smartsheet.html')
+# @login_required
+# def quote_sent_to_Smartsheet_yh(request):
+# 	''' Function to render the quote_sent_to_Smartsheet page '''
+# 	return render(request,'yourheat/pages/quote_sent_to_Smartsheet.html')
 
 
-@login_required
-def quote_generated_yh(request):
-	''' Function to render the quote_generated page '''
-	request.session['created_quote'] = True
-	created_quote_group = Group.objects.get(name = 'created_quote')
-	request.user.groups.add(created_quote_group)
-	return render(request,'yourheat/pages/quote_generated.html')
+# @login_required
+# def quote_generated_yh(request):
+# 	''' Function to render the quote_generated page '''
+# 	request.session['created_quote'] = True
+# 	created_quote_group = Group.objects.get(name = 'created_quote')
+# 	request.user.groups.add(created_quote_group)
+# 	return render(request,'yourheat/pages/quote_generated.html')
 
-@login_required
-def quote_generated_yh(request):
-	''' Function to render the quote_generated page '''
-	request.session['created_quote'] = True
-	created_quote_group = Group.objects.get(name = 'created_quote')
-	request.user.groups.add(created_quote_group)
-	return render(request,'yourheat/pages/quote_generated.html')
+# @login_required
+# def quote_generated_yh(request):
+# 	''' Function to render the quote_generated page '''
+# 	request.session['created_quote'] = True
+# 	created_quote_group = Group.objects.get(name = 'created_quote')
+# 	request.user.groups.add(created_quote_group)
+# 	return render(request,'yourheat/pages/quote_generated.html')
 
 @login_required
 def list_quote_archive_yh(request):
 	''' Function to render the page required to display previously generated quotes '''
-	#folder = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/".format(request.user.username))
-	#path="C:\\somedirectory"  # insert the path to your directory   
-	# pdf_files =os.listdir(folder)
 	path = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/".format(request.user.username))
 	name_list = os.listdir(path)
 	full_list = [os.path.join(path,i) for i in name_list]
@@ -117,20 +114,6 @@ def pdf_view(request, pdf_file):
 	except FileNotFoundError:
 		raise Http404()
 
-#class FinanceFormWizardView_yh(SessionWizardView):
-	''' Redundant remove when ready'''
-
-#	template_name = "yourheat/orderforms/financeform.html"
-	# def get_template_names(self):
-	# 	print(self.steps.current)
-	# 	if self.steps.current == '1':
-	# 		return "yourheat/orderforms/CustomerProductForm.html"
-
-#	form_list = [FinanceForm_yh]
-
-#	def done(self, form_list, **kwargs):
-	#	return HttpResponseRedirect('/quotegenerated/')
-
 def ss_customer_comms_yh(request):
 	''' Function to display landpage for customer comms'''
 	ss_customer_id = request.GET.get('customerid', None)
@@ -140,120 +123,120 @@ def ss_customer_comms_yh(request):
 	return render(request, 'yourheat/pages/customer_comms_landing_page.html', {'customer_id': ss_customer_id, 'customer_name': ss_customer_name})
 
 
-@login_required	  
-def ss_list_customers_for_comms_yh(request, comms_name, customer_id=None):
-	''' Function to display list of customers for communications based upon Smartsheet data '''
+# @login_required	  
+# def ss_list_customers_for_comms_yh(request, comms_name, customer_id=None):
+# 	''' Function to display list of customers for communications based upon Smartsheet data '''
 
-	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(request.user.username, comms_name))
+# 	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(request.user.username, comms_name))
 
-	if customer_id:		# customer_id has been passed so get individual record from sheet
-		ss_get_data_from_sheet(
-			settings.YH_SS_ACCESS_TOKEN,
-			settings.YH_SS_SHEET_NAME,
-			['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'Installation Date', 'Survey Date',  'Surveyor', 'Engineer Appointed', 'Boiler Manufacturer'],
-			'Customer ID',
-			customer_id,
-			data_filename
-		)
-		data_source_is_report = False		# Boolean to pass to HTML page to determine instructions
-	else:	# customer_id has NOT been passed so get records from predefined SS report
-		ss_get_data_from_report(
-				settings.YH_SS_ACCESS_TOKEN,
-				settings.YH_SS_SHEET_NAME,
-				comms_name,
-				data_filename
-		)
-		data_source_is_report = True		# Boolean to pass to HTML page to determine instructions
+# 	if customer_id:		# customer_id has been passed so get individual record from sheet
+# 		ss_get_data_from_sheet(
+# 			settings.YH_SS_ACCESS_TOKEN,
+# 			settings.YH_SS_SHEET_NAME,
+# 			['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'Installation Date', 'Survey Date',  'Surveyor', 'Engineer Appointed', 'Boiler Manufacturer'],
+# 			'Customer ID',
+# 			customer_id,
+# 			data_filename
+# 		)
+# 		data_source_is_report = False		# Boolean to pass to HTML page to determine instructions
+# 	else:	# customer_id has NOT been passed so get records from predefined SS report
+# 		ss_get_data_from_report(
+# 				settings.YH_SS_ACCESS_TOKEN,
+# 				settings.YH_SS_SHEET_NAME,
+# 				comms_name,
+# 				data_filename
+# 		)
+# 		data_source_is_report = True		# Boolean to pass to HTML page to determine instructions
 
-	# Open the text file with the Smartsheet data 
-	with open(data_filename) as file:
-			comms_data = []
-			for line in file:
-				comms_data.append(eval(line))
+# 	# Open the text file with the Smartsheet data 
+# 	with open(data_filename) as file:
+# 			comms_data = []
+# 			for line in file:
+# 				comms_data.append(eval(line))
 
-	# Check if record has already been sent and add details to dict
-	for index, line in enumerate(comms_data):
-		if CustomerComm.objects.filter(customer_id = line.get('smartsheet_id'), comms_id = comms_name ).exists():
-			comms_data[index]["already_sent"] = True
-		else:
-			comms_data[index]["already_sent"] = False
+# 	# Check if record has already been sent and add details to dict
+# 	for index, line in enumerate(comms_data):
+# 		if CustomerComm.objects.filter(customer_id = line.get('smartsheet_id'), comms_id = comms_name ).exists():
+# 			comms_data[index]["already_sent"] = True
+# 		else:
+# 			comms_data[index]["already_sent"] = False
 
-	#print(comms_data)
-	#print(stop)			
-	return render(request, 'yourheat/pages/list_comms_data.html', {'comms_data': comms_data, 'report_name': comms_name, 'data_source_is_report': data_source_is_report })
+# 	#print(comms_data)
+# 	#print(stop)			
+# 	return render(request, 'yourheat/pages/list_comms_data.html', {'comms_data': comms_data, 'report_name': comms_name, 'data_source_is_report': data_source_is_report })
 
-@login_required	  
-def ss_generate_customer_comms_yh(request, comms_name, customer_id=None):
-	''' Function to generate communication emails to send to customers based upon Smartsheet data '''
+# @login_required	  
+# def ss_generate_customer_comms_yh(request, comms_name, customer_id=None):
+# 	''' Function to generate communication emails to send to customers based upon Smartsheet data '''
 	
-	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(request.user.username, comms_name))
-	html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/{}.html".format(settings.YH_MASTER_PROFILE_USERNAME, comms_name))
+# 	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(request.user.username, comms_name))
+# 	html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/{}.html".format(settings.YH_MASTER_PROFILE_USERNAME, comms_name))
 	
-	if customer_id:		# customer_id has been passed so get individual record from sheet
-		ss_get_data_from_sheet(
-			settings.YH_SS_ACCESS_TOKEN,
-			settings.YH_SS_SHEET_NAME,
-			['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'Installation Date', 'Survey Date', 'Surveyor', 'Engineer Appointed', 'Boiler Manufacturer'],
-			'Customer ID',
-			customer_id,
-			data_filename
-		)
+# 	if customer_id:		# customer_id has been passed so get individual record from sheet
+# 		ss_get_data_from_sheet(
+# 			settings.YH_SS_ACCESS_TOKEN,
+# 			settings.YH_SS_SHEET_NAME,
+# 			['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'Installation Date', 'Survey Date', 'Surveyor', 'Engineer Appointed', 'Boiler Manufacturer'],
+# 			'Customer ID',
+# 			customer_id,
+# 			data_filename
+# 		)
 
-	# Open the text file with the Smartsheet data 
-	with open(data_filename) as file:
-			file_form_data = []
-			for line in file:
-				file_form_data.append(eval(line))
+# 	# Open the text file with the Smartsheet data 
+# 	with open(data_filename) as file:
+# 			file_form_data = []
+# 			for line in file:
+# 				file_form_data.append(eval(line))
 
-	for line in file_form_data:
-		#print(line.get('customer_title'))
+# 	for line in file_form_data:
+# 		#print(line.get('customer_title'))
 
-		if CustomerComm.objects.filter(customer_id = line.get('smartsheet_id'), comms_id = comms_name ).exists():
-			print(line.get('smartsheet_id'), comms_name, ' already exists - do not resend.' )
-		else:	
-			# Add record and send
-			if settings.YH_SS_TRACK_COMMS_SENT:
-				CustComm = CustomerComm(user = request.user ,customer_id = line.get('smartsheet_id') , comms_id = comms_name )
-				CustComm.save()
+# 		if CustomerComm.objects.filter(customer_id = line.get('smartsheet_id'), comms_id = comms_name ).exists():
+# 			print(line.get('smartsheet_id'), comms_name, ' already exists - do not resend.' )
+# 		else:	
+# 			# Add record and send
+# 			if settings.YH_SS_TRACK_COMMS_SENT:
+# 				CustComm = CustomerComm(user = request.user ,customer_id = line.get('smartsheet_id') , comms_id = comms_name )
+# 				CustComm.save()
 
-			# Add the image logo url to the dictionary
-			line["image_logo"] = settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png"
-			# Add the dictionary entry engineer_name  from the engineer_email address with some string manipulation
-			at_pos = line["engineer_email"].find('@')
-			line["engineer_name"] = ((line["engineer_email"].replace('.',' '))[0:at_pos]).title()
-			# Add the dictionary entry engineer_name  from the surveyor_email address with some string manipulation
-			at_pos = line["surveyor_email"].find('@')
-			line["surveyor_name"] = ((line["surveyor_email"].replace('.',' '))[0:at_pos]).title()
-			# Add the dictionary entry engineer_first_name
-			at_pos = line["engineer_name"].find(' ')
-			line["engineer_first_name"] = (line["engineer_name"])[0:at_pos]
-			# Change the installation_date format
-			if line["installation_date"] != "None":
-				line["installation_date"] = datetime.datetime.strptime(line["installation_date"], "%Y-%m-%d")
-			if line["survey_date"] != "None":
-				line["survey_date"] = datetime.datetime.strptime(line["survey_date"], "%Y-%m-%d")
-			html_content = render_to_string(html_email_filename, line)
-			# Drop the Comms from the comms_name for the Email subject line
-			at_pos = comms_name.find('Comms')
-			mail_subject = 'Your Heat - ' + comms_name[0:at_pos]
+# 			# Add the image logo url to the dictionary
+# 			line["image_logo"] = settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png"
+# 			# Add the dictionary entry engineer_name  from the engineer_email address with some string manipulation
+# 			at_pos = line["engineer_email"].find('@')
+# 			line["engineer_name"] = ((line["engineer_email"].replace('.',' '))[0:at_pos]).title()
+# 			# Add the dictionary entry engineer_name  from the surveyor_email address with some string manipulation
+# 			at_pos = line["surveyor_email"].find('@')
+# 			line["surveyor_name"] = ((line["surveyor_email"].replace('.',' '))[0:at_pos]).title()
+# 			# Add the dictionary entry engineer_first_name
+# 			at_pos = line["engineer_name"].find(' ')
+# 			line["engineer_first_name"] = (line["engineer_name"])[0:at_pos]
+# 			# Change the installation_date format
+# 			if line["installation_date"] != "None":
+# 				line["installation_date"] = datetime.datetime.strptime(line["installation_date"], "%Y-%m-%d")
+# 			if line["survey_date"] != "None":
+# 				line["survey_date"] = datetime.datetime.strptime(line["survey_date"], "%Y-%m-%d")
+# 			html_content = render_to_string(html_email_filename, line)
+# 			# Drop the Comms from the comms_name for the Email subject line
+# 			at_pos = comms_name.find('Comms')
+# 			mail_subject = 'Your Heat - ' + comms_name[0:at_pos]
 
-			if settings.YH_TEST_EMAIL:
-					email = EmailMessage(mail_subject, html_content, 'info@yourheat.co.uk' , [line.get('customer_email')])
-					email.content_subtype = "html"  # Main content is now text/html
-					email.send()
-			else:	
-				send_email_using_SendGrid('info@yourheat.co.uk', line.get('customer_email'), mail_subject, html_content )
+# 			if settings.YH_TEST_EMAIL:
+# 					email = EmailMessage(mail_subject, html_content, 'info@yourheat.co.uk' , [line.get('customer_email')])
+# 					email.content_subtype = "html"  # Main content is now text/html
+# 					email.send()
+# 			else:	
+# 				send_email_using_SendGrid('info@yourheat.co.uk', line.get('customer_email'), mail_subject, html_content )
 
-			if settings.YH_SS_INTEGRATION:		# Update Comments
-				ss_add_comments(
-				settings.YH_SS_ACCESS_TOKEN,
-				settings.YH_SS_SHEET_NAME,
-				'Customer ID',
-				line.get('smartsheet_id'),
-				[comms_name + " email sent."]
-			)
+# 			if settings.YH_SS_INTEGRATION:		# Update Comments
+# 				ss_add_comments(
+# 				settings.YH_SS_ACCESS_TOKEN,
+# 				settings.YH_SS_SHEET_NAME,
+# 				'Customer ID',
+# 				line.get('smartsheet_id'),
+# 				[comms_name + " email sent."]
+# 			)
 
-	return HttpResponseRedirect('/emailsSentToCustomers_yh/')
+# 	return HttpResponseRedirect('/emailsSentToCustomers_yh/')
 	
 
 class ssPostSurveyQuestions(FormView):
@@ -379,30 +362,14 @@ class QuoteAccepted(FormView):
 		else:
 			send_email_using_SendGrid('info@yourheat.co.uk', emailnames, mail_subject, msg )
 
-
-
-
-		# Build the update dictionary
-		# update_data = []
-		# ss_customer_id = form.cleaned_data['smartsheet_id']
-
-		# Create list of customer comments
-		# customer_comms = []
-		# customer_comms.append("Reason for quote: " + form.cleaned_data['reason_for_quote'])
-		# customer_comms.append("Why you quoted what you quoted: " + form.cleaned_data['why_you_quoted_what_you_quoted'])
-		# customer_comms.append("Why customer did not go ahead on day: " + form.cleaned_data['why_customer_did_not_go_ahead_on_day'])
-		# customer_comms.append("Important to customer: " + form.cleaned_data['important_to_customer'])
-
-		#update_data.append({"Customer Comms": customer_comms })
-
-		# if settings.YH_SS_INTEGRATION:		# Update Comments
-		# 		ss_add_comments(
-		# 		settings.YH_SS_ACCESS_TOKEN,
-		# 		settings.YH_SS_SHEET_NAME,
-		# 		'Customer ID',
-		# 		form.cleaned_data["smartsheet_id"],
-		# 		customer_comms
-		# 	)
+		if settings.YH_SS_INTEGRATION:		# Update Comments
+				ss_add_comments(
+				settings.YH_SS_ACCESS_TOKEN,
+				settings.YH_SS_SHEET_NAME,
+				'Customer ID',
+				form.cleaned_data["smartsheet_id"],
+				['Customer has accepted quotation during survey']
+			)
 
 		self.request.session["accept_quotation"] = True	
 		#return HttpResponseRedirect('/quote_sent_to_Smartsheet_yh/')
@@ -501,8 +468,8 @@ class BoilerFormWizardView_yh(SessionWizardView):
 		else:
 			return "yourheat/orderforms/boilerform.html"
 
-	# Below method is to pass the logged in user to the
-	# appropriate form to filter the drop down product listing
+	# Below method is to pass parameters to the
+	# appropriate form to filter the drop down listings and functionality
 	def get_form_kwargs(self, step):
 		#print(step)
 		if step == '5':
@@ -1364,18 +1331,18 @@ class BoilerFormWizardView_yh(SessionWizardView):
 
 		#print(a_break)
 		# Set all session variables for Hub screen buttons ( Reset state )
-		request.session["create_quotation"] = True
-		request.session["view_current_quote"] = False
-		request.session["email_to_customer"] = False
-		request.session["send_to_smartsheet"] = False
-		request.session["accept_quotation"] = False
-		request.session["attach_photos"] = False
-		request.session["office_handover"] = False
-		request.session["recommend_a_friend"] = False
-		request.session["view_plans"] = False
-		request.session["finance_demo"] = False
-		request.session["link_to_hitachi"] = False
-		request.session["previous_quotes"] = False
+		self.request.session["create_quotation"] = True
+		self.request.session["view_current_quote"] = False
+		self.request.session["email_to_customer"] = False
+		self.request.session["send_to_smartsheet"] = False
+		self.request.session["accept_quotation"] = False
+		self.request.session["attach_photos"] = False
+		self.request.session["office_handover"] = False
+		self.request.session["recommend_a_friend"] = False
+		self.request.session["view_plans"] = False
+		self.request.session["finance_demo"] = False
+		self.request.session["link_to_hitachi"] = False
+		self.request.session["previous_quotes"] = False
 
 		#return HttpResponseRedirect('/quotegenerated_yh/')
 		return HttpResponseRedirect('/ConfirmationPage/Quote Generation Confirmation/Customer Quote/The Customer quote has been generated and is ready for further actions./HubHome')
@@ -1786,21 +1753,21 @@ def upload_for_reprint_yh(request):
 
 	return render(request, 'yourheat/pages/upload_for_reprint.html')
 
-@login_required
-def quote_ready_yh(request):
-	''' Function to render the quote_ready page '''
-	# request.session['created_quote'] = True
-	# created_quote_group = Group.objects.get(name = 'created_quote')
-	# request.user.groups.add(created_quote_group)
-	return render(request,'yourheat/pages/quote_ready.html')
+# @login_required
+# def quote_ready_yh(request):
+# 	''' Function to render the quote_ready page '''
+# 	# request.session['created_quote'] = True
+# 	# created_quote_group = Group.objects.get(name = 'created_quote')
+# 	# request.user.groups.add(created_quote_group)
+# 	return render(request,'yourheat/pages/quote_ready.html')
 
-@login_required
-def quote_emailed_yh(request):
-	''' Function to render the quote_emailed page '''
-	return render(request,'yourheat/pages/quote_emailed.html')	
+# @login_required
+# def quote_emailed_yh(request):
+# 	''' Function to render the quote_emailed page '''
+# 	return render(request,'yourheat/pages/quote_emailed.html')	
 
-def get_smartsheet(request):
-	''' dummy function to test Smartsheet Integrations '''
+# def get_smartsheet(request):
+# 	''' dummy function to test Smartsheet Integrations '''
 
 	# ss_add_comments(
 	# 	settings.YH_SS_ACCESS_TOKEN,
@@ -1855,7 +1822,7 @@ def get_smartsheet(request):
 	#	[{'First Name':'Bart'},{'Surname':'Simpson'},{'Address Line 1':'Springfield'}],	
 	#)
 
-	return HttpResponseRedirect('/home/')
+	# return HttpResponseRedirect('/home/')
 
 class ssGetPhotosForUpload(FormView):
 

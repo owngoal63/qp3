@@ -1,4 +1,4 @@
-{% extends "yourheat/pages/base.html" %}
+{% extends "base.html" %}
 {% load static %}
 {% load quotepad_extras %}
 
@@ -110,7 +110,7 @@ btn.addEventListener('click', event => {
      }
      if (event.target.id == 'new-quotation') {
         //are_you_sure("Are you sure", "This option will generate a new quote overwriting the current customer data. Are you sure that you have completed all the updates for the current customer? ", "boilerform_yh/")
-        window.location.replace("/boilerform_yh/");
+        window.location.assign("/boilerform_yh/");
      }
      if (event.target.id == 'view-current-quote') {
         var element = document.getElementById("view-current-quote");

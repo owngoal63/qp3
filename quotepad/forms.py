@@ -1303,172 +1303,6 @@ class EditCurrentQuoteDataForm(forms.Form):
 		self.fields['quote_data'].initial = template_file.read
 		alert = None
 
-	
-
-
-''' Section for defining the multiple forms that will be used for the boiler quote (FormWizard library) '''
-
-#class XWestChemFormStepOne(forms.Form):
-	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
-	# within double curly braces...
-	# form_data.0.field_name e.g. form_data.0.customer_first_name
-	#def __init__(self, *args, **kwargs):
-		#super(WestChemFormStepOne, self).__init__(*args, **kwargs)
-		#for field in self: 
-			#field.field.widget.attrs['class'] = 'form-control'
-	#customer_first_name = forms.CharField(max_length=100)
-	#customer_last_name = forms.CharField(max_length=100)
-	#customer_home_phone = forms.CharField(max_length=100, required = False)
-	#customer_mobile_phone = forms.CharField(max_length=100, required = False)
-	#customer_email = forms.EmailField()
-	#owner_or_tenant = forms.ChoiceField(choices=OWNER_OR_TENANT_DROPDOWN)
-	#choice = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user, brand = 'Worcester Bosch'), empty_label = 'Select Product for quote')
-	
-
-#class XWestChemFormStepTwo(forms.Form):
-	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
-	# within double curly braces...
-	# form_data.1.field_name e.g. form_data.1.installation_address
-	#def __init__(self, *args, **kwargs):
-		#self.user = kwargs.pop('user')
-		#super(WestChemFormStepTwo, self).__init__(*args, **kwargs)
-		# Get the user to seed the filter on the drop down.
-		#self.manuf = kwargs.pop('manufacturer')
-		#self.fields['product_choice'] = forms.ModelMultipleChoiceField(queryset=ProductPrice.objects.filter(user = self.user))
-		#self.fields['product_choice'] = ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=ProductPrice.objects.filter(user = self.user).values_list('id', flat=True))
-		#removals = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
-		#									 choices=REMOVALS_CHOICES)
-		#self.fields['product_choice'] = forms.ModelChoiceField(queryset=ProductPrice.objects.all(), empty_label = 'Select Product for quote')
-		#for field in self: 
-			#field.field.widget.attrs['class'] = 'form-control'
-	#house_name_or_number = forms.CharField(max_length=100)
-	#street_address = forms.CharField(max_length=100)
-	#city = forms.CharField(max_length=100)
-	#county = forms.CharField(max_length=100)
-	#postcode = forms.CharField(max_length=100)
-	#property_type = forms.ChoiceField(choices=PROPERTY_TYPE_DROPDOWN)
-
-# class CustomerProductForm(forms.Form):
-# 	def __init__(self, *args, **kwargs):
-# 		super(CustomerProductForm, self).__init__(*args, **kwargs)
-# 		for field in self: 
-# 			field.field.widget.attrs['class'] = 'form-control'
-# 	customer = forms.CharField(max_length=100)
-# 	contact = forms.CharField(max_length=100)
-# 	customer_email = forms.EmailField()
-# 	customer_phone= forms.CharField(max_length=100, required=False)
-# 	machine = forms.CharField(max_length=100)
-# 	make = forms.CharField(max_length=100)
-# 	model = forms.CharField(max_length=100)
-	
-
-# class KitchenChecksForm(forms.Form):
-# 	def __init__(self, *args, **kwargs):
-# 		super(KitchenChecksForm, self).__init__(*args, **kwargs)
-# 		for field in self: 
-# 			field.field.widget.attrs['class'] = 'format_chkbox'
-# 	results = forms.BooleanField(required=False)
-# 	wash_temp_55C = forms.BooleanField(required=False)
-# 	rinse_temp_82C = forms.BooleanField(required=False)
-# 	is_a_descale_required = forms.BooleanField( required=False)
-# 	rinse_jets_blocked = forms.BooleanField( required=False)
-# 	rinse_jets_missing = forms.BooleanField(required=False)
-# 	wash_jets_clean = forms.BooleanField( required=False)
-# 	other_fault = forms.BooleanField(required=False)
-# 	wall_racks = forms.BooleanField(required=False)
-# 	auto_dosing_clean = forms.BooleanField(required=False)
-# 	auto_dosing_pump_head = forms.BooleanField(required=False)
-# 	auto_dosing_tube_stiffeners = forms.BooleanField(required=False)
-# 	control_systems_clean = forms.BooleanField(required=False)
-# 	control_system_damaged = forms.BooleanField(required=False)
-# 	wall_charts = forms.BooleanField(required=False)
-
-# class LaundryChecksForm(forms.Form):
-# 	def __init__(self, *args, **kwargs):
-# 		super(LaundryChecksForm, self).__init__(*args, **kwargs)
-# 		for field in self: 
-# 			field.field.widget.attrs['class'] = 'format_chkbox'
-# 	results = forms.BooleanField(required=False)
-# 	other_faults = forms.BooleanField(required=False)
-# 	clean = forms.BooleanField(required=False)
-# 	pump_heads = forms.BooleanField(required=False)
-# 	tube_stiffener = forms.BooleanField(required=False)
-# 	touch_pad_attached = forms.BooleanField(required=False)
-# 	wall_charts = forms.BooleanField(required=False)
-
-# class WaterSoftenerChecksForm(forms.Form):
-# 	def __init__(self, *args, **kwargs):
-# 		super(WaterSoftenerChecksForm, self).__init__(*args, **kwargs)
-# 		for field in self: 
-# 			field.field.widget.attrs['class'] = 'format_chkbox'
-# 	is_water_hard = forms.BooleanField(required=False)
-# 	is_water_softener_working = forms.BooleanField(required=False)
-
-# class ProductsUsedForForm(forms.Form):
-# 	def __init__(self, *args, **kwargs):
-# 		super(ProductsUsedForForm, self).__init__(*args, **kwargs)
-# 		for field in self: 
-# 			field.field.widget.attrs['class'] = 'format_chkbox'
-# 	pot_washing = forms.BooleanField(required=False)
-# 	glass_washing = forms.BooleanField(required=False)
-# 	food_prep_areas = forms.BooleanField(required=False)
-# 	floors_and_surfaces = forms.BooleanField(required=False)
-# 	ovens = forms.BooleanField(required=False)
-# 	hand_soap = forms.BooleanField(required=False)
-# 	hand_sanitiser = forms.BooleanField(required=False)
-# 	drains = forms.BooleanField(required=False)
-# 	laundry = forms.BooleanField(required=False)
-# 	housekeeping = forms.BooleanField(required=False)
-
-# class CommentsForm(forms.Form):
-# 	def __init__(self, *args, **kwargs):
-# 		super(CommentsForm, self).__init__(*args, **kwargs)
-# 		for field in self: 
-# 			field.field.widget.attrs['class'] = 'form-control'
-# 	comments = forms.CharField(max_length=3000, required=False, widget=forms.Textarea(attrs={'rows':15, 'cols':30}))
-
-# class ProductOrderForm(forms.Form):
-# 	def __init__(self, *args, **kwargs):
-# 		super(ProductOrderForm, self).__init__(*args, **kwargs)
-# 		for field in self: 
-# 			field.field.widget.attrs['class'] = 'form-control-products'
-# 	hydroclean5L_s = forms.IntegerField(required=False, min_value=0, max_value=999)
-# 	hydroclean5L_o = forms.IntegerField(required=False, min_value=0, max_value=999)
-# 	hydroclean10L_s = forms.IntegerField(required=False, min_value=0, max_value=999)
-# 	hydroclean10L_o = forms.IntegerField(required=False, min_value=0, max_value=999)
-# 	soilmaster5L_s = forms.IntegerField(required=False, min_value=0, max_value=999)
-# 	soilmaster5L_o = forms.IntegerField(required=False, min_value=0, max_value=999)
-# 	soilmaster10L_s = forms.IntegerField(required=False, min_value=0, max_value=999)
-# 	soilmaster10L_o = forms.IntegerField(required=False, min_value=0, max_value=999)
-
-
-	# quadrant_s = forms.IntegerField(required=False, min_value=0, max_value=999)
-	# quadrant_o = forms.IntegerField(required=False, min_value=0, max_value=999)
-	# ace87_s = forms.IntegerField(required=False, min_value=0, max_value=999)
-	# ace87_o = forms.IntegerField(required=False, min_value=0, max_value=999)
-	# dp100_s = forms.IntegerField(required=False, min_value=0, max_value=999)
-	# dp100_o = forms.IntegerField(required=False, min_value=0, max_value=999)
-
-	# bravo_s = forms.IntegerField(required=False, min_value=0, max_value=999)
-	# bravo_o = forms.IntegerField(required=False, min_value=0, max_value=999)
-	# fabricare_s = forms.IntegerField(required=False, min_value=0, max_value=999)
-	# fabricare_o = forms.IntegerField(required=False, min_value=0, max_value=999)
-	# encore5L_s = forms.IntegerField(required=False, min_value=0, max_value=999)
-	# encore5L_o = forms.IntegerField(required=False, min_value=0, max_value=999)
-
-# class ProductForm(forms.Form):
-# 	product_id = forms.IntegerField(widget=forms.HiddenInput)
-# 	model_name = forms.CharField(label=False, required=False,
-# 	 widget=forms.TextInput(attrs={'readonly':'readonly','class': "input-disabled"})
-# 	 )
-# 	size = forms.CharField(label=False, required=False,
-# 	 widget=forms.TextInput(attrs={'readonly':'readonly','class': "input-price"})
-# 	 )
-# 	price = forms.DecimalField(label=False, required=False,
-# 	 widget=forms.TextInput(attrs={'readonly':'readonly','class': "input-price"})
-# 	 )
-# 	stock = forms.IntegerField(label=False, widget=forms.TextInput(attrs={'class': "input-int"}))
-# 	quantity = forms.IntegerField(label=False, widget=forms.TextInput(attrs={'class': "input-int"}))
 
 ''' ----------- Form pages for yourheat -------------'''
 
@@ -1714,18 +1548,6 @@ class FormStepEight_yh(forms.Form):
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user')
 		super(FormStepEight_yh, self).__init__(*args, **kwargs)
-		# self.fields['location_1'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
-		# self.fields['location_2'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
-		# self.fields['location_3'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
-		# self.fields['location_4'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
-		# self.fields['location_5'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
-		# self.fields['location_6'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
-		# self.fields['location_7'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
-		# self.fields['location_8'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
-		# self.fields['location_9'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
-		# self.fields['location_10'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
-		# self.fields['location_11'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
-		# self.fields['location_12'] = forms.ChoiceField(required = False, choices=RADIATOR_LOCATION_DROPDOWN)
 		self.fields['loc_1'] = forms.ChoiceField(required = False, choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Radiator Location').order_by('brand').only('component_name')])
 		self.fields['loc_2'] = forms.ChoiceField(required = False, choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Radiator Location').order_by('brand').only('component_name')])
 		self.fields['loc_3'] = forms.ChoiceField(required = False, choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Radiator Location').order_by('brand').only('component_name')])
@@ -1797,10 +1619,6 @@ class FormStepEight_yh(forms.Form):
 		self.fields['tow_3'] = forms.ChoiceField(required = False, choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Towel Rail').order_by('brand').only('component_name')])
 		self.fields['tow_4'] = forms.ChoiceField(required = False, choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Towel Rail').order_by('brand').only('component_name')])
 
-		#self.fields['towel_rail_location_1'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_LOCATION_DROPDOWN)
-		#self.fields['towel_rail_location_2'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_LOCATION_DROPDOWN)
-		#self.fields['towel_rail_location_3'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_LOCATION_DROPDOWN)
-		#self.fields['towel_rail_location_4'] = forms.ChoiceField(required = False, choices=TOWEL_RAIL_LOCATION_DROPDOWN)
 		self.fields['trl_1'] = forms.ChoiceField(required = False, choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Towel Rail Location').order_by('brand').only('component_name')])
 		self.fields['trl_2'] = forms.ChoiceField(required = False, choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Towel Rail Location').order_by('brand').only('component_name')])
 		self.fields['trl_3'] = forms.ChoiceField(required = False, choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(user = self.user, component_type = 'Towel Rail Location').order_by('brand').only('component_name')])

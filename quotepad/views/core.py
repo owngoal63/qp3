@@ -114,7 +114,10 @@ def home(request):
 		print("Using the generic PDF template file.")
 	#if 'yourheat' in request.user.groups.all():
 	if request.user.groups.filter(name__in=['yourheat']).exists():
-		return render(request, 'yourheat/pages/home.html')
+		if request.user.username == "yourheatx":
+			return render(request, 'yourheat/pages/home.html')
+		else:
+			return render(request, 'yourheat/pages/hub_home.html')
 	else:
 		return render(request, 'home.html')
 

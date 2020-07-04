@@ -29,6 +29,11 @@
 
   {% if user.is_authenticated %}
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="/home">
+      <div class="img-logo-admin">
+        <img src="{% static 'images/YourHeatLogo-Transparent.png' %}" width="180px" alt="">
+      </div>
+    </a>
     <a class="navbar-brand" href="/home">Quotepad - {{ user.username }}</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
       aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,9 +42,9 @@
 
     <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link" href="/home">Dashboard<span class="sr-only">(current)</span></a>
-        </li>
+        </li> -->
         {% if request.user.username == 'yourheatx' %}
         <span class="nav-item dropdown">
           <a class="nav-link dropdown dropdown-toggle" href="/productcomponentlist/" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -82,11 +87,11 @@
             <a class="dropdown-item" href="/productcomponentlist/?filter=Towel Rail Location">Towel Rail Location</a>
           </div>
         </span>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link" href="/optionalextralist">Optional Extras<span class="sr-only">(current)</span></a>
-        </li>
+        </li> -->
         {% if YH_SS_INTEGRATION %}
-        <span class="nav-item dropdown">
+        <!-- <span class="nav-item dropdown">
           <a class="nav-link dropdown dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
           Customer Comms
@@ -98,7 +103,7 @@
             <a class="dropdown-item" href="/ssListCustomersForComms_yh/Our%20Priority%20Comms/">Our Priority Comms</a>
             <a class="dropdown-item" href="/ssListCustomersForComms_yh/Free%20Boiler%20Service%20Comms/">Free Boiler Service</a>
           </div>
-        </span>
+        </span> -->
         {% endif %}
         {% endif %}
         {% if request.session.created_quote %}
@@ -107,13 +112,13 @@
               <a class="nav-item nav-link" href="/listreportarchive">Previous Reports</a>
             </li>
           {% elif request.user|has_group:"yourheat" %}
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-item nav-link" href="/listquotearchive_yh">Previous Quotes</a>
-          </li>          
+          </li>           -->
           {% else %}
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-item nav-link" href="/listquotearchive">Previous Quotes</a>
-          </li>
+          </li> -->
           {% endif %}
         {% endif %}
 
@@ -127,23 +132,23 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="/editprofiledetails">Edit Profile</a>
-          <a class="dropdown-item" href="/showuploadedfiles">Show Images</a>
+          <a class="dropdown-item" href="/changepassword">Change Password</a>
           {% if request.user.username == 'yourheatx' %}
-            <a class="dropdown-item" href="/changepassword">Change Password</a>
-            <a class="dropdown-item" href="/uploadforreprint_yh">Upload Reprint File</a>
-            <a class="dropdown-item" href="/editcurrentquotedata">Edit Quote Data</a>
+            <a class="dropdown-item" href="/showuploadedfiles">Show Images</a>
+            <!-- <a class="dropdown-item" href="/uploadforreprint_yh">Upload Reprint File</a>
+            <a class="dropdown-item" href="/editcurrentquotedata">Edit Quote Data</a> -->
             {% endif %}
-            <a class="dropdown-item" href="/ssPostSurveyQuestions">Post Survey Update</a>
-            <a class="dropdown-item" href="/ssGetPhotosForUpload">Upload Photos</a>
+            <!-- <a class="dropdown-item" href="/ssPostSurveyQuestions">Post Survey Update</a>
+            <a class="dropdown-item" href="/ssGetPhotosForUpload">Upload Photos</a> -->
           <!-- <a class="dropdown-item" href="/stripecheckout">Subscribe</a> -->
           {% if request.session.created_quote %}
-            <div class="dropdown-divider"></div>
+            <!-- <div class="dropdown-divider"></div> -->
             {% if request.user|has_group:"WESTCHEM" %}
               <a class="dropdown-item" href="/listreportarchive">Previous Reports</a>
             {% elif request.user|has_group:"yourheat" %}
-              <a class="dropdown-item" href="/listquotearchive_yh">Previous Quotes</a>
+              <!-- <a class="dropdown-item" href="/listquotearchive_yh">Previous Quotes</a> -->
             {% else %}
-              <a class="dropdown-item" href="/listquotearchive">Previous Quotes</a>
+              <!-- <a class="dropdown-item" href="/listquotearchive">Previous Quotes</a> -->
             {% endif %}  
           {% endif %}
           <div class="dropdown-divider"></div>

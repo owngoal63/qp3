@@ -184,14 +184,14 @@ button {
 }
 
 .done {
-    background-color: rgb(47, 131, 21);
+    background-color: rgb(84, 156, 62);
     color: white;
-    border: 1px solid rgb(71, 97, 153);
+    border: 1px solid rgb(51, 153, 59);
 }
 
 button:hover {
-    color: yellow;
-    border: 2px solid white;
+    color: #FFD229;
+    border:1px solid #FFD229;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
 }
 .big {
