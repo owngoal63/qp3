@@ -47,12 +47,16 @@ def hub_home(request):
 	''' Function to render the Hub Home page '''
 
 	quote_form_filename =  Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/current_quote.txt".format(request.user.username))
-	with open(quote_form_filename) as file:
+	if os.path.isfile(quote_form_filename):
+		with open(quote_form_filename) as file:
+			file_form_data = []
+			for line in file:
+				#print(line)
+				file_form_data.append(eval(line))
+	else:	# curent_quote.txt does not exist create a list with empty values
 		file_form_data = []
-		for line in file:
-			#print(line)
-			file_form_data.append(eval(line))
-
+		file_form_data.append(dict({'customer_title': '', 'customer_first_name': '', 'customer_last_name': '', 'customer_email': '', 'smartsheet_id': ''}))
+		
 	customer_id = file_form_data[0].get("smartsheet_id")
 	customer_title = file_form_data[0].get("customer_title")
 	customer_first_name = file_form_data[0].get("customer_first_name")
@@ -360,7 +364,8 @@ class QuoteAccepted(FormView):
 			email.send()
 
 		else:
-			send_email_using_SendGrid('info@yourheat.co.uk', emailnames, mail_subject, msg )
+			for email_to in settings.YH_QUOTE_ACCEPTED_EMAILS:
+				send_email_using_SendGrid('info@yourheat.co.uk', email_to, mail_subject, msg )
 
 		if settings.YH_SS_INTEGRATION:		# Update Comments
 				ss_add_comments(
@@ -1431,7 +1436,7 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 		created_quote_template_group = Group.objects.get(name = 'created_quote_template')
 		request.user.groups.add(created_quote_template_group)
 		# Set Flag to generate the quote and include the supplementary internal report output
-		include_report = True
+		include_report = False
 		pdf = pdf_generation(sourceHtml, {
 			'form_data': file_form_data,
 			'idx': idx,
@@ -1485,6 +1490,11 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			email.send()
 
 		else:
+			print("Cust Email:", fd[0]['customer_email'])
+			print("Subject:", mail_subject)
+			print("Msg:", msg)
+			print("outputFilename:", outputFilename)
+			print("idx.email:", idx.email)
 			send_pdf_email_using_SendGrid('quotes@yourheat.co.uk', idx_master.email, mail_subject, msg, outputFilename, quote_form_filename )
 
 		# Generate the PDF and write to disk ( Customer Copy )
@@ -1521,6 +1531,11 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			email.send()
 
 		else:
+			print("Cust Email:", fd[0]['customer_email'])
+			print("Subject:", mail_subject)
+			print("Msg:", msg)
+			print("outputFilename:", outputFilename)
+			print("idx.email:", idx.email)
 			send_pdf_email_using_SendGrid('quotes@yourheat.co.uk', fd[0]['customer_email'], mail_subject, msg, outputFilename, None, idx.email)
 
 		# ss_update_data code to go here !!!!!!!	
@@ -1890,14 +1905,17 @@ def recommend_a_friend(request):
 	customer_title = file_form_data[0].get("customer_title")
 	customer_first_name = file_form_data[0].get("customer_first_name")
 	customer_last_name = file_form_data[0].get("customer_last_name")
-	customer_email = file_form_data[0].get("customer_email")		
+	customer_email = file_form_data[0].get("customer_email")	
 
+	#pdf = pdf_generation(html_email_filename, {'customer_id': customer_id,'customer_title': customer_title,'customer_first_name': customer_first_name,'customer_last_name': customer_last_name,'customer_email': customer_email })	
+	#return HttpResponse(pdf, content_type='application/pdf')
 
 	return render(request, html_email_filename, {'customer_id': customer_id,'customer_title': customer_title,'customer_first_name': customer_first_name,'customer_last_name': customer_last_name,'customer_email': customer_email })
 
 @login_required
 def preview_recommend_a_friend(request, customer_id):
 	''' Function to provide preview and Email for Recommend a Friend'''
+
 
 	return render(request, 'yourheat/pages/preview_recommend_a_friend.html', {'customer_id': customer_id })
 
@@ -1933,7 +1951,7 @@ def email_recommend_a_friend(request):
 			email.content_subtype = "html"  # Main content is now text/html
 			email.send()
 	else:	
-		send_email_using_SendGrid('info@yourheat.co.uk', customer_email, mail_subject, html_content )
+		send_email_using_SendGrid('info@yourheat.co.uk', customer_email, mail_subject, html_content, 'info@yourheat.co.uk' )
 
 	#print(stop)	
 

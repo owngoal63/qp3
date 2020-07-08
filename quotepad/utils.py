@@ -189,26 +189,26 @@ def component_attrib_build_exVat(component_name, component_type, user, qty=1, br
 
 	return {component_name: [qty, price_exVat, ext_price_exVat, cost_exVat, ext_duration]}
 
-def send_email_using_SendGrid(sender, receiver, mail_subject, mail_content):
+def send_email_using_SendGrid(sender, receiver, mail_subject, mail_content, cc_email=None):
 
 	message = Mail(
 		from_email = sender,
-		to_emails = receiver,
+		#to_emails = receiver,			# Removed since it generates an extra email with SendGrid
 		subject = mail_subject,
 		html_content = mail_content)
 	
-	# if cc_email:
-	# 	cc = Email(cc_email)
-	# 	to = Email(receiver)
-	# 	p = Personalization()
-	# 	p.add_to(to)
-	# 	p.add_cc(cc)
-	# 	message.add_personalization(p)
-	# else:	# no cc
-	# 	to = Email(receiver)
-	# 	p = Personalization()
-	# 	p.add_to(to)
-	# 	message.add_personalization(p)
+	if cc_email:
+		cc = Email(cc_email)
+		to = Email(receiver)
+		p = Personalization()
+		p.add_to(to)
+		p.add_cc(cc)
+		message.add_personalization(p)
+	else:	# no cc
+		to = Email(receiver)
+		p = Personalization()
+		p.add_to(to)
+		message.add_personalization(p)
 
 	try:
 		sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
@@ -261,7 +261,7 @@ def send_pdf_email_using_SendGrid(sender, receiver, mail_subject, mail_content, 
 
 	message = Mail(
 		from_email = sender,
-		to_emails = receiver,
+		#to_emails = receiver,			# Removed since it generates an extra email with SendGrid
 		subject = mail_subject,
 		html_content = mail_content)
 	message.attachment = attachment

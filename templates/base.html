@@ -34,7 +34,11 @@
         <img src="{% static 'images/YourHeatLogo-Transparent.png' %}" width="180px" alt="">
       </div>
     </a>
-    <a class="navbar-brand" href="/home">Quotepad - {{ user.username }}</a>
+    {% if request.user.username == 'yourheatx' %}
+    <a class="navbar-brand" href="/home">Quotepad Admin - {{ user.username }}</a>
+    {% else %}
+      <a class="navbar-brand" href="/home">Quotepad - {{ user.username }}</a>
+    {% endif %}
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
       aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -202,9 +206,9 @@
     </div>
     <div class="footer-copyright">
       <div class="container">
-        © 2019 Copyright
+        © 2020 Copyright
         <a class="grey-text text-lighten-4 right" href="https://github.com/Rorywork" target="_blank">Designed by
-          Rorywork</a>
+          KHC</a>
       </div>
     </div>
 

@@ -4,12 +4,14 @@
 
 <div class="container">
 
-    <h4>Recommend a Friend Email Preview</h4>
+    <h4>Recommend a Friend</h4>
 
-    <iframe id="comms_iframe" height=500px width="85%" src="{% url 'RecommendAFriend' %}">
+    <iframe id="comms_iframe" height=500px width="100%" src="{% url 'RecommendAFriend' %}">
     </iframe>
 
+
     <br><br>
+    <!-- <a class="btn btn-primary" href="/RecommendAFriend/" target="_blank">Preview Email Message in new tab</a> -->
     <a class="btn btn-primary" href="/EmailRecommendAFriend/">Email to Customer</a>
     <a class="btn btn-secondary" href="/HubHome/">Cancel</a>
 

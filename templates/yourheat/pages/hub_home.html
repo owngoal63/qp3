@@ -20,11 +20,11 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <hr>
+            
         </div>
     </div>
     <div class="row">
-        <div class="col-6">
+        <div class="col-12 d-flex justify-content-center">
             <div id="customer-details">
                 <table>
                     <tr>
@@ -47,9 +47,6 @@
                 </table>
             </div>   
         </div>
-        <div class="col-6">
-            <a href="/QuoteAccepted"><button id = 'accept-quotation' class='{%if request.session.view_current_quote%}done{%else%}notdone{%endif%}'><i class="fas fa-user-check"></i> ACCEPT QUOTATION</button></a>
-        </div>
     </div>
     <br>
     <div class="row">
@@ -70,6 +67,12 @@
         </div>
         <div class="col-6">
             <a href="/ssPostSurveyQuestions"><button id = 'office-handover' class='{%if request.session.office_handover%}done{%else%}notdone{%endif%} float-left'><i class="fas fa-handshake"></i> OFFICE HANDOVER</button></a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            <a href="/QuoteAccepted"><button id = 'accept-quotation' ><i class="fas fa-user-check"></i> ACCEPT QUOTATION</button></a>
         </div>
     </div>
 

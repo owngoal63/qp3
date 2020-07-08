@@ -4,7 +4,7 @@ from import_export.admin import ImportExportModelAdmin
 
 
 admin.site.register(Profile)
-admin.site.register(OptionalExtra)
+#admin.site.register(OptionalExtra)
 admin.site.register(CustomerComm)
 admin.site.register(Document)
 

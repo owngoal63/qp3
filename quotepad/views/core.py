@@ -117,7 +117,8 @@ def home(request):
 		if request.user.username == "yourheatx":
 			return render(request, 'yourheat/pages/home.html')
 		else:
-			return render(request, 'yourheat/pages/hub_home.html')
+			#return render(request, 'yourheat/pages/hub_home.html')
+			return HttpResponseRedirect('/HubHome/')
 	else:
 		return render(request, 'home.html')
 

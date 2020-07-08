@@ -148,7 +148,7 @@ def generate_customer_comms(request, comms_name, customer_id=None):
 					email.content_subtype = "html"  # Main content is now text/html
 					email.send()
 			else:	
-				send_email_using_SendGrid('info@yourheat.co.uk', line.get('customer_email'), mail_subject, html_content )
+				send_email_using_SendGrid('info@yourheat.co.uk', line.get('customer_email'), mail_subject, html_content, 'info@yourheat.co.uk' )
 
 			#print(stop)	
 

@@ -1,5 +1,12 @@
 /* These classes are used throughout the application in order to make the look of the site consistent. */
+@import url('https://fonts.googleapis.com/css?family=Poppins&display=swap');
+
+* {
+  font-family: 'Poppins', sans-serif;
+}
+
 body {
+  background:#f0f7fa;
   font-size: 16px;
   min-height: 70vh;
 }
@@ -12,6 +19,8 @@ main {
   margin-right: 5vw;
   padding-top: 10px;
   padding-bottom: 10px;
+  border: 1px solid rgb(129, 129, 129);
+  border-radius: 5px;
 }
 
 a {
@@ -577,5 +586,61 @@ The responsive effects on the dashboard page are built using these cards, they a
   pointer-events: none;
   cursor: default;
   opacity: 0.6;
+}
+
+/* Styles for hub_home.html page  */
+
+#customer-details {
+  /* border-radius: 5px;
+  border: none;
+  box-shadow: inset 0 0 5px; */
+  background-color: rgb(247, 244, 244);
+  padding:5px;
+  border-radius: 5px;
+  width:535px;
+  border: 1px solid transparent;
+  border-top: none;
+  border-bottom: 1px solid #DDD;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.39), 0 -1px 1px #FFF, 0 1px 0 #FFF;
+}
+
+
+.home-hub button {
+  display: block;
+  border-radius: 5px;
+  border: none;
+  margin-bottom: 10px;
+  background-color: rgb(13, 38, 48);
+  color: #f0f7fa;
+  border: 1px solid rgb(1, 10, 29);
+  width :200px;
+  height: 60px;
+  font-weight: 500;
+  padding: 5px;
+}
+
+.home-hub .notdone {
+  background-color: rgb(171, 171, 172);
+  color: rgb(56, 58, 58);
+  border: 1px solid rgb(129, 129, 129); 
+}
+
+.home-hub .done {
+  background-color: rgb(84, 156, 62);
+  color: white;
+  border: 1px solid rgb(51, 153, 59);
+}
+
+.home-hub button:hover {
+  /* color: #FFD229; */
+  color:white;
+  /* border:1px solid #FFD229; */
+  border:1px solid white;
+  /* box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8); */
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.5);
+}
+
+.ad-card-color {
+  color: #2A739E;
 }
 
