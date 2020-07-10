@@ -32,7 +32,7 @@ from quotepad.views import ssCustomerSelect, ssPostSurveyQuestions, ss_customer_
 
 # Imports for Yourheat admin
 from quotepad.views import admin_home, customer_comms, list_customers_for_comms, generate_customer_comms, emails_sent_to_customers, confirm_calendar_appointment, get_survey_appointment, get_installation_appointment
-from quotepad.views import processing_cancelled
+from quotepad.views import processing_cancelled, preview_comms, display_comms, email_comms
 
 # Imports for Hub
 from quotepad.views import hub_home, recommend_a_friend, preview_recommend_a_friend, email_recommend_a_friend, confirmation_page
@@ -147,6 +147,9 @@ urlpatterns = [
     path('GetSurveyAppointment/', get_survey_appointment.as_view(), name='GetSurveyAppointment'),
     path('GetInstallationAppointment/<str:customer_id>/', get_installation_appointment.as_view(), name='GetInstallationAppointment'),
     path('ProcessingCancelled/', processing_cancelled, name='ProcessingCancelled'),
+    path('PreviewComms/<str:comms>/<str:customer_id>/', preview_comms, name = 'PreviewComms'),
+    path('DisplayComms/<str:comms>/<str:customer_id>/', display_comms, name = 'DisplayComms'),
+    path('EmailComms/<str:comms>/<str:customer_id>/', email_comms, name = 'EmailComms'),
 
     
 	path('', include('payments.urls')),

@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 from django.template.loader import render_to_string
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic import FormView
+from django.core.validators import validate_email
 
 import datetime
 from pathlib import Path
@@ -46,6 +47,153 @@ def customer_comms(request):
 
 	return render(request, 'yourheat/adminpages/customer_comms_landing_page.html', {'customer_id': ss_customer_id, 'customer_name': ss_customer_name, 'customer_status': ss_customer_status})
 
+def preview_comms(request, comms, customer_id):
+	''' Function to provide preview and Email screen for Comms '''
+
+	return render(request, 'yourheat/adminpages/preview_comms.html', {'comms': comms, 'customer_id': customer_id })
+
+def display_comms(request, comms, customer_id=None):
+	''' Function to display the email contents prior to sending the email '''
+
+	html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/{}.html".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
+	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/customer_comms/{}.txt".format(request.user.username, comms))
+
+	if customer_id:		# customer_id has been passed so get individual record from sheet
+		ss_get_data_from_sheet(
+			settings.YH_SS_ACCESS_TOKEN,
+			settings.YH_SS_SHEET_NAME,
+			['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'Installation Date', 'Survey Date',  'Surveyor', 'Survey Time', 'Engineer Appointed', 'Boiler Manufacturer'],
+			'Customer ID',
+			customer_id,
+			data_filename
+		)
+		data_source_is_report = False		# Boolean to pass to HTML page to determine instructions
+	else:	# customer_id has NOT been passed so get records from predefined SS report
+		ss_get_data_from_report(
+				settings.YH_SS_ACCESS_TOKEN,
+				settings.YH_SS_SHEET_NAME,
+				comms,
+				data_filename
+		)
+		data_source_is_report = True		# Boolean to pass to HTML page to determine instructions
+
+	# Open the text file with the Smartsheet data 
+	with open(data_filename) as file:
+			file_form_data = []
+			for line in file:
+				file_form_data.append(eval(line))
+
+	for line in file_form_data:
+		# Add the image logo url to the dictionary
+		line["image_logo"] = settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png"
+		# Add the dictionary entry engineer_name  from the engineer_email address with some string manipulation
+		at_pos = line["engineer_email"].find('@')
+		line["engineer_name"] = ((line["engineer_email"].replace('.',' '))[0:at_pos]).title()
+		# Add the dictionary entry engineer_name  from the surveyor_email address with some string manipulation
+		at_pos = line["surveyor_email"].find('@')
+		line["surveyor_name"] = ((line["surveyor_email"].replace('.',' '))[0:at_pos]).title()
+		# Add the dictionary entry engineer_first_name
+		at_pos = line["engineer_name"].find(' ')
+		line["engineer_first_name"] = (line["engineer_name"])[0:at_pos]
+		# Change the installation_date format
+		if line["installation_date"] != "None":
+			line["installation_date"] = datetime.datetime.strptime(line["installation_date"], "%Y-%m-%d")
+		if line["survey_date"] != "None":
+			line["survey_date"] = datetime.datetime.strptime(line["survey_date"], "%Y-%m-%d")
+
+		# Popup error if Email recipient address has not been populated
+		if line["customer_email"] == "None":
+			return HttpResponse("The customer's email address has not been set or is invalid.")
+		try:
+			validate_email(line["customer_email"])
+		except:
+			return HttpResponse("The customer's email address is invalid.")	
+
+	#Check if record has already been sent and add details to dict
+	# for index, line in enumerate(comms_data):
+	# 	if CustomerComm.objects.filter(customer_id = line.get('smartsheet_id'), comms_id = comms ).exists():
+	# 		comms_data[index]["already_sent"] = True
+	# 	else:
+	# 		comms_data[index]["already_sent"] = False
+
+	return render(request, html_email_filename, line)
+
+def email_comms(request, comms, customer_id=None):
+	''' Function to generate communication emails to send to customers based upon Smartsheet data '''
+	
+	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
+	html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/{}.html".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
+	
+	if customer_id:		# customer_id has been passed so get individual record from sheet
+		ss_get_data_from_sheet(
+			settings.YH_SS_ACCESS_TOKEN,
+			settings.YH_SS_SHEET_NAME,
+			['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'Installation Date', 'Survey Date', 'Survey Time', 'Surveyor', 'Engineer Appointed', 'Boiler Manufacturer'],
+			'Customer ID',
+			customer_id,
+			data_filename
+		)
+
+	# Open the text file with the Smartsheet data 
+	with open(data_filename) as file:
+			file_form_data = []
+			for line in file:
+				file_form_data.append(eval(line))
+
+	for line in file_form_data:
+		#print(line.get('customer_title'))
+
+		if CustomerComm.objects.filter(customer_id = line.get('smartsheet_id'), comms_id = comms ).exists():
+			print(line.get('smartsheet_id'), comms_name, ' already exists - do not resend.' )
+		else:	
+			# Add record and send
+			if settings.YH_SS_TRACK_COMMS_SENT:
+				CustComm = CustomerComm(user = request.user ,customer_id = line.get('smartsheet_id') , comms_id = comms )
+				CustComm.save()
+
+			# Add the image logo url to the dictionary
+			line["image_logo"] = settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png"
+			# Add the dictionary entry engineer_name  from the engineer_email address with some string manipulation
+			at_pos = line["engineer_email"].find('@')
+			line["engineer_name"] = ((line["engineer_email"].replace('.',' '))[0:at_pos]).title()
+			# Add the dictionary entry engineer_name  from the surveyor_email address with some string manipulation
+			at_pos = line["surveyor_email"].find('@')
+			line["surveyor_name"] = ((line["surveyor_email"].replace('.',' '))[0:at_pos]).title()
+			# Add the dictionary entry engineer_first_name
+			at_pos = line["engineer_name"].find(' ')
+			line["engineer_first_name"] = (line["engineer_name"])[0:at_pos]
+			# Change the installation_date format
+			if line["installation_date"] != "None":
+				line["installation_date"] = datetime.datetime.strptime(line["installation_date"], "%Y-%m-%d")
+			if line["survey_date"] != "None":
+				line["survey_date"] = datetime.datetime.strptime(line["survey_date"], "%Y-%m-%d")
+			html_content = render_to_string(html_email_filename, line)
+			# Drop the Comms from the comms_name for the Email subject line
+			at_pos = comms.find('Comms')
+			mail_subject = 'Your Heat - ' + comms[0:at_pos]
+
+			if settings.YH_TEST_EMAIL:
+					email = EmailMessage(mail_subject, html_content, 'info@yourheat.co.uk' , [line.get('customer_email')])
+					email.content_subtype = "html"  # Main content is now text/html
+					email.send()
+			else:
+				if mail_subject == "Your Heat - New Survey Booked":		# Test Email - don't send cc
+					send_email_using_SendGrid('info@yourheat.co.uk', line.get('customer_email'), mail_subject, html_content )
+				else:		# Send with cc
+					send_email_using_SendGrid('info@yourheat.co.uk', line.get('customer_email'), mail_subject, html_content, 'info@yourheat.co.uk' )
+
+			#print(stop)	
+
+			if settings.YH_SS_INTEGRATION:		# Update Comments
+				ss_add_comments(
+				settings.YH_SS_ACCESS_TOKEN,
+				settings.YH_SS_SHEET_NAME,
+				'Customer ID',
+				line.get('smartsheet_id'),
+				[comms + " email sent."]
+			)
+
+	return HttpResponseRedirect('/EmailsSentToCustomers/')	
 
 def list_customers_for_comms(request, comms_name, customer_id=None):
 	''' Function to display list of customers for communications based upon Smartsheet data '''

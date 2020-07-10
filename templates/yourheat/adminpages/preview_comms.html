@@ -1,0 +1,21 @@
+{% extends "yourheat/adminpages/base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h4>{{comms}}</h4>
+
+    <iframe id="comms_iframe" height=500px width="100%" src="{% url 'DisplayComms' comms customer_id %}">
+    </iframe>
+
+
+    <br><br>
+    <!-- <a class="btn btn-primary" href="/RecommendAFriend/" target="_blank">Preview Email Message in new tab</a> -->
+    <a class="btn btn-primary" href="/EmailComms/{{comms}}/{{customer_id}}">Email to Customer</a>
+    <a class="btn btn-secondary" href="/ProcessingCancelled/">Cancel</a>
+
+</div>
+
+
+{% endblock %}

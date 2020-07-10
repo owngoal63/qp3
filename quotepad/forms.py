@@ -136,6 +136,7 @@ NEW_BOILER_TYPE_DROPDOWN = (
 NEW_BOILER_LOCATION_DROPDOWN = (
 	('','Select One'),
 	('Existing Location','Existing Location'),
+	('Open to options','Open to options'),
 	('Relocate in current room','Relocate in current room'),
 	('Kitchen','Kitchen'),
 	('Bathroom','Bathroom'),
@@ -927,6 +928,7 @@ CURRENT_BOILER_LOCATION_DROPDOWN = (
 LOCATION_OF_NEW_BOILER_DROPDOWN = (
 	('','Select One'),
 	('Existing Location','Existing Location'),
+	('Open To Options','Open To Options'),
 	('Relocate in current room','Relocate in current room'),
 	('Kitchen','Kitchen'),
 	('Bathroom','Bathroom'),
@@ -946,7 +948,12 @@ LOCATION_OF_NEW_BOILER_DROPDOWN = (
 
 PARKING_AND_ACCESS_DROPDOWN = (
 	('','Select One'),
-	('Street', 'Street'),	
+	('No restrictions', 'No restrictions'),
+	('Customer Driveway ( Customer Agreed)', 'Customer Driveway ( Customer Agreed)'),
+	('Paid Parking Required', 'Paid Parking Required'),
+	('Customer Provided Permit', 'Customer Provided Permit'),
+	('Difficult', 'Difficult'),
+	('Other See Notes', 'Other See Notes'),	
 )
 
 BRING_FORWARD_DROPDOWN = (
