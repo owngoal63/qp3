@@ -33,6 +33,11 @@ a:hover {
  cursor:pointer;
 }
 
+.bg-custom-2 {
+  background: rgb(216,177,56);
+  background: radial-gradient(circle, rgba(216,177,56,1) 30%, rgba(179,94,63,1) 70%);
+  }
+
 .white-space {
   min-height: 70vh;
 }
@@ -46,6 +51,7 @@ a:hover {
   list-style: none;
   border: none;
   margin-right: 30px;
+  color:white;
 }
 
 .container-fluid {
@@ -56,7 +62,14 @@ a:hover {
 .base-footer {
   color: rgb(255, 255, 255);
   padding-top: 20px;
-  min-height: 25vh
+  min-height: 15vh
+}
+
+.base-footer-image {
+  background-image: radial-gradient( circle, rgba(216,177,56,0.25) 30%, rgba(179,94,63,1)), url("http://www.qpcentral.co.uk/static/images/yh_email_background.jpg");
+  background-position: center;
+  background-size: contain;
+  margin: 0 auto;
 }
 
 h1 {
@@ -642,5 +655,9 @@ The responsive effects on the dashboard page are built using these cards, they a
 
 .ad-card-color {
   color: #2A739E;
+}
+
+.social-list i {
+  color:white;
 }
 
