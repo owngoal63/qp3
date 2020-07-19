@@ -170,7 +170,7 @@ def email_comms(request, comms, customer_id=None):
 			html_content = render_to_string(html_email_filename, line)
 			# Drop the Comms from the comms_name for the Email subject line
 			at_pos = comms.find('Comms')
-			mail_subject = 'Your Heat - ' + comms[0:at_pos]
+			mail_subject = ('Your Heat - ' + comms[0:at_pos]).strip()
 
 			if settings.YH_TEST_EMAIL:
 					email = EmailMessage(mail_subject, html_content, 'info@yourheat.co.uk' , [line.get('customer_email')])
@@ -179,8 +179,9 @@ def email_comms(request, comms, customer_id=None):
 			else:
 				if mail_subject == "Your Heat - New Survey Booked":		# Test Email - don't send cc
 					send_email_using_SendGrid('info@yourheat.co.uk', line.get('customer_email'), mail_subject, html_content )
-				else:		# Send with cc
-					send_email_using_SendGrid('info@yourheat.co.uk', line.get('customer_email'), mail_subject, html_content, 'info@yourheat.co.uk' )
+				else:		# Send separate emails to try and avoid blocks
+					send_email_using_SendGrid('info@yourheat.co.uk', line.get('customer_email'), mail_subject, html_content )
+					send_email_using_SendGrid('info@yourheat.co.uk', 'info@yourheat.co.uk', mail_subject, html_content )
 
 			#print(stop)	
 
@@ -405,6 +406,30 @@ class get_survey_appointment(FormView):
 		update_data.append({"Surveyor": form.cleaned_data['surveyor']})
 		survey_date = form.cleaned_data['survey_date_and_time'].date().strftime('%d-%b-%Y')
 		update_data.append({"Survey Date":  str(survey_date)})
+		update_data.append({"Title": form.cleaned_data['customer_title']})
+		update_data.append({"First Name": form.cleaned_data['customer_first_name']})
+		update_data.append({"Surname": form.cleaned_data['customer_last_name']})
+		update_data.append({"House Name or Number": form.cleaned_data['house_name_or_number']})
+		update_data.append({"Street Address": form.cleaned_data['street_address']})
+		update_data.append({"City": form.cleaned_data['city']})
+		update_data.append({"County": form.cleaned_data['county']})
+		update_data.append({"Postcode": form.cleaned_data['postcode']})
+		update_data.append({"Preferred Contact Number": form.cleaned_data['customer_primary_phone']})
+		update_data.append({"Email": form.cleaned_data['customer_email']})
+
+		update_data.append({"Website Fuel Type": form.cleaned_data['fuel_type']})
+		update_data.append({"Website Property type": form.cleaned_data['property_type']})
+		update_data.append({"Website Number of Bedrooms": form.cleaned_data['number_of_bedrooms']})
+		update_data.append({"Website Number of Bathrooms": form.cleaned_data['number_of_bathrooms']})
+		update_data.append({"Website Hot Water Cylinder": form.cleaned_data['hot_water_cylinder']})
+		#update_data.append({"Website Standard Package": form.cleaned_data['website_premium_package_quote']})
+		#update_data.append({"Website Premium Package": form.cleaned_data['website_premium_package_quote']})
+		#update_data.append({"Website Economy Package": form.cleaned_data['website_economy_package_quote']})
+		update_data.append({"Existing Boiler": form.cleaned_data['current_system']})
+		update_data.append({"Existing Boiler Status": form.cleaned_data['current_boiler_status']})
+		update_data.append({"Requested Boiler Type": form.cleaned_data['system_wanted']})
+		update_data.append({"Lead Summary Notes": form.cleaned_data['additional_information']})
+
 		if form.cleaned_data['time_override'] == 'No override':
 			survey_start_time = str(form.cleaned_data['survey_date_and_time'].time().strftime('%H'))
 			survey_time_int_plus_two = str(int(form.cleaned_data['survey_date_and_time'].time().strftime('%H')) + 2)
@@ -632,6 +657,7 @@ class get_installation_appointment(FormView):
 		installation_date = form.cleaned_data['installation_date']
 		#survey_date_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%d-%b-%Y')
 		update_data.append({"Installation Date":  str(installation_date)})
+		update_data.append({"Lead Summary Notes": form.cleaned_data['additional_information']})
 		#survey_start_time = str(form.cleaned_data['survey_date_and_time'].time().strftime('%H'))
 		#survey_time_int_plus_two = str(int(form.cleaned_data['survey_date_and_time'].time().strftime('%H')) + 2)
 		#survey_time = survey_start_time + ":00-" + survey_time_int_plus_two + ":00"

@@ -1514,15 +1514,18 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 		# Generate the email, attach the pdf and send out
 		fd = file_form_data
 		mail_subject = 'Your Personal Boiler Replacement Quotation'
-		msg = "<img src='" + settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png'><br>"
-		msg = msg + "<p style='font-family:arial, font-size:12px'>Thank you for your time today, attached is a copy of your Fixed Price Quotation - I hope Surveyor {} {} looked after you well and answered all your questions.</p>".format(idx.first_name, idx.last_name)
-		msg = msg + "<p style='font-family:arial, font-size:12px'>It is quite common to have a few more questions following receipt of the quotation so please feel free to contact {} on {}, who will be able answer these for you. Alternatively, you are welcome to contact the office direct on telephone number 01732 622990 or email <a href='mailto:info@yourheat.co.uk'>info@yourheat.co.uk</a> for any additional support.</p>".format(idx.first_name, idx.telephone)
-		msg = msg + "<p style='font-family:arial, font-size:12px'>The team here will be in touch with you again very shortly to ensure that you have everything you need.</p>"
-		msg = msg + "<p style='font-family:arial, font-size:12px'>For more information about us, please visit <a href='https://yourheat.co.uk/'>https://yourheat.co.uk/</a></p>"
-		msg = msg + "<p style='font-family:arial, font-size:12px'>Warm regards</p>"
-		msg = msg + "<p style='font-family:arial, font-size:12px'>Yourheat Team</p>"
-		
+		#msg = "<img src='" + settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png'><br>"
+		#msg = msg + "<p style='font-family:arial, font-size:12px'>Thank you for your time today, attached is a copy of your Fixed Price Quotation - I hope Surveyor {} {} looked after you well and answered all your questions.</p>".format(idx.first_name, idx.last_name)
+		#msg = msg + "<p style='font-family:arial, font-size:12px'>It is quite common to have a few more questions following receipt of the quotation so please feel free to contact {} on {}, who will be able answer these for you. Alternatively, you are welcome to contact the office direct on telephone number 01732 622990 or email <a href='mailto:info@yourheat.co.uk'>info@yourheat.co.uk</a> for any additional support.</p>".format(idx.first_name, idx.telephone)
+		#msg = msg + "<p style='font-family:arial, font-size:12px'>The team here will be in touch with you again very shortly to ensure that you have everything you need.</p>"
+		#msg = msg + "<p style='font-family:arial, font-size:12px'>For more information about us, please visit <a href='https://yourheat.co.uk/'>https://yourheat.co.uk/</a></p>"
+		#msg = msg + "<p style='font-family:arial, font-size:12px'>Warm regards</p>"
+		#msg = msg + "<p style='font-family:arial, font-size:12px'>Yourheat Team</p>"
 
+		html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/Customer Quote Comms.html".format(settings.YH_MASTER_PROFILE_USERNAME))
+
+		msg = render_to_string(html_email_filename, {'customer_title': fd[0]['customer_title'],'customer_last_name': fd[0]['customer_last_name'],'surveyor_first_name': idx.first_name, 'surveyor_last_name': idx.last_name, 'surveyor_phone_number': idx.telephone })
+		
 		if settings.YH_TEST_EMAIL:
 			email = EmailMessage(
 			'Your Personal Boiler Replacement Quotation', msg, idx.email, [fd[0]['customer_email']])
