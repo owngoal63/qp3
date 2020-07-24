@@ -103,8 +103,8 @@ class BoilerFormWizardView(SessionWizardView):
 			print(type(e)) 
 			print("Error: No Image exists for the Product")
 
-		# Calculate the daily_work_rate multiplied by the estimated_duration
-		workload_cost = idx.daily_work_rate * int([form.cleaned_data for form in form_list][8].get('estimated_duration')[0])
+		# Calculate the baseline_work_rate multiplied by the estimated_duration
+		workload_cost = idx.baseline_work_rate * int([form.cleaned_data for form in form_list][8].get('estimated_duration')[0])
 		# Calculate the total quote price for the quote
 		total_quote_price = workload_cost + product_record.price
 
@@ -199,8 +199,8 @@ def generate_quote_from_file(request, outputformat, quotesource):
 	except: # if not then continue with empty object
 		img_record = ""
 
-	# Calculate the daily_work_rate multiplied by the estimated_duration
-	workload_cost = idx.daily_work_rate * int(file_form_data[8].get('estimated_duration')[0])
+	# Calculate the baseline_work_rate multiplied by the estimated_duration
+	workload_cost = idx.baseline_work_rate * int(file_form_data[8].get('estimated_duration')[0])
 	# Calculate the total quote price for the quote
 	total_quote_price = workload_cost + product_record.price	
 
