@@ -27,6 +27,22 @@ from django.db.models import Q
 #Added for Smartsheet API
 import smartsheet
 
+# Added for Google Mail API
+import pickle
+from apiclient import errors
+from httplib2 import Http
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from pathlib import Path
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+#import mimetypes
+#from email.mime.base import MIMEBase
+from email.mime.application import MIMEApplication
+#from google.oauth2 import service_account
+
+
 ''' Various functions used by the XHtml2pdf library '''
 
 ''' Function to ensure that the correct path is returned for images used in the quote pdf output '''
@@ -291,3 +307,143 @@ def send_pdf_email_using_SendGrid(sender, receiver, mail_subject, mail_content, 
 		print(e.message)
 
 	return
+
+
+def send_email_using_GmailAPI(sender, receiver, mail_subject, mail_content, attach_file=None, attach_txt_file=None):
+
+	SCOPES = ['https://www.googleapis.com/auth/calendar','https://www.googleapis.com/auth/gmail.modify']
+
+	creds = None
+	# The file token.pickle stores the user's access and refresh tokens, and is
+	# created automatically when the authorization flow completes for the first
+	# time.
+	token_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/token.pickle")
+	creds_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/credentials.json")
+	#print(creds_filename)
+	if os.path.exists(token_filename):
+		with open(token_filename, 'rb') as token:
+			creds = pickle.load(token)
+	# If there are no (valid) credentials available, let the user log in.
+	if not creds or not creds.valid:
+		if creds and creds.expired and creds.refresh_token:
+			creds.refresh(Request())
+		else:
+			flow = InstalledAppFlow.from_client_secrets_file(
+				creds_filename, SCOPES)
+			creds = flow.run_local_server(port=0)
+		# Save the credentials for the next run
+		with open(token_filename, 'wb') as token:
+			pickle.dump(creds, token)
+
+
+	service = build('gmail', 'v1', credentials=creds)
+	# Call the Gmail API
+	if attach_file == None:	# No attachment
+		message = create_message(sender, receiver, mail_subject, mail_content)
+	else: # Attached file(s)
+		if attach_txt_file == None:		# No txt file attachment
+			message = create_message_with_attachment(sender, receiver, mail_subject, mail_content, attach_file)
+		else: # Attached file includes txt data file	
+			message = create_message_with_attachment(sender, receiver, mail_subject, mail_content, attach_file, attach_txt_file)
+	sent = send_message(service,'me', message)
+
+	return
+
+def create_message(sender, to, subject, message_text):
+
+	message = MIMEText(message_text, 'html')
+	message['to'] = to
+	message['from'] = sender
+	message['subject'] = subject
+	#return {'raw': base64.urlsafe_b64encode(message.as_string())}
+
+	return {'raw': base64.urlsafe_b64encode(message.as_bytes()).decode()}
+
+def create_message_with_attachment(sender, to, subject, message_text, file, file2=None):
+  
+	message = MIMEMultipart('mixed')
+	message['to'] = to
+	message['from'] = sender
+	message['subject'] = subject
+
+	msg = MIMEText(message_text, 'html')
+	message.attach(msg)
+
+	#message.attach(MIMEText("test", 'application/pdf'))
+
+	# print(file)
+
+	# if os.path.isfile(file):
+	# 	print("exists")
+
+	#content_type, encoding = mimetypes.guess_type(file)
+
+	#print(content_type)
+
+	#print(stop)
+
+	#if content_type is None or encoding is not None:
+	#	content_type = 'application/octet-stream'
+	#main_type, sub_type = content_type.split('/', 1)
+	#print(main_type)
+	#print(stop)
+	# main_type = "xxxx"
+	# if main_type == 'text':
+	# 	fp = open(file, 'rb')
+	# 	msg = MIMEText(fp.read(), _subtype=sub_type)
+	# 	fp.close()
+	# elif main_type == 'image':
+	# 	fp = open(file, 'rb')
+	# 	msg = MIMEImage(fp.read(), _subtype=sub_type)
+	# 	fp.close()
+	# elif main_type == 'audio':
+	# 	fp = open(file, 'rb')
+	# 	msg = MIMEAudio(fp.read(), _subtype=sub_type)
+	# 	fp.close()
+	# else:
+		#fp = open(file, 'rb')
+		#msg = MIMEBase(main_type, sub_type)
+		#msg.set_payload(fp.read())
+		#fp.close()
+	with open(file, "rb") as f:
+		attach = MIMEApplication(f.read(),_subtype="pdf")
+	filename = os.path.basename(file)
+	attach.add_header('Content-Disposition', 'attachment', filename=filename)
+	#message.attach(msg)
+	message.attach(attach)
+
+	if file2 != None:	# Also attach text file
+		print("Attach text file")
+		with open(file2, "rb") as f:
+			attach = MIMEApplication(f.read(),_subtype="txt")
+		filename = os.path.basename(file2)
+		attach.add_header('Content-Disposition', 'attachment', filename=filename)
+		#message.attach(msg)
+		message.attach(attach)
+	
+	#return {'raw': base64.urlsafe_b64encode(message.as_string())}
+	return {'raw': base64.urlsafe_b64encode(message.as_bytes()).decode()}	
+
+def send_message(service, user_id, message):
+
+	try:
+		message = (service.users().messages().send(userId=user_id, body=message)
+			   .execute())
+		print('Message Id: %s' % message['id'])
+		return message
+	except errors.HttpError as error:
+		print('An error occurred: %s' % error)
+
+	return
+
+def service_account_login():
+	SCOPES = ['https://www.googleapis.com/auth/gmail.send']
+	SERVICE_ACCOUNT_FILE = 'service-key.json'
+
+	credentials = service_account.Credentials.from_service_account_file(
+		  SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+	delegated_credentials = credentials.with_subject(EMAIL_FROM)
+	service = build('gmail', 'v1', credentials=delegated_credentials)
+	return service	
+
+

@@ -31,6 +31,8 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
+from quotepad.utils import create_message, create_message_with_attachment, send_message, send_email_using_GmailAPI
+
 def admin_home(request):
 	''' Your Heat Admin Home page '''
 
@@ -176,12 +178,14 @@ def email_comms(request, comms, customer_id=None):
 					email = EmailMessage(mail_subject, html_content, 'info@yourheat.co.uk' , [line.get('customer_email')])
 					email.content_subtype = "html"  # Main content is now text/html
 					email.send()
+					#send_email_using_GmailAPI('gordonalindsay@gmail.com',line.get('customer_email'), mail_subject, html_content)
 			else:
 				if mail_subject == "Your Heat - New Survey Booked":		# Test Email - don't send cc
 					send_email_using_SendGrid('info@yourheat.co.uk', line.get('customer_email'), mail_subject, html_content )
 				else:		# Send separate emails to try and avoid blocks
-					send_email_using_SendGrid('info@yourheat.co.uk', line.get('customer_email'), mail_subject, html_content )
-					send_email_using_SendGrid('info@yourheat.co.uk', 'info@yourheat.co.uk', mail_subject, html_content )
+					#send_email_using_SendGrid('info@yourheat.co.uk', line.get('customer_email'), mail_subject, html_content )
+					#send_email_using_SendGrid('info@yourheat.co.uk', 'info@yourheat.co.uk', mail_subject, html_content )
+					send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content)
 
 			#print(stop)	
 
@@ -797,6 +801,78 @@ def confirm_calendar_appointment(request, customer_id=None):
 
 def processing_cancelled(request):
 	''' Function to confirm Processing Cancelled '''
-	return render(request,'yourheat/adminpages/processing_cancelled.html')	
+	return render(request,'yourheat/adminpages/processing_cancelled.html')
+
+def test_gmail(request):
+	SCOPES = ['https://www.googleapis.com/auth/calendar','https://www.googleapis.com/auth/gmail.modify']
+
+	creds = None
+	# The file token.pickle stores the user's access and refresh tokens, and is
+	# created automatically when the authorization flow completes for the first
+	# time.
+	token_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/token.pickle")
+	creds_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/credentials.json")
+	#print(creds_filename)
+	if os.path.exists('token.pickle'):
+		print("pickle exists")
+		with open('token.pickle', 'rb') as token:
+			creds = pickle.load(token)
+	# If there are no (valid) credentials available, let the user log in.
+	if not creds or not creds.valid:
+		print("Creds not valid")
+		if creds and creds.expired and creds.refresh_token:
+			creds.refresh(Request())
+		else:
+			flow = InstalledAppFlow.from_client_secrets_file(
+				creds_filename, SCOPES)
+			creds = flow.run_local_server(port=0)
+		# Save the credentials for the next run
+		with open('token.pickle', 'wb') as token:
+			pickle.dump(creds, token)
+
+
+	service = build('calendar', 'v3', credentials=creds)
+
+	# Call the Calendar API
+	now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+	print('Getting the upcoming 10 events')
+	events_result = service.events().list(calendarId='primary', timeMin=now,
+																			maxResults=10, singleEvents=True,
+																			orderBy='startTime').execute()
+	events = events_result.get('items', [])
+
+	if not events:
+			print('No upcoming events found.')
+	for event in events:
+			start = event['start'].get('dateTime', event['start'].get('date'))
+			print(start, event['summary'])
+
+	# Insert the event into the calendar
+	#event = service.events().insert(calendarId=form.cleaned_data["engineer"], body=event).execute()
+	#print ('Event created: %s' % (event.get('htmlLink')))
+
+	service = build('gmail', 'v1', credentials=creds)
+
+	#message = create_message('hello@yourheat.co.uk', 'gordonlindsay@virginmedia.com', 'THis is a test email', 'This is the content')
+
+
+	outputFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/CustomerQuoteForCustomer_Formula_YH-55.pdf")
+	message = create_message_with_attachment('hello@yourheat.co.uk', 'gordonlindsay@virginmedia.com', 'THis is a test email', '<u>This is the content</u>', outputFilename)
+	#message = create_message_with_attachment('hello@yourheat.co.uk', 'gordonlindsay@virginmedia.com', 'THis is a test email', '<u>This is the content</u>', 'CustomerQuoteForCustomer_Formula_YH-55.pdf')
+	sent = send_message(service,'me', message)
+
+	# Call the Gmail API
+	results = service.users().labels().list(userId='me').execute()
+	labels = results.get('labels', [])
+
+	if not labels:
+		print('No labels found.')
+	else:
+		print('Labels:')
+		for label in labels:
+			print(label['name'])
+
+	return
+
 
 

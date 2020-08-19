@@ -1899,6 +1899,18 @@ class QuoteAcceptedForm(forms.Form):
 	primary_product_choice = forms.CharField(max_length=200, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
 	alternative_product_choice = forms.CharField(max_length=200, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
 
+class TestForm(forms.Form):
+	def __init__(self, *args, **kwargs):
+		super(TestForm, self).__init__(*args, **kwargs)
+		self.fields['chemical_system_treatment'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(brand='Applicable for All', user = 6, component_type = 'Chemical System Treatment').order_by('brand').only('component_name')] + [('Other','Other')])
+		# self.fields['fuel_supply_length'] = forms.MultipleChoiceField(required = False, choices=[(component.component_name,component.component_name) for component in ProductComponent.objects.filter(brand='Applicable for All', user = 6, component_type = 'Fuel Supply Length').order_by('-component_name').only('component_name')])
+		self.fields['scaffolding_required'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(brand='Applicable for All', user = 6, component_type = 'Scaffolding').order_by('-component_name').only('component_name')] + [('Other','Other')])
+		self.fields['parking_requirements'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(brand='Applicable for All', user = 6, component_type = 'Parking').order_by('brand').only('component_name')] + [('Other','Other')])
+		self.fields['central_heating_system_filter'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(brand='Applicable for All', user = 6, component_type = 'Central Heating System Filter').order_by('brand').only('component_name')] + [('Other','Other')])
+
+		for field in self: 
+			field.field.widget.attrs['class'] = 'form-control'
+
 
 
 

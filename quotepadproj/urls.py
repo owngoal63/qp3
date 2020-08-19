@@ -37,6 +37,8 @@ from quotepad.views import processing_cancelled, preview_comms, display_comms, e
 # Imports for Hub
 from quotepad.views import hub_home, recommend_a_friend, preview_recommend_a_friend, email_recommend_a_friend, confirmation_page
 
+from quotepad.views import TestForm, test_gmail
+
 urlpatterns = [
     
     url(r'^admin/', admin.site.urls),
@@ -151,6 +153,8 @@ urlpatterns = [
     path('DisplayComms/<str:comms>/<str:customer_id>/', display_comms, name = 'DisplayComms'),
     path('EmailComms/<str:comms>/<str:customer_id>/', email_comms, name = 'EmailComms'),
 
-    
+    path('TestForm/', login_required(TestForm.as_view()), name='TestForm'),
+    path('TestGmail/', test_gmail, name='TestGmail'),
+
 	path('', include('payments.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

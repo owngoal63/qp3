@@ -42,6 +42,11 @@ from django.db.models import Q
 from quotepad.smartsheet_integration import ss_get_data_from_report, ss_update_data, ss_append_data, ss_attach_pdf, ss_get_data_from_sheet, ss_add_comments, ss_attach_list_of_image_files
 from quotepad.forms import ssCustomerSelectForm, ssPostSurveyQuestionsForm, ssGetPhotosForUploadForm, QuoteAcceptedForm
 
+# Added for Gmail delivery
+from quotepad.utils import create_message, create_message_with_attachment, send_message, send_email_using_GmailAPI
+
+from quotepad.forms import TestForm
+
 @login_required
 def hub_home(request):
 	''' Function to render the Hub Home page '''
@@ -1488,6 +1493,7 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			email.attach_file(outputFilename)
 			email.content_subtype = "html"  # Main content is now text/html
 			email.send()
+			send_email_using_GmailAPI('hello@gmail.com',idx_master.email, mail_subject, msg, outputFilename, quote_form_filename )
 
 		else:
 			print("Cust Email:", fd[0]['customer_email'])
@@ -1495,7 +1501,8 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			print("Msg:", msg)
 			print("outputFilename:", outputFilename)
 			print("idx.email:", idx.email)
-			send_pdf_email_using_SendGrid('quotes@yourheat.co.uk', idx_master.email, mail_subject, msg, outputFilename, quote_form_filename )
+			#send_pdf_email_using_SendGrid('quotes@yourheat.co.uk', idx_master.email, mail_subject, msg, outputFilename, quote_form_filename )
+			send_email_using_GmailAPI('hello@gmail.com',idx_master.email, mail_subject, msg, outputFilename )	# Email to yourheatx email address 
 
 		# Generate the PDF and write to disk ( Customer Copy )
 		outputFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/CustomerQuoteForCustomer_{}_{}.pdf".format(request.user.username,customer_last_name.replace(" ","_"),fd[0]['smartsheet_id']))
@@ -1532,6 +1539,8 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			email.attach_file(outputFilename)
 			email.content_subtype = "html"  # Main content is now text/html
 			email.send()
+			send_email_using_GmailAPI('hello@gmail.com',fd[0]['customer_email'], mail_subject, msg, outputFilename ) # Email to customer
+			send_email_using_GmailAPI('hello@gmail.com',idx.email, mail_subject, msg, outputFilename ) # Email to Surveyor
 
 		else:
 			print("Cust Email:", fd[0]['customer_email'])
@@ -1539,7 +1548,9 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			print("Msg:", msg)
 			print("outputFilename:", outputFilename)
 			print("idx.email:", idx.email)
-			send_pdf_email_using_SendGrid('quotes@yourheat.co.uk', fd[0]['customer_email'], mail_subject, msg, outputFilename, None, idx.email)
+			#send_pdf_email_using_SendGrid('quotes@yourheat.co.uk', fd[0]['customer_email'], mail_subject, msg, outputFilename, None, idx.email)
+			send_email_using_GmailAPI('hello@gmail.com',fd[0]['customer_email'], mail_subject, msg, outputFilename ) # Email to customer
+			send_email_using_GmailAPI('hello@gmail.com',idx.email, mail_subject, msg, outputFilename ) # Email to Surveyor
 
 		# ss_update_data code to go here !!!!!!!	
 
@@ -1766,7 +1777,8 @@ def upload_for_reprint_yh(request):
 			for chunk in data_file.chunks():
 				f.write(chunk) 
 		
-		return HttpResponseRedirect('/quotegenerated_yh/')
+		#return HttpResponseRedirect('/quotegenerated_yh/')
+		return HttpResponseRedirect('/ConfirmationPage/Quote Upload Confirmation/Quote Upload/The customer quote data has been uploaded/HubHome')
 
 
 	return render(request, 'yourheat/pages/upload_for_reprint.html')
@@ -1973,5 +1985,10 @@ def email_recommend_a_friend(request):
 def confirmation_page(request, header, popup_title, popup_message, next_page):
 	''' Function to display a standard confirmation page with parameters '''
 
-	return render(request, 'yourheat/pages/confirmation_page.html', {'header': header, 'popup_title': popup_title, 'popup_message': popup_message, 'next_page': next_page })	
+	return render(request, 'yourheat/pages/confirmation_page.html', {'header': header, 'popup_title': popup_title, 'popup_message': popup_message, 'next_page': next_page })
+
+class TestForm(FormView):
+
+	form_class = TestForm
+	template_name = "yourheat/orderforms/TestForm.html"
 
