@@ -441,6 +441,18 @@ def ss_attach_pdf(access_token, sheet_name, conditional_field_name, conditional_
 		for MyCell in MyRow["cells"]:
 			if colMapRev.get(MyCell.get("columnId")) == conditional_field_name and MyCell.get("value") == conditional_field_value:
 				#print("found it", MyRow["id"])
+
+				# Get all the attachments for the row so that we can delete previous pdf quotes
+				all_attachments = ss.Attachments.list_row_attachments(sheet_id, MyRow["id"], include_all=True)
+				attachments = all_attachments.data
+
+				# Loop through attachments and delete the previous Quote.pdf files
+				for attachment in attachments:
+					if attachment.name in ['Quote - Customer copy.pdf', 'Quote - Office use only.pdf']:
+						print("Deleting...",attachment.name, attachment.id)
+						ss.Attachments.delete_attachment(sheet_id, attachment.id)
+				#print(stop)
+
 				updated_attachment = ss.Attachments.attach_file_to_row(
   					sheet_id,       # sheet_id
   					MyRow["id"],       # row_id

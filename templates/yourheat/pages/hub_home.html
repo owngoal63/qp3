@@ -5,14 +5,16 @@
 {% block content %}
 
 <div class="container home-hub">
- 
+    
     <div class="row">
         <div class="col-3">
             <button id = '{% if request.session.email_to_customer and request.session.attach_photos and request.session.office_handover and request.session.send_to_smartsheet and request.session.office_handover %}new-quotation{% else %}new-quotation-but-not-complete{% endif %}'
-             class='{% if request.session.email_to_customer and request.session.attach_photos and request.session.office_handover and request.session.send_to_smartsheet and request.session.office_handover %}xdone{% else %}not-done{% endif %} '><i class="fas fa-folder-plus"></i> NEW QUOTATION</button>   
+             class='{% if request.session.email_to_customer and request.session.attach_photos and request.session.office_handover and request.session.send_to_smartsheet and request.session.office_handover %}xdone{% else %}not-done{% endif %} '>
+             <i class="fas fa-folder-plus"></i> 
+             {% if request.user.username == 'yourheatx' %}RE-QUOTE{% else %}NEW QUOTATION{% endif %}</button>   
         </div>
         <div class="col-6">
-            <h1>Customer Dashboard</h1>    
+            <h1>{% if request.user.username == 'yourheatx' %}Re-quote Dashboard{% else %}Customer Dashboard{% endif %}</h1>    
         </div>
         <div class="col-3">
             <a href="/listquotearchive_yh/"><button id = 'previous-quotes' class='float-right'><i class="fas fa-file-pdf"></i> PREVIOUS QUOTES</button></a>
@@ -61,6 +63,7 @@
         </div>
     </div>
 
+    {% if request.user.username != 'yourheatx' %}
     <div class="row">
         <div class="col-6">
             <a href="/ssGetPhotosForUpload"><button id = 'attach-photos' class='{%if request.session.attach_photos%}done{%else%}notdone{%endif%} float-right'><i class="fas fa-camera"></i> ATTACH PHOTOS</button></a>
@@ -96,6 +99,7 @@
             <a href="/PreviewRecommendAFriend/{{customer_id}}"><button id = 'recommend-a-friend' class='float-right'><i class="fas fa-users"></i> RECOMMEND A FRIEND</button></a>
         </div>
     </div>
+    {% endif %}
 
 </div>
 

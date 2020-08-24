@@ -1,0 +1,75 @@
+{% extends "basenew.html" %}
+
+{% block content %}
+<div class="container">
+    <h4>Test Form</h4>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <div class="parent-grid">
+
+            <!-- <div class="span-6l grid-section">
+                <div class="form-group">
+                    { form.chemical_system_treatment.label}} *<br>
+                    { form.chemical_system_treatment }} <input type="text" class="form-control" id = "{{form.chemical_system_treatment.name}}_other" placeholder="Enter text for other"/>
+                </div>
+            </div>
+        
+            <div class="span-6r grid-section">
+                <div class="form-group">
+                    { form.fuel_supply_length.label}} *<br>
+                    { form.fuel_supply_length }}
+                </div>
+            </div> -->
+
+        </div>
+
+        <div class="parent-grid">
+
+            {% for field in form %}
+                {% if forloop.counter == 1 or forloop.counter == 3 or forloop.counter == 5 or forloop.counter == 7 or forloop.counter == 9  or forloop.counter == 11 or forloop.counter == 13 %}
+                    <div class="span-6l grid-section">
+                {% else %}
+                <div class="span-6r grid-section">
+                {% endif %}
+                    <div class="form-group">
+
+                        {{ field.label }} *<br>
+                        {{field}} <input type="text" class="form-control" id = "{{field.name}}_other" placeholder="Enter text for other"/>
+
+
+                    </div>
+                </div>    
+            {% endfor %}
+        
+        </div>
+
+        <button class="btn boilerbtn btn-warning" type="submit">Email Quote Accepted Details</button>
+
+        <a href="{% url 'HubHome' %}" class="btn btn-secondary">Cancel</a>
+
+    </form>
+    <br>
+</div>
+
+<script>
+    $("input[type=text]").hide();
+
+//     $("#dataTable tbody tr").on("click", function(event){
+//     alert($(this).text());
+// });
+
+    // $('#id_chemical_system_treatment').on('change', function () { 
+    //     console.log("changed"); 
+    //     $(this).next('input[type=text]').toggle((this.value) == 'Other')
+    // });
+
+    $('.form-control').on('change', function () { 
+        console.log("changed"); 
+        $(this).next('input[type=text]').toggle((this.value) == 'Other')
+    });
+</script>
+
+{% endblock content %}

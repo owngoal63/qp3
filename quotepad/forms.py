@@ -1341,32 +1341,38 @@ class FormStepTwo_yh(forms.Form):
 	# within double curly braces...
 	# form_data.1.field_name e.g. form_data.1.installation_address
 	def __init__(self, *args, **kwargs):
+		self.user_name = kwargs.pop('user_name')
 		super(FormStepTwo_yh, self).__init__(*args, **kwargs)
+		
+		self.fields['house_name_or_number'] = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'size':60}))
+		self.fields['street_address'] = forms.CharField(max_length=100)
+		self.fields['city'] = forms.CharField(max_length=100)
+		if settings.YH_SS_INTEGRATION:
+			self.fields['county'] = forms.CharField(max_length=100, required=False)
+		else:	
+			self.fields['county'] = forms.CharField(max_length=100)
+		self.fields['postcode'] = forms.CharField(max_length=100)
+		self.fields['property_type'] = forms.ChoiceField(choices=PROPERTY_TYPE_DROPDOWN)	
+		self.fields['alternative_billing_address'] = forms.ChoiceField(choices=ALTERNATIVE_BILLING_ADDRESS_DROPDOWN)
+		if self.user_name == settings.YH_MASTER_PROFILE_USERNAME:		
+			self.fields['billing_house_name_or_number'] = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address'}))
+			self.fields['billing_street_address'] = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address'}))
+			self.fields['billing_city'] = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address'}))
+			self.fields['billing_county'] = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address'}))
+			self.fields['billing_postcode'] = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address'}))
+		else:
+			self.fields['billing_house_name_or_number'] = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address', 'disabled': 'disabled'}))
+			self.fields['billing_street_address'] = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address', 'disabled': 'disabled'}))
+			self.fields['billing_city'] = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address', 'disabled': 'disabled'}))
+			self.fields['billing_county'] = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address', 'disabled': 'disabled'}))
+			self.fields['billing_postcode'] = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address', 'disabled': 'disabled'}))
+		self.fields['heat_loss_house_type'] = forms.ChoiceField(choices=HEAT_LOSS_HOUSE_TYPE_DROPDOWN)
+		self.fields['building_width'] = forms.FloatField( validators = [MinValueValidator(0.0)],widget=forms.NumberInput(attrs={'placeholder': 'Metres'}))
+		self.fields['building_length'] = forms.FloatField( validators = [MinValueValidator(0.0)],widget=forms.NumberInput(attrs={'placeholder': 'Metres'}))
+		self.fields['ceiling_height'] = forms.FloatField( validators = [MinValueValidator(0.0)],widget=forms.NumberInput(attrs={'placeholder': 'Metres'}))
+		self.fields['floors'] = forms.IntegerField( validators = [MinValueValidator(0)], widget=forms.NumberInput(attrs={'placeholder': 'No. of floors'}))
 		for field in self: 
-			field.field.widget.attrs['class'] = 'form-control'
-	house_name_or_number = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'size':60}))
-	street_address = forms.CharField(max_length=100)
-	city = forms.CharField(max_length=100)
-	if settings.YH_SS_INTEGRATION:
-		county = forms.CharField(max_length=100, required=False)
-	else:	
-		county = forms.CharField(max_length=100)
-	postcode = forms.CharField(max_length=100)
-	property_type = forms.ChoiceField(choices=PROPERTY_TYPE_DROPDOWN)	
-	alternative_billing_address = forms.ChoiceField(choices=ALTERNATIVE_BILLING_ADDRESS_DROPDOWN)		
-	#alt_billing_address = forms.BooleanField(required=False)		
-	#alt_billing_address = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs = {'class': 'form-check-input', 'onchange' : "extras_handler();"}))		
-	billing_house_name_or_number = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address', 'disabled': 'disabled'}))
-	billing_street_address = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address', 'disabled': 'disabled'}))
-	billing_city = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address', 'disabled': 'disabled'}))
-	billing_county = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address', 'disabled': 'disabled'}))
-	billing_postcode = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={ 'placeholder': 'If different to installation address', 'disabled': 'disabled'}))		
-	
-	heat_loss_house_type = forms.ChoiceField(choices=HEAT_LOSS_HOUSE_TYPE_DROPDOWN)
-	building_width = forms.FloatField( validators = [MinValueValidator(0.0)],widget=forms.NumberInput(attrs={'placeholder': 'Metres'}))
-	building_length = forms.FloatField( validators = [MinValueValidator(0.0)],widget=forms.NumberInput(attrs={'placeholder': 'Metres'}))
-	ceiling_height = forms.FloatField( validators = [MinValueValidator(0.0)],widget=forms.NumberInput(attrs={'placeholder': 'Metres'}))
-	floors = forms.IntegerField( validators = [MinValueValidator(0)], widget=forms.NumberInput(attrs={'placeholder': 'No. of floors'}))
+				field.field.widget.attrs['class'] = 'form-control'
 
 
 class FormStepThree_yh(forms.Form):
@@ -1374,25 +1380,36 @@ class FormStepThree_yh(forms.Form):
 	# within double curly braces...
 	# form_data.2.field_name e.g. form_data.2.current_fuel_type
 	def __init__(self, *args, **kwargs):
+		self.user_name = kwargs.pop('user_name')
 		super(FormStepThree_yh, self).__init__(*args, **kwargs)
+		self.fields['current_fuel_type'] = forms.ChoiceField(choices=CURRENT_FUEL_TYPE_DROPDOWN)
+		self.fields['current_boiler_type'] = forms.ChoiceField(choices=CURRENT_BOILER_TYPE_DROPDOWN)
+		self.fields['current_boiler_location'] = forms.ChoiceField(choices=CURRENT_BOILER_LOCATION_DROPDOWN)
+		self.fields['current_flue_system'] = forms.ChoiceField(choices=CURRENT_FLUE_SYSTEM_DROPDOWN)
+		self.fields['current_flue_location'] = forms.ChoiceField(choices=CURRENT_FLUE_LOCATION_DROPDOWN)
+		self.fields['current_controls'] = forms.MultipleChoiceField(choices=CURRENT_CONTROLS_DROPDOWN)
+		self.fields['current_radiators_working_correctly'] = forms.ChoiceField(choices=CURRENT_RADIATORS_WORKING_CORRECTLY_DROPDOWN)
+		if self.user_name == settings.YH_MASTER_PROFILE_USERNAME:
+			self.fields['locations_where_radiators_not_working_correctly'] = forms.MultipleChoiceField(required=False, choices=LOCATIONS_WHERE_RADIATORS_NOT_WORKING_CORRECTLY_DROPDOWN)
+		else:
+			self.fields['locations_where_radiators_not_working_correctly'] = forms.MultipleChoiceField(required=False, choices=LOCATIONS_WHERE_RADIATORS_NOT_WORKING_CORRECTLY_DROPDOWN, disabled=True)
+		#locations_where_radiators_not_working_correctly = forms.MultipleChoiceField(required=False, choices=LOCATIONS_WHERE_RADIATORS_NOT_WORKING_CORRECTLY_DROPDOWN, widget=forms.SelectMultiple(attrs={'disabled': 'disabled'}))
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
-	current_fuel_type = forms.ChoiceField(choices=CURRENT_FUEL_TYPE_DROPDOWN)
-	current_boiler_type = forms.ChoiceField(choices=CURRENT_BOILER_TYPE_DROPDOWN)
-	current_boiler_location = forms.ChoiceField(choices=CURRENT_BOILER_LOCATION_DROPDOWN)
-	current_flue_system = forms.ChoiceField(choices=CURRENT_FLUE_SYSTEM_DROPDOWN)
-	current_flue_location = forms.ChoiceField(choices=CURRENT_FLUE_LOCATION_DROPDOWN)
-	current_controls = forms.MultipleChoiceField(choices=CURRENT_CONTROLS_DROPDOWN)
-	current_radiators_working_correctly = forms.ChoiceField(choices=CURRENT_RADIATORS_WORKING_CORRECTLY_DROPDOWN)
-	locations_where_radiators_not_working_correctly = forms.MultipleChoiceField(required=False, choices=LOCATIONS_WHERE_RADIATORS_NOT_WORKING_CORRECTLY_DROPDOWN, disabled=True)
 	
 class FormStepFour_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
 	# within double curly braces...
 	# form_data.3.field_name e.g. form_data.3.removals
-	removals = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
+	def __init__(self, *args, **kwargs):
+		self.user_name = kwargs.pop('user_name')
+		super(FormStepFour_yh, self).__init__(*args, **kwargs)
+		self.fields['removals'] = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
 											 choices=REMOVALS_CHOICES)
-	radiator_quantity = forms.IntegerField(required=False, validators = [MinValueValidator(0)], widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate', 'disabled': 'disabled'}))
+		if self.user_name == settings.YH_MASTER_PROFILE_USERNAME:									 
+			self.fields['radiator_quantity'] = forms.IntegerField(required=False, validators = [MinValueValidator(0)], widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate'}))
+		else:
+			self.fields['radiator_quantity'] = forms.IntegerField(required=False, validators = [MinValueValidator(0)], widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate', 'disabled': 'disabled'}))
 
 class FormStepFive_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
@@ -1401,27 +1418,33 @@ class FormStepFive_yh(forms.Form):
 	def __init__(self, *args, **kwargs):
 		# Get the user to seed the filter on the boiler_manufacturer drop down.
 		self.user = kwargs.pop('user')
+		self.user_name = kwargs.pop('user_name')
 		super(FormStepFive_yh, self).__init__(*args, **kwargs)
+		self.fields['new_fuel_type'] = forms.ChoiceField(choices=NEW_FUEL_TYPE_DROPDOWN)
+		self.fields['new_boiler_type'] = forms.ChoiceField(choices=NEW_BOILER_TYPE_DROPDOWN)
+		self.fields['new_boiler_location'] = forms.ChoiceField(choices=NEW_BOILER_LOCATION_DROPDOWN)
+		self.fields['new_flue_system'] = forms.ChoiceField(choices=NEW_FLUE_SYSTEM_DROPDOWN)
+		self.fields['new_flue_location'] = forms.ChoiceField(choices=NEW_FLUE_LOCATION_DROPDOWN)
+		self.fields['new_flue_diameter'] = forms.ChoiceField(choices=NEW_FLUE_DIAMETER_DROPDOWN)
+		self.fields['plume_management_kit'] = forms.ChoiceField(choices=PLUME_MANAGEMENT_KIT_DROPDOWN)
+		self.fields['condensate_termination'] = forms.ChoiceField(choices=CONDENSATE_TERMINATION_DROPDOWN)
+		#new_controls = forms.MultipleChoiceField(choices=NEW_CONTROLS_DROPDOWN)
+		self.fields['new_controls'] = forms.ChoiceField(choices=NEW_CONTROLS_DROPDOWN)
+		self.fields['incoming_flow_rate'] = forms.ChoiceField(choices=INCOMING_FLOW_RATE_DROPDOWN)
+		self.fields['will_boiler_be_housed_in_cupboard'] = forms.ChoiceField(choices=WILL_BOILER_BE_HOUSED_IN_CUPBOARD_DROPDOWN)
+		if self.user_name == settings.YH_MASTER_PROFILE_USERNAME:
+			self.fields['cupboard_height'] = forms.IntegerField(required=False, validators = [MinValueValidator(0)],  widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate'}))
+			self.fields['cupboard_width'] = forms.IntegerField(required=False, validators = [MinValueValidator(0)], widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate'}))
+			self.fields['cupboard_depth'] = forms.IntegerField(required=False, validators = [MinValueValidator(0)], widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate'}))
+		else:
+			self.fields['cupboard_height'] = forms.IntegerField(required=False, validators = [MinValueValidator(0)],  widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate', 'disabled': 'disabled'}))
+			self.fields['cupboard_width'] = forms.IntegerField(required=False, validators = [MinValueValidator(0)], widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate', 'disabled': 'disabled'}))
+			self.fields['cupboard_depth'] = forms.IntegerField(required=False, validators = [MinValueValidator(0)], widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate', 'disabled': 'disabled'}))
 		self.fields['boiler_manufacturer'] = forms.ModelChoiceField(queryset=ProductPrice.objects.filter(user = self.user).order_by('brand').values_list('brand', flat=True).distinct(), to_field_name='brand',empty_label = 'Select Boiler Brand for quote')
 		self.fields['alt_boiler_manufacturer'] = forms.ModelChoiceField(required=False, queryset=ProductPrice.objects.filter(user = self.user).order_by('brand').values_list('brand', flat=True).distinct(), to_field_name='brand',empty_label = 'Select Alternative Boiler Brand if required')
 		for field in self: 
-			field.field.widget.attrs['class'] = 'form-control'
-	new_fuel_type = forms.ChoiceField(choices=NEW_FUEL_TYPE_DROPDOWN)
-	new_boiler_type = forms.ChoiceField(choices=NEW_BOILER_TYPE_DROPDOWN)
-	new_boiler_location = forms.ChoiceField(choices=NEW_BOILER_LOCATION_DROPDOWN)
-	new_flue_system = forms.ChoiceField(choices=NEW_FLUE_SYSTEM_DROPDOWN)
-	new_flue_location = forms.ChoiceField(choices=NEW_FLUE_LOCATION_DROPDOWN)
-	new_flue_diameter = forms.ChoiceField(choices=NEW_FLUE_DIAMETER_DROPDOWN)
-	plume_management_kit = forms.ChoiceField(choices=PLUME_MANAGEMENT_KIT_DROPDOWN)
-	condensate_termination = forms.ChoiceField(choices=CONDENSATE_TERMINATION_DROPDOWN)
-	#new_controls = forms.MultipleChoiceField(choices=NEW_CONTROLS_DROPDOWN)
-	new_controls = forms.ChoiceField(choices=NEW_CONTROLS_DROPDOWN)
-	incoming_flow_rate = forms.ChoiceField(choices=INCOMING_FLOW_RATE_DROPDOWN)
-	will_boiler_be_housed_in_cupboard = forms.ChoiceField(choices=WILL_BOILER_BE_HOUSED_IN_CUPBOARD_DROPDOWN)
-	cupboard_height = forms.IntegerField(required=False, validators = [MinValueValidator(0)],  widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate', 'disabled': 'disabled'}))
-	cupboard_width = forms.IntegerField(required=False, validators = [MinValueValidator(0)], widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate', 'disabled': 'disabled'}))
-	cupboard_depth = forms.IntegerField(required=False, validators = [MinValueValidator(0)], widget=forms.NumberInput(attrs={ 'placeholder': 'If appropriate', 'disabled': 'disabled'}))
-	
+				field.field.widget.attrs['class'] = 'form-control'
+
 class FormStepSix_yh(forms.Form):
 	# Fields in this class are rendered in the quote_for_pdf.html file with the following notation
 	# within double curly braces...
@@ -1435,6 +1458,7 @@ class FormStepSix_yh(forms.Form):
 		self.alt_manuf = kwargs.pop('alt_manufacturer')
 		self.fuel_type = kwargs.pop('fuel_type')
 		self.boiler_type = kwargs.pop('boiler_type')
+		self.user_name = kwargs.pop('user_name')
 		#self.heat_loss_value = kwargs.pop('heat_loss_value')
 		super(FormStepSix_yh, self).__init__(*args, **kwargs)
 		self.fields['chemical_system_treatment'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(Q(brand='Applicable for All') | Q(brand=self.manuf), user = self.user, component_type = 'Chemical System Treatment').order_by('brand').only('component_name')])
@@ -1443,11 +1467,18 @@ class FormStepSix_yh(forms.Form):
 		self.fields['fuel_supply_length'] = forms.MultipleChoiceField(required = False, choices=[(component.component_name,component.component_name) for component in ProductComponent.objects.filter(Q(brand='Applicable for All') | Q(brand=self.manuf), user = self.user, component_type = 'Fuel Supply Length').order_by('-component_name').only('component_name')])
 		self.fields['scaffolding_required'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(Q(brand='Applicable for All') | Q(brand=self.manuf), user = self.user, component_type = 'Scaffolding').order_by('-component_name').only('component_name')])
 		self.fields['asbestos_containing_materials_identified'] = forms.ChoiceField(choices=ASBESTOS_CONTAINING_MATERIALS_IDENTIFIED_DROPDOWN)
-		self.fields['asbestos_removal_procedure'] = forms.ChoiceField(required = False, choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(Q(brand='Applicable for All') | Q(brand=self.manuf), user = self.user, component_type = 'Asbestos Removal Procedure').order_by('brand').only('component_name')], widget=forms.Select(attrs={'disabled': 'disabled'}))
+		if self.user_name == settings.YH_MASTER_PROFILE_USERNAME:
+			self.fields['asbestos_removal_procedure'] = forms.ChoiceField(required = False, choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(Q(brand='Applicable for All') | Q(brand=self.manuf), user = self.user, component_type = 'Asbestos Removal Procedure').order_by('brand').only('component_name')])
+		else:
+			self.fields['asbestos_removal_procedure'] = forms.ChoiceField(required = False, choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(Q(brand='Applicable for All') | Q(brand=self.manuf), user = self.user, component_type = 'Asbestos Removal Procedure').order_by('brand').only('component_name')], widget=forms.Select(attrs={'disabled': 'disabled'}))
 		#self.fields['electrical_work_required'] = forms.ChoiceField(choices=ELECTRICAL_WORK_REQUIRED_DROPDOWN)
 		self.fields['electrical_work_required'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(Q(brand='Applicable for All') | Q(brand=self.manuf), user = self.user, component_type = 'Electrical Work').order_by('brand').only('component_name')])
 		self.fields['potential_contractor_attendance_required'] = forms.ChoiceField(choices=POTENTIAL_CONTRACTOR_ATTENDANCE_REQUIRED_DROPDOWN)
-		self.fields['details_on_potential_contractor_requirements'] = forms.CharField(max_length=2000, required = False, widget=forms.Textarea(attrs={'rows':3, 'cols':30, 'placeholder': 'if applicable, please be detailed', 'disabled': 'disabled'}))
+		if self.user_name == settings.YH_MASTER_PROFILE_USERNAME:
+			self.fields['details_on_potential_contractor_requirements'] = forms.CharField(max_length=2000, required = False, widget=forms.Textarea(attrs={'rows':3, 'cols':30, 'placeholder': 'if applicable, please be detailed'}))
+		else:
+			self.fields['details_on_potential_contractor_requirements'] = forms.CharField(max_length=2000, required = False, widget=forms.Textarea(attrs={'rows':3, 'cols':30, 'placeholder': 'if applicable, please be detailed', 'disabled': 'disabled'}))
+		#self.fields['parking_requirements'] = forms.CharField(max_length=2000, required = False, widget=forms.Textarea(attrs={'rows':3, 'cols':30, 'placeholder': 'if applicable, please be detailed'}))
 		#self.fields['parking_requirements'] = forms.CharField(max_length=2000, required = False, widget=forms.Textarea(attrs={'rows':3, 'cols':30, 'placeholder': 'if applicable, please be detailed'}))
 		self.fields['parking_requirements'] = forms.ChoiceField(choices=[('','Select One')] + [(component.component_name,component.component_name) for component in ProductComponent.objects.filter(Q(brand='Applicable for All') | Q(brand=self.manuf), user = self.user, component_type = 'Parking').order_by('brand').only('component_name')])
 
@@ -1476,6 +1507,7 @@ class FormStepSeven_yh(forms.Form):
 		self.new_fuel_type = kwargs.pop('new_fuel_type')
 		self.new_controls = kwargs.pop('new_controls')
 		self.boiler_type = kwargs.pop('boiler_type')
+		self.user_name = kwargs.pop('user_name')
 		super(FormStepSeven_yh, self).__init__(*args, **kwargs)
 		#self.fields['gas_flue_components'] = forms.ModelMultipleChoiceField(required=True, queryset=ProductComponent.objects.filter(user = self.user, brand = self.manuf, component_type = 'Gas Flue Component').only('component_name'))
 		if self.new_fuel_type == 'Oil':
@@ -1733,10 +1765,12 @@ class FinanceForm_yh(forms.Form):
 		self.component_duration_total = kwargs.pop('component_duration_total')
 		self.total_quote_price = kwargs.pop('total_quote_price')
 		self.alt_total_quote_price = kwargs.pop('alt_total_quote_price')
-		#print('-----')
-		#print(self.total_quote_price)
+		self.user_name = kwargs.pop('user_name')
 		super(FinanceForm_yh, self).__init__(*args, **kwargs)
-		self.fields['total_cost'].disabled = True
+		if self.user_name == settings.YH_MASTER_PROFILE_USERNAME:
+			self.fields['total_cost'].disabled = False
+		else:	
+			self.fields['total_cost'].disabled = True
 		self.fields['total_cost'].initial = self.total_quote_price
 		self.fields['deposit_amount'].initial = round((float(self.total_quote_price) * 30) / 100, 2)
 		self.fields['deposit_amount'].decimal_places = 2

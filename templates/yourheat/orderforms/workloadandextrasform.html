@@ -99,17 +99,16 @@
                         </table>
                         
                     </div>
-
+            </div>
         </div>
         
     </div>
-    
+    <br>    
     {% endif %}
     
     <div class = "row">
         <div class="col-12">
             <div class="boilerformbtns">
-                <br>
                 {% if wizard.steps.prev %}
                 <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.first }}" class="boilerbtn">First step</button>
                 <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.prev }}" class="boilerbtn">Previous step</button>

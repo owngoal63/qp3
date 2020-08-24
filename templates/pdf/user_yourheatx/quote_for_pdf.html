@@ -29,12 +29,16 @@
 
         <div class="ob-top">
             <p class="ob-name">{{form_data.0.customer_title}} {{form_data.0.customer_last_name}}</p>
-            <p class="ob-reference">Your reference: {{ idx.quote_prefix }}-{{ form_data.19.quote_number }}</p>
+            <p class="ob-reference">Your reference: {{ form_data.0.smartsheet_id }}</p>
             <br>
             <br>
-            <p class="ob-text">Thank you for having <b>{{idx.first_name}} {{idx.last_name}}</b> visit you today. Please find your bespoke, fixed-price
-                quotation
-                for your brand new boiler. We estimate that your installation will take {{form_data.8.estimated_duration}}.</p>
+            <p class="ob-text">
+                {% if user_name == 'yourheatx' %}
+                    Thank you for agreeing to have us provide you with a revised quote.&nbsp;
+                {% else %}
+                    Thank you for having <b>{{idx.first_name}} {{idx.last_name}}</b> visit you today.&nbsp;
+                {% endif %}
+                Please find your bespoke, fixed-price quotation for your brand new boiler. We estimate that your installation will take {{form_data.8.estimated_duration}}.</p>
 
         </div>
 
@@ -111,7 +115,11 @@
                 <td class="headrow">Accelerated 1</td>
                 <td class="midrow">9.9%</td>
                 <td class="midrow">120 Months</td>
-                <td class="midrow">£ {{ form_data.9.deposit_amount_thirty_percent|floatformat:2 }}<br>(Optional)</td>
+                {% if user_name == 'yourheatx' %}
+                    <td class="midrow">£ {{ form_data.9.deposit_amount|floatformat:2 }}<br>(Optional)</td>
+                {% else %}
+                    <td class="midrow">£ {{ form_data.9.deposit_amount_thirty_percent|floatformat:2 }}<br>(Optional)</td>
+                {% endif %}
                 <td class="midrow">£ {{ form_data.9.ib120_loan_amount }}</td>
                 <td class="midrow">£ {{ form_data.9.ib120_total_payable }}</td>
                 <td class="endrow">£ {{ form_data.9.ib120_monthly_payment }}</td>
@@ -120,7 +128,11 @@
                 <td class="headrow">Accelerated 2</td>
                 <td class="midrow">9.9%</td>
                 <td class="midrow">96 Months</td>
-                <td class="midrow">£ {{ form_data.9.deposit_amount_thirty_percent|floatformat:2 }}<br>(Optional)</td>
+                {% if user_name == 'yourheatx' %}
+                    <td class="midrow">£ {{ form_data.9.deposit_amount|floatformat:2 }}<br>(Optional)</td>
+                {% else %}
+                    <td class="midrow">£ {{ form_data.9.deposit_amount_thirty_percent|floatformat:2 }}<br>(Optional)</td>
+                {% endif %}
                 <td class="midrow">£ {{ form_data.9.ib96_loan_amount }}</td>
                 <td class="midrow">£ {{ form_data.9.ib96_total_payable }}</td>
                 <td class="endrow">£ {{ form_data.9.ib96_monthly_payment }}</td>
@@ -128,7 +140,11 @@
                 <td class="headrow">Accelerated 3</td>
                 <td class="midrow">9.9%</td>
                 <td class="midrow">60 Months</td>
-                <td class="midrow">£ {{ form_data.9.deposit_amount_thirty_percent|floatformat:2 }}<br>(Optional)</td>
+                {% if user_name == 'yourheatx' %}
+                    <td class="midrow">£ {{ form_data.9.deposit_amount|floatformat:2 }}<br>(Optional)</td>
+                {% else %}
+                    <td class="midrow">£ {{ form_data.9.deposit_amount_thirty_percent|floatformat:2 }}<br>(Optional)</td>
+                {% endif %}
                 <td class="midrow">£ {{ form_data.9.ib60_loan_amount }}</td>
                 <td class="midrow">£ {{ form_data.9.ib60_total_payable }}</td>
                 <td class="endrow">£ {{ form_data.9.ib60_monthly_payment }}</td>
@@ -137,7 +153,11 @@
                 <td class="headrow">Accelerated 4</td>
                 <td class="midrow">9.9%</td>
                 <td class="midrow">48 Months</td>
-                <td class="midrow">£ {{ form_data.9.deposit_amount_thirty_percent|floatformat:2 }}<br>(Optional)</td>
+                {% if user_name == 'yourheatx' %}
+                    <td class="midrow">£ {{ form_data.9.deposit_amount|floatformat:2 }}<br>(Optional)</td>
+                {% else %}
+                    <td class="midrow">£ {{ form_data.9.deposit_amount_thirty_percent|floatformat:2 }}<br>(Optional)</td>
+                {% endif %}
                 <td class="midrow">£ {{ form_data.9.ib48_loan_amount }}</td>
                 <td class="midrow">£ {{ form_data.9.ib48_total_payable }}</td>
                 <td class="endrow">£ {{ form_data.9.ib48_monthly_payment }}</td>
@@ -146,7 +166,11 @@
                 <td class="headrow">Accelerated 5</td>
                 <td class="midrow">9.9%</td>
                 <td class="midrow">36 Months</td>
-                <td class="midrow">£ {{ form_data.9.deposit_amount_thirty_percent|floatformat:2 }}<br>(Optional)</td>
+                {% if user_name == 'yourheatx' %}
+                    <td class="midrow">£ {{ form_data.9.deposit_amount|floatformat:2 }}<br>(Optional)</td>
+                {% else %}
+                    <td class="midrow">£ {{ form_data.9.deposit_amount_thirty_percent|floatformat:2 }}<br>(Optional)</td>
+                {% endif %}
                 <td class="midrow">£ {{ form_data.9.ib36_loan_amount }}</td>
                 <td class="midrow">£ {{ form_data.9.ib36_total_payable }}</td>
                 <td class="endrow">£ {{ form_data.9.ib36_monthly_payment }}</td>
@@ -155,7 +179,11 @@
                 <td class="headrowx">Interest Free</td>
                 <td class="midrow">0%</td>
                 <td class="midrow">12 Months</td>
-                <td class="midrow">£ {{ form_data.9.deposit_amount_thirty_percent|floatformat:2 }}</td>
+                {% if user_name == 'yourheatx' %}
+                    <td class="midrow">£ {{ form_data.9.deposit_amount|floatformat:2 }}<br>(Optional)</td>
+                {% else %}
+                    <td class="midrow">£ {{ form_data.9.deposit_amount_thirty_percent|floatformat:2 }}<br>(Optional)</td>
+                {% endif %}
                 <td class="midrow">£ {{ form_data.9.interest_free_12m_loan_amount }}</td>
                 <td class="midrow">£ {{ form_data.9.interest_free_12m_total_payable }}</td>
                 <td class="endrow">£ {{ form_data.9.interest_free_12m_monthly_payment }}</td>
@@ -850,7 +878,11 @@
                 <td class="tech-attrib">DEPOSIT REQUIRED</td>
             </tr>
             <tr>    
-                <td class="tech-value">£{{form_data.9.deposit_amount_thirty_percent|floatformat:2}}</td>
+                {% if user_name == 'yourheatx' %}
+                    <td class="tech-value">£{{form_data.9.deposit_amount|floatformat:2}}</td>
+                {% else %}
+                    <td class="tech-value">£{{form_data.9.deposit_amount_thirty_percent|floatformat:2}}</td>
+                {% endif %}
             </tr>
             <tr>
                 <td class="tech-attrib">BALANCE DUE ON COMPLETION</td>

@@ -434,36 +434,72 @@ class BoilerFormWizardView_yh(SessionWizardView):
 	#template_name = "yourheat/orderforms/boilerform.html"
 
 	def get_form_initial(self, step):
-		#Get the selected Customer index from the session variable
-		selected_customer_index = int(self.request.session['selected_customer_index'])
+		
 
 		init_dict = {}
-		#get object to populate data
-		print(selected_customer_index, type(selected_customer_index))
-		if selected_customer_index != -1 and settings.YH_SS_INTEGRATION:
-			cfile = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/ss_custdata.txt".format(self.request.user.username))
-			if step == '0':		# Customer Details Formpage
-				with open(cfile, encoding='utf-8', errors='replace') as txtfile:
-					all_lines = txtfile.readlines()
-					init_dict = json.loads(all_lines[selected_customer_index])
-			elif step == '1':	# Customer Address Formpage
-				with open(cfile, encoding='utf-8', errors='replace') as txtfile:
-					all_lines = txtfile.readlines()
-					init_dict = json.loads(all_lines[selected_customer_index])
-					#Convert house number with a .0 postfix to an integer with string manipulation
-					at_pos = init_dict.get("house_name_or_number").find('.0')
-					if at_pos > 0:
-						init_dict["house_name_or_number"] = init_dict.get("house_name_or_number")[0:at_pos]
-					else:	
-						init_dict['house_name_or_number'] = init_dict.get("house_name_or_number")
-					# Check for any "NONE" fields coming from Smartsheet and replace with ''
-					for key, value in init_dict.items():
-						if value == 'None':
-							init_dict[key] = ''
-				#print(init_dict)
-				#print(stop)
+		if self.request.user.username == "yourheatx":	# Prepopulate all forms with data from file
+			print("Pre-populating data on all forms for user yourheatx")
+			quote_form_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/current_quote.txt")
 
-		#print(init_dict.get("house_name_or_number"))
+			with open(quote_form_filename) as file:
+				file_form_data = []
+				for line in file:
+					file_form_data.append(eval(line))
+			#print(file_form_data)
+			if step == '0':
+				init_dict = dict(file_form_data[0])
+			if step == '1':
+				init_dict = dict(file_form_data[1])
+			if step == '2':
+				init_dict = dict(file_form_data[2])
+			if step == '3':
+				init_dict = dict(file_form_data[3])
+			if step == '4':
+				init_dict = dict(file_form_data[4])
+			if step == '5':
+				init_dict = dict(file_form_data[5])
+			if step == '6':
+				init_dict = dict(file_form_data[6])
+			if step == '7':
+				init_dict = dict(file_form_data[7])
+			if step == '8':		# This one needs to be populated manually due to the Optional Extras
+				init_dict = {"optional_extras" : file_form_data[8].get("optional_extras")}
+				init_dict["description_of_works"] = file_form_data[8].get("description_of_works")
+				init_dict["surveyors_notes"] = file_form_data[8].get("surveyors_notes")
+				#init_dict["component_duration_total"] = file_form_data[8].get("component_duration_total") removed so that calc is done by program
+				for i in range(1, 11):
+					if file_form_data[8].get("extra_" + str(i)):
+						init_dict["extra_" + str(i)] = OptionalExtra.objects.get(product_name=file_form_data[8].get("extra_" + str(i)) ,user=settings.YH_MASTER_PROFILE_ID).id
+						init_dict["extra_qty_" + str(i)] = file_form_data[8].get("extra_qty_" + str(i))
+
+			#print(init_dict)		
+
+		else:	# Pre-Populate for surveyor with downloaded customer details
+			#Get the selected Customer index from the session variable
+			selected_customer_index = int(self.request.session['selected_customer_index'])
+
+			#get object to populate data
+			#print(selected_customer_index, type(selected_customer_index))
+			if selected_customer_index != -1 and settings.YH_SS_INTEGRATION:
+				cfile = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/ss_custdata.txt".format(self.request.user.username))
+				if step == '0':		# Customer Details Formpage
+					with open(cfile, encoding='utf-8', errors='replace') as txtfile:
+						all_lines = txtfile.readlines()
+						init_dict = json.loads(all_lines[selected_customer_index])
+				elif step == '1':	# Customer Address Formpage
+					with open(cfile, encoding='utf-8', errors='replace') as txtfile:
+						all_lines = txtfile.readlines()
+						init_dict = json.loads(all_lines[selected_customer_index])
+						#Convert house number with a .0 postfix to an integer with string manipulation
+						at_pos = init_dict.get("house_name_or_number").find('.0')
+						if at_pos > 0:
+							init_dict["house_name_or_number"] = init_dict.get("house_name_or_number")[0:at_pos]
+						else:	
+							init_dict['house_name_or_number'] = init_dict.get("house_name_or_number")
+						# Check for any "NONE" fields coming from Smartsheet and replace with ''
+						for key, value in init_dict.items():
+							if value == 'None':
+								init_dict[key] = ''
 		return init_dict
 
 	def get_template_names(self):
@@ -481,14 +517,25 @@ class BoilerFormWizardView_yh(SessionWizardView):
 	# Below method is to pass parameters to the
 	# appropriate form to filter the drop down listings and functionality
 	def get_form_kwargs(self, step):
-		#print(step)
-		if step == '5':
+		if step == '1':
+			return {'user_name': self.request.user.username}
+
+		elif step == '2':
+			return {'user_name': self.request.user.username}	
+
+		elif step == '3':
+			return {'user_name': self.request.user.username}	
+
+		elif step == '4':
+			return {'user': settings.YH_MASTER_PROFILE_ID, 'user_name': self.request.user.username}
+
+		elif step == '5':
 			step_data = self.storage.get_step_data('4')
 			manuf = step_data.get('4-boiler_manufacturer','')
 			alt_manuf = step_data.get('4-alt_boiler_manufacturer','')
 			fuel_type = step_data.get('4-new_fuel_type','')
 			boiler_type = step_data.get('4-new_boiler_type','')
-			return {'user': settings.YH_MASTER_PROFILE_ID, 'manufacturer': manuf, 'alt_manufacturer': alt_manuf, 'fuel_type': fuel_type, 'boiler_type': boiler_type }
+			return {'user': settings.YH_MASTER_PROFILE_ID, 'manufacturer': manuf, 'alt_manufacturer': alt_manuf, 'fuel_type': fuel_type, 'boiler_type': boiler_type, 'user_name': self.request.user.username }
 
 		elif step == '6':
 			step_data = self.storage.get_step_data('4')
@@ -498,10 +545,7 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			alt_manuf = step_data.get('4-alt_boiler_manufacturer','')
 			new_fuel_type = step_data.get('4-new_fuel_type','')
 			boiler_type = step_data.get('4-new_boiler_type','')
-			return {'user': settings.YH_MASTER_PROFILE_ID, 'manufacturer': manuf, 'alt_manufacturer': alt_manuf, 'plume_management_kit': plume_management_kit, 'new_fuel_type': new_fuel_type, 'new_controls': new_controls, 'boiler_type': boiler_type }
-
-		elif step == '4':
-			return {'user': settings.YH_MASTER_PROFILE_ID}
+			return {'user': settings.YH_MASTER_PROFILE_ID, 'manufacturer': manuf, 'alt_manufacturer': alt_manuf, 'plume_management_kit': plume_management_kit, 'new_fuel_type': new_fuel_type, 'new_controls': new_controls, 'boiler_type': boiler_type, 'user_name': self.request.user.username }
 
 		elif step == '7':
 			return {'user': settings.YH_MASTER_PROFILE_ID}
@@ -531,10 +575,12 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			for i in components_list:
 				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Scaffolding', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 
-			# Get the Asbestos Removel Procedure Duration
+			# Get the Asbestos Removal Procedure Duration
 			components_list = new_installation_step_data.getlist('5-asbestos_removal_procedure')
-			for i in components_list:
-				component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Asbestos Removal Procedure', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+			if components_list:
+				for i in components_list:
+					if i:	# only lookup if i has a value
+						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name=i, component_type='Asbestos Removal Procedure', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 
 			# Get the Electrical Work Duration
 			components_list = new_installation_step_data.getlist('5-electrical_work_required')
@@ -661,7 +707,9 @@ class BoilerFormWizardView_yh(SessionWizardView):
 					if radiators_step_data.get('7-tow_' + str(x)):
 						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-tow_' + str(x)), component_type='Towel Rail', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
 					if radiators_step_data.get('7-trl_' + str(x)):
-						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-trl_' + str(x)), component_type='Towel Rail Location', user=settings.YH_MASTER_PROFILE_ID).est_time_duration	
+						component_duration_total = component_duration_total + ProductComponent.objects.get(component_name = radiators_step_data.get('7-trl_' + str(x)), component_type='Towel Rail Location', user=settings.YH_MASTER_PROFILE_ID).est_time_duration
+
+			#print("Component Duration Total Time - Workload Page", component_duration_total )			
 
 			return {'user': settings.YH_MASTER_PROFILE_ID, 'component_duration_total': component_duration_total}
 
@@ -1237,10 +1285,11 @@ class BoilerFormWizardView_yh(SessionWizardView):
 			print("Primary parts total", parts_total )
 			print("Primary Total Price Total", total_quote_price)
 			print("Alt Total Price Total", alt_total_quote_price)
+			print("Component Duration Total Time Calculation", component_duration_total)
 
 			return {'product_price': product_price, 'component_price_total':component_price_total, 'parts_price_total':parts_total,
 				'estimated_duration_cost': estimated_duration_cost, 'component_duration_total': component_duration_total,
-				 'total_quote_price': total_quote_price, 'alt_total_quote_price': alt_total_quote_price }
+				 'total_quote_price': total_quote_price, 'alt_total_quote_price': alt_total_quote_price, 'user_name': self.request.user.username }
 		else:
 			return {}
 
@@ -1451,7 +1500,8 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			'img_record': img_record,
 			'alt_img_record': alt_img_record,
 			'optional_extra_extended_prices': optional_extra_extended_prices,
-			'include_report': include_report})
+			'include_report': include_report,
+			'user_name': request.user.username})
 
 		request.session["view_current_quote"] = True
 		return HttpResponse(pdf, content_type='application/pdf')
@@ -1475,13 +1525,15 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			'img_record': img_record,
 			'alt_img_record': alt_img_record,
 			'optional_extra_extended_prices': optional_extra_extended_prices,
-			'include_report': include_report})
+			'include_report': include_report,
+			'user_name': request.user.username})
 		# Generate the email, attach the pdf and send out
 		msg = "<img src='" + settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png'><br>"
 		msg = msg + "<p>Hi {}. Attached is the Quote and Internal Report for <b>{} {} {}</b>.</p>".format(idx_master.first_name, fd[0]['customer_title'], fd[0]['customer_first_name'], fd[0]['customer_last_name'])
 		msg = msg + "<p>Customer Phone No: {}<p>".format(str(fd[0]['customer_primary_phone']))
 		msg = msg + "<p>Customer Email: <a href='mailto:{}'>{}</a><p>".format(fd[0]['customer_email'], fd[0]['customer_email'])
 		msg = msg + "<p>You can contact the surveyor, {} on {} or <a href='mailto:{}'>{}</a><p>.</p>".format(idx.first_name, str(idx.telephone), idx.email, idx.email)
+		msg = msg + "<p>Also attached is the data file current_quote.txt which can be downloaded and used for re-quotation purposes.</p>"
 
 		if settings.YH_SS_INTEGRATION:
 			mail_subject = 'Boiler Installation Quote Number: {} Smartsheet ID: {} Customer: {} {} Surveyor: {} {}'.format(fd[19]['quote_number'], fd[0]['smartsheet_id'], fd[0]['customer_first_name'], fd[0]['customer_last_name'], idx.first_name, idx.last_name)
@@ -1493,7 +1545,7 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			email.attach_file(outputFilename)
 			email.content_subtype = "html"  # Main content is now text/html
 			email.send()
-			send_email_using_GmailAPI('hello@gmail.com',idx_master.email, mail_subject, msg, outputFilename, quote_form_filename )
+			#send_email_using_GmailAPI('hello@gmail.com',idx_master.email, mail_subject, msg, outputFilename, quote_form_filename )
 
 		else:
 			print("Cust Email:", fd[0]['customer_email'])
@@ -1502,7 +1554,7 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			print("outputFilename:", outputFilename)
 			print("idx.email:", idx.email)
 			#send_pdf_email_using_SendGrid('quotes@yourheat.co.uk', idx_master.email, mail_subject, msg, outputFilename, quote_form_filename )
-			send_email_using_GmailAPI('hello@gmail.com',idx_master.email, mail_subject, msg, outputFilename )	# Email to yourheatx email address 
+			send_email_using_GmailAPI('hello@gmail.com',idx_master.email, mail_subject, msg, outputFilename, quote_form_filename )	# Email to yourheatx email address 
 
 		# Generate the PDF and write to disk ( Customer Copy )
 		outputFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/CustomerQuoteForCustomer_{}_{}.pdf".format(request.user.username,customer_last_name.replace(" ","_"),fd[0]['smartsheet_id']))
@@ -1517,7 +1569,8 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			'img_record': img_record,
 			'alt_img_record': alt_img_record,
 			'optional_extra_extended_prices': optional_extra_extended_prices,
-			'include_report': include_report})
+			'include_report': include_report,
+			'user_name': request.user.username})
 		# Generate the email, attach the pdf and send out
 		fd = file_form_data
 		mail_subject = 'Your Personal Boiler Replacement Quotation'
@@ -1531,7 +1584,7 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 
 		html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/Customer Quote Comms.html".format(settings.YH_MASTER_PROFILE_USERNAME))
 
-		msg = render_to_string(html_email_filename, {'customer_title': fd[0]['customer_title'],'customer_last_name': fd[0]['customer_last_name'],'surveyor_first_name': idx.first_name, 'surveyor_last_name': idx.last_name, 'surveyor_phone_number': idx.telephone })
+		msg = render_to_string(html_email_filename, {'customer_title': fd[0]['customer_title'],'customer_last_name': fd[0]['customer_last_name'],'surveyor_first_name': idx.first_name, 'surveyor_last_name': idx.last_name, 'surveyor_phone_number': idx.telephone, 'user_name': request.user.username })
 		
 		if settings.YH_TEST_EMAIL:
 			email = EmailMessage(
@@ -1539,8 +1592,8 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			email.attach_file(outputFilename)
 			email.content_subtype = "html"  # Main content is now text/html
 			email.send()
-			send_email_using_GmailAPI('hello@gmail.com',fd[0]['customer_email'], mail_subject, msg, outputFilename ) # Email to customer
-			send_email_using_GmailAPI('hello@gmail.com',idx.email, mail_subject, msg, outputFilename ) # Email to Surveyor
+			#send_email_using_GmailAPI('hello@gmail.com',fd[0]['customer_email'], mail_subject, msg, outputFilename ) # Email to customer
+			#send_email_using_GmailAPI('hello@gmail.com',idx.email, mail_subject, msg, outputFilename ) # Email to Surveyor
 
 		else:
 			print("Cust Email:", fd[0]['customer_email'])

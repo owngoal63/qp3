@@ -36,9 +36,10 @@
         <h3>WORKLOAD DETAILS</h3>
     {% endif %}
 
-    {% if wizard.steps.step1 == 1 and YH_SS_INTEGRATION %}
+    {% if wizard.steps.step1 == 1 and YH_SS_INTEGRATION and request.user.username != 'yourheatx' %}
         <a class="btn boilerbtn btn-warning disp_inline float_right" href="/ssCustomerSelect/">Download Customer from Smartsheet</a>
-    {% endif %}    
+    {% endif %}
+    
     
     <h5>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</h5>
     

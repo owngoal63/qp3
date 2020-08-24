@@ -122,9 +122,13 @@
 
             <!-- Insert Email body content here  -->
 
-            <p class="all_text">
-                Thank you for your time today, attached is a copy of your Fixed Price Quotation - I hope Surveyor {{surveyor_first_name}} {{surveyor_last_name}} looked after you well and answered all your questions.
-            </p>
+            {% if user_name == 'yourheatx' %}
+                <p class="all_text">Thank you for agreeing to have us provide you with a revised quote, which is attached to this email.</p>
+            {% else %}
+                <p class="all_text">
+                    Thank you for your time today, attached is a copy of your Fixed Price Quotation - I hope Surveyor {{surveyor_first_name}} {{surveyor_last_name}} looked after you well and answered all your questions.
+                </p>
+            {% endif %}
 
             <p class="all_text">
                 It is quite common to have a few more questions following receipt of the quotation so please feel free
