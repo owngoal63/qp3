@@ -102,7 +102,8 @@ def ss_get_data_from_sheet(access_token, sheet_name, column_names, conditional_f
 		"Website Economy Package": "website_economy_package_quote",
 		"Lead Summary Notes": "additional_information",
 		"Agreed Boiler Option": "agreed_boiler_option",
-		"Option A / Install Days Required": "installation_days_required"
+		"Option A / Install Days Required": "installation_days_required",
+		"Agreed Deposit Amount": "agreed_deposit_amount"
 		}
 
 	# Get the Sheet from Smartsheet - limit it to only the requested columns
@@ -441,25 +442,38 @@ def ss_attach_pdf(access_token, sheet_name, conditional_field_name, conditional_
 		for MyCell in MyRow["cells"]:
 			if colMapRev.get(MyCell.get("columnId")) == conditional_field_name and MyCell.get("value") == conditional_field_value:
 				#print("found it", MyRow["id"])
-
-				# Get all the attachments for the row so that we can delete previous pdf quotes
-				all_attachments = ss.Attachments.list_row_attachments(sheet_id, MyRow["id"], include_all=True)
-				attachments = all_attachments.data
-
-				# Loop through attachments and delete the previous Quote.pdf files
-				for attachment in attachments:
-					if attachment.name in ['Quote - Customer copy.pdf', 'Quote - Office use only.pdf']:
-						print("Deleting...",attachment.name, attachment.id)
-						ss.Attachments.delete_attachment(sheet_id, attachment.id)
+				#print(attachFilename)
+				#print(str(attachFilename))
 				#print(stop)
+ 
+				if "CustomerInvoice" in str(attachFilename):		# Attachment is invoice
+					updated_attachment = ss.Attachments.attach_file_to_row(
+						sheet_id,       # sheet_id
+						MyRow["id"],       # row_id
+						('Customer Invoice.pdf',
+						open(attachFilename, 'rb'),
+						'application/pdf')
+					)
+				else:	# Attachment is Quote(s)	
+					# Get all the attachments for the row so that we can delete previous pdf quotes
+					all_attachments = ss.Attachments.list_row_attachments(sheet_id, MyRow["id"], include_all=True)
+					attachments = all_attachments.data
 
-				updated_attachment = ss.Attachments.attach_file_to_row(
-  					sheet_id,       # sheet_id
-  					MyRow["id"],       # row_id
-  					('Quote - Office use only.pdf',
-					open(attachFilename, 'rb'),
-					'application/pdf')
-				)
+					# Loop through attachments and delete the previous Quote.pdf files
+					for attachment in attachments:
+						if attachment.name in ['Quote - Customer copy.pdf', 'Quote - Office use only.pdf']:
+							print("Deleting...",attachment.name, attachment.id)
+							ss.Attachments.delete_attachment(sheet_id, attachment.id)
+					#print(stop)
+
+					updated_attachment = ss.Attachments.attach_file_to_row(
+						sheet_id,       # sheet_id
+						MyRow["id"],       # row_id
+						('Quote - Office use only.pdf',
+						open(attachFilename, 'rb'),
+						'application/pdf')
+					)
+
 				if attachFilename2:		# Optional Attach second file if provided as parameter
 					updated_attachment = ss.Attachments.attach_file_to_row(
   						sheet_id,       # sheet_id

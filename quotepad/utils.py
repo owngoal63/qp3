@@ -27,6 +27,9 @@ from django.db.models import Q
 #Added for Smartsheet API
 import smartsheet
 
+#Added for Smartsheet
+from quotepad.smartsheet_integration import ss_get_data_from_sheet
+
 # Added for Google Mail API
 import pickle
 from apiclient import errors
@@ -446,4 +449,35 @@ def service_account_login():
 	service = build('gmail', 'v1', credentials=delegated_credentials)
 	return service	
 
+def invoice_pdf_generation(customer_id, outputformat):
+	comms = "Invoice Comms"
+	#customer_id = 'YH-97'
+	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
 
+	ss_get_data_from_sheet(
+			settings.YH_SS_ACCESS_TOKEN,
+			settings.YH_SS_SHEET_NAME,
+			['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'House Name or Number', 'Street Address', 'City', 'County', 'Postcode', 'Agreed Deposit Amount'],
+			'Customer ID',
+			customer_id,
+			data_filename
+		)
+
+	# Open the text file with the Smartsheet data 
+	with open(data_filename) as file:
+			file_form_data = []
+			for line in file:
+				file_form_data.append(eval(line))
+
+	# Generate the PDF based on the first row contents of text file
+	for line in file_form_data:
+		#print(line)
+		sourceHtml = "pdf/user_{}/invoice_for_pdf.html".format(settings.YH_MASTER_PROFILE_USERNAME)
+		outputFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/CustomerInvoice_{}_{}.pdf".format(settings.YH_MASTER_PROFILE_USERNAME, line.get("customer_last_name"), line.get("smartsheet_id")))
+		if outputformat == "EmailOutput":
+			pdf_generation_to_file(sourceHtml, outputFilename, {'invoice_data': line})
+			return
+		else:	# outputformat is PDF to screen
+			pdf = pdf_generation(sourceHtml, {'invoice_data': line})
+			return pdf
+		

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'formtools',
     'payments.apps.PaymentsConfig',
     'import_export',
+    'django.contrib.humanize',
     #'rest_framework',
     #'Rest',
     #'corsheaders'
@@ -71,6 +72,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
+                'quotepad.context_processors.static_vars',
             ],
         },
     },
@@ -112,7 +114,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+#LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-GB'
 
 TIME_ZONE = 'UTC'
 
@@ -122,6 +125,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+DATE_INPUT_FORMATS = ['%d-%m-%Y']
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
@@ -153,7 +157,28 @@ STRIPE_PUBLISHABLE_KEY = 'pk_test_34Pl9iMCAFEIfxCGX84ZrP6G0047uZg93B'
 # yourheat master settings
 YH_MASTER_PROFILE_ID = 6
 YH_MASTER_PROFILE_USERNAME = 'yourheatx'
-YH_TEST_EMAIL = True
+YH_TEST_EMAIL = False
+YH_URL_STATIC_FOLDER = 'http://127.0.0.1:8000/static/'    # Set this to the static folder on the live server
+
+# SmartSheet integration settings for test Smartsheet
+#YH_SS_PRODUCTION_SITE = False
+#YH_SS_INTEGRATION = True
+#YH_SS_ACCESS_TOKEN = 'rix4kc3qoulzw42y4ukuqyfxfe'
+#YH_SS_SHEET_NAME = "Master Database"
+#YH_SS_SURVEY_REPORT = "20.0 All Booked Surveys"
+#YH_SS_TRACK_COMMS_SENT = False
+
+# SmartSheet integration settings for live Smartsheet
+YH_SS_PRODUCTION_SITE = False       # Setting to determine whether a proxy server needs to be access ( only for PythonAnyhwere )
+YH_SS_INTEGRATION = True
+YH_SS_ACCESS_TOKEN = '727cjzxr1715oenualfctjcsoi'
+YH_SS_SHEET_NAME = "Master Database Boiler"
+YH_SS_SURVEY_REPORT = "Customers for Survey to QP"
+YH_SS_TRACK_COMMS_SENT = False      # Flag to determine if the Customer Comm model is updated
+YH_QUOTE_ACCEPTED_EMAILS = ['tom.hewitt@yourheat.co.uk,tom.driscoll@yourheat.co.uk,jeremy.tomkinson@yourheat.co.uk']
+
+# Google Calendar settings
+YH_CAL_ENABLED = True
 
 # REST Framework Authentication settings
 

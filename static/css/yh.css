@@ -772,4 +772,68 @@ p.account-details {
 }
 
 
+#invoice {
+    width: 100%;
+    /* background-color: darkturquoise; */
+}
+
+#invoice-cell-right {
+    width: 45%;
+    text-align: right;
+    vertical-align: top;
+}
+
+#invoice-cell-left {
+    width: 45%;
+    text-align: left;
+    vertical-align: top;
+}
+
+#invoice-cell-middle {
+    width: 10%;
+    /* text-align: left; */
+}
+
+#invoice-block-header {
+    width: 100%;
+    background-color: black;
+}
+
+#invoice-block-details {
+    width: 100%;
+    background-color: rgb(240, 240, 240);
+    border-bottom: lightgray;
+    border-bottom-style: solid;
+}
+
+
+#invoice-details-on-black {
+    width: 75%;
+    text-align: left;
+    color: white;
+    margin-left: 2px;
+}
+
+#invoice-amount-on-black {
+    width: 25%;
+    text-align: right;
+    color: white;
+    margin-right: 2px;
+}
+
+#invoice-details-on-gray {
+    width: 75%;
+    text-align: left;
+    color: black;
+    margin-left: 2px;
+    vertical-align: top;
+}
+
+#invoice-amount-on-gray {
+    width: 25%;
+    text-align: right;
+    color: black;
+    margin-right: 2px;
+    vertical-align: top;
+}
 

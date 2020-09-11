@@ -32,6 +32,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 from quotepad.utils import create_message, create_message_with_attachment, send_message, send_email_using_GmailAPI
+from quotepad.utils import pdf_generation, pdf_generation_to_file, invoice_pdf_generation
 
 def admin_home(request):
 	''' Your Heat Admin Home page '''
@@ -180,11 +181,25 @@ def email_comms(request, comms, customer_id=None):
 					email.send()
 					#send_email_using_GmailAPI('gordonalindsay@gmail.com',line.get('customer_email'), mail_subject, html_content)
 			else:
-				if mail_subject == "Your Heat - New Survey Booked":		# Test Email - don't send cc
-					send_email_using_SendGrid('info@yourheat.co.uk', line.get('customer_email'), mail_subject, html_content )
-				else:		# Send separate emails to try and avoid blocks
+				if mail_subject == "Your Heat - Invoice":		# Invoice Comms - Attach Invoice PDF
 					#send_email_using_SendGrid('info@yourheat.co.uk', line.get('customer_email'), mail_subject, html_content )
-					#send_email_using_SendGrid('info@yourheat.co.uk', 'info@yourheat.co.uk', mail_subject, html_content )
+					# Generate Invoice PDF File
+					build_invoice_pdf(line.get('smartsheet_id'))
+					#print(stop)
+					AttachFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/CustomerInvoice_{}_{}.pdf".format(settings.YH_MASTER_PROFILE_USERNAME, line.get("customer_last_name"), line.get("smartsheet_id")))
+					send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content, AttachFilename)
+
+					# Add Invoice PDF to Smartsheet Attachments
+					if settings.YH_SS_INTEGRATION:
+						ss_attach_pdf(
+							settings.YH_SS_ACCESS_TOKEN,
+							settings.YH_SS_SHEET_NAME,
+							"Customer ID",
+							line.get('smartsheet_id'),
+							AttachFilename
+						)	
+					 
+				else:		# Send comms emails without attachments
 					send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content)
 
 			#print(stop)	
@@ -793,7 +808,51 @@ class get_installation_appointment(FormView):
 
 		#return render(self.request, 'yourheat/adminpages/confirm_calendar_appointment.html', {'customer_id': customer_id})
 		return render(self.request, 'yourheat/adminpages/confirm_calendar_appointment.html', {'comms_name': 'Installation Notification Comms', 'customer_id': customer_id})
-	
+
+
+def view_invoice_pdf(request, customer_id):
+
+	pdf = invoice_pdf_generation(customer_id, "PDFOutput")
+
+	return HttpResponse(pdf, content_type='application/pdf')
+
+
+def build_invoice_pdf(customer_id):
+
+	invoice_pdf_generation(customer_id, "EmailOutput")
+
+	return 
+
+	# comms = "Invoice Comms"
+	# customer_id = 'YH-97'
+	# data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
+
+	# ss_get_data_from_sheet(
+	# 		settings.YH_SS_ACCESS_TOKEN,
+	# 		settings.YH_SS_SHEET_NAME,
+	# 		['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'House Name or Number', 'Street Address', 'City', 'County', 'Postcode', 'Agreed Deposit Amount'],
+	# 		'Customer ID',
+	# 		customer_id,
+	# 		data_filename
+	# 	)
+
+	# Open the text file with the Smartsheet data 
+	# with open(data_filename) as file:
+	# 		file_form_data = []
+	# 		for line in file:
+	# 			file_form_data.append(eval(line))
+
+	# Generate the PDF based on the first row contents of text file
+	# for line in file_form_data:
+	# 	print(line)
+	# 	sourceHtml = "pdf/user_{}/invoice_for_pdf.html".format(settings.YH_MASTER_PROFILE_USERNAME)
+	# 	outputFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/CustomerInvoice_{}_{}.pdf".format(settings.YH_MASTER_PROFILE_USERNAME, line.get("customer_last_name"), line.get("smartsheet_id")))
+	# 	if outputformat == "EmailOutput":
+	# 		pdf_generation_to_file(sourceHtml, outputFilename, {'invoice_data': line})
+	# 		return
+	# 	else:	# outputformat is PDF to screen
+	# 		pdf = pdf_generation(sourceHtml, {'invoice_data': line})
+	# 		return HttpResponse(pdf, content_type='application/pdf')
 
 def confirm_calendar_appointment(request, customer_id=None):
 	''' Function to confirm Calendar Appointment '''

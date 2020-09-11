@@ -1,0 +1,128 @@
+{% load static %}
+{% load humanize %}
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <title>Invoice PDF</title>
+</head>
+
+<body>
+  <table id="invoice">
+    <tr>
+      <td>
+        &nbsp;  
+      </td>
+    </tr>
+  </table>  
+
+<table id="invoice">
+  <tr>
+    <td id="invoice-cell-left"><img src="http://www.qpcentral.co.uk/static/images/YourHeatLogo.png"> </td>
+    <td id="invoice-cell-middle"></td>
+    <td id="invoice-cell-left">
+      <b>Your Heat Ltd</b><br>
+      The Oast<br>
+      East Malling Business Centre<br>
+      New Road<br>
+      East Malling<br>
+      Kent<br>
+      ME19 6BJ<br><br>
+    </td>
+  </tr>
+</table>
+
+
+<table id="invoice">
+  <tr>
+    <td id="invoice-cell-left"><hr></td>
+    <td id="invoice-cell-middle"></td>
+    <td id="invoice-cell-left"><hr></td>
+  </tr>
+
+  <tr>
+    <td id="invoice-cell-left">
+      {{invoice_data.customer_title}} &nbsp;{{invoice_data.customer_first_name}} &nbsp;{{invoice_data.customer_last_name}}<br>
+      {{invoice_data.house_name_or_number|floatformat:0}}<br>
+      {{invoice_data.street_address}}<br>
+      {{invoice_data.city}}&nbsp;{{ invoice_data.county}}<br>
+      {{invoice_data.postcode}}<br>
+    </td>
+    <td id="invoice-cell-middle"></td>
+    <td id="invoice-cell-left">
+      <b>Customer Reference ID: {{invoice_data.smartsheet_id}}</b><br>
+      {% now "jS F Y" %}<br>
+    </td>
+  </tr>
+</table>
+
+<br>
+<table id="invoice-block-header">
+  <tr>
+    <td id="invoice-details-on-black">
+      Details
+    </td>
+
+    <td id="invoice-amount-on-black">
+      Subtotal
+    </td>
+  </tr>
+
+</table>
+
+<table id="invoice-block-details">
+  <tr>
+    <td id="invoice-details-on-gray">
+      Deposit amount due for Boiler Installation and associated works.
+    </td>
+
+    <td id="invoice-amount-on-gray">
+      £{{invoice_data.agreed_deposit_amount|floatformat:2|intcomma}}<br><br>
+      <br>
+    </td>
+  </tr>
+
+</table>
+
+<br>
+
+<table id="invoice">
+
+  <tr>
+    <td id="invoice-cell-left">&nbsp;</td>
+    <td id="invoice-cell-middle"></td>
+    <td id="invoice-cell-right"><b>Total £{{invoice_data.agreed_deposit_amount|floatformat:2|intcomma}}</b></td>
+  </tr>
+
+</table>
+<br>
+
+<table id="invoice">
+
+  <tr>
+    <td id="invoice-cell-left"><hr></td>
+    <td id="invoice-cell-middle"></td>
+    <td id="invoice-cell-left"><hr></td>
+  </tr>
+
+  <tr>
+    <td id="invoice-cell-left">
+      <b>Payment Details</b><br><br>
+      Account Name: Your Heat LTD<br>
+      Account Number: 54576261<br>
+      Sort Code: 60-60-08<br>
+      All major debit and credit cards accepted - including AMEX
+    </td>
+    <td id="invoice-cell-middle"></td>
+    <td id="invoice-cell-left">
+      <br><br>
+      <b>Please reference your Customer Reference ID and/or postcode on the payment</b>
+    </td>
+  </tr>
+</table>
+
+
+</body>
+
+</html>

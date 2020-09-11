@@ -12,6 +12,9 @@
 
     <br><br>
     <!-- <a class="btn btn-primary" href="/RecommendAFriend/" target="_blank">Preview Email Message in new tab</a> -->
+    {% if comms == "Invoice Comms" %}
+        <a class="btn btn-warning" href="/ViewInvoicePDF/{{customer_id}}" target="_blank">Preview Invoice</a>
+    {% endif %}    
     <a class="btn btn-primary" href="/EmailComms/{{comms}}/{{customer_id}}">Email to Customer</a>
     <a class="btn btn-secondary" href="/ProcessingCancelled/">Cancel</a>
 
