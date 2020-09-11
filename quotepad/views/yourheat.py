@@ -959,7 +959,7 @@ class BoilerFormWizardView_yh(SessionWizardView):
 				components_exVat.append(dict(component_attrib_build_exVat(i, 'Programmer Thermostat', settings.YH_MASTER_PROFILE_ID, 1, alt_brand)))
 				new_materials_comp_dict_exVat['Alt Programmer/Thermostat'] = components_exVat
 				new_materials_comp_dict['Alt Programmer/Thermostat'] = components
-				print('Alternative Programmer Thermostat', ProductComponent.objects.get(Q(brand='Applicable for All') | Q(brand=brand), component_name=i, component_type='Programmer Thermostat', user=settings.YH_MASTER_PROFILE_ID).price)
+				print('Alternative Programmer Thermostat', ProductComponent.objects.get(Q(brand='Applicable for All') | Q(brand=alt_brand), component_name=i, component_type='Programmer Thermostat', user=settings.YH_MASTER_PROFILE_ID).price)
 
 			# Get the Additional Central Heating System Components Prices
 			components_list = new_installation_step_data.getlist('6-additional_central_heating_components')
