@@ -33,9 +33,7 @@
             <br>
             <br>
             <p class="ob-text">
-                {% if user_name == 'yourheatx' %}
-                    Thank you for agreeing to have us provide you with a revised quote.&nbsp;
-                {% else %}
+                {% if user_name != 'yourheatx' %}
                     Thank you for having <b>{{idx.first_name}} {{idx.last_name}}</b> visit you today.&nbsp;
                 {% endif %}
                 Please find your bespoke, fixed-price quotation for your brand new boiler. We estimate that your installation will take {{form_data.8.estimated_duration}}.</p>
@@ -180,9 +178,9 @@
                 <td class="midrow">0%</td>
                 <td class="midrow">12 Months</td>
                 {% if user_name == 'yourheatx' %}
-                    <td class="midrow">£ {{ form_data.9.deposit_amount|floatformat:2 }}<br>(Optional)</td>
+                    <td class="midrow">£ {{ form_data.9.deposit_amount|floatformat:2 }}</td>
                 {% else %}
-                    <td class="midrow">£ {{ form_data.9.deposit_amount_thirty_percent|floatformat:2 }}<br>(Optional)</td>
+                    <td class="midrow">£ {{ form_data.9.deposit_amount_thirty_percent|floatformat:2 }}</td>
                 {% endif %}
                 <td class="midrow">£ {{ form_data.9.interest_free_12m_loan_amount }}</td>
                 <td class="midrow">£ {{ form_data.9.interest_free_12m_total_payable }}</td>
