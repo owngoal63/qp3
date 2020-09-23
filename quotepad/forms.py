@@ -977,7 +977,9 @@ ENGINEER_DROPDOWN = (
 	('kevin.harvey@yourheat.co.uk', 'Kevin Harvey'),
 	('jeremy.tomkinson@yourheat.co.uk', 'Jeremy Tomkinson'),
 	('ben.pike@yourheat.co.uk', 'Ben Pike'),
-	('dave.easton@yourheat.co.uk', 'Dave Easton'),	
+	('dave.easton@yourheat.co.uk', 'Dave Easton'),
+	('andy.douglas@yourheat.co.uk', 'Andy Douglas'),
+
 )
 
 TIME_OVERRIDE_DROPDOWN = (
