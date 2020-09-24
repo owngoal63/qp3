@@ -46,7 +46,7 @@
     </div>
 
     <div class = "row">
-        <div class = "col-6">
+        <div class = "col-12">
             <div class="form-check">
                 <label class="form-check-label">{{ wizard.form.optional_extras.label }}</label>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ wizard.form.optional_extras }}
@@ -103,20 +103,22 @@
                 
             </div>
 
-            <div class = "col-6">
-                {% if request.user.username == 'yourheatx' %}
-                    <div class="form-group">
-                        <label>{{ wizard.form.addition_comments_for_requote.label }}</label>
-                        {{ wizard.form.addition_comments_for_requote }}
-                    </div>
-                {% else %}
-                    &nbsp;
-                {% endif %}    
+            
+        </div>
+        {% endif %}
+        <div class = "row">    
+                <div class = "col-12">
+                    {% if request.user.username == 'yourheatx' %}
+                        <div class="form-group">
+                            <label>{{ wizard.form.addition_comments_for_requote.label }}</label>
+                            {{ wizard.form.addition_comments_for_requote }}
+                        </div>
+                    {% else %}
+                        &nbsp;
+                    {% endif %}    
+                </div>
             </div>
-        
-    </div>
-    <br>    
-    {% endif %}
+            <br>    
     
     <div class = "row">
         <div class="col-12">
