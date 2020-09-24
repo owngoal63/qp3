@@ -1651,7 +1651,7 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 				'optional_extra_extended_prices': optional_extra_extended_prices,
 				'include_report': include_report})
 
-			# Add Quote PDFs to Smartsheet Attachments
+			# Add Quote PDFs to Smartsheet Attachments + add Quote data File (.txt)
 			if settings.YH_SS_INTEGRATION:
 				ss_attach_pdf(
 					settings.YH_SS_ACCESS_TOKEN,
@@ -1659,7 +1659,8 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 					"Customer ID",
 					ss_customer_id,
 					outputFilename_Internal,
-					outputFilename_Customer
+					outputFilename_Customer,
+					quote_form_filename
 				)	
 
 			#print(stop)

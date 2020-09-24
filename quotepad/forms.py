@@ -1687,6 +1687,7 @@ class FormStepNine_yh(forms.Form):
 	surveyors_notes = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':8, 'cols':60}))
 	optional_extras = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs = {'class': 'form-check-input', 'onchange' : "extras_handler();"}))
 	component_duration_total = forms.DecimalField(required=False)
+	addition_comments_for_requote = forms.CharField(required=False, max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':8, 'cols':60}))
 
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user')
@@ -1724,6 +1725,7 @@ class FormStepNine_yh(forms.Form):
 
 		# Initialise the component_duration_total field
 		self.fields['component_duration_total'].initial = self.component_duration_total
+
 
 
 class FinanceForm_yh(forms.Form):

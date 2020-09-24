@@ -404,7 +404,7 @@ def ss_append_data(access_token, sheet_name, append_data):
 
 	return
 
-def ss_attach_pdf(access_token, sheet_name, conditional_field_name, conditional_field_value, attachFilename, attachFilename2 = None):
+def ss_attach_pdf(access_token, sheet_name, conditional_field_name, conditional_field_value, attachFilename, attachFilename2 = None, attachDataFile = None):
 
 	if settings.YH_SS_PRODUCTION_SITE:
 		# Initialize client proxy.server:3128 and provide access token
@@ -482,6 +482,15 @@ def ss_attach_pdf(access_token, sheet_name, conditional_field_name, conditional_
 						open(attachFilename2, 'rb'),
 						'application/pdf')
 					)
+
+				if attachDataFile:		# Optional Attach Third txt file if provided as parameter
+					updated_attachment = ss.Attachments.attach_file_to_row(
+  						sheet_id,       # sheet_id
+  						MyRow["id"],       # row_id
+  						('current_quote.txt',
+						open(attachDataFile, 'rb'),
+						'text/plain')
+					)	
 	return
 
 
