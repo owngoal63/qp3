@@ -1683,10 +1683,11 @@ class FormStepNine_yh(forms.Form):
 	# within double curly braces...
 	# form_data.8.field_name e.g. form_data.8.estimated_duration
 	#estimated_duration = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}), choices=ESTIMATED_DURATION_DROPDOWN)	
-	description_of_works = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':8, 'cols':60}))
-	surveyors_notes = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':8, 'cols':60}))
+	description_of_works = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':12, 'cols':60}))
+	surveyors_notes = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':5, 'cols':60}))
 	optional_extras = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs = {'class': 'form-check-input', 'onchange' : "extras_handler();"}))
 	component_duration_total = forms.DecimalField(required=False)
+	disruption_and_pipework_routes = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':5, 'cols':60, 'placeholder': 'Please record any pipe runs discussed in detail and any disruption the installation will cause to the property'}))
 	addition_comments_for_requote = forms.CharField(required=False, max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':8, 'cols':60}))
 
 	def __init__(self, *args, **kwargs):
@@ -1788,6 +1789,8 @@ class FinanceForm_yh(forms.Form):
 		self.fields['alt_total_cost'].initial = self.alt_total_quote_price
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
+		self.fields['include_interest_free_option'] = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs = {'class': 'form-check-input'}))	
+		self.fields['include_interest_free_option'].initial = True
 
 class ssCustomerSelectForm(forms.Form):
 	customers_for_quote = forms.ChoiceField(required = False, choices=[])

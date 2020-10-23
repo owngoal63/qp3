@@ -58,12 +58,28 @@
                     {{ wizard.form.estimated_duration_cost.as_hidden }}
                     {{ wizard.form.component_duration_total.as_hidden }}
                     {{ wizard.form.alt_total_cost.as_hidden }}
+                    {% if wizard.form.user_name != 'yourheatx' %}                
+                      {{ wizard.form.include_interest_free_option.as_hidden }}
+                    {% endif %}  
                 </div>
                 
             </div>    
         </div>    
+    <!-- </div> -->
+    {% if wizard.form.user_name == 'yourheatx' %}
+    <div class = "row">
+      <div class = "col-6">
+        <div class="form-check">
+              <label class="form-check-label">{{ wizard.form.include_interest_free_option.label }}</label>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ wizard.form.include_interest_free_option }}
+              <br><br>
+          </div>
+      </div>
+      <div class = "col-6">
+       
+      </div>
     </div>
-
+    {% endif %}
         
     <div class = "row">
         <div class="col-12">

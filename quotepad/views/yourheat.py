@@ -466,6 +466,7 @@ class BoilerFormWizardView_yh(SessionWizardView):
 				init_dict = {"optional_extras" : file_form_data[8].get("optional_extras")}
 				init_dict["description_of_works"] = file_form_data[8].get("description_of_works")
 				init_dict["surveyors_notes"] = file_form_data[8].get("surveyors_notes")
+				init_dict["disruption_and_pipework_routes"] = file_form_data[8].get("disruption_and_pipework_routes")
 				#init_dict["component_duration_total"] = file_form_data[8].get("component_duration_total") removed so that calc is done by program
 				for i in range(1, 11):
 					if file_form_data[8].get("extra_" + str(i)):

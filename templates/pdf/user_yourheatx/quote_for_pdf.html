@@ -833,7 +833,14 @@
                 </td>
             </tr>
         </table>
-  
+    </div>    
+
+    <div class="break"></div>
+
+
+    <div class="page-start"><br><br><br><br></div>
+
+    <div class="tech-details">
         <table>    
             <tr>
                 <td class="tech-title" colspan="2">Installation Notes</td>
@@ -849,6 +856,12 @@
             </tr>
             <tr>    
                 <td class="tech-value" id="description-of-works" colspan="2">{{form_data.8.description_of_works|safe|linebreaksbr }}</td>
+            </tr>
+            <tr>
+                <td class="tech-attrib" colspan="2">DISRUPTION & DISCUSSED PIPEWORK ROUTES AT TIME OF SURVEY (may be subject to change on day of install)</td>
+            </tr>
+            <tr>    
+                <td class="tech-value" id="description-of-works" colspan="2">{{form_data.8.disruption_and_pipework_routes|safe|linebreaksbr }}</td>
             </tr>
         </table>
 
@@ -914,6 +927,14 @@
             <tr>    
                 <td class="tech-value">{{form_data.19.house_heat_loss_value|floatformat:2}} KW</td>
             </tr>
+            {% if user_name == 'yourheatx' and form_data.8.addition_comments_for_requote %}
+                <tr>    
+                    <td class="tech-attrib">ADDITIONAL REQUOTE INFORMATION</td>
+                </tr>
+                <tr>    
+                    <td class="tech-value" id="description-of-works">{{form_data.8.addition_comments_for_requote|safe|linebreaksbr }}</td>
+                </tr>
+            {% endif %}
             <br>
             {% if form_data.8.optional_extras %}
             <!-- <div class="opt-extra-orange-box"> -->
@@ -982,11 +1003,14 @@
                                 <td>{{form_data.8.extra_10}}</td><td>{{form_data.8.extra_qty_10}}</td><td>£{{optional_extra_extended_prices.9}}</td>
                             </tr>
                         {% endif %}
+
                     </table>
                 </td>
             </tr>
             <!-- </div> -->
             {% endif %}
+
+           
             <tr>    
                 <td class="tech-value">
                     <table class="account-information">
