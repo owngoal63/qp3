@@ -501,20 +501,22 @@ class get_survey_appointment(FormView):
 
 		event['description'] = event_description
 
-		# Google start and end dates and times ( including time overrides as necessary)
+		# Google start and end dates and times ( including time overrides as necessary - now changed to Zulu time on October clock change)
 		if form.cleaned_data['time_override'] == 'No override':
-			start_datetime_for_google = form.cleaned_data['survey_date_and_time'].strftime('%Y-%m-%dT%H:%M:%S+01:00')
+			#start_datetime_for_google = form.cleaned_data['survey_date_and_time'].strftime('%Y-%m-%dT%H:%M:%S+01:00')
+			start_datetime_for_google = form.cleaned_data['survey_date_and_time'].strftime('%Y-%m-%dT%H:%M:%SZ')
 			end_datetime = form.cleaned_data['survey_date_and_time'] + datetime.timedelta(hours=2)
-			end_datetime_for_google = end_datetime.strftime('%Y-%m-%dT%H:%M:%S+01:00')
+			#end_datetime_for_google = end_datetime.strftime('%Y-%m-%dT%H:%M:%S+01:00')
+			end_datetime_for_google = end_datetime.strftime('%Y-%m-%dT%H:%M:%SZ')
 		elif form.cleaned_data['time_override'] == 'Anytime':
-			start_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT08:00:00+01:00')
-			end_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT17:00:00+01:00')
+			start_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT08:00:00Z')
+			end_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT17:00:00Z')
 		elif form.cleaned_data['time_override'] == 'Anytime AM':
-			start_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT08:00:00+01:00')
-			end_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT12:00:00+01:00')
+			start_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT08:00:00Z')
+			end_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT12:00:00Z')
 		elif form.cleaned_data['time_override'] == 'Anytime PM':
-			start_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT12:00:00+01:00')
-			end_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT17:00:00+01:00')
+			start_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT12:00:00Z')
+			end_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT17:00:00Z')
 
 		start = {}
 		start['dateTime'] = start_datetime_for_google
