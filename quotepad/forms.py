@@ -996,6 +996,7 @@ ENGINEER_POSTCODE_DROPDOWN = (
 
 MERCHANT_DROPDOWN = (
 	('', 'Select One'),
+	('2336@cityplumbing.co.uk', '2336@cityplumbing.co.uk'),
 	('dan.lombard@cityplumbing.co.uk', 'dan.lombard@cityplumbing.co.uk'),
 	('ben.cooper3@cityplumbing.co.uk', 'ben.cooper3@cityplumbing.co.uk'),
 	('jon@tdlonline.co.uk', 'jon@tdlonline.co.uk'),
