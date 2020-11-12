@@ -979,6 +979,28 @@ ENGINEER_DROPDOWN = (
 	('ben.pike@yourheat.co.uk', 'Ben Pike'),
 	('dave.easton@yourheat.co.uk', 'Dave Easton'),
 	('andy.douglas@yourheat.co.uk', 'Andy Douglas'),
+	('john.hickey@yourheat.co.uk', 'Jon Hickey'),
+
+)
+
+ENGINEER_POSTCODE_DROPDOWN = (
+	('','Select One'),
+	('Ben Pike (SS12)', 'Ben Pike (SS12)'),
+	('Dave Easton (ME14)', 'Dave Easton (ME14)'),
+	('Kevin Harvey (SM5)', 'Kevin Harvey (SM5)'),
+	('Andy Douglas (BR6)', 'Andy Douglas (BR6)'),
+	('Jeremy Tomkinson (TN2)', 'Jeremy Tomkinson (TN2)'),
+	('Jon Hickey (TN24)', 'Jon Hickey (TN24)'),
+
+)
+
+MERCHANT_DROPDOWN = (
+	('', 'Select One'),
+	('dan.lombard@cityplumbing.co.uk', 'dan.lombard@cityplumbing.co.uk'),
+	('ben.cooper3@cityplumbing.co.uk', 'ben.cooper3@cityplumbing.co.uk'),
+	('jon@tdlonline.co.uk', 'jon@tdlonline.co.uk'),
+	('sam@tdlonline.co.uk', 'sam@tdlonline.co.uk'),
+	('purchasing@yourheat.co.uk', 'purchasing@yourheat.co.uk'),
 
 )
 
@@ -1940,6 +1962,33 @@ class QuoteAcceptedForm(forms.Form):
 	primary_product_choice = forms.CharField(max_length=200, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
 	alternative_product_choice = forms.CharField(max_length=200, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
 
+class JobPartsForm(forms.Form):
+	def __init__(self, *args, **kwargs):
+		super(JobPartsForm, self).__init__(*args, **kwargs)
+		for field in self: 
+			field.field.widget.attrs['class'] = 'form-control'
+	PO = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	#customer_title = forms.CharField(max_length=20)		
+	#customer_first_name = forms.CharField(max_length=100)
+	#customer_last_name = forms.CharField(max_length=100)
+	#customer_primary_phone = forms.CharField(max_length=100)
+	#customer_email = forms.EmailField()
+	house_name_or_number = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	street_address = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	city = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	county = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	postcode = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	#job_date = forms.DateField(initial=datetime.datetime.now().strftime('%d/%m/%Y'), input_formats=['%d/%m/%Y'])
+	installation_date = forms.DateField(input_formats=['%d/%m/%Y'])
+	engineer = forms.ChoiceField(choices=ENGINEER_POSTCODE_DROPDOWN)
+	merchant = forms.ChoiceField(choices=MERCHANT_DROPDOWN)
+	delivery_or_collection = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':3, 'cols':60}))
+	agreed_boiler_option = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	parts = forms.CharField(max_length=4000, required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':5, 'cols':60}))
+	optional_extras_taken = forms.CharField(max_length=4000, required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':5, 'cols':60}))
+	additional_information = forms.CharField(max_length=2000, required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':3, 'cols':60}))
+
+	
 class TestForm(forms.Form):
 	def __init__(self, *args, **kwargs):
 		super(TestForm, self).__init__(*args, **kwargs)

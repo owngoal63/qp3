@@ -1,0 +1,124 @@
+{% extends "yourheat/adminpages/base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <h4>Job Parts Despatch</h4>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>PO</label>
+                    {{ form.PO }}
+                    
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class = "row">
+            <div class = "col-4">
+                <div class="form-group">
+                    <label>{{form.house_name_or_number.label}}</label>
+                    {{ form.house_name_or_number }}
+                </div>
+            </div>
+            <div class = "col-4">
+                <div class="form-group">
+                    <label>{{form.street_address.label}}</label>
+                    {{ form.street_address }}
+                </div>
+            </div>
+            <div class = "col-4">
+                <div class="form-group">
+                    <label>{{form.city.label}}</label>
+                    {{ form.city }}
+                </div>
+            </div>
+        </div>
+
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.county.label}}</label>
+                    {{ form.county }}
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.postcode.label}}</label>
+                    {{ form.postcode }}
+                </div>
+            </div>
+        </div>
+
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.parts.label}}: {{ form.agreed_boiler_option.value }}</label>
+                    {{ form.parts }}
+                    {{ form.agreed_boiler_option.as_hidden }}
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.optional_extras_taken.label}}</label>
+                    {{ form.optional_extras_taken }}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class = "row">
+            <div class = "col-4">
+                <div class="form-group">
+                    <label>{{form.merchant.label}}</label>
+                    {{ form.merchant }}
+                </div>
+            </div>
+            <div class = "col-4">
+                <div class="form-group">
+                    <label>{{form.engineer.label}}</label>
+                    {{ form.engineer }}
+                </div>
+            </div>
+            <div class = "col-4">
+                <div class="form-group">
+                    <label>{{form.installation_date.label}}</label>
+                    {{ form.installation_date }}
+                </div>
+            </div>
+        </div>
+
+        <div class = "row">
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.delivery_or_collection.label}}</label>
+                    {{ form.delivery_or_collection }}
+                </div>
+            </div>
+            <div class = "col-6">
+                <div class="form-group">
+                    <label>{{form.additional_information.label}}</label>
+                    {{ form.additional_information }}
+                </div>
+            </div>
+        </div>
+
+        <button class="btn boilerbtn btn-warning" type="submit">Send Email Notification</button>
+
+        <a href="{% url 'ProcessingCancelled' %}" class="btn btn-secondary">Cancel</a>
+
+    </form>
+
+</div>
+{% endblock content %}

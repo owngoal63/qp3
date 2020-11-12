@@ -103,7 +103,10 @@ def ss_get_data_from_sheet(access_token, sheet_name, column_names, conditional_f
 		"Lead Summary Notes": "additional_information",
 		"Agreed Boiler Option": "agreed_boiler_option",
 		"Option A / Install Days Required": "installation_days_required",
-		"Agreed Deposit Amount": "agreed_deposit_amount"
+		"Agreed Deposit Amount": "agreed_deposit_amount",
+		"Option A Parts List": "option_a_parts_list",
+		"Option B Parts List": "option_b_parts_list",
+		"Optional Extras Accepted": "optional_extras_taken"
 		}
 
 	# Get the Sheet from Smartsheet - limit it to only the requested columns
@@ -138,7 +141,10 @@ def ss_get_data_from_sheet(access_token, sheet_name, column_names, conditional_f
 	# Loop through columns in the filtered row and write dictionary to file
 	file.write("{")
 	for index, MyCell in enumerate(filter_row["cells"]):
-		file.write('"' + coltransdict.get(str(colMapRev.get(MyCell.get("columnId")))) + '": "' + str(MyCell.get("value")).replace('\n', ' ') + '"')
+		if str(colMapRev.get(MyCell.get("columnId"))) == "Option A Parts List" or str(colMapRev.get(MyCell.get("columnId"))) == "Option B Parts List" or str(colMapRev.get(MyCell.get("columnId"))) == "Optional Extras Accepted":
+			file.write('"' + coltransdict.get(str(colMapRev.get(MyCell.get("columnId")))) + '": "' + str(MyCell.get("value")).replace('\n', '|') + '"')
+		else:		
+			file.write('"' + coltransdict.get(str(colMapRev.get(MyCell.get("columnId")))) + '": "' + str(MyCell.get("value")).replace('\n', ' ') + '"')
 		#print(str(MyCell.get("value")).replace('\n', ' ') + "-----")
 		if index < len(filter_row["cells"]) - 1:		# Print comma delimiter for all but last element
 				file.write(', ')

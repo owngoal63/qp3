@@ -12,17 +12,20 @@
      
     </div>
     <div class="row">
-        <div class = "col-4"  style="color:rgb(0,48,89)">
+        <div class = "col-3"  style="color:rgb(0,48,89)">
             &nbsp;&nbsp;<i class="fas fa-address-card"></i>
             <strong>{{ customer_name }}</strong><br>
             &nbsp;&nbsp;<img src="{% static 'images/smartsheet_tick_transparent.png' %}">
             <strong>{{ customer_id }}</strong>
         </div>  
-        <div class = "col-4">
+        <div class = "col-3">
             <a class="btn boilerbtn {% if customer_status != '1' %} btn-secondary disabled {% else %} btn-primary {% endif %} " href="{% url 'GetSurveyAppointment' customer_id %}">Schedule Survey Calendar Booking</a>
         </div> 
-        <div class = "col-4">
+        <div class = "col-3">
             <a class="btn boilerbtn {% if customer_status != '4' %} boilerbtn btn-secondary disabled {% else %} btn-primary {% endif %}" href="{% url 'GetInstallationAppointment' customer_id %}">Schedule Installation Calendar Booking</a>
+        </div>
+        <div class = "col-3">
+            <a class="btn boilerbtn btn-primary" href="{% url 'GetJobParts' customer_id %}">Generate Job Parts Email for Merchant</a>
         </div>  
     </div>
 

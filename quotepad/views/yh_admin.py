@@ -13,7 +13,7 @@ import smartsheet
 import json
 
 from quotepad.models import CustomerComm
-from quotepad.forms import ssSurveyAppointmentForm, ssInstallationAppointmentForm
+from quotepad.forms import ssSurveyAppointmentForm, ssInstallationAppointmentForm, JobPartsForm
 from quotepad.utils import send_email_using_SendGrid
 
 # imports associated with sending email ( can be removed for production )
@@ -334,6 +334,10 @@ def generate_customer_comms(request, comms_name, customer_id=None):
 def emails_sent_to_customers(request):
 	''' Function to render the emails sent page '''
 	return render(request,'yourheat/adminpages/emails_sent_to_customers.html')
+
+def email_sent_to_merchant(request):
+	''' Function to render the emails sent page '''
+	return render(request,'yourheat/adminpages/email_sent_to_merchant.html')	
 
 
 class get_survey_appointment(FormView):
@@ -863,6 +867,147 @@ def confirm_calendar_appointment(request, customer_id=None):
 def processing_cancelled(request):
 	''' Function to confirm Processing Cancelled '''
 	return render(request,'yourheat/adminpages/processing_cancelled.html')
+
+class get_job_parts(FormView):
+
+	form_class = JobPartsForm
+	template_name = "yourheat/adminpages/job_parts_form.html"
+	customer_id = None
+
+
+	def get_initial(self, **kwargs):
+		initial = super().get_initial()
+		customer_id = self.kwargs['customer_id']
+
+		#data_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/JobParts.txt")
+		data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/customer_comms/Job Parts.txt")
+
+		#Get Customer Info from Smartsheet
+		ss_get_data_from_sheet(
+			settings.YH_SS_ACCESS_TOKEN,
+			settings.YH_SS_SHEET_NAME,
+			['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname','Preferred Contact Number', 'Email',
+			 'House Name or Number', 'Street Address', 'City', 'County',
+			 'Postcode',  'Installation Date',
+			 'Agreed Boiler Option', 'Option A Parts List', 'Option B Parts List', 'Optional Extras Accepted'
+			],
+			'Customer ID',
+			customer_id,
+			data_filename
+		)
+
+		#print(stop)
+
+		# Open the text file with the Smartsheet data to prepopulate the form
+		with open(data_filename) as file:
+			#file_form_data = []
+			for line in file:
+				line_dict = json.loads(line)
+				# Check for any "NONE" fields coming from Smartsheet and replace with ''
+				for key, value in line_dict.items():
+					if value == 'None':
+						line_dict[key] = ''
+				initial['PO'] = line_dict.get("smartsheet_id").replace('YH','PO')
+				# Convert house number with a .0 postfix to an integer with string manipulation
+				at_pos = line_dict.get("house_name_or_number").find('.0')
+				if at_pos > 0:
+					initial["house_name_or_number"] = line_dict.get("house_name_or_number")[0:at_pos]
+				else:	
+					initial['house_name_or_number'] = line_dict.get("house_name_or_number")
+				if line_dict.get("optional_extras_taken"):
+					initial['optional_extras_taken'] = line_dict.get("optional_extras_taken").replace('|', '\r\n')
+				initial['street_address'] = line_dict.get("street_address")
+				initial['city'] = line_dict.get("city")
+				initial['county'] = line_dict.get("county")
+				initial['postcode'] = line_dict.get("postcode")
+				if line_dict.get("installation_date"):
+					ss_date = datetime.datetime.strptime(line_dict.get("installation_date"), "%Y-%m-%d")
+					initial['installation_date'] = datetime.datetime.strftime(ss_date, "%d/%m/%Y")
+				agreed_boiler_option = line_dict.get("agreed_boiler_option")
+				initial['agreed_boiler_option'] = agreed_boiler_option
+				# String replacement fix to ensure carriage returns exist on parts lists
+				if agreed_boiler_option == "Option B Parts":
+					initial['parts'] = line_dict.get("option_b_parts_list").replace('|', '\r\n')
+				else:		
+					initial['parts'] = line_dict.get("option_a_parts_list").replace('|', '\r\n')
+
+		return initial
+
+	def form_valid(self, form, **kwargs):
+		print(form.cleaned_data)
+		#form.cleaned_data["parts"] = form.cleaned_data["parts"].replace('\r\n', '<br>')
+		#form.cleaned_data["parts"] = form.cleaned_data["parts"]
+		# Create a dictionary to lookup the correct enginner email address
+		engineer_emails = {
+			'Kevin Harvey (SM5)': 'kevin.harvey@yourheat.co.uk',
+			'Jeremy Tomkinson (TN2)': 'jeremy.tomkinson@yourheat.co.uk',
+			'Ben Pike (SS12)': 'ben.pike@yourheat.co.uk', 
+			'Dave Easton (ME14)': 'dave.easton@yourheat.co.uk', 
+			'Andy Douglas (BR6)': 'andy.douglas@yourheat.co.uk', 
+			'Jon Hickey (TN24)': 'john.hickey@yourheat.co.uk',
+		}
+
+		html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/Job Parts Comms.html".format(settings.YH_MASTER_PROFILE_USERNAME))
+		html_content = render_to_string(html_email_filename, form.cleaned_data)
+		#print(html_content)
+		#print(stop)
+
+		#email = EmailMessage(mail_subject, html_content, 'info@yourheat.co.uk' , [line.get('customer_email')])
+		##email = EmailMessage("Test Email", html_content, 'info@yourheat.co.uk' , ['gordonlindsay@virginmedia.com'])
+		##email.content_subtype = "html"  # Main content is now text/html
+		##email.send()
+		#send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content)
+		print("Merchant Email:", form.cleaned_data['merchant'])
+		print("Engineer Email:",engineer_emails.get(form.cleaned_data['engineer']))
+		merchant_email = form.cleaned_data['merchant']
+		engineer_email = engineer_emails.get(form.cleaned_data['engineer'])
+
+		#print(settings.YH_TEST_EMAIL)
+		#print(stop)
+		if settings.YH_TEST_EMAIL:
+			email = EmailMessage("Your Heat Job Parts Notification " + form.cleaned_data['PO'], html_content, 'info@yourheat.co.uk' , [merchant_email])
+			email.content_subtype = "html"  # Main content is now text/html
+			email.send()
+			email = EmailMessage("Your Heat Job Parts Notification " + form.cleaned_data['PO'], html_content, 'info@yourheat.co.uk' , [engineer_email])
+			email.content_subtype = "html"  # Main content is now text/html
+			email.send()
+		else:
+			# Note that the sender email below can only be hello@yourheat.co.uk due to the API authentication
+			send_email_using_GmailAPI('Purchasing@yourheat.co.uk', merchant_email, "Your Heat Job Parts Notification " + form.cleaned_data['PO'], html_content)
+			send_email_using_GmailAPI('Purchasing@yourheat.co.uk', engineer_email, "Your Heat Job Parts Notification " + form.cleaned_data['PO'], html_content)
+
+		print(form.cleaned_data['PO'].replace('PO','YH'))
+		smartsheet_id = form.cleaned_data['PO'].replace('PO','YH')
+
+		# Update PO Number Field
+		update_data = []
+		update_data.append({"PO Number": "Awaiting - Ordered"})
+		if settings.YH_SS_INTEGRATION:		
+			ss_update_data(
+				settings.YH_SS_ACCESS_TOKEN,
+				settings.YH_SS_SHEET_NAME,
+				"Customer ID",
+				smartsheet_id,
+				update_data
+			)
+
+		if settings.YH_SS_INTEGRATION:		# Update Comments on Smartsheet
+				ss_add_comments(
+				settings.YH_SS_ACCESS_TOKEN,
+				settings.YH_SS_SHEET_NAME,
+				'Customer ID',
+				smartsheet_id,
+				["Job Parts email sent to " + merchant_email]
+			)
+
+		#data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/customer_comms/Job Parts.txt")
+		#with open(data_filename, 'w') as f:
+		#	print(form.cleaned_data, file=f)
+		#print(stop)
+		#return render(self.request, 'yourheat/adminpages/confirm_calendar_appointment.html', {'comms_name': 'Installation Notification Comms', 'customer_id': customer_id})
+		#return render(self.request, html_email_filename, form.cleaned_data)
+		return HttpResponseRedirect('/EmailSentToMerchant/')
+
 
 def test_gmail(request):
 	SCOPES = ['https://www.googleapis.com/auth/calendar','https://www.googleapis.com/auth/gmail.modify']

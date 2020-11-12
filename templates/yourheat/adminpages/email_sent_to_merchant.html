@@ -1,0 +1,18 @@
+{% extends "yourheat/adminpages/base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h4>Email sent to merchant</h4>
+    <br>
+    <h4><b>You should now close this window/tab</b></h4>
+
+</div>
+
+<script>
+    // all_good("Email processing", "Communication email(s) sent to the customer(s).", "adminhome/")
+    all_good_close_window("Email processing", "Job Parts email sent to merchant.")
+</script>
+
+{% endblock %}
