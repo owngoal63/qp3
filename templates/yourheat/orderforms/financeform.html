@@ -24,6 +24,11 @@
             <div class="form-group">
                 <label>{{ wizard.form.total_cost.label }} £</label>
                 {{ wizard.form.total_cost }}
+
+                {% if wizard.form.user_name == 'yourheatx' and wizard.form.alt_total_cost.value > 0 %}
+                  <label>{{ wizard.form.alt_total_cost.label }} £</label>
+                  {{ wizard.form.alt_total_cost }}
+                {% endif %}  
             </div>
         </div>    
             <div class = "col-6">
@@ -52,12 +57,15 @@
                     {{ wizard.form.interest_free_12m_total_payable.as_hidden }}
                     {{ wizard.form.interest_free_12m_monthly_payment.as_hidden }}
 
+                    {% if wizard.form.user_name != 'yourheatx' or wizard.form.alt_total_cost.value == 0 %}
+                      {{ wizard.form.alt_total_cost.as_hidden }}
+                    {% endif %}
+
                     {{ wizard.form.product_price.as_hidden }}
                     {{ wizard.form.component_price_total.as_hidden }}
                     {{ wizard.form.parts_price_total.as_hidden }}
                     {{ wizard.form.estimated_duration_cost.as_hidden }}
                     {{ wizard.form.component_duration_total.as_hidden }}
-                    {{ wizard.form.alt_total_cost.as_hidden }}
                     {% if wizard.form.user_name != 'yourheatx' %}                
                       {{ wizard.form.include_interest_free_option.as_hidden }}
                     {% endif %}  
