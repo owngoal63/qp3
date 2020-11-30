@@ -106,7 +106,9 @@ def ss_get_data_from_sheet(access_token, sheet_name, column_names, conditional_f
 		"Agreed Deposit Amount": "agreed_deposit_amount",
 		"Option A Parts List": "option_a_parts_list",
 		"Option B Parts List": "option_b_parts_list",
-		"Optional Extras Accepted": "optional_extras_taken"
+		"Optional Extras Accepted": "optional_extras_taken",
+		"Price Option A (Inc VAT)": "option_a_price",
+		"Price Option B (Inc VAT)": "option_b_price"
 		}
 
 	# Get the Sheet from Smartsheet - limit it to only the requested columns

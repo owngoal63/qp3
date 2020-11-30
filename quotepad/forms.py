@@ -1969,11 +1969,6 @@ class JobPartsForm(forms.Form):
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
 	PO = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
-	#customer_title = forms.CharField(max_length=20)		
-	#customer_first_name = forms.CharField(max_length=100)
-	#customer_last_name = forms.CharField(max_length=100)
-	#customer_primary_phone = forms.CharField(max_length=100)
-	#customer_email = forms.EmailField()
 	house_name_or_number = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
 	street_address = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
 	city = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
@@ -1988,6 +1983,26 @@ class JobPartsForm(forms.Form):
 	parts = forms.CharField(max_length=4000, required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':5, 'cols':60}))
 	optional_extras_taken = forms.CharField(max_length=4000, required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':5, 'cols':60}))
 	additional_information = forms.CharField(max_length=2000, required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':3, 'cols':60}))
+
+class SpecialOfferForm(forms.Form):
+	def __init__(self, *args, **kwargs):
+		super(SpecialOfferForm, self).__init__(*args, **kwargs)
+		for field in self: 
+			field.field.widget.attrs['class'] = 'form-control'
+	smartsheet_id = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	customer_title = forms.CharField(max_length=20, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))		
+	customer_first_name = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	customer_last_name = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	customer_email = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	survey_date = forms.CharField(max_length=30, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	#quote_date = forms.DateField(input_formats=['%d/%m/%Y'], required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	primary_boiler = forms.CharField(max_length=300, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	alternative_boiler = forms.CharField(max_length=300, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	primary_boiler_price = forms.CharField(max_length=20, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	alternative_boiler_price = forms.CharField(max_length=20, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	agreed_boiler_option = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	special_offer_details = forms.CharField(max_length=4000, required=True, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':5, 'cols':60}))
+
 
 	
 class TestForm(forms.Form):

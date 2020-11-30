@@ -61,6 +61,15 @@
         </div>
     </div>
     <div class="row comms-row">
+        <div class = "col-4">                      
+            <a class="btn boilerbtn btn-warning" href="{% url 'GetSpecialOffer' customer_id %}">Special Offer Comms</a>
+        </div>
+        <div class = "col-8">    
+            <i>Dear ____, We just wanted to thank you for the opportunity to quote...</i>
+            <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [Customer ID] tbd</p>
+        </div>
+    </div>
+    <div class="row comms-row">
         <div class = "col-4">              
             <a class="btn boilerbtn btn-warning" href="{% url 'PreviewComms' 'Installation Notification Comms' customer_id  %}">Resend Installation Notification Comms</a>
         </div>

@@ -31,7 +31,7 @@ from quotepad.views import list_quote_archive_yh, upload_for_reprint_yh, QuoteAc
 from quotepad.views import ssCustomerSelect, ssPostSurveyQuestions, ss_customer_comms_yh, ssGetPhotosForUpload
 
 # Imports for Yourheat admin
-from quotepad.views import admin_home, customer_comms, list_customers_for_comms, generate_customer_comms, emails_sent_to_customers, confirm_calendar_appointment, get_survey_appointment, get_installation_appointment, get_job_parts
+from quotepad.views import admin_home, customer_comms, list_customers_for_comms, generate_customer_comms, emails_sent_to_customers, confirm_calendar_appointment, get_survey_appointment, get_installation_appointment, get_job_parts, get_special_offer
 from quotepad.views import processing_cancelled, preview_comms, display_comms, email_comms, email_sent_to_merchant
 
 # Imports for Hub
@@ -150,6 +150,7 @@ urlpatterns = [
     path('GetSurveyAppointment/', get_survey_appointment.as_view(), name='GetSurveyAppointment'),
     path('GetInstallationAppointment/<str:customer_id>/', get_installation_appointment.as_view(), name='GetInstallationAppointment'),
     path('GetJobParts/<str:customer_id>/', get_job_parts.as_view(), name='GetJobParts'),
+    path('GetSpecialOffer/<str:customer_id>/', get_special_offer.as_view(), name='GetSpecialOffer'),
     path('ProcessingCancelled/', processing_cancelled, name='ProcessingCancelled'),
     path('PreviewComms/<str:comms>/<str:customer_id>/', preview_comms, name = 'PreviewComms'),
     path('DisplayComms/<str:comms>/<str:customer_id>/', display_comms, name = 'DisplayComms'),

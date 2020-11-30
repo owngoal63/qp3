@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <title>Customer Comms</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Poppins&display=swap');
+
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            text-align: center;
+        }
+
+        .all_text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            text-align:justify;
+        }
+
+        .special_text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            text-align:left;
+        }
+
+        .contact_text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .contact_text a {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .body_text {
+            position: relative;
+            width: 99%;
+            margin: 0 auto;
+        }
+
+        #final-strap-line {
+            text-align: center;
+            color: rgb(251, 126, 51);
+        }
+
+        #final-strap-text {
+            font-family: verdana;
+            font-style: italic;
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        #img2 {
+            position: relative;
+            top: 20px;
+        }
+
+        .text_header {
+            font-family: 'Poppins', sans-serif;
+            font-size: 22px;
+            color: white;
+            bottom:90px;
+            position:relative;
+        }
+
+
+        .background_footer {
+            width: 99%;
+            height: 80px;
+            background-position: center;
+            background-color: black;
+            margin: 25px auto 0px auto;
+        }
+
+        .footer_text {
+            color: white;
+            font-size: 12px;
+            text-align: right;
+        }
+
+        .left {
+            float: left;
+            margin: 1.5rem 2rem 2rem 2rem;
+
+        }
+
+        .right {
+            margin: .4rem 2rem 2rem 2rem;
+            float: right;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .email_header img {
+            width:99%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="email_header">
+        <img src='http://www.qpcentral.co.uk/static/images/YH_email_header_special_offer.png' alt="Your Heat Header"/>
+    </div>
+
+    <div class="body_text">
+
+        <div class="content">
+            <div class="contact_text">
+                <img src='http://www.qpcentral.co.uk/static/images/phone-solid.png' width="15" /> <a
+                    href="tel:01732622990">01732 622990</a> | <img
+                    src='http://www.qpcentral.co.uk/static/images/globe-solid.png' width="15" /> <a
+                    href='https://yourheat.co.uk/book-a-job/'>www.yourheat.co.uk</a> | <img
+                    src='http://www.qpcentral.co.uk/static/images/envelope-solid.png' width="15" /> <a
+                    href='mailto:info@yourheat.co.uk'>info@yourheat.co.uk</a>
+            </div>
+
+            <p class="all_text">
+                <b>YOUR FIXED PRICE QUOTATION</b><br>
+                {% if alternative_boiler != "" %}
+                    Option 1: 
+                {% endif %}
+                {{primary_boiler}} - £{{primary_boiler_price}}<br>
+                {% if alternative_boiler != "" %}
+                    Option 2: {{alternative_boiler}} - £{{alternative_boiler_price}}
+                {% endif %}    
+            </p>
+
+            <p class="all_text">Dear {{ customer_title }} {{ customer_last_name }},</p>
+
+            <!-- Insert Email body content here  -->
+
+
+            <p class="all_text">
+                We just wanted to thank you for the opportunity to quote for your new central heating boiler on {{ survey_date|date:"D j F Y" }} with one of our FIXED PRICED QUOTATIONS, we hope you found the appointment valuable.
+                We understand it’s a difficult decision, deciding who to choose to install your new boiler and equipment. So we we’re hoping to make your decision a little easier with a special offer. 
+            </p>
+            
+            <hr>
+            <p class="special_text">
+                {{special_offer_details|safe }}
+            </p>
+            <hr>
+            <p class="all_text">
+                If you would like to take advantage of this special offer, please give us a call on <a href="tel:01732622990">01732 622990.</a>
+            </p>
+
+            <p class="all_text">
+                Warm Regards, The Your Heat Team
+            </p>
+
+            <!-- End of Email body content  -->
+
+            <div id="final-strap-line">
+                <p id="final-strap-text">"Our friendly team will provide you with an efficient service, delivered with a
+                    sense of warmth. Your Heat, is our Priority, ALWAYS."</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="background_footer">
+
+        <div class="left">
+            <img src='http://www.qpcentral.co.uk/static/images/yh_logo_white_text.png' width="150">
+        </div>
+
+        <div class="right">
+            <p class="footer_text">Copyright © 2020 Your Heat Ltd | VAT No. 213 6884 04</p>
+            <p class="footer_text"><a href=' https://yourheat.co.uk/terms-and-conditions/'>Installation Terms and
+                    Conditions</a></p>
+        </div>
+    </div>
+
+</body>
+
+</html>

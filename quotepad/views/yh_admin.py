@@ -4,6 +4,7 @@ from django.template.loader import render_to_string
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic import FormView
 from django.core.validators import validate_email
+from django.utils.html import strip_tags
 
 import datetime
 from pathlib import Path
@@ -13,7 +14,7 @@ import smartsheet
 import json
 
 from quotepad.models import CustomerComm
-from quotepad.forms import ssSurveyAppointmentForm, ssInstallationAppointmentForm, JobPartsForm
+from quotepad.forms import ssSurveyAppointmentForm, ssInstallationAppointmentForm, JobPartsForm, SpecialOfferForm
 from quotepad.utils import send_email_using_SendGrid
 
 # imports associated with sending email ( can be removed for production )
@@ -59,50 +60,56 @@ def display_comms(request, comms, customer_id=None):
 	''' Function to display the email contents prior to sending the email '''
 
 	html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/{}.html".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
-	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/customer_comms/{}.txt".format(request.user.username, comms))
-
-	if customer_id:		# customer_id has been passed so get individual record from sheet
-		ss_get_data_from_sheet(
-			settings.YH_SS_ACCESS_TOKEN,
-			settings.YH_SS_SHEET_NAME,
-			['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'Installation Date', 'Survey Date',  'Surveyor', 'Survey Time', 'Engineer Appointed', 'Boiler Manufacturer'],
-			'Customer ID',
-			customer_id,
-			data_filename
-		)
-		data_source_is_report = False		# Boolean to pass to HTML page to determine instructions
-	else:	# customer_id has NOT been passed so get records from predefined SS report
-		ss_get_data_from_report(
+	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
+	
+	if comms != "Special Offer Comms":	# Pull the data from Smartsheet and populate the relevant .txt file
+		if customer_id:		# customer_id has been passed so get individual record from sheet
+			ss_get_data_from_sheet(
 				settings.YH_SS_ACCESS_TOKEN,
 				settings.YH_SS_SHEET_NAME,
-				comms,
+				['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'Installation Date', 'Survey Date',  'Surveyor', 'Survey Time', 'Engineer Appointed', 'Boiler Manufacturer'],
+				'Customer ID',
+				customer_id,
 				data_filename
-		)
-		data_source_is_report = True		# Boolean to pass to HTML page to determine instructions
-
+			)
+			data_source_is_report = False		# Boolean to pass to HTML page to determine instructions
+		else:	# customer_id has NOT been passed so get records from predefined SS report
+			ss_get_data_from_report(
+					settings.YH_SS_ACCESS_TOKEN,
+					settings.YH_SS_SHEET_NAME,
+					comms,
+					data_filename
+			)
+			data_source_is_report = True		# Boolean to pass to HTML page to determine instructions
+	
 	# Open the text file with the Smartsheet data 
 	with open(data_filename) as file:
 			file_form_data = []
 			for line in file:
 				file_form_data.append(eval(line))
 
+
 	for line in file_form_data:
-		# Add the image logo url to the dictionary
-		line["image_logo"] = settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png"
-		# Add the dictionary entry engineer_name  from the engineer_email address with some string manipulation
-		at_pos = line["engineer_email"].find('@')
-		line["engineer_name"] = ((line["engineer_email"].replace('.',' '))[0:at_pos]).title()
-		# Add the dictionary entry engineer_name  from the surveyor_email address with some string manipulation
-		at_pos = line["surveyor_email"].find('@')
-		line["surveyor_name"] = ((line["surveyor_email"].replace('.',' '))[0:at_pos]).title()
-		# Add the dictionary entry engineer_first_name
-		at_pos = line["engineer_name"].find(' ')
-		line["engineer_first_name"] = (line["engineer_name"])[0:at_pos]
-		# Change the installation_date format
-		if line["installation_date"] != "None":
-			line["installation_date"] = datetime.datetime.strptime(line["installation_date"], "%Y-%m-%d")
-		if line["survey_date"] != "None":
+		if comms != "Special Offer Comms":
+			# Add the image logo url to the dictionary
+			line["image_logo"] = settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png"
+			# Add the dictionary entry engineer_name  from the engineer_email address with some string manipulation
+			at_pos = line["engineer_email"].find('@')
+			line["engineer_name"] = ((line["engineer_email"].replace('.',' '))[0:at_pos]).title()
+			# Add the dictionary entry engineer_name  from the surveyor_email address with some string manipulation
+			at_pos = line["surveyor_email"].find('@')
+			line["surveyor_name"] = ((line["surveyor_email"].replace('.',' '))[0:at_pos]).title()
+			# Add the dictionary entry engineer_first_name
+			at_pos = line["engineer_name"].find(' ')
+			line["engineer_first_name"] = (line["engineer_name"])[0:at_pos]
+			# Change the installation_date format
+			if line["installation_date"] != "None":
+				line["installation_date"] = datetime.datetime.strptime(line["installation_date"], "%Y-%m-%d")
+			if line["survey_date"] != "None":
+				line["survey_date"] = datetime.datetime.strptime(line["survey_date"], "%Y-%m-%d")
+		else:
 			line["survey_date"] = datetime.datetime.strptime(line["survey_date"], "%Y-%m-%d")
+
 
 		# Popup error if Email recipient address has not been populated
 		if line["customer_email"] == "None":
@@ -127,15 +134,16 @@ def email_comms(request, comms, customer_id=None):
 	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
 	html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/{}.html".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
 	
-	if customer_id:		# customer_id has been passed so get individual record from sheet
-		ss_get_data_from_sheet(
-			settings.YH_SS_ACCESS_TOKEN,
-			settings.YH_SS_SHEET_NAME,
-			['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'Installation Date', 'Survey Date', 'Survey Time', 'Surveyor', 'Engineer Appointed', 'Boiler Manufacturer'],
-			'Customer ID',
-			customer_id,
-			data_filename
-		)
+	if comms != "Special Offer Comms":	# Pull the data from Smartsheet and populate the relevant .txt file
+		if customer_id:		# customer_id has been passed so get individual record from sheet
+			ss_get_data_from_sheet(
+				settings.YH_SS_ACCESS_TOKEN,
+				settings.YH_SS_SHEET_NAME,
+				['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'Installation Date', 'Survey Date', 'Survey Time', 'Surveyor', 'Engineer Appointed', 'Boiler Manufacturer'],
+				'Customer ID',
+				customer_id,
+				data_filename
+			)
 
 	# Open the text file with the Smartsheet data 
 	with open(data_filename) as file:
@@ -144,16 +152,17 @@ def email_comms(request, comms, customer_id=None):
 				file_form_data.append(eval(line))
 
 	for line in file_form_data:
-		#print(line.get('customer_title'))
+		
 
-		if CustomerComm.objects.filter(customer_id = line.get('smartsheet_id'), comms_id = comms ).exists():
-			print(line.get('smartsheet_id'), comms_name, ' already exists - do not resend.' )
-		else:	
-			# Add record and send
-			if settings.YH_SS_TRACK_COMMS_SENT:
-				CustComm = CustomerComm(user = request.user ,customer_id = line.get('smartsheet_id') , comms_id = comms )
-				CustComm.save()
+		# if CustomerComm.objects.filter(customer_id = line.get('smartsheet_id'), comms_id = comms ).exists():
+		# 	print(line.get('smartsheet_id'), comms_name, ' already exists - do not resend.' )
+		# else:	
+		# 	# Add record and send
+		# 	if settings.YH_SS_TRACK_COMMS_SENT:
+		# 		CustComm = CustomerComm(user = request.user ,customer_id = line.get('smartsheet_id') , comms_id = comms )
+		# 		CustComm.save()
 
+		if comms != "Special Offer Comms":
 			# Add the image logo url to the dictionary
 			line["image_logo"] = settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png"
 			# Add the dictionary entry engineer_name  from the engineer_email address with some string manipulation
@@ -170,48 +179,56 @@ def email_comms(request, comms, customer_id=None):
 				line["installation_date"] = datetime.datetime.strptime(line["installation_date"], "%Y-%m-%d")
 			if line["survey_date"] != "None":
 				line["survey_date"] = datetime.datetime.strptime(line["survey_date"], "%Y-%m-%d")
-			html_content = render_to_string(html_email_filename, line)
-			# Drop the Comms from the comms_name for the Email subject line
-			at_pos = comms.find('Comms')
-			mail_subject = ('Your Heat - ' + comms[0:at_pos]).strip()
+		else:
+			line["survey_date"] = datetime.datetime.strptime(line["survey_date"], "%Y-%m-%d")
 
-			if settings.YH_TEST_EMAIL:
-					email = EmailMessage(mail_subject, html_content, 'info@yourheat.co.uk' , [line.get('customer_email')])
-					email.content_subtype = "html"  # Main content is now text/html
-					email.send()
-					#send_email_using_GmailAPI('gordonalindsay@gmail.com',line.get('customer_email'), mail_subject, html_content)
-			else:
-				if mail_subject == "Your Heat - Invoice":		# Invoice Comms - Attach Invoice PDF
-					#send_email_using_SendGrid('info@yourheat.co.uk', line.get('customer_email'), mail_subject, html_content )
-					# Generate Invoice PDF File
-					build_invoice_pdf(line.get('smartsheet_id'))
-					#print(stop)
-					AttachFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/CustomerInvoice_{}_{}.pdf".format(settings.YH_MASTER_PROFILE_USERNAME, line.get("customer_last_name"), line.get("smartsheet_id")))
-					send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content, AttachFilename)
+		html_content = render_to_string(html_email_filename, line)
+		# Drop the Comms from the comms_name for the Email subject line
+		at_pos = comms.find('Comms')
+		mail_subject = ('Your Heat - ' + comms[0:at_pos]).strip()
 
-					# Add Invoice PDF to Smartsheet Attachments
-					if settings.YH_SS_INTEGRATION:
-						ss_attach_pdf(
-							settings.YH_SS_ACCESS_TOKEN,
-							settings.YH_SS_SHEET_NAME,
-							"Customer ID",
-							line.get('smartsheet_id'),
-							AttachFilename
-						)	
-					 
-				else:		# Send comms emails without attachments
-					send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content)
+		if settings.YH_TEST_EMAIL:
+				email = EmailMessage(mail_subject, html_content, 'info@yourheat.co.uk' , [line.get('customer_email')])
+				email.content_subtype = "html"  # Main content is now text/html
+				email.send()
+				#send_email_using_GmailAPI('gordonalindsay@gmail.com',line.get('customer_email'), mail_subject, html_content)
+		else:
+			if mail_subject == "Your Heat - Invoice":		# Invoice Comms - Attach Invoice PDF
+				#send_email_using_SendGrid('info@yourheat.co.uk', line.get('customer_email'), mail_subject, html_content )
+				# Generate Invoice PDF File
+				build_invoice_pdf(line.get('smartsheet_id'))
+				#print(stop)
+				AttachFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/CustomerInvoice_{}_{}.pdf".format(settings.YH_MASTER_PROFILE_USERNAME, line.get("customer_last_name"), line.get("smartsheet_id")))
+				send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content, AttachFilename)
 
-			#print(stop)	
+				# Add Invoice PDF to Smartsheet Attachments
+				if settings.YH_SS_INTEGRATION:
+					ss_attach_pdf(
+						settings.YH_SS_ACCESS_TOKEN,
+						settings.YH_SS_SHEET_NAME,
+						"Customer ID",
+						line.get('smartsheet_id'),
+						AttachFilename
+					)	
+					
+			else:		# Send comms emails without attachments
+				send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content)
 
-			if settings.YH_SS_INTEGRATION:		# Update Comments
-				ss_add_comments(
-				settings.YH_SS_ACCESS_TOKEN,
-				settings.YH_SS_SHEET_NAME,
-				'Customer ID',
-				line.get('smartsheet_id'),
-				[comms + " email sent."]
-			)
+		#print(stop)
+
+		if comms == "Special Offer Comms":
+			special_offer_text = " Special Offer Details: " + strip_tags(line.get("special_offer_details"))
+		else:
+			special_offer_text = ""	
+
+		if settings.YH_SS_INTEGRATION:		# Update Comments
+			ss_add_comments(
+			settings.YH_SS_ACCESS_TOKEN,
+			settings.YH_SS_SHEET_NAME,
+			'Customer ID',
+			line.get('smartsheet_id'),
+			[comms + " email sent." + special_offer_text]
+		)
 
 	return HttpResponseRedirect('/EmailsSentToCustomers/')	
 
@@ -868,13 +885,91 @@ def processing_cancelled(request):
 	''' Function to confirm Processing Cancelled '''
 	return render(request,'yourheat/adminpages/processing_cancelled.html')
 
+class get_special_offer(FormView):
+
+	form_class = SpecialOfferForm
+	template_name = "yourheat/adminpages/special_offer_form.html"
+	customer_id = None
+
+	def get_initial(self, **kwargs):
+		initial = super().get_initial()
+		customer_id = self.kwargs['customer_id']
+
+		print(customer_id)
+
+		data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/customer_comms/Special Offer Comms.txt")
+
+		#Get Customer Info from Smartsheet
+		ss_get_data_from_sheet(
+			settings.YH_SS_ACCESS_TOKEN,
+			settings.YH_SS_SHEET_NAME,
+			['Customer ID', 'Title', 'First Name', 'Surname','Survey Date', 
+			 'Agreed Boiler Option', 'Option A Parts List', 'Option B Parts List', 
+			 'Price Option A (Inc VAT)', 'Price Option B (Inc VAT)', 'Email'
+			],
+			'Customer ID',
+			customer_id,
+			data_filename
+		)
+
+		# print(stop)
+
+		# Open the text file with the Smartsheet data to prepopulate the form
+		with open(data_filename) as file:
+			#file_form_data = []
+			for line in file:
+				line_dict = json.loads(line)
+				# Check for any "NONE" fields coming from Smartsheet and replace with ''
+				for key, value in line_dict.items():
+					if value == 'None':
+						line_dict[key] = ''
+				initial['smartsheet_id'] = line_dict.get("smartsheet_id")
+				initial['customer_title'] = line_dict.get("customer_title")
+				initial['customer_first_name'] = line_dict.get("customer_first_name")
+				initial['customer_last_name'] = line_dict.get("customer_last_name")
+				# if line_dict.get("survey_date"):
+				# 	ss_date = datetime.datetime.strptime(line_dict.get("survey_date"), "%Y-%m-%d")
+				# 	initial['quote_date'] = datetime.datetime.strftime(ss_date, "%d/%m/%Y")
+				initial['survey_date'] = line_dict.get("survey_date") 
+				agreed_boiler_option = line_dict.get("agreed_boiler_option")
+				initial['agreed_boiler_option'] = line_dict.get("agreed_boiler_option")
+				# String replacement fix to ensure carriage returns exist on parts lists
+				#if agreed_boiler_option == "Option B Parts":
+				#	initial['parts'] = line_dict.get("option_b_parts_list").replace('|', '\r\n')
+				#else:		
+				#	initial['parts'] = line_dict.get("option_a_parts_list").replace('|', '\r\n')
+				initial['primary_boiler'] = line_dict.get("option_a_parts_list").split('|')[0].split('Boiler: ')[1]
+				initial['primary_boiler_price'] = '%.2f' % float(line_dict.get("option_a_price"))
+				if line_dict.get("option_b_parts_list"):
+					initial['alternative_boiler'] = line_dict.get("option_b_parts_list").split('|')[0].split('Boiler: ')[1]
+					initial['alternative_boiler_price'] = '%.2f' % float(line_dict.get("option_b_price"))
+				initial['customer_email'] = line_dict.get("customer_email")
+		return initial
+
+	def form_valid(self, form, **kwargs):
+		print(form.cleaned_data)
+		customer_id = form.cleaned_data['smartsheet_id']
+		print(customer_id)
+		data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/customer_comms/Special Offer Comms.txt")
+		file = open(data_filename, "w")
+		file.write(str(form.cleaned_data))
+		file.close()
+
+
+		#print(stop)
+		#return render(self.request, 'yourheat/adminpages/preview_comms.html', {'comms': 'Special Offer Comms', 'customer_id': customer_id})
+		return HttpResponseRedirect('/PreviewComms/Special Offer Comms/'+ customer_id)
+		#return preview_comms('Special Offer Comms', customer_id)
+		#preview_comms(self.request,'Special Offer Comms', customer_id)
+		#return
+
 class get_job_parts(FormView):
 
 	form_class = JobPartsForm
 	template_name = "yourheat/adminpages/job_parts_form.html"
 	customer_id = None
 
-
+	
 	def get_initial(self, **kwargs):
 		initial = super().get_initial()
 		customer_id = self.kwargs['customer_id']
