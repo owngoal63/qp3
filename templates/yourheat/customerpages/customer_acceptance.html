@@ -1,0 +1,48 @@
+{% extends "yourheat/customerpages/base.html" %}
+
+{% block content %}
+
+{% if acceptancetype == "SpecialOffer" %}
+
+    <div class="form-container">
+
+        <p class="info-header-text">Thank You for choosing Yourheat</p>
+
+        <p class="info-text">We are delighted that you would like to take advantage of our special offer.</p>
+
+        <p class="info-text">By clicking the button below our team will be notified<br>
+             and will be in contact to finalise the details and arrange your installation.</p>
+
+        <div class="confirm-button">
+            <a  class=”link” href="/CustomerAcceptanceEmail/SpecialOffer/{{customerid}}/{{ firstname }}/{{ surname }}/">
+                <i class="fas fa-check-circle"></i> Confirm             
+            </a>
+        </div>
+
+    </div>
+
+{% endif %}
+
+{% if acceptancetype == "Quote" %}
+
+    <div class="form-container">
+
+        <p class="info-header-text">Thank You for choosing Yourheat</p>
+
+        <p class="info-text">We are delighted that you would like us to take care of you.</p>
+
+        <p class="info-text">By clicking the button below our team will be notified
+            that you have accepted our quote<br>
+             and will be in contact to finalise the details and arrange your installation.</p>
+
+        <div class="confirm-button">
+            <a  class=”link” href="https://www.copernica.com" target="_blank">
+                <i class="fas fa-check-circle"></i> Confirm             
+            </a>
+        </div>
+
+    </div>
+
+{% endif %}
+
+{% endblock %}

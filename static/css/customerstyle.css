@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+}
+
+.page {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.header {
+    height: 6rem;
+    width: 100%;
+    background-color: rgba(31, 28, 28, 0.925);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo {
+    position: relative;
+    background-image: url('../images/yh_logo_white_text.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 100%;
+    width: 200px;
+
+}
+
+.content {
+    background-image: url('../images/homepage-page-header-template.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    
+}
+
+.form-container {
+    position: relative;
+    max-width:1200px;
+    max-height: 90%;
+    bottom: 1rem;
+    border-radius: 3rem 0 3rem 0;
+    /* border-color: white;
+    border-width: 1rem; */
+    border: white 0.2rem solid;
+    background-color: rgba(0, 0, 0, .3);
+    /* box-shadow: 1px 1px 1px 1px rgb(31, 30, 30), 56); */
+    text-align: center;
+    padding: 1rem;
+
+}
+
+.info-header-text {
+    font-size: 2rem;
+    color: white;
+    font-weight: 300;
+}
+
+.info-text {
+    font-size: 1.3rem;
+    color: white;
+    font-weight: 100;
+    padding: 1rem;
+}
+
+.confirm-button {
+    border-radius: 5px;
+}
+
+.confirm-button a {
+    padding: 8px 12px;
+    border: 0.2rem solid rgba(31, 28, 28, 0.925);
+    border-radius: 5px;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: rgba(31, 28, 28, 0.925); 
+    text-decoration: none;
+    /* font-weight: bold; */
+    display: inline-block;
+}
+
+form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+label {
+    color:white;
+}
+
+@media (max-width: 800px) {
+    .form-container {
+        width: 80%;
+        margin: 0 auto;
+    }
+}

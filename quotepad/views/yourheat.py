@@ -370,7 +370,8 @@ class QuoteAccepted(FormView):
 
 		else:
 			for email_to in settings.YH_QUOTE_ACCEPTED_EMAILS:
-				send_email_using_SendGrid('info@yourheat.co.uk', email_to, mail_subject, msg )
+				#send_email_using_SendGrid('info@yourheat.co.uk', email_to, mail_subject, msg )
+				send_email_using_GmailAPI('hello@gmail.com',email_to, mail_subject, msg) # Email to customer
 
 		if settings.YH_SS_INTEGRATION:		# Update Comments
 				ss_add_comments(
@@ -2021,7 +2022,9 @@ def email_recommend_a_friend(request):
 			email.content_subtype = "html"  # Main content is now text/html
 			email.send()
 	else:	
-		send_email_using_SendGrid('info@yourheat.co.uk', customer_email, mail_subject, html_content, 'info@yourheat.co.uk' )
+		#send_email_using_SendGrid('info@yourheat.co.uk', customer_email, mail_subject, html_content, 'info@yourheat.co.uk' )
+		send_email_using_GmailAPI('hello@gmail.com',customer_email, mail_subject, html_content ) # Email to customer
+		send_email_using_GmailAPI('hello@gmail.com','customer_email', mail_subject, html_content ) # Email to customer
 
 	#print(stop)	
 

@@ -3,6 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css"
+    integrity="sha256-zmfNZmXoNWBMemUOo1XUGFfc0ihGGLYdgtJS3KCr/l0=" crossorigin="anonymous" />
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
     <title>Customer Comms</title>
     <style>
@@ -104,6 +106,22 @@
         .email_header img {
             width:99%;
         }
+
+        .email_button {
+            border-radius: 5px;
+        }
+
+        .email_button a {
+            padding: 8px 12px;
+            border: 3px solid #f07e39;
+            border-radius: 5px;
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 20px;
+            color: #ffffff; 
+            text-decoration: none;
+            /* font-weight: bold; */
+            display: inline-block;  
+        }
     </style>
 </head>
 
@@ -168,6 +186,33 @@
         </div>
 
     </div>
+
+    <table width="100%" cellspacing="0" cellpadding="5">
+        <tr>
+            <td align="right">
+                <table cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td class="email_button" bgcolor="#f07e39">
+                            <a  class=”link” href="http://127.0.0.1:8000/CustomerAcceptance/SpecialOffer/{{smartsheet_id}}/{{ customer_first_name }}/{{ customer_last_name }}/" target="_blank">
+                                <i class="fas fa-check-circle"></i> Accept Special Offer             
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td align="left">
+                <table cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td class="email_button" bgcolor="#f07e39">
+                            <a  class=”link” href="http://127.0.0.1:8000/CustomerEnquiry/SpecialOffer/{{smartsheet_id}}/{{ customer_first_name }}/{{ customer_last_name }}/" target="_blank">
+                                <i class="fas fa-handshake"></i> Discuss Special Offer             
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+      </table>
 
     <div class="background_footer">
 

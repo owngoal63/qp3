@@ -2003,6 +2003,16 @@ class SpecialOfferForm(forms.Form):
 	agreed_boiler_option = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
 	special_offer_details = forms.CharField(max_length=4000, required=True, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':5, 'cols':60}))
 
+class CustomerEnquiryForm(forms.Form):
+	def __init__(self, *args, **kwargs):
+		super(CustomerEnquiryForm, self).__init__(*args, **kwargs)
+		for field in self: 
+			field.field.widget.attrs['class'] = 'form-control'
+	questions_about_the_quote = forms.CharField(max_length=4000, required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':4, 'cols':40}))
+	questions_about_finance = forms.CharField(max_length=4000, required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':4, 'cols':40}))
+	changes_customer_would_like = forms.CharField(max_length=4000, required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':4, 'cols':40}))
+	feedback_on_the_visit = forms.CharField(max_length=4000, required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':4, 'cols':40}))
+	request_a_call_back = forms.DateTimeField(required=False, input_formats=['%d/%m/%Y %H:%M'])
 
 	
 class TestForm(forms.Form):

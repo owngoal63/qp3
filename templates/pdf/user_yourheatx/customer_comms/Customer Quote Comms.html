@@ -123,23 +123,27 @@
             <!-- Insert Email body content here  -->
 
             {% if user_name == 'yourheatx' %}
-                <p class="all_text">Thank you for agreeing to have us provide you with a revised quote, which is attached to this email.</p>
+                <p class="all_text">Thank you for your continued interest.  Please find attached your amended fixed priced quotation, with the agreed changes for your consideration.</p>
+                <p class="all_text">
+                    A member of the team will call you shortly to make sure this has arrived with you safely.  If you have any trouble opening this attachment, want to check availability or require anything further form us here, please call us on <a
+                    href="tel:01732622990"><b>01732 622990</b></a>, or email <a href='mailto:hello@yourheat.co.uk'><b>hello@yourheat.co.uk</b></a>.   
+                </p>
             {% else %}
                 <p class="all_text">
                     Thank you for your time today, attached is a copy of your Fixed Price Quotation - I hope Surveyor {{surveyor_first_name}} {{surveyor_last_name}} looked after you well and answered all your questions.
                 </p>
+                <p class="all_text">
+                    It is quite common to have a few more questions following receipt of the quotation so please feel free
+                    to contact {{surveyor_first_name}} on <a href="tel:{{surveyor_phone_number}}"><b>{{surveyor_phone_number}}</b></a>, who will be able answer these for you.
+                    Alternatively, you are welcome to contact the office directly on <a
+                    href="tel:01732622990"><b>01732 622990</b></a> or email <a href='mailto:info@yourheat.co.uk'><b>info@yourheat.co.uk</b></a> for any additional support.
+                </p>
+                <p class="all_text">
+                    The team here will be in touch with you again very shortly to ensure that you have everything you need.
+                </p>
             {% endif %}
 
-            <p class="all_text">
-                It is quite common to have a few more questions following receipt of the quotation so please feel free
-                to contact {{surveyor_first_name}} on <a href="tel:{{surveyor_phone_number}}"><b>{{surveyor_phone_number}}</b></a>, who will be able answer these for you.
-                Alternatively, you are welcome to contact the office directly on <a
-                href="tel:01732622990"><b>01732 622990</b></a> or email <a href='mailto:info@yourheat.co.uk'><b>info@yourheat.co.uk</b></a> for any additional support.
-            </p>
 
-            <p class="all_text">
-                The team here will be in touch with you again very shortly to ensure that you have everything you need.
-            </p>
 
             <p class="all_text">
                 For more information about us, please visit <a href='https://yourheat.co.uk/'><b>www.yourheat.co.uk</b></a>    

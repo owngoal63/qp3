@@ -1,0 +1,43 @@
+{% extends "yourheat/customerpages/base.html" %}
+
+{% block content %}
+
+<div class="form-container">
+
+            
+    <p class="info-header-text">Your Feedback is important to us</p>
+    <form id="CustomerEnquiryForm" method="POST">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Questions for us about your quote</label>
+                {{ form.questions_about_the_quote }}
+        </div> 
+        <div class="form-group">
+            <label>Questions about financing</label>
+                {{ form.questions_about_finance }}
+        </div> 
+        <div class="form-group">
+            <label>Any changes you would like to the quote</label>
+                {{ form.changes_customer_would_like }}
+        </div> 
+        <div class="form-group">
+            <label>Feedback on the actual site survey</label>
+                {{ form.feedback_on_the_visit }}
+        </div>
+        <div class="form-group">
+            <label>Preferred date and time for a call</label>
+            {{ form.request_a_call_back}}
+        </div>
+
+        <div class="confirm-button">
+            <a href="#" onclick="document.getElementById('CustomerEnquiryForm').submit()">
+                <i class="fas fa-check-circle"></i> Send Feedback</a>
+            </a>
+        </div>
+    </form>
+
+</div>
+
+
+{% endblock content %}

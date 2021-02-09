@@ -37,6 +37,9 @@ from quotepad.views import processing_cancelled, preview_comms, display_comms, e
 # Imports for Hub
 from quotepad.views import hub_home, recommend_a_friend, preview_recommend_a_friend, email_recommend_a_friend, confirmation_page, view_invoice_pdf
 
+# Imports for Customer Pages
+from quotepad.views import customer_acceptance, customer_acceptance_email, customer_enquiry_form
+
 from quotepad.views import TestForm, test_gmail
 
 urlpatterns = [
@@ -159,6 +162,10 @@ urlpatterns = [
     path('TestForm/', login_required(TestForm.as_view()), name='TestForm'),
     path('TestGmail/', test_gmail, name='TestGmail'),
     path('ViewInvoicePDF/<str:customer_id>/', view_invoice_pdf, name = 'ViewInvoicePDF'),
+
+    path('CustomerAcceptance/<str:acceptancetype>/<str:customerid>/<str:firstname>/<str:surname>/', customer_acceptance, name = 'CustomerAcceptance'),
+    path('CustomerAcceptanceEmail/<str:acceptancetype>/<str:customerid>/<str:firstname>/<str:surname>/', customer_acceptance_email, name = 'CustomerAcceptanceEmail'),
+    path('CustomerEnquiry/<str:acceptancetype>/<str:customerid>/<str:firstname>/<str:surname>/', customer_enquiry_form.as_view(), name='CustomerEnquiry'),
 
 	path('', include('payments.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

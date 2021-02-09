@@ -14,7 +14,7 @@ import smartsheet
 import json
 
 from quotepad.models import CustomerComm
-from quotepad.forms import ssSurveyAppointmentForm, ssInstallationAppointmentForm, JobPartsForm, SpecialOfferForm
+from quotepad.forms import ssSurveyAppointmentForm, ssInstallationAppointmentForm, JobPartsForm, SpecialOfferForm, CustomerEnquiryForm
 from quotepad.utils import send_email_using_SendGrid
 
 # imports associated with sending email ( can be removed for production )
@@ -1175,5 +1175,119 @@ def test_gmail(request):
 
 	return
 
+def customer_acceptance(request, acceptancetype, customerid, firstname, surname):
+	''' Customer Acceptance Landing Page '''
+
+	return render(request, 'yourheat/customerpages/customer_acceptance.html',
+	{'acceptancetype': acceptancetype, 'customerid': customerid, 'firstname':firstname, 'surname':surname}
+	)
+
+def customer_acceptance_email(request, acceptancetype, customerid, firstname, surname):
+	''' Function to send email to yourheat admin to notify of customer acceptance '''
+
+	if acceptancetype == "Quote":
+		acceptance_type_text = "quote"
+		additional_info_text = "The customer quote details are available on Smartsheet as an attachment."
+	else:
+		acceptance_type_text = "Special Offer"
+		additional_info_text = "The special offer details are listed in the comments associated with the Smartsheet record."
+
+	email_message = 'Customer ' + firstname + ' ' + surname + ' has accepted the ' + acceptance_type_text
+	html_content = "Smartsheet ID : " + customerid + "<br>Please contact the customer to finalise details on their acceptance of the " + acceptance_type_text
+	html_content = html_content + "<br>" + additional_info_text + "<hr>"
+
+	if settings.YH_TEST_EMAIL:
+			email = EmailMessage(email_message, html_content, 'info@yourheat.co.uk' , ['hello@yourheat.co.uk'])
+			email.content_subtype = "html"  # Main content is now text/html
+			email.send()
+	else:
+		# Note that the sender email below can only be hello@yourheat.co.uk due to the API authentication
+		send_email_using_GmailAPI('Purchasing@yourheat.co.uk', 'hello@yourheat.co.uk', email_message, html_content)
+
+	# Update Smartsheet - set customer status to Deposit and Bookings [Quote Accepted] = 1
+	update_data = []
+	update_data.append({"Quote Accepted": 1})
+
+	if settings.YH_SS_INTEGRATION:		
+			ss_update_data(
+				settings.YH_SS_ACCESS_TOKEN,
+				settings.YH_SS_SHEET_NAME,
+				"Customer ID",
+				customerid,
+				update_data
+			)
+
+	
+	if settings.YH_SS_INTEGRATION:		# Update Comments on Smartsheet to confirm customer acceptance of offer/quote
+			ss_add_comments(
+			settings.YH_SS_ACCESS_TOKEN,
+			settings.YH_SS_SHEET_NAME,
+			'Customer ID',
+			customerid,
+			["Customer has confirmed their acceptance of Special Offer/Quote"]
+		)
+
+	return HttpResponseRedirect('https://yourheat.co.uk/')
+
+class customer_enquiry_form(FormView):
+
+	form_class = CustomerEnquiryForm
+	template_name = "yourheat/customerpages/customer_enquiry_form.html"
+
+	def form_valid(self, form, **kwargs):
+
+		if self.kwargs['acceptancetype'] == "Quote":
+			acceptance_type_text = "quote"
+			additional_info_text = "The customer quote details are available on Smartsheet as an attachment."
+		else:
+			acceptance_type_text = "Special Offer"
+			additional_info_text = "The special offer details are listed in the comments associated with the Smartsheet record."
+
+		email_message = 'Customer ' + self.kwargs['firstname'] + ' ' + self.kwargs['surname'] + ' has provided feedback on the ' + acceptance_type_text
+		html_content = "Smartsheet ID : " + self.kwargs['customerid'] + "<br>Please contact the customer to address their feedback regarding the " + acceptance_type_text
+		html_content = html_content + "<br>" + additional_info_text + "<hr>"
+		html_content = html_content + "<br>Questions about the quote/special offer: " + form.cleaned_data['questions_about_the_quote'] + "<br>"
+		html_content = html_content + "<br>Questions about finance: " + form.cleaned_data['questions_about_finance'] + "<br>"
+		html_content = html_content + "<br>Changes the customer would like: " + form.cleaned_data['changes_customer_would_like'] + "<br>"
+		html_content = html_content + "<br>Feedback on the visit: " + form.cleaned_data['feedback_on_the_visit'] + "<br>"
+		html_content = html_content + "<br>Requested Call back date/time: " + datetime.datetime.strftime(form.cleaned_data['request_a_call_back'], "%d-%m-%Y %H:%M") + "<br>"
+		html_content = html_content + "<hr>"
 
 
+		if settings.YH_TEST_EMAIL:
+				email = EmailMessage(email_message, html_content, 'info@yourheat.co.uk' , ['hello@yourheat.co.uk'])
+				email.content_subtype = "html"  # Main content is now text/html
+				email.send()
+		else:
+			# Note that the sender email below can only be hello@yourheat.co.uk due to the API authentication
+			send_email_using_GmailAPI('Purchasing@yourheat.co.uk', 'hello@yourheat.co.uk', email_message, html_content)
+
+		# Update Smartsheet - set customer status to Deposit and Bookings [Quote Accepted] = 1
+		update_data = []
+		update_data.append({"Quote Accepted": 1})
+
+		if settings.YH_SS_INTEGRATION:		
+				ss_update_data(
+					settings.YH_SS_ACCESS_TOKEN,
+					settings.YH_SS_SHEET_NAME,
+					"Customer ID",
+					self.kwargs['customerid'],
+					update_data
+				)
+
+		# Build Q and A for comments
+		q_and_a = strip_tags(html_content.replace('<br>', '   '))
+
+		if settings.YH_SS_INTEGRATION:		# Update Comments on Smartsheet with customer query details
+				ss_add_comments(
+				settings.YH_SS_ACCESS_TOKEN,
+				settings.YH_SS_SHEET_NAME,
+				'Customer ID',
+				self.kwargs['customerid'],
+				[q_and_a]
+			)
+
+		return HttpResponseRedirect('https://yourheat.co.uk/')
+
+
+			
