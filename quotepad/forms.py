@@ -1051,6 +1051,31 @@ TIME_OVERRIDE_DROPDOWN = (
 	('Anytime PM', 'Anytime PM')
 )
 
+''' Dropdown fields for Heat Plans '''
+
+BOILER_FUEL_TYPE_DROPDOWN = (
+	('Not Yet Determined', 'Not Yet Determined'),
+	('Gas Boiler', 'Gas Boiler'),
+	('LPG Boiler', 'LPG Boiler'),
+	('Oil Boiler', 'Oil Boiler')
+)
+
+TYPE_OF_PLAN_DROPDOWN = (
+	('Not Yet Determined', 'Not Yet Determined'),
+	('Boiler Service Care Plan', 'Boiler Service Care Plan'),
+	('Boiler & Controls Care Plan', 'Boiler & Controls Care Plan'),
+	('Full System Care Plan', 'Full System Care Plan')
+)
+
+CUSTOMER_PLAN_TYPE_DROPDOWN = (
+	('', 'Select One'),
+	('Prospective Home Owner', 'Prospective Home Owner'),
+	('Prospective Landlord', 'Prospective Landlord'),
+	('Confirmed Home Owner', 'Confirmed Home Owner'),
+	('Confirmed Landlord', 'Confirmed Landlord')
+)
+
+
 ''' Section for defining the multiple forms that will be used for the boiler quote (FormWizard library) '''
 
 class FormStepOne(forms.Form):
@@ -2002,6 +2027,20 @@ class SpecialOfferForm(forms.Form):
 	alternative_boiler_price = forms.CharField(max_length=20, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
 	agreed_boiler_option = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
 	special_offer_details = forms.CharField(max_length=4000, required=True, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':5, 'cols':60}))
+
+class HeatPlanForm(forms.Form):
+	def __init__(self, *args, **kwargs):
+		super(HeatPlanForm, self).__init__(*args, **kwargs)
+		for field in self: 
+			field.field.widget.attrs['class'] = 'form-control'
+	smartsheet_id = forms.CharField(max_length=100, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	customer_title = forms.CharField(max_length=20)		
+	customer_first_name = forms.CharField(max_length=100)
+	customer_last_name = forms.CharField(max_length=100)
+	customer_email = forms.EmailField(max_length=100)
+	fuel_type = forms.ChoiceField(choices=BOILER_FUEL_TYPE_DROPDOWN)
+	type_of_plan = forms.ChoiceField(choices=TYPE_OF_PLAN_DROPDOWN)
+	customer_plan_type = forms.ChoiceField(choices=CUSTOMER_PLAN_TYPE_DROPDOWN)
 
 class CustomerEnquiryForm(forms.Form):
 	def __init__(self, *args, **kwargs):

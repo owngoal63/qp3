@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css"
+    integrity="sha256-zmfNZmXoNWBMemUOo1XUGFfc0ihGGLYdgtJS3KCr/l0=" crossorigin="anonymous" />
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <title>Customer Comms</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Poppins&display=swap');
+
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            text-align: center;
+        }
+
+        .all_text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            text-align:justify;
+        }
+
+        .centered-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            text-align:center;
+        }
+
+        .special_text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            text-align:left;
+        }
+
+        .contact_text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .contact_text a {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .body_text {
+            position: relative;
+            width: 99%;
+            margin: 0 auto;
+        }
+
+        #final-strap-line {
+            text-align: center;
+            color: rgb(251, 126, 51);
+        }
+
+        #final-strap-text {
+            font-family: verdana;
+            font-style: italic;
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        #img2 {
+            position: relative;
+            top: 20px;
+        }
+
+        .text_header {
+            font-family: 'Poppins', sans-serif;
+            font-size: 22px;
+            color: white;
+            bottom:90px;
+            position:relative;
+        }
+
+
+        .background_footer {
+            width: 99%;
+            height: 80px;
+            background-position: center;
+            background-color: black;
+            margin: 25px auto 0px auto;
+        }
+
+        .footer_text {
+            color: white;
+            font-size: 12px;
+            text-align: right;
+        }
+
+        .left {
+            float: left;
+            margin: 1.5rem 2rem 2rem 2rem;
+
+        }
+
+        .right {
+            margin: .4rem 2rem 2rem 2rem;
+            float: right;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .email_header img {
+            width:99%;
+        }
+
+        .email_button {
+            border-radius: 5px;
+        }
+
+        .email_button a {
+            padding: 8px 12px;
+            border: 3px solid #f07e39;
+            border-radius: 5px;
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 20px;
+            color: #ffffff; 
+            text-decoration: none;
+            /* font-weight: bold; */
+            display: inline-block;  
+        }
+
+        tr {
+            height: 2rem;
+            vertical-align: middle;
+        }
+
+        .left-column {
+            /* border: 5px solid orange; */
+            padding-top:5px;
+            padding-bottom:5px;
+            width:250px;
+            padding-left:20px;
+            text-align: left;
+        }
+
+        .data-column-on {
+            border: 5px solid orange;
+            border-radius: 25px 0px 25px 0px;
+            width:250px;
+            text-align: center;
+        }
+
+        .data-column-off {
+            /* border: 5px solid orange;
+            border-radius: 25px 0px 25px 0px; */
+            padding:5px;
+            width:250px;
+            text-align: center;
+        }
+
+        .features-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr; /* fraction*/
+            /* text-align: center; */
+        }
+
+        table {
+            width:100%;
+            /* text-align: center; */
+        }
+
+        th {
+            text-align: center;
+        }
+
+        .bigbold {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .bold {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .features {
+            font-size:1rem;        
+        }
+
+
+    </style>
+</head>
+
+<body>
+    <div class="email_header">
+        <img src='http://www.qpcentral.co.uk/static/images/YH_email_header_care_plan.png' alt="Your Heat Header"/>
+    </div>
+
+    <div class="body_text">
+
+        <div class="content">
+            <div class="contact_text">
+                <img src='http://www.qpcentral.co.uk/static/images/phone-solid.png' width="15" /> <a
+                    href="tel:01732622990">01732 622990</a> | <img
+                    src='http://www.qpcentral.co.uk/static/images/globe-solid.png' width="15" /> <a
+                    href='https://yourheat.co.uk/book-a-job/'>www.yourheat.co.uk</a> | <img
+                    src='http://www.qpcentral.co.uk/static/images/envelope-solid.png' width="15" /> <a
+                    href='mailto:info@yourheat.co.uk'>info@yourheat.co.uk</a>
+            </div>
+
+            <p class="all_text">
+                <b>YOUR HEAT CARE PLAN</b><br>
+            </p>
+
+            <p class="all_text">Dear {{ customer_title }} {{ customer_last_name }},</p>
+
+            <!-- Insert Email body content here  -->
+
+            <p class="all_text">
+                {% if customer_plan_type == "Prospective Home Owner" or customer_plan_type == "Prospective Landlord" %}
+                Thank you for taking the time to view our range of care plans.  We have sent you the plans based on your installation with us.
+                This would be a 12 month rolling contract, which automatically renews each year.
+                {% else %}
+                Your Heat would like to welcome you to your new care plan.  You have signed up to the {{ fuel_type }} / {{ type_of_plan }}.
+                This is a 12 month rolling contract, which will automatically renew each year.
+                {% endif %}
+            </p>
+
+            <p class="all_text">
+            {% if customer_plan_type == "Prospective Home Owner" or customer_plan_type == "Prospective Landlord" %}
+                What’s included in our plans are demonstrated in the chart below. 
+            {% else %}
+                Included in your plan {{ type_of_plan }} is demonstrated in the chart below. 
+            {% endif %}
+            </p>
+
+            <!-- <hr> -->
+
+            <div class="features-container">
+
+                <div class="left-column">
+                    <table>
+                        <tr>
+                            <th>
+                                &nbsp;<br>
+                                &nbsp;		
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                {% if fuel_type == "Gas Boiler" %}    
+                                <span class="bold">Gas Boiler</span>
+                                {% else %}
+                                Gas Boiler
+                                {% endif %}
+                                <span class="bigbold">&nbsp;</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {% if fuel_type == "LPG Boiler" %}    
+                                <span class="bold">LPG Boiler</span>
+                                {% else %}
+                                LPG Boiler
+                                {% endif %}
+                                <span class="bigbold">&nbsp;</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {% if fuel_type == "Oil Boiler" %}    
+                                <span class="bold">Oil Boiler</span>
+                                {% else %}
+                                Oil Boiler
+                                {% endif %}
+                                <span class="bigbold">&nbsp;</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="bigbold">&nbsp;</span>
+                            </td>
+                        </tr>
+                    </table>
+                    <table>   
+                        <tr>
+                            <td>
+                                <span class="features">Annual Boiler Service</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="features">System Health Check</span>
+                            </td>
+                        </tr>
+                        {% if "Landlord" in customer_plan_type %}
+                        <tr>
+                            <td>
+                                <span class="features">Landlord Certificate (CP12)**</span>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <td>
+                                <span class="features">Central Heating Controls</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="features">Breakdown</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="features">Parts & Labour*</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="features">Radiators</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="features">Tanks and Cylinders</span>
+                            </td>
+                        </tr>
+                    </table>    
+                </div>
+
+                {% if type_of_plan == "Boiler Service Care Plan" and "Confirmed" in customer_plan_type %}
+                    <div class="data-column-on">
+                {% else %}
+                    <div class="data-column-off">
+                {% endif %}
+
+                    <table>
+                        <tr>
+                            <th>
+                                {% if "Landlord" in customer_plan_type %}
+                                LANDLORD
+                                {% else %}
+                                HOME OWNER
+                                {% endif %}
+                                <br>
+                                Boiler Service Care Plan
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="bigbold">
+                                    {% if "Landlord" in customer_plan_type %}
+                                    £9.50
+                                    {% else %}
+                                    £7
+                                    {% endif %}
+                                </span> a month
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="bigbold">
+                                    {% if "Landlord" in customer_plan_type %}
+                                    £9.50
+                                    {% else %}
+                                    £7
+                                    {% endif %}
+                                </span> a month
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="bigbold">
+                                    {% if "Landlord" in customer_plan_type %}
+                                    £14.50
+                                    {% else %}
+                                    £12
+                                    {% endif %}
+                                </span> a month
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="bigbold">&nbsp;</span>
+                            </td>
+                        </tr>
+                    </table>
+                    <table>
+                        <tr>
+                            <td>
+                                <span class="features">&#10004;</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="features">&#10004;</span>
+                            </td>
+                        </tr>
+                        {% if "Landlord" in customer_plan_type %}
+                        <tr>
+                            <td>
+                                <span class="features">&#10004;</span>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <td>
+                                <span class="features">X</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="features">X</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="features">X</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="features">X</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="features">X</span>
+                            </td>
+                        </tr>
+                    </table>    
+                </div>
+
+                {% if type_of_plan == "Boiler & Controls Care Plan" and "Confirmed" in customer_plan_type %}
+                    <div class="data-column-on">
+                {% else %}
+                    <div class="data-column-off">
+                {% endif %}
+                    <table>
+                        <tr>
+                            <th>
+                                {% if "Landlord" in customer_plan_type %}
+                                LANDLORD
+                                {% else %}
+                                HOME OWNER
+                                {% endif %}
+                                <br>
+                                Boiler & Controls Care Plan		
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="bigbold">
+                                    {% if "Landlord" in customer_plan_type %}
+                                    £18.50
+                                    {% else %}
+                                    £16.50
+                                    {% endif %}
+                                </span> a month
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="bigbold">
+                                    {% if "Landlord" in customer_plan_type %}
+                                    £18.50
+                                    {% else %}
+                                    £16.50
+                                    {% endif %}
+                                </span> a month
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="bigbold">
+                                    {% if "Landlord" in customer_plan_type %}
+                                    £24
+                                    {% else %}
+                                    £21.50
+                                    {% endif %}
+                                </span> a month
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="bigbold">&nbsp;</span>
+                            </td>
+                        </tr>
+                    </table>
+                    <table>
+                        <tr>
+                            <td>
+                                <span class="features">&#10004;</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="features">&#10004;</span>
+                            </td>
+                        </tr>
+                        {% if "Landlord" in customer_plan_type %}
+                        <tr>
+                            <td>
+                                <span class="features">&#10004;</span>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <td>
+                                <span class="features">&#10004;</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="features">&#10004;</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="features">&#10004;</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="features">X</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="features">X</span>
+                            </td>
+                        </tr>
+                    </table> 
+                </div>
+
+                {% if type_of_plan == "Full System Care Plan" and "Confirmed" in customer_plan_type  %}
+                    <div class="data-column-on">
+                {% else %}
+                    <div class="data-column-off">
+                {% endif %}
+                    <table>
+                        <tr>
+                            <th>
+                                {% if "Landlord" in customer_plan_type %}
+                                LANDLORD
+                                {% else %}
+                                HOME OWNER
+                                {% endif %}
+                                <br>
+                                Full System Care Plan	
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="bigbold">
+                                    {% if "Landlord" in customer_plan_type %}
+                                    £24.50
+                                    {% else %}
+                                    £22
+                                    {% endif %}
+                                </span> a month
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="bigbold">
+                                    {% if "Landlord" in customer_plan_type %}
+                                    £24.50
+                                    {% else %}
+                                    £22
+                                    {% endif %}
+                                </span> a month
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="bigbold">
+                                    {% if "Landlord" in customer_plan_type %}
+                                    £30.50
+                                    {% else %}
+                                    £28
+                                    {% endif %}
+                                </span> a month
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="bigbold">&nbsp;</span>
+                            </td>
+                        </tr>
+                    </table>
+                    <table>
+                        <tr>
+                            <td>
+                                <span class="features">&#10004;</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="features">&#10004;</span>
+                            </td>
+                        </tr>
+                        {% if "Landlord" in customer_plan_type %}
+                        <tr>
+                            <td>
+                                <span class="features">&#10004;</span>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <td>
+                                <span class="features">&#10004;</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="features">&#10004;</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="features">&#10004;</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="features">&#10004;</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="features">X</span>
+                            </td>
+                        </tr>
+                    </table>     
+                </div>
+            </div>
+
+            <p class="all_text">
+                {% if "Landlord" in customer_plan_type %}
+                *Only applicable for boilers in warranty, boilers without warranty, labour is included, parts are charged at retail rate<br>
+                **Up to 3 gas appliances (including the boiler)
+                {% else %}
+                *Only applicable for boilers in warranty, boilers without warranty, labour is included, parts are charged at retail rate
+                {% endif %}
+            </p>
+
+            
+            <!-- <hr> -->
+            <p class="centered-text">
+                <b>Speedy</b><br>
+                <img src='http://www.qpcentral.co.uk/static/images/shipping-fast-solid.png' width="30" /><br>
+                90% of all emergency call-outs completed within 24 hours.<br><br>
+
+                <b>Fair</b><br>
+                <img src='http://www.qpcentral.co.uk/static/images/handshake-solid.png' width="30" /><br>
+                Your price won’t change even if you have had a call-out. Ever.<br><br>
+
+                <b>Comprehensive</b><br>
+                <img src='http://www.qpcentral.co.uk/static/images/arrows-alt-solid.png' width="30" /><br>
+                No matter the age or model, your boiler is protected. Can't fix it? We’ll give you 15% off a new one.<br><br>
+
+                <b>Value</b><br>
+                <img src='http://www.qpcentral.co.uk/static/images/check-double-solid.png' width="30" /><br>
+                Switching to Your Heat can on average save you up to 20% compared to other providers.<br><br>
+
+                <b>No Excess</b><br>
+                <img src='http://www.qpcentral.co.uk/static/images/times-circle-solid.png' width="30" /><br>
+                With our plans, we don’t charge an excess, what you see, is what you pay<br><br>
+
+                {% if not "Confirmed" in customer_plan_type %}
+                <b>Extend your Guarantee</b><br>
+                <img src='http://www.qpcentral.co.uk/static/images/fast-forward-solid.png' width="30" /><br>
+                Did we install your boiler?  You could benefit from an extended guarantee with us<br><br>
+                {% endif %}
+            </p>
+            
+
+            <p class="all_text">
+                {% if "Confirmed" in customer_plan_type %}
+                If you have any questions, please call us on <a href="tel:01732622990">01732 622990</a> or email via <a href='mailto:service@yourheat.co.uk'>service@yourheat.co.uk</a>
+                {% else %}
+                If you would like to take advantage of this special offer, please give us a call on <a href="tel:01732622990">01732 622990.</a>
+                {% endif %}
+            </p>
+
+
+            <!-- End of Email body content  -->
+
+            <div id="final-strap-line">
+                <p id="final-strap-text">"Our friendly team will provide you with an efficient service, delivered with a
+                    sense of warmth. Your Heat, is our Priority, ALWAYS."</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    
+
+    <div class="background_footer">
+
+        <div class="left">
+            <img src='http://www.qpcentral.co.uk/static/images/yh_logo_white_text.png' width="150">
+        </div>
+
+        <div class="right">
+            <p class="footer_text">Copyright © 2020 Your Heat Ltd | VAT No. 213 6884 04</p>
+            <p class="footer_text"><a href=' https://yourheat.co.uk/terms-and-conditions/'>Installation Terms and
+                    Conditions</a></p>
+        </div>
+    </div>
+
+</body>
+
+</html>

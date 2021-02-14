@@ -14,7 +14,7 @@ import smartsheet
 import json
 
 from quotepad.models import CustomerComm
-from quotepad.forms import ssSurveyAppointmentForm, ssInstallationAppointmentForm, JobPartsForm, SpecialOfferForm, CustomerEnquiryForm
+from quotepad.forms import ssSurveyAppointmentForm, ssInstallationAppointmentForm, JobPartsForm, SpecialOfferForm, CustomerEnquiryForm, HeatPlanForm
 from quotepad.utils import send_email_using_SendGrid
 
 # imports associated with sending email ( can be removed for production )
@@ -62,7 +62,7 @@ def display_comms(request, comms, customer_id=None):
 	html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/{}.html".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
 	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
 	
-	if comms != "Special Offer Comms":	# Pull the data from Smartsheet and populate the relevant .txt file
+	if comms != "Special Offer Comms" and comms != "Heat Plan Comms":	# Pull the data from Smartsheet and populate the relevant .txt file
 		if customer_id:		# customer_id has been passed so get individual record from sheet
 			ss_get_data_from_sheet(
 				settings.YH_SS_ACCESS_TOKEN,
@@ -90,7 +90,7 @@ def display_comms(request, comms, customer_id=None):
 
 
 	for line in file_form_data:
-		if comms != "Special Offer Comms":
+		if comms != "Special Offer Comms" and comms != "Heat Plan Comms":
 			# Add the image logo url to the dictionary
 			line["image_logo"] = settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png"
 			# Add the dictionary entry engineer_name  from the engineer_email address with some string manipulation
@@ -108,7 +108,8 @@ def display_comms(request, comms, customer_id=None):
 			if line["survey_date"] != "None":
 				line["survey_date"] = datetime.datetime.strptime(line["survey_date"], "%Y-%m-%d")
 		else:
-			line["survey_date"] = datetime.datetime.strptime(line["survey_date"], "%Y-%m-%d")
+			if comms == "Special Offer Comms":
+				line["survey_date"] = datetime.datetime.strptime(line["survey_date"], "%Y-%m-%d")
 
 
 		# Popup error if Email recipient address has not been populated
@@ -134,7 +135,7 @@ def email_comms(request, comms, customer_id=None):
 	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
 	html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/{}.html".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
 	
-	if comms != "Special Offer Comms":	# Pull the data from Smartsheet and populate the relevant .txt file
+	if comms != "Special Offer Comms" and comms != "Heat Plan Comms":	# Pull the data from Smartsheet and populate the relevant .txt file
 		if customer_id:		# customer_id has been passed so get individual record from sheet
 			ss_get_data_from_sheet(
 				settings.YH_SS_ACCESS_TOKEN,
@@ -162,7 +163,7 @@ def email_comms(request, comms, customer_id=None):
 		# 		CustComm = CustomerComm(user = request.user ,customer_id = line.get('smartsheet_id') , comms_id = comms )
 		# 		CustComm.save()
 
-		if comms != "Special Offer Comms":
+		if comms != "Special Offer Comms" and comms != "Heat Plan Comms":
 			# Add the image logo url to the dictionary
 			line["image_logo"] = settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png"
 			# Add the dictionary entry engineer_name  from the engineer_email address with some string manipulation
@@ -180,7 +181,8 @@ def email_comms(request, comms, customer_id=None):
 			if line["survey_date"] != "None":
 				line["survey_date"] = datetime.datetime.strptime(line["survey_date"], "%Y-%m-%d")
 		else:
-			line["survey_date"] = datetime.datetime.strptime(line["survey_date"], "%Y-%m-%d")
+			if comms == "Special Offer Comms":
+				line["survey_date"] = datetime.datetime.strptime(line["survey_date"], "%Y-%m-%d")
 
 		html_content = render_to_string(html_email_filename, line)
 		# Drop the Comms from the comms_name for the Email subject line
@@ -927,17 +929,10 @@ class get_special_offer(FormView):
 				initial['customer_title'] = line_dict.get("customer_title")
 				initial['customer_first_name'] = line_dict.get("customer_first_name")
 				initial['customer_last_name'] = line_dict.get("customer_last_name")
-				# if line_dict.get("survey_date"):
-				# 	ss_date = datetime.datetime.strptime(line_dict.get("survey_date"), "%Y-%m-%d")
-				# 	initial['quote_date'] = datetime.datetime.strftime(ss_date, "%d/%m/%Y")
 				initial['survey_date'] = line_dict.get("survey_date") 
 				agreed_boiler_option = line_dict.get("agreed_boiler_option")
 				initial['agreed_boiler_option'] = line_dict.get("agreed_boiler_option")
 				# String replacement fix to ensure carriage returns exist on parts lists
-				#if agreed_boiler_option == "Option B Parts":
-				#	initial['parts'] = line_dict.get("option_b_parts_list").replace('|', '\r\n')
-				#else:		
-				#	initial['parts'] = line_dict.get("option_a_parts_list").replace('|', '\r\n')
 				initial['primary_boiler'] = line_dict.get("option_a_parts_list").split('|')[0].split('Boiler: ')[1]
 				initial['primary_boiler_price'] = '%.2f' % float(line_dict.get("option_a_price"))
 				if line_dict.get("option_b_parts_list"):
@@ -955,13 +950,60 @@ class get_special_offer(FormView):
 		file.write(str(form.cleaned_data))
 		file.close()
 
-
-		#print(stop)
-		#return render(self.request, 'yourheat/adminpages/preview_comms.html', {'comms': 'Special Offer Comms', 'customer_id': customer_id})
 		return HttpResponseRedirect('/PreviewComms/Special Offer Comms/'+ customer_id)
-		#return preview_comms('Special Offer Comms', customer_id)
-		#preview_comms(self.request,'Special Offer Comms', customer_id)
-		#return
+
+class get_heat_plan(FormView):
+
+	form_class = HeatPlanForm
+	template_name = "yourheat/adminpages/heat_plan_form.html"
+	customer_id = None
+
+	def get_initial(self, **kwargs):
+		initial = super().get_initial()
+
+		if 'customer_id' in self.kwargs.keys():
+			customer_id = self.kwargs['customer_id']
+
+			data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/customer_comms/Heat Plan Comms.txt")
+
+			#Get Customer Info from Smartsheet
+			ss_get_data_from_sheet(
+				settings.YH_SS_ACCESS_TOKEN,
+				settings.YH_SS_SHEET_NAME,
+				['Customer ID', 'Title', 'First Name', 'Surname', 'Email'],
+				'Customer ID',
+				customer_id,
+				data_filename
+			)
+
+			# Open the text file with the Smartsheet data to prepopulate the form
+			with open(data_filename) as file:
+				#file_form_data = []
+				for line in file:
+					line_dict = json.loads(line)
+					# Check for any "NONE" fields coming from Smartsheet and replace with ''
+					for key, value in line_dict.items():
+						if value == 'None':
+							line_dict[key] = ''
+					initial['smartsheet_id'] = line_dict.get("smartsheet_id")
+					initial['customer_title'] = line_dict.get("customer_title")
+					initial['customer_first_name'] = line_dict.get("customer_first_name")
+					initial['customer_last_name'] = line_dict.get("customer_last_name")
+					initial['customer_email'] = line_dict.get("customer_email")
+		else:
+			initial['smartsheet_id'] = "No Smartsheet Record"		
+		return initial
+
+	def form_valid(self, form, **kwargs):
+		print(form.cleaned_data)
+		customer_id = form.cleaned_data['smartsheet_id']
+		print(customer_id)
+		data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/customer_comms/Heat Plan Comms.txt")
+		file = open(data_filename, "w")
+		file.write(str(form.cleaned_data))
+		file.close()
+
+		return HttpResponseRedirect('/PreviewComms/Heat Plan Comms/'+ customer_id)
 
 class get_job_parts(FormView):
 
