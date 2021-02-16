@@ -223,14 +223,15 @@ def email_comms(request, comms, customer_id=None):
 		else:
 			special_offer_text = ""	
 
-		if settings.YH_SS_INTEGRATION:		# Update Comments
-			ss_add_comments(
-			settings.YH_SS_ACCESS_TOKEN,
-			settings.YH_SS_SHEET_NAME,
-			'Customer ID',
-			line.get('smartsheet_id'),
-			[comms + " email sent." + special_offer_text]
-		)
+		if customer_id != "No Smartsheet Record":
+			if settings.YH_SS_INTEGRATION:		# Update Comments
+				ss_add_comments(
+				settings.YH_SS_ACCESS_TOKEN,
+				settings.YH_SS_SHEET_NAME,
+				'Customer ID',
+				line.get('smartsheet_id'),
+				[comms + " email sent." + special_offer_text]
+			)
 
 	return HttpResponseRedirect('/EmailsSentToCustomers/')	
 
