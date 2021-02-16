@@ -165,11 +165,16 @@
         }
 
         table {
-            width:100%;
+            width:99%;
+            margin: 2px;
             /* text-align: center; */
         }
 
         th {
+            text-align: center;
+        }
+
+        td {
             text-align: center;
         }
 
@@ -184,8 +189,15 @@
         }
 
         .features {
+            line-height:1;
             font-size:1rem;        
         }
+
+        .fbold {
+            font-weight: 600;    
+        } 
+
+    
 
 
     </style>
@@ -236,405 +248,267 @@
 
             <!-- <hr> -->
 
-            <div class="features-container">
 
-                <div class="left-column">
-                    <table>
-                        <tr>
-                            <th>
-                                &nbsp;<br>
-                                &nbsp;		
-                            </th>
-                        </tr>
-                        <tr>
-                            <td>
-                                {% if fuel_type == "Gas Boiler" %}    
-                                <span class="bold">Gas Boiler</span>
-                                {% else %}
-                                Gas Boiler
-                                {% endif %}
-                                <span class="bigbold">&nbsp;</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                {% if fuel_type == "LPG Boiler" %}    
-                                <span class="bold">LPG Boiler</span>
-                                {% else %}
-                                LPG Boiler
-                                {% endif %}
-                                <span class="bigbold">&nbsp;</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                {% if fuel_type == "Oil Boiler" %}    
-                                <span class="bold">Oil Boiler</span>
-                                {% else %}
-                                Oil Boiler
-                                {% endif %}
-                                <span class="bigbold">&nbsp;</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="bigbold">&nbsp;</span>
-                            </td>
-                        </tr>
-                    </table>
-                    <table>   
-                        <tr>
-                            <td>
-                                <span class="features">Annual Boiler Service</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="features">System Health Check</span>
-                            </td>
-                        </tr>
-                        {% if "Landlord" in customer_plan_type %}
-                        <tr>
-                            <td>
-                                <span class="features">Landlord Certificate (CP12)**</span>
-                            </td>
-                        </tr>
-                        {% endif %}
-                        <tr>
-                            <td>
-                                <span class="features">Central Heating Controls</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="features">Breakdown</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="features">Parts & Labour*</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="features">Radiators</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="features">Tanks and Cylinders</span>
-                            </td>
-                        </tr>
-                    </table>    
-                </div>
+            <!-- <div class="features-container"> -->
+                <table>
+                    <tr>
+                        <td style="width:250px; text-align:center;">    
+                            <div class="left-column">
+                               
+                                <p class = "features fbold">&nbsp;</p>
+                                <p class = "features fbold">&nbsp;</p>		
+                               
+                                            {% if fuel_type == "Gas Boiler" %}    
+                                            <p class = "features"><span class="bold">Gas Boiler</span><span class="bigbold">&nbsp;</span></p>
+                                            {% else %}
+                                            <p class = "features">Gas Boiler<span class="bigbold">&nbsp;</span></p>
+                                            {% endif %}
+                                            <!-- <p class = "features"><span class="bigbold">&nbsp;</span></p> -->
+                               
+                                            {% if fuel_type == "LPG Boiler" %}    
+                                            <p class = "features"><span class="bold">LPG Boiler</span><span class="bigbold">&nbsp;</span></p>
+                                            {% else %}
+                                            <p class = "features">LPG Boiler<span class="bigbold">&nbsp;</span></p>
+                                            {% endif %}
+                                            <!-- <p class = "features"><span class="bigbold">&nbsp;</span></p> -->
+                               
+                                            {% if fuel_type == "Oil Boiler" %}    
+                                            <p class = "features"><span class="bold">Oil Boiler</span><span class="bigbold">&nbsp;</span></p>
+                                            {% else %}
+                                            <p class = "features">Oil Boiler<span class="bigbold">&nbsp;</span></p>
+                                            {% endif %}
+                                            <!-- <p class = "features"><span class="bigbold">&nbsp;</span></p> -->
+                               
+                                            <p class = "features"><span class="bigbold">&nbsp;</span></p>
+                               
+                               
+                                            <p class = "features">Annual Boiler Service</p>
+                                  
+                                            <p class = "features">System Health Check</p>
+                                
+                                    {% if "Landlord" in customer_plan_type %}
+                                  
+                                            <p class = "features">Landlord Certificate (CP12)**</p>
+                                   
+                                    {% endif %}
+                                  
+                                            <p class = "features">Central Heating Controls</p>
+                                     
+                                            <p class = "features">Breakdown</p>
+                                     
+                                            <p class = "features">Parts & Labour*</p>
+                                     
+                                            <p class = "features">Radiators</p>
+                                    
+                                            <p class = "features">Tanks and Cylinders</p>
+                                       
+                            </div>
 
-                {% if type_of_plan == "Boiler Service Care Plan" and "Confirmed" in customer_plan_type %}
-                    <div class="data-column-on">
-                {% else %}
-                    <div class="data-column-off">
-                {% endif %}
+                        </td>
 
-                    <table>
-                        <tr>
-                            <th>
-                                {% if "Landlord" in customer_plan_type %}
-                                LANDLORD
-                                {% else %}
-                                HOME OWNER
-                                {% endif %}
-                                <br>
-                                Boiler Service Care Plan
-                            </th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="bigbold">
-                                    {% if "Landlord" in customer_plan_type %}
-                                    £9.50
-                                    {% else %}
-                                    £7
-                                    {% endif %}
-                                </span> a month
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="bigbold">
-                                    {% if "Landlord" in customer_plan_type %}
-                                    £9.50
-                                    {% else %}
-                                    £7
-                                    {% endif %}
-                                </span> a month
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="bigbold">
-                                    {% if "Landlord" in customer_plan_type %}
-                                    £14.50
-                                    {% else %}
-                                    £12
-                                    {% endif %}
-                                </span> a month
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="bigbold">&nbsp;</span>
-                            </td>
-                        </tr>
-                    </table>
-                    <table>
-                        <tr>
-                            <td>
-                                <span class="features">&#10004;</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="features">&#10004;</span>
-                            </td>
-                        </tr>
-                        {% if "Landlord" in customer_plan_type %}
-                        <tr>
-                            <td>
-                                <span class="features">&#10004;</span>
-                            </td>
-                        </tr>
-                        {% endif %}
-                        <tr>
-                            <td>
-                                <span class="features">X</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="features">X</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="features">X</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="features">X</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="features">X</span>
-                            </td>
-                        </tr>
-                    </table>    
-                </div>
+                    <td style="width:250px; text-align:center;">
 
-                {% if type_of_plan == "Boiler & Controls Care Plan" and "Confirmed" in customer_plan_type %}
-                    <div class="data-column-on">
-                {% else %}
-                    <div class="data-column-off">
-                {% endif %}
-                    <table>
-                        <tr>
-                            <th>
-                                {% if "Landlord" in customer_plan_type %}
-                                LANDLORD
-                                {% else %}
-                                HOME OWNER
-                                {% endif %}
-                                <br>
-                                Boiler & Controls Care Plan		
-                            </th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="bigbold">
-                                    {% if "Landlord" in customer_plan_type %}
-                                    £18.50
-                                    {% else %}
-                                    £16.50
-                                    {% endif %}
-                                </span> a month
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="bigbold">
-                                    {% if "Landlord" in customer_plan_type %}
-                                    £18.50
-                                    {% else %}
-                                    £16.50
-                                    {% endif %}
-                                </span> a month
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="bigbold">
-                                    {% if "Landlord" in customer_plan_type %}
-                                    £24
-                                    {% else %}
-                                    £21.50
-                                    {% endif %}
-                                </span> a month
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="bigbold">&nbsp;</span>
-                            </td>
-                        </tr>
-                    </table>
-                    <table>
-                        <tr>
-                            <td>
-                                <span class="features">&#10004;</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="features">&#10004;</span>
-                            </td>
-                        </tr>
-                        {% if "Landlord" in customer_plan_type %}
-                        <tr>
-                            <td>
-                                <span class="features">&#10004;</span>
-                            </td>
-                        </tr>
-                        {% endif %}
-                        <tr>
-                            <td>
-                                <span class="features">&#10004;</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="features">&#10004;</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="features">&#10004;</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="features">X</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="features">X</span>
-                            </td>
-                        </tr>
-                    </table> 
-                </div>
+                            {% if type_of_plan == "Boiler Service Care Plan" and "Confirmed" in customer_plan_type %}
+                                <div class="data-column-on">
+                            {% else %}
+                                <div class="data-column-off">
+                            {% endif %}
 
-                {% if type_of_plan == "Full System Care Plan" and "Confirmed" in customer_plan_type  %}
-                    <div class="data-column-on">
-                {% else %}
-                    <div class="data-column-off">
-                {% endif %}
-                    <table>
-                        <tr>
-                            <th>
-                                {% if "Landlord" in customer_plan_type %}
-                                LANDLORD
-                                {% else %}
-                                HOME OWNER
-                                {% endif %}
-                                <br>
-                                Full System Care Plan	
-                            </th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="bigbold">
+                                        <p class = "features fbold">
+                                            {% if "Landlord" in customer_plan_type %}
+                                                LANDLORD
+                                            {% else %}
+                                                HOME OWNER
+                                            {% endif %}
+                                        </p>
+                                      
+                                            <p class = "features fbold">Boiler Service Care Plan</p>
+                                    
+                                            <p class = "features"><span class="bigbold">
+                                                {% if "Landlord" in customer_plan_type %}
+                                                £9.50
+                                                {% else %}
+                                                £7
+                                                {% endif %}
+                                            </span> a month</p>
+                                    
+                                            <p class = "features"><span class="bigbold">
+                                                {% if "Landlord" in customer_plan_type %}
+                                                £9.50
+                                                {% else %}
+                                                £7
+                                                {% endif %}
+                                            </span> a month</p>
+                                    
+                                            <p class = "features"><span class="bigbold">
+                                                {% if "Landlord" in customer_plan_type %}
+                                                £14.50
+                                                {% else %}
+                                                £12
+                                                {% endif %}
+                                            </span> a month</p>
+                                    
+                                            <p class = "features"><span class="bigbold">&nbsp;</span></p>
+                                    
+                                            <p class = "features">&#10004;</p>
+                               
+                                            <p class="features">&#10004;</p>
+                               
                                     {% if "Landlord" in customer_plan_type %}
-                                    £24.50
-                                    {% else %}
-                                    £22
+                               
+                                            <p class="features">&#10004;</p>
+                               
                                     {% endif %}
-                                </span> a month
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="bigbold">
+                               
+                                            <p class="features">X</p>
+                               
+                                            <p class="features">X</p>
+                               
+                                            <p class="features">X</p>
+                               
+                                            <p class="features">X</p>
+                               
+                                            <p class="features">X</p>
+                               
+                            </div>
+                        </td>
+
+                        <td style="width:250px; text-align:center;"> 
+
+                            {% if type_of_plan == "Boiler & Controls Care Plan" and "Confirmed" in customer_plan_type %}
+                                <div class="data-column-on">
+                            {% else %}
+                                <div class="data-column-off">
+                            {% endif %}
+                                        <p class = "features fbold">
+                                            {% if "Landlord" in customer_plan_type %}
+                                            LANDLORD
+                                            {% else %}
+                                            HOME OWNER
+                                            {% endif %}
+                                        </p>
+                                            
+                                        <p class = "features fbold">Boiler & Controls Care Plan</p>	
+                                     
+                                        <p class = "features"><span class="bigbold">
+                                                {% if "Landlord" in customer_plan_type %}
+                                                £18.50
+                                                {% else %}
+                                                £16.50
+                                                {% endif %}
+                                            </span> a month</p>
+                                  
+                                            <p class = "features"><span class="bigbold">
+                                                {% if "Landlord" in customer_plan_type %}
+                                                £18.50
+                                                {% else %}
+                                                £16.50
+                                                {% endif %}
+                                            </span> a month</p>
+                              
+                                            <p class = "features"><span class="bigbold">
+                                                {% if "Landlord" in customer_plan_type %}
+                                                £24
+                                                {% else %}
+                                                £21.50
+                                                {% endif %}
+                                            </span> a month</p>
+                              
+                                            <p class = "features"><span class="bigbold">&nbsp;</span></p>
+                                 
+                                
+                                            <p class = "features">&#10004;</p>
+                                 
+                                            <p class = "features">&#10004;</p>
+                                
                                     {% if "Landlord" in customer_plan_type %}
-                                    £24.50
-                                    {% else %}
-                                    £22
+                                 
+                                            <p class = "features">&#10004;</p>
+                                   
                                     {% endif %}
-                                </span> a month
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="bigbold">
+                                  
+                                            <p class = "features">&#10004;</p>
+                                  
+                                            <p class = "features">&#10004;</p>
+                                 
+                                            <p class = "features">&#10004;</p>
+                                    
+                                            <p class = "features">X</p>
+                                     
+                                            <p class = "features">X</p>
+                                      
+                            </div>
+                        </td>
+
+                    <td style="width:250px; text-align:center;"> 
+
+                            {% if type_of_plan == "Full System Care Plan" and "Confirmed" in customer_plan_type  %}
+                                <div class="data-column-on">
+                            {% else %}
+                                <div class="data-column-off">
+                            {% endif %}
+                                        <p class = "features fbold">
+                                            {% if "Landlord" in customer_plan_type %}
+                                            LANDLORD
+                                            {% else %}
+                                            HOME OWNER
+                                            {% endif %}
+                                        </p>
+
+                                        <p class = "features fbold">Full System Care Plan</p>	
+                                   
+                                             <p class = "features fbold"><span class="bigbold">
+                                                {% if "Landlord" in customer_plan_type %}
+                                                £24.50
+                                                {% else %}
+                                                £22
+                                                {% endif %}
+                                            </span> a month</p>
+                                      
+                                            <p class = "features fbold"><span class="bigbold">
+                                                {% if "Landlord" in customer_plan_type %}
+                                                £24.50
+                                                {% else %}
+                                                £22
+                                                {% endif %}
+                                            </span> a month</p>
+                                    
+                                            <p class = "features fbold"><span class="bigbold">
+                                                {% if "Landlord" in customer_plan_type %}
+                                                £30.50
+                                                {% else %}
+                                                £28
+                                                {% endif %}
+                                            </span> a month</p>
+                                       
+                                            <p class = "features fbold"><span class="bigbold">&nbsp;</span></p>
+                                    
+                               
+                                            <p class="features">&#10004;</p>
+                                    
+                                            <p class="features">&#10004;</p>
+                                   
                                     {% if "Landlord" in customer_plan_type %}
-                                    £30.50
-                                    {% else %}
-                                    £28
+                                  
+                                            <p class="features">&#10004;</p>
+                                      
                                     {% endif %}
-                                </span> a month
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="bigbold">&nbsp;</span>
-                            </td>
-                        </tr>
-                    </table>
-                    <table>
-                        <tr>
-                            <td>
-                                <span class="features">&#10004;</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="features">&#10004;</span>
-                            </td>
-                        </tr>
-                        {% if "Landlord" in customer_plan_type %}
-                        <tr>
-                            <td>
-                                <span class="features">&#10004;</span>
-                            </td>
-                        </tr>
-                        {% endif %}
-                        <tr>
-                            <td>
-                                <span class="features">&#10004;</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="features">&#10004;</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="features">&#10004;</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="features">&#10004;</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="features">X</span>
-                            </td>
-                        </tr>
-                    </table>     
-                </div>
-            </div>
+                                   
+                                            <p class="features">&#10004;</p>
+                                     
+                                            <p class="features">&#10004;</p>
+                                     
+                                            <p class="features">&#10004;</p>
+                                       
+                                            <p class="features">&#10004;</p>
+                                       
+                                            <p class="features">X</p>
+                                       
+                            </div>
+                        </td>
+                    </tr>    
+                </table>
+            <!-- </div> -->
 
             <p class="all_text">
                 {% if "Landlord" in customer_plan_type %}
