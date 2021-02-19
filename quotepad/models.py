@@ -11,7 +11,10 @@ PRODUCT_BRAND_DROPDOWN = (
 	('Ideal','Ideal'),
 	('Glow Worm','Glow Worm'),
 	('Baxi','Baxi'),
-	('Alpha','Alpha')
+	('Alpha','Alpha'),
+	('Heatline','Heatline'),
+	('Keston','Keston'),
+	('Grant','Grant')
 )
 
 PRODUCT_FUEL_TYPE_DROPDOWN = (
