@@ -86,6 +86,8 @@
             background-position: center;
             background-color: black;
             margin: 25px auto 0px auto;
+            padding-left:5%;
+            padding-right:5%;
         }
 
         .footer_text {
@@ -264,21 +266,27 @@
                                             {% if fuel_type == "Gas Boiler" %}    
                                             <p class = "features"><span class="bold">Gas Boiler</span><span class="bigbold">&nbsp;</span></p>
                                             {% else %}
+                                            {% if "Prospective" in customer_plan_type and fuel_type == "Not Yet Determined" %} 
                                             <p class = "features">Gas Boiler<span class="bigbold">&nbsp;</span></p>
+                                            {% endif %}
                                             {% endif %}
                                             <!-- <p class = "features"><span class="bigbold">&nbsp;</span></p> -->
                                
                                             {% if fuel_type == "LPG Boiler" %}    
                                             <p class = "features"><span class="bold">LPG Boiler</span><span class="bigbold">&nbsp;</span></p>
                                             {% else %}
+                                            {% if "Prospective" in customer_plan_type and fuel_type == "Not Yet Determined" %} 
                                             <p class = "features">LPG Boiler<span class="bigbold">&nbsp;</span></p>
+                                            {% endif %}
                                             {% endif %}
                                             <!-- <p class = "features"><span class="bigbold">&nbsp;</span></p> -->
                                
                                             {% if fuel_type == "Oil Boiler" %}    
                                             <p class = "features"><span class="bold">Oil Boiler</span><span class="bigbold">&nbsp;</span></p>
                                             {% else %}
+                                            {% if "Prospective" in customer_plan_type and fuel_type == "Not Yet Determined" %} 
                                             <p class = "features">Oil Boiler<span class="bigbold">&nbsp;</span></p>
+                                            {% endif %}
                                             {% endif %}
                                             <!-- <p class = "features"><span class="bigbold">&nbsp;</span></p> -->
                                
@@ -327,6 +335,7 @@
                                       
                                             <p class = "features fbold">Boiler Service Care Plan</p>
                                     
+                                            {% if "Prospective" in customer_plan_type and fuel_type == "Not Yet Determined" or fuel_type == "Gas Boiler" %}  
                                             <p class = "features"><span class="bigbold">
                                                 {% if "Landlord" in customer_plan_type %}
                                                 £9.50
@@ -334,7 +343,9 @@
                                                 £7
                                                 {% endif %}
                                             </span> a month</p>
-                                    
+                                            {% endif %}
+                                            
+                                            {% if "Prospective" in customer_plan_type and fuel_type == "Not Yet Determined" or fuel_type == "LPG Boiler" %}
                                             <p class = "features"><span class="bigbold">
                                                 {% if "Landlord" in customer_plan_type %}
                                                 £9.50
@@ -342,7 +353,9 @@
                                                 £7
                                                 {% endif %}
                                             </span> a month</p>
+                                            {% endif %}
                                     
+                                            {% if "Prospective" in customer_plan_type and fuel_type == "Not Yet Determined" or fuel_type == "Oil Boiler" %}
                                             <p class = "features"><span class="bigbold">
                                                 {% if "Landlord" in customer_plan_type %}
                                                 £14.50
@@ -350,7 +363,8 @@
                                                 £12
                                                 {% endif %}
                                             </span> a month</p>
-                                    
+                                            {% endif %}
+
                                             <p class = "features"><span class="bigbold">&nbsp;</span></p>
                                     
                                             <p class = "features"><img src='http://www.qpcentral.co.uk/static/images/check-solid.png' width="15" /></p>
@@ -392,7 +406,8 @@
                                         </p>
                                             
                                         <p class = "features fbold">Boiler & Controls Care Plan</p>	
-                                     
+                                        
+                                        {% if "Prospective" in customer_plan_type and fuel_type == "Not Yet Determined" or fuel_type == "Gas Boiler" %}  
                                         <p class = "features"><span class="bigbold">
                                                 {% if "Landlord" in customer_plan_type %}
                                                 £18.50
@@ -400,22 +415,27 @@
                                                 £16.50
                                                 {% endif %}
                                             </span> a month</p>
+                                        {% endif %}
                                   
-                                            <p class = "features"><span class="bigbold">
-                                                {% if "Landlord" in customer_plan_type %}
-                                                £18.50
-                                                {% else %}
-                                                £16.50
-                                                {% endif %}
-                                            </span> a month</p>
-                              
-                                            <p class = "features"><span class="bigbold">
-                                                {% if "Landlord" in customer_plan_type %}
-                                                £24
-                                                {% else %}
-                                                £21.50
-                                                {% endif %}
-                                            </span> a month</p>
+                                        {% if "Prospective" in customer_plan_type and fuel_type == "Not Yet Determined" or fuel_type == "LPG Boiler" %}  
+                                        <p class = "features"><span class="bigbold">
+                                            {% if "Landlord" in customer_plan_type %}
+                                            £18.50
+                                            {% else %}
+                                            £16.50
+                                            {% endif %}
+                                        </span> a month</p>
+                                        {% endif %}
+                            
+                                        {% if "Prospective" in customer_plan_type and fuel_type == "Not Yet Determined" or fuel_type == "Oil Boiler" %}  
+                                        <p class = "features"><span class="bigbold">
+                                            {% if "Landlord" in customer_plan_type %}
+                                            £24
+                                            {% else %}
+                                            £21.50
+                                            {% endif %}
+                                        </span> a month</p>
+                                        {% endif %}
                               
                                             <p class = "features"><span class="bigbold">&nbsp;</span></p>
                                  
@@ -458,8 +478,9 @@
                                             {% endif %}
                                         </p>
 
-                                        <p class = "features fbold">Full System Care Plan</p>	
-                                   
+                                        <p class = "features fbold">Full System Care Plan</p>
+
+                                        {% if "Prospective" in customer_plan_type and fuel_type == "Not Yet Determined" or fuel_type == "Gas Boiler" %}  
                                              <p class = "features fbold"><span class="bigbold">
                                                 {% if "Landlord" in customer_plan_type %}
                                                 £24.50
@@ -467,7 +488,9 @@
                                                 £22
                                                 {% endif %}
                                             </span> a month</p>
-                                      
+                                        {% endif %}
+                                        
+                                        {% if "Prospective" in customer_plan_type and fuel_type == "Not Yet Determined" or fuel_type == "LPG Boiler" %}  
                                             <p class = "features fbold"><span class="bigbold">
                                                 {% if "Landlord" in customer_plan_type %}
                                                 £24.50
@@ -475,7 +498,9 @@
                                                 £22
                                                 {% endif %}
                                             </span> a month</p>
-                                    
+                                        {% endif %}
+                                            
+                                        {% if "Prospective" in customer_plan_type and fuel_type == "Not Yet Determined" or fuel_type == "Oil Boiler" %}  
                                             <p class = "features fbold"><span class="bigbold">
                                                 {% if "Landlord" in customer_plan_type %}
                                                 £30.50
@@ -483,6 +508,7 @@
                                                 £28
                                                 {% endif %}
                                             </span> a month</p>
+                                        {% endif %}
                                        
                                             <p class = "features fbold"><span class="bigbold">&nbsp;</span></p>
                                     
@@ -534,11 +560,11 @@
                 Your price won’t change even if you have had a call-out. Ever.<br><br>
 
                 <b>Comprehensive</b><br>
-                <img src='http://www.qpcentral.co.uk/static/images/arrows-alt-solid.png' width="30" /><br>
+                <img src='http://www.qpcentral.co.uk/static/images/clipboard-check-solid.png' width="30" /><br>
                 No matter the age or model, your boiler is protected. Can't fix it? We’ll give you 15% off a new one.<br><br>
 
                 <b>Value</b><br>
-                <img src='http://www.qpcentral.co.uk/static/images/check-double-solid.png' width="30" /><br>
+                <img src='http://www.qpcentral.co.uk/static/images/pound-sign-solid.png' width="30" /><br>
                 Switching to Your Heat can on average save you up to 20% compared to other providers.<br><br>
 
                 <b>No Excess</b><br>
@@ -552,7 +578,7 @@
                 {% endif %}
             </p>
             
-
+            
             <p class="all_text">
                 {% if "Confirmed" in customer_plan_type %}
                 If you have any questions, please call us on <a href="tel:01732622990">01732 622990</a> or email via <a href='mailto:service@yourheat.co.uk'>service@yourheat.co.uk</a>
@@ -561,7 +587,7 @@
                 You can also talk to us here by calling <a href="tel:01732622990">01732 622990.</a>
                 {% endif %}
             </p>
-
+            <p>&nbsp;</p>
 
             <!-- End of Email body content  -->
 
@@ -574,20 +600,22 @@
 
     </div>
 
-    
+    <p>&nbsp;</p>    
 
-    <div class="background_footer">
 
-        <div class="left">
-            <img src='http://www.qpcentral.co.uk/static/images/yh_logo_white_text.png' width="150">
-        </div>
+    <table class="background_footer">
+        <tr>
+            <td>
+                <img src='http://www.qpcentral.co.uk/static/images/yh_logo_white_text.png' width="150">  
+            </td>
+            <td>
+                <p class="footer_text">Copyright © 2021 Your Heat Ltd | VAT No. 213 6884 04</p>
+                <p class="footer_text"><a href='https://yourheat.co.uk/boiler-heating-care-plans-policy-terms-conditions/'>Heating Care Plan Terms and
+                        Conditions</a></p> 
+            </td>
+        </tr>
 
-        <div class="right">
-            <p class="footer_text">Copyright © 2021 Your Heat Ltd | VAT No. 213 6884 04</p>
-            <p class="footer_text"><a href='https://yourheat.co.uk/boiler-heating-care-plans-policy-terms-conditions/'>Heating Care Plan Terms and
-                    Conditions</a></p>
-        </div>
-    </div>
+    </table>
 
 </body>
 
