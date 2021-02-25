@@ -1676,12 +1676,14 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			product = file_form_data[5].get('product_choice')
 			product_name = ProductPrice.objects.get(id=product).model_name
 			product_brand = ProductPrice.objects.get(id=product).brand
+			product_guarantee = ProductPrice.objects.get(id=product).guarantee
 			parts_list_a = parts_list_a + "Boiler: " + product_brand + " " + product_name + "\n"
 
 			alt_product = file_form_data[5].get('alt_product_choice')
 			if alt_product:
 				alt_product_name = ProductPrice.objects.get(id=alt_product).model_name
 				alt_product_brand = ProductPrice.objects.get(id=alt_product).brand
+				alt_product_guarantee = ProductPrice.objects.get(id=alt_product).guarantee
 				parts_list_b = parts_list_b + "Alt Boiler: " + alt_product_brand + " " + alt_product_name + "\n"
 			
 			
@@ -1761,18 +1763,8 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 			update_data.append({"Boiler Manufacturer":  file_form_data[4].get('boiler_manufacturer')})
 			update_data.append({"Surveyor Notes": file_form_data[8].get('surveyors_notes')})
 			update_data.append({"First Sales Call Due": str((datetime.datetime.now() + datetime.timedelta(days=1)).strftime('%d-%b-%Y'))})
-
-			# Updates For Test Site
-			#update_data.append({"Customer Status": "30 Open Opportunity"})
-			#update_data.append({"Price (Inc VAT)": str(file_form_data[9].get('total_cost'))})
-			#update_data.append({"Deposit %": "0.3"})
-			#update_data.append({"Deposit Amount": str(file_form_data[9].get('deposit_amount_thirty_percent'))})
-			#update_data.append({"Current Boiler Type": str(file_form_data[2].get('current_boiler_type'))})
-			#update_data.append({"Current Fuel": str(file_form_data[2].get('current_fuel_type'))})
-			#update_data.append({"New Fuel": str(file_form_data[4].get('new_fuel_type'))})
-			#update_data.append({"New Boiler Type": str(file_form_data[4].get('new_boiler_type'))})
-			#update_data.append({"Boiler Brand": str(file_form_data[4].get("boiler_manufacturer"))})
-			#update_data.append({"Parts List": parts_list})
+			update_data.append({"New Fuel Type": file_form_data[4].get('new_fuel_type')})
+			update_data.append({"Guarantee Length": product_guarantee})
 
 			# Update Customer Status
 			if settings.YH_SS_INTEGRATION:		
