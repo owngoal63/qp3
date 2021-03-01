@@ -1095,9 +1095,9 @@ class get_job_parts(FormView):
 		##email.send()
 		#send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content)
 		print("Merchant Email:", form.cleaned_data['merchant'])
-		print("Engineer Email:",engineer_postcode_dict.get(form.cleaned_data['engineer']))
+		print("Engineer Email (no longer required):",engineer_postcode_dict.get(form.cleaned_data['engineer']))
 		merchant_email = form.cleaned_data['merchant']
-		engineer_email = engineer_postcode_dict.get(form.cleaned_data['engineer'])
+		#engineer_email = engineer_postcode_dict.get(form.cleaned_data['engineer']) (no longer required)
 
 		#print(settings.YH_TEST_EMAIL)
 		#print(stop)
@@ -1105,13 +1105,13 @@ class get_job_parts(FormView):
 			email = EmailMessage("Your Heat Job Parts Notification " + form.cleaned_data['PO'], html_content, 'info@yourheat.co.uk' , [merchant_email])
 			email.content_subtype = "html"  # Main content is now text/html
 			email.send()
-			email = EmailMessage("Your Heat Job Parts Notification " + form.cleaned_data['PO'], html_content, 'info@yourheat.co.uk' , [engineer_email])
-			email.content_subtype = "html"  # Main content is now text/html
-			email.send()
+			#email = EmailMessage("Your Heat Job Parts Notification " + form.cleaned_data['PO'], html_content, 'info@yourheat.co.uk' , [engineer_email])
+			#email.content_subtype = "html"  # Main content is now text/html
+			#email.send()
 		else:
 			# Note that the sender email below can only be hello@yourheat.co.uk due to the API authentication
 			send_email_using_GmailAPI('Purchasing@yourheat.co.uk', merchant_email, "Your Heat Job Parts Notification " + form.cleaned_data['PO'], html_content)
-			send_email_using_GmailAPI('Purchasing@yourheat.co.uk', engineer_email, "Your Heat Job Parts Notification " + form.cleaned_data['PO'], html_content)
+			#send_email_using_GmailAPI('Purchasing@yourheat.co.uk', engineer_email, "Your Heat Job Parts Notification " + form.cleaned_data['PO'], html_content)
 
 		print(form.cleaned_data['PO'].replace('PO','YH'))
 		smartsheet_id = form.cleaned_data['PO'].replace('PO','YH')
