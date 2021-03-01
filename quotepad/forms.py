@@ -14,6 +14,9 @@ from pathlib import Path
 # To allow OR conditions on object filters
 from django.db.models import Q
 
+# Import YH personel data ( in the views folder ) required for forms
+from .views.yh_personnel import SURVEYOR_DROPDOWN, ENGINEER_DROPDOWN, ENGINEER_POSTCODE_DROPDOWN
+
 ''' Section to define the boiler quote form field dropdown values and choices '''
 OWNER_OR_TENANT_DROPDOWN = (
 	('Owner','Owner'),
@@ -962,37 +965,6 @@ BRING_FORWARD_DROPDOWN = (
 	('Yes', 'Yes'),	
 )
 
-SURVEYOR_DROPDOWN = (
-	('','Select One'),
-	('tom.hewitt@yourheat.co.uk', 'Tom Hewitt'),
-	('ivan.painter@yourheat.co.uk', 'Ivan Painter'),
-	('jeremy.tomkinson@yourheat.co.uk', 'Jeremy Tomkinson'),
-	('lee.hewitt@yourheat.co.uk', 'Lee Hewitt'),
-	('tom.driscoll@yourheat.co.uk', 'Tom Driscoll'),	
-)
-
-ENGINEER_DROPDOWN = (
-	('','Select One'),
-	('dan.flattery@yourheat.co.uk', 'Dan Flattery'),
-	('kevin.harvey@yourheat.co.uk', 'Kevin Harvey'),
-	('jeremy.tomkinson@yourheat.co.uk', 'Jeremy Tomkinson'),
-	('ben.pike@yourheat.co.uk', 'Ben Pike'),
-	('dave.easton@yourheat.co.uk', 'Dave Easton'),
-	('andy.douglas@yourheat.co.uk', 'Andy Douglas'),
-	('john.hickey@yourheat.co.uk', 'Jon Hickey'),
-
-)
-
-ENGINEER_POSTCODE_DROPDOWN = (
-	('','Select One'),
-	('Ben Pike (SS12)', 'Ben Pike (SS12)'),
-	('Dave Easton (ME14)', 'Dave Easton (ME14)'),
-	('Kevin Harvey (SM5)', 'Kevin Harvey (SM5)'),
-	('Andy Douglas (BR6)', 'Andy Douglas (BR6)'),
-	('Jeremy Tomkinson (TN2)', 'Jeremy Tomkinson (TN2)'),
-	('Jon Hickey (TN24)', 'Jon Hickey (TN24)'),
-
-)
 
 MERCHANT_DROPDOWN = (
 	('', 'Select One'),

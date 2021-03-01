@@ -31,7 +31,7 @@ from quotepad.views import list_quote_archive_yh, upload_for_reprint_yh, QuoteAc
 from quotepad.views import ssCustomerSelect, ssPostSurveyQuestions, ss_customer_comms_yh, ssGetPhotosForUpload
 
 # Imports for Yourheat admin
-from quotepad.views import admin_home, customer_comms, list_customers_for_comms, generate_customer_comms, emails_sent_to_customers, confirm_calendar_appointment, get_survey_appointment, get_installation_appointment, get_job_parts, get_special_offer, get_heat_plan
+from quotepad.views import admin_home, customer_comms, list_customers_for_comms, emails_sent_to_customers, confirm_calendar_appointment, get_survey_appointment, get_installation_appointment, get_job_parts, get_special_offer, get_heat_plan
 from quotepad.views import processing_cancelled, preview_comms, display_comms, email_comms, email_sent_to_merchant
 
 # Imports for Hub
@@ -144,8 +144,8 @@ urlpatterns = [
     path('CustomerComms/', customer_comms, name = 'CustomerComms'),
     path('ListCustomersForComms/<str:comms_name>/<str:customer_id>/', list_customers_for_comms, name = 'ListCustomersForComms'),
     path('ListCustomersForComms/<str:comms_name>/', list_customers_for_comms, name = 'ListCustomersForComms'),
-    path('GenerateCustomerComms/<str:comms_name>/<str:customer_id>/', generate_customer_comms, name = 'GenerateCustomerComms'),
-    path('GenerateCustomerComms/<str:comms_name>/', generate_customer_comms, name = 'GenerateCustomerComms'),
+    #path('GenerateCustomerComms/<str:comms_name>/<str:customer_id>/', generate_customer_comms, name = 'GenerateCustomerComms'),
+    #path('GenerateCustomerComms/<str:comms_name>/', generate_customer_comms, name = 'GenerateCustomerComms'),
     path('EmailsSentToCustomers/', emails_sent_to_customers, name = 'EmailsSentToCustomers'),
     path('EmailSentToMerchant/', email_sent_to_merchant, name = 'EmailSentToMerchant'),
     path('ConfirmCalendarAppointment/<str:comms_name>/<str:customer_id>/', confirm_calendar_appointment, name = 'ConfirmCalendarAppointment'),

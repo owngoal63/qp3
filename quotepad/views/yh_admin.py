@@ -35,6 +35,10 @@ from google.auth.transport.requests import Request
 from quotepad.utils import create_message, create_message_with_attachment, send_message, send_email_using_GmailAPI
 from quotepad.utils import pdf_generation, pdf_generation_to_file, invoice_pdf_generation
 
+# Import YH Engineer and surveyor data required for forms
+from .yh_personnel import surveyor_dict, engineer_dict, engineer_postcode_dict
+
+
 def admin_home(request):
 	''' Your Heat Admin Home page '''
 
@@ -93,15 +97,12 @@ def display_comms(request, comms, customer_id=None):
 		if comms != "Special Offer Comms" and comms != "Heat Plan Comms":
 			# Add the image logo url to the dictionary
 			line["image_logo"] = settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png"
-			# Add the dictionary entry engineer_name  from the engineer_email address with some string manipulation
-			at_pos = line["engineer_email"].find('@')
-			line["engineer_name"] = ((line["engineer_email"].replace('.',' '))[0:at_pos]).title()
-			# Add the dictionary entry engineer_name  from the surveyor_email address with some string manipulation
-			at_pos = line["surveyor_email"].find('@')
-			line["surveyor_name"] = ((line["surveyor_email"].replace('.',' '))[0:at_pos]).title()
+			# Look up the engineer_dict to get engineer's name
+			line["engineer_name"] = engineer_dict[line["engineer_email"]].split()[0] + " " + engineer_dict[line["engineer_email"]].split()[1]
+			# Lookup the surveyors name from the surveyor_dict
+			line["surveyor_name"] = surveyor_dict[line["surveyor_email"]].split()[0] + " " + surveyor_dict[line["surveyor_email"]].split()[1]
 			# Add the dictionary entry engineer_first_name
-			at_pos = line["engineer_name"].find(' ')
-			line["engineer_first_name"] = (line["engineer_name"])[0:at_pos]
+			line["engineer_first_name"] = engineer_dict[line["engineer_email"]].split()[0]
 			# Change the installation_date format
 			if line["installation_date"] != "None":
 				line["installation_date"] = datetime.datetime.strptime(line["installation_date"], "%Y-%m-%d")
@@ -166,15 +167,12 @@ def email_comms(request, comms, customer_id=None):
 		if comms != "Special Offer Comms" and comms != "Heat Plan Comms":
 			# Add the image logo url to the dictionary
 			line["image_logo"] = settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png"
-			# Add the dictionary entry engineer_name  from the engineer_email address with some string manipulation
-			at_pos = line["engineer_email"].find('@')
-			line["engineer_name"] = ((line["engineer_email"].replace('.',' '))[0:at_pos]).title()
-			# Add the dictionary entry engineer_name  from the surveyor_email address with some string manipulation
-			at_pos = line["surveyor_email"].find('@')
-			line["surveyor_name"] = ((line["surveyor_email"].replace('.',' '))[0:at_pos]).title()
+			# Look up the engineer_dict to get engineer's name
+			line["engineer_name"] = engineer_dict[line["engineer_email"]].split()[0] + " " + engineer_dict[line["engineer_email"]].split()[1]
+			# Lookup the surveyors name from the surveyor_dict
+			line["surveyor_name"] = surveyor_dict[line["surveyor_email"]].split()[0] + " " + surveyor_dict[line["surveyor_email"]].split()[1]
 			# Add the dictionary entry engineer_first_name
-			at_pos = line["engineer_name"].find(' ')
-			line["engineer_first_name"] = (line["engineer_name"])[0:at_pos]
+			line["engineer_first_name"] = engineer_dict[line["engineer_email"]].split()[0]
 			# Change the installation_date format
 			if line["installation_date"] != "None":
 				line["installation_date"] = datetime.datetime.strptime(line["installation_date"], "%Y-%m-%d")
@@ -277,79 +275,79 @@ def list_customers_for_comms(request, comms_name, customer_id=None):
 	#return render(request, 'yourheat/adminpages/list_comms_data.html', {'comms_data': comms_data, 'report_name': comms_name, 'data_source_is_report': data_source_is_report })
 	return render(request, 'yourheat/adminpages/show_comms_data.html', {'comms_data': comms_data, 'report_name': comms_name, 'data_source_is_report': data_source_is_report })
 
-def generate_customer_comms(request, comms_name, customer_id=None):
-	''' Function to generate communication emails to send to customers based upon Smartsheet data '''
+# def generate_customer_comms(request, comms_name, customer_id=None):
+# 	''' Function to generate communication emails to send to customers based upon Smartsheet data '''
 	
-	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(settings.YH_MASTER_PROFILE_USERNAME, comms_name))
-	html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/{}.html".format(settings.YH_MASTER_PROFILE_USERNAME, comms_name))
+# 	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(settings.YH_MASTER_PROFILE_USERNAME, comms_name))
+# 	html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/{}.html".format(settings.YH_MASTER_PROFILE_USERNAME, comms_name))
 	
-	if customer_id:		# customer_id has been passed so get individual record from sheet
-		ss_get_data_from_sheet(
-			settings.YH_SS_ACCESS_TOKEN,
-			settings.YH_SS_SHEET_NAME,
-			['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'Installation Date', 'Survey Date', 'Survey Time', 'Surveyor', 'Engineer Appointed', 'Boiler Manufacturer'],
-			'Customer ID',
-			customer_id,
-			data_filename
-		)
+# 	if customer_id:		# customer_id has been passed so get individual record from sheet
+# 		ss_get_data_from_sheet(
+# 			settings.YH_SS_ACCESS_TOKEN,
+# 			settings.YH_SS_SHEET_NAME,
+# 			['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'Installation Date', 'Survey Date', 'Survey Time', 'Surveyor', 'Engineer Appointed', 'Boiler Manufacturer'],
+# 			'Customer ID',
+# 			customer_id,
+# 			data_filename
+# 		)
 
-	# Open the text file with the Smartsheet data 
-	with open(data_filename) as file:
-			file_form_data = []
-			for line in file:
-				file_form_data.append(eval(line))
+# 	# Open the text file with the Smartsheet data 
+# 	with open(data_filename) as file:
+# 			file_form_data = []
+# 			for line in file:
+# 				file_form_data.append(eval(line))
 
-	for line in file_form_data:
-		#print(line.get('customer_title'))
+# 	for line in file_form_data:
+# 		#print(line.get('customer_title'))
 
-		if CustomerComm.objects.filter(customer_id = line.get('smartsheet_id'), comms_id = comms_name ).exists():
-			print(line.get('smartsheet_id'), comms_name, ' already exists - do not resend.' )
-		else:	
-			# Add record and send
-			if settings.YH_SS_TRACK_COMMS_SENT:
-				CustComm = CustomerComm(user = request.user ,customer_id = line.get('smartsheet_id') , comms_id = comms_name )
-				CustComm.save()
+# 		if CustomerComm.objects.filter(customer_id = line.get('smartsheet_id'), comms_id = comms_name ).exists():
+# 			print(line.get('smartsheet_id'), comms_name, ' already exists - do not resend.' )
+# 		else:	
+# 			# Add record and send
+# 			if settings.YH_SS_TRACK_COMMS_SENT:
+# 				CustComm = CustomerComm(user = request.user ,customer_id = line.get('smartsheet_id') , comms_id = comms_name )
+# 				CustComm.save()
 
-			# Add the image logo url to the dictionary
-			line["image_logo"] = settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png"
-			# Add the dictionary entry engineer_name  from the engineer_email address with some string manipulation
-			at_pos = line["engineer_email"].find('@')
-			line["engineer_name"] = ((line["engineer_email"].replace('.',' '))[0:at_pos]).title()
-			# Add the dictionary entry engineer_name  from the surveyor_email address with some string manipulation
-			at_pos = line["surveyor_email"].find('@')
-			line["surveyor_name"] = ((line["surveyor_email"].replace('.',' '))[0:at_pos]).title()
-			# Add the dictionary entry engineer_first_name
-			at_pos = line["engineer_name"].find(' ')
-			line["engineer_first_name"] = (line["engineer_name"])[0:at_pos]
-			# Change the installation_date format
-			if line["installation_date"] != "None":
-				line["installation_date"] = datetime.datetime.strptime(line["installation_date"], "%Y-%m-%d")
-			if line["survey_date"] != "None":
-				line["survey_date"] = datetime.datetime.strptime(line["survey_date"], "%Y-%m-%d")
-			html_content = render_to_string(html_email_filename, line)
-			# Drop the Comms from the comms_name for the Email subject line
-			at_pos = comms_name.find('Comms')
-			mail_subject = 'Your Heat - ' + comms_name[0:at_pos]
+# 			# Add the image logo url to the dictionary
+# 			line["image_logo"] = settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png"
+# 			# Add the dictionary entry engineer_name  from the engineer_email address with some string manipulation
+# 			at_pos = line["engineer_email"].find('@')
+# 			line["engineer_name"] = ((line["engineer_email"].replace('.',' '))[0:at_pos]).title()
+# 			# Add the dictionary entry engineer_name  from the surveyor_email address with some string manipulation
+# 			at_pos = line["surveyor_email"].find('@')
+# 			line["surveyor_name"] = ((line["surveyor_email"].replace('.',' '))[0:at_pos]).title()
+# 			# Add the dictionary entry engineer_first_name
+# 			at_pos = line["engineer_name"].find(' ')
+# 			line["engineer_first_name"] = (line["engineer_name"])[0:at_pos]
+# 			# Change the installation_date format
+# 			if line["installation_date"] != "None":
+# 				line["installation_date"] = datetime.datetime.strptime(line["installation_date"], "%Y-%m-%d")
+# 			if line["survey_date"] != "None":
+# 				line["survey_date"] = datetime.datetime.strptime(line["survey_date"], "%Y-%m-%d")
+# 			html_content = render_to_string(html_email_filename, line)
+# 			# Drop the Comms from the comms_name for the Email subject line
+# 			at_pos = comms_name.find('Comms')
+# 			mail_subject = 'Your Heat - ' + comms_name[0:at_pos]
 
-			if settings.YH_TEST_EMAIL:
-					email = EmailMessage(mail_subject, html_content, 'info@yourheat.co.uk' , [line.get('customer_email')])
-					email.content_subtype = "html"  # Main content is now text/html
-					email.send()
-			else:	
-				send_email_using_SendGrid('info@yourheat.co.uk', line.get('customer_email'), mail_subject, html_content, 'info@yourheat.co.uk' )
+# 			if settings.YH_TEST_EMAIL:
+# 					email = EmailMessage(mail_subject, html_content, 'info@yourheat.co.uk' , [line.get('customer_email')])
+# 					email.content_subtype = "html"  # Main content is now text/html
+# 					email.send()
+# 			else:	
+# 				send_email_using_SendGrid('info@yourheat.co.uk', line.get('customer_email'), mail_subject, html_content, 'info@yourheat.co.uk' )
 
-			#print(stop)	
+# 			#print(stop)	
 
-			if settings.YH_SS_INTEGRATION:		# Update Comments
-				ss_add_comments(
-				settings.YH_SS_ACCESS_TOKEN,
-				settings.YH_SS_SHEET_NAME,
-				'Customer ID',
-				line.get('smartsheet_id'),
-				[comms_name + " email sent."]
-			)
+# 			if settings.YH_SS_INTEGRATION:		# Update Comments
+# 				ss_add_comments(
+# 				settings.YH_SS_ACCESS_TOKEN,
+# 				settings.YH_SS_SHEET_NAME,
+# 				'Customer ID',
+# 				line.get('smartsheet_id'),
+# 				[comms_name + " email sent."]
+# 			)
 
-	return HttpResponseRedirect('/EmailsSentToCustomers/')
+# 	return HttpResponseRedirect('/EmailsSentToCustomers/')
 
 def emails_sent_to_customers(request):
 	''' Function to render the emails sent page '''
@@ -971,7 +969,7 @@ class get_heat_plan(FormView):
 			ss_get_data_from_sheet(
 				settings.YH_SS_ACCESS_TOKEN,
 				settings.YH_SS_SHEET_NAME,
-				['Customer ID', 'Title', 'First Name', 'Surname', 'Email'],
+				['Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'New Fuel Type'],
 				'Customer ID',
 				customer_id,
 				data_filename
@@ -991,6 +989,7 @@ class get_heat_plan(FormView):
 					initial['customer_first_name'] = line_dict.get("customer_first_name")
 					initial['customer_last_name'] = line_dict.get("customer_last_name")
 					initial['customer_email'] = line_dict.get("customer_email")
+					initial['fuel_type'] = line_dict.get("new_fuel_type").strip() + " Boiler"
 		else:
 			initial['smartsheet_id'] = "No Smartsheet Record"		
 		return initial
@@ -1076,14 +1075,14 @@ class get_job_parts(FormView):
 		#form.cleaned_data["parts"] = form.cleaned_data["parts"].replace('\r\n', '<br>')
 		#form.cleaned_data["parts"] = form.cleaned_data["parts"]
 		# Create a dictionary to lookup the correct enginner email address
-		engineer_emails = {
-			'Kevin Harvey (SM5)': 'kevin.harvey@yourheat.co.uk',
-			'Jeremy Tomkinson (TN2)': 'jeremy.tomkinson@yourheat.co.uk',
-			'Ben Pike (SS12)': 'ben.pike@yourheat.co.uk', 
-			'Dave Easton (ME14)': 'dave.easton@yourheat.co.uk', 
-			'Andy Douglas (BR6)': 'andy.douglas@yourheat.co.uk', 
-			'Jon Hickey (TN24)': 'john.hickey@yourheat.co.uk',
-		}
+		# engineer_emails = {
+		# 	'Kevin Harvey (SM5)': 'kevin.harvey@yourheat.co.uk',
+		# 	'Jeremy Tomkinson (TN2)': 'jeremy.tomkinson@yourheat.co.uk',
+		# 	'Ben Pike (SS12)': 'ben.pike@yourheat.co.uk', 
+		# 	'Dave Easton (ME14)': 'dave.easton@yourheat.co.uk', 
+		# 	'Andy Douglas (BR6)': 'andy.douglas@yourheat.co.uk', 
+		# 	'Jon Hickey (TN24)': 'john.hickey@yourheat.co.uk',
+		# }
 
 		html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/Job Parts Comms.html".format(settings.YH_MASTER_PROFILE_USERNAME))
 		html_content = render_to_string(html_email_filename, form.cleaned_data)
@@ -1096,9 +1095,9 @@ class get_job_parts(FormView):
 		##email.send()
 		#send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content)
 		print("Merchant Email:", form.cleaned_data['merchant'])
-		print("Engineer Email:",engineer_emails.get(form.cleaned_data['engineer']))
+		print("Engineer Email:",engineer_postcode_dict.get(form.cleaned_data['engineer']))
 		merchant_email = form.cleaned_data['merchant']
-		engineer_email = engineer_emails.get(form.cleaned_data['engineer'])
+		engineer_email = engineer_postcode_dict.get(form.cleaned_data['engineer'])
 
 		#print(settings.YH_TEST_EMAIL)
 		#print(stop)
