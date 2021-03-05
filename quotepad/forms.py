@@ -1931,6 +1931,7 @@ class ssInstallationAppointmentForm(forms.Form):
 	#parking_and_access = forms.ChoiceField(choices=PARKING_AND_ACCESS_DROPDOWN)
 	#customer_interested_in_bring_forward = forms.ChoiceField(choices=BRING_FORWARD_DROPDOWN)
 	surveyor_notes	= forms.CharField(max_length=2000, required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':3, 'cols':60, 'readonly':'readonly'}))
+	parts_list = forms.CharField(max_length=3000, required=False, widget=forms.HiddenInput())
 
 class ssGetPhotosForUploadForm(forms.Form):
 	def __init__(self, *args, **kwargs):
