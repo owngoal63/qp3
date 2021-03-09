@@ -2039,6 +2039,9 @@ class TestForm(forms.Form):
 		for field in self: 
 			field.field.widget.attrs['class'] = 'form-control'
 
+class EngineerPhotoForm(forms.Form):
+    engineer_photos = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+
 
 
 

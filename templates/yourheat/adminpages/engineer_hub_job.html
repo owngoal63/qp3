@@ -1,0 +1,29 @@
+{% extends "yourheat/adminpages/basemobile.html" %}
+
+
+{% block content %}
+
+<h4 class="engineer__heading">Job Details</h4>
+
+<div class="w3-container events__container">
+    <div class="w3-cell-row headers">
+        <div class="w3-cell" style="width:100%">
+            Job Description
+        </div>
+    </div>
+</div>
+
+<div class="w3-container events__container">
+    <div class="w3-cell-row">
+        <div class="w3-cell" style="width:100%">
+            {% if '<br>' in job_description %}
+                {{ job_description|safe }}
+            {% else %}
+                {{ job_description|linebreaks }}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

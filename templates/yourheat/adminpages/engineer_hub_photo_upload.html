@@ -1,0 +1,37 @@
+{% extends "yourheat/adminpages/basemobile.html" %}
+
+
+{% block content %}
+
+<h4 class="engineer__heading">Job Photos</h4>
+
+<form method="post" enctype="multipart/form-data"> {% csrf_token %}
+
+<div class="w3-container events__container">
+    <div class="w3-cell-row headers">
+        <div class="w3-cell" style="width:100%">
+            Select and Upload Photos
+        </div>
+    </div>
+</div>
+
+<div class="w3-container events__container">
+    <div class="w3-cell-row">
+        <div class="w3-cell" style="width:100%">
+            {{ form.engineer_photos }}
+        </div>
+    </div>
+</div>
+
+<div class="w3-container events__container">
+    <div class="w3-cell-row">
+        <div class="w3-cell" style="width:100%">
+            <button class="w3-button" type="submit">Upload</button>
+        </div>
+    </div>
+</div>
+
+</form>
+
+
+{% endblock %}

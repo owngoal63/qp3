@@ -7,6 +7,7 @@ from django.core.validators import validate_email
 from django.utils.html import strip_tags
 
 import datetime
+import dateutil.parser
 from pathlib import Path
 from math import ceil
 
@@ -14,19 +15,20 @@ import smartsheet
 import json
 
 from quotepad.models import CustomerComm
-from quotepad.forms import ssSurveyAppointmentForm, ssInstallationAppointmentForm, JobPartsForm, SpecialOfferForm, CustomerEnquiryForm, HeatPlanForm
+from quotepad.forms import ssSurveyAppointmentForm, ssInstallationAppointmentForm, JobPartsForm, SpecialOfferForm, CustomerEnquiryForm, HeatPlanForm, EngineerPhotoForm
 from quotepad.utils import send_email_using_SendGrid
 
 # imports associated with sending email ( can be removed for production )
 from django.core.mail import EmailMessage
 
 #Added for Smartsheet
-from quotepad.smartsheet_integration import ss_get_data_from_report, ss_update_data, ss_append_data, ss_attach_pdf, ss_get_data_from_sheet, ss_add_comments
+from quotepad.smartsheet_integration import ss_get_data_from_report, ss_update_data, ss_append_data, ss_attach_pdf, ss_get_data_from_sheet, ss_add_comments, ss_attach_list_of_image_files
 #from quotepad.forms import ssCustomerSelectForm, ssPostSurveyQuestionsForm
 
 # Import for Google Calendar API
 #from __future__ import print_function
 import pickle
+import os
 import os.path
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -36,7 +38,7 @@ from quotepad.utils import create_message, create_message_with_attachment, send_
 from quotepad.utils import pdf_generation, pdf_generation_to_file, invoice_pdf_generation
 
 # Import YH Engineer and surveyor data required for forms
-from .yh_personnel import surveyor_dict, engineer_dict, engineer_postcode_dict
+from .yh_personnel import surveyor_dict, engineer_dict, engineer_postcode_dict, engineer_calendar_dict
 
 
 def admin_home(request):
@@ -98,11 +100,14 @@ def display_comms(request, comms, customer_id=None):
 			# Add the image logo url to the dictionary
 			line["image_logo"] = settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png"
 			# Look up the engineer_dict to get engineer's name
-			line["engineer_name"] = engineer_dict[line["engineer_email"]].split()[0] + " " + engineer_dict[line["engineer_email"]].split()[1]
+			if line["engineer_email"] != "None":
+				line["engineer_name"] = engineer_dict[line["engineer_email"]].split()[0] + " " + engineer_dict[line["engineer_email"]].split()[1]
 			# Lookup the surveyors name from the surveyor_dict
-			line["surveyor_name"] = surveyor_dict[line["surveyor_email"]].split()[0] + " " + surveyor_dict[line["surveyor_email"]].split()[1]
+			if line["surveyor_email"] != "None":
+				line["surveyor_name"] = surveyor_dict[line["surveyor_email"]].split()[0] + " " + surveyor_dict[line["surveyor_email"]].split()[1]
 			# Add the dictionary entry engineer_first_name
-			line["engineer_first_name"] = engineer_dict[line["engineer_email"]].split()[0]
+			if line["engineer_email"] != "None":
+				line["engineer_first_name"] = engineer_dict[line["engineer_email"]].split()[0]
 			# Change the installation_date format
 			if line["installation_date"] != "None":
 				line["installation_date"] = datetime.datetime.strptime(line["installation_date"], "%Y-%m-%d")
@@ -168,11 +173,14 @@ def email_comms(request, comms, customer_id=None):
 			# Add the image logo url to the dictionary
 			line["image_logo"] = settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png"
 			# Look up the engineer_dict to get engineer's name
-			line["engineer_name"] = engineer_dict[line["engineer_email"]].split()[0] + " " + engineer_dict[line["engineer_email"]].split()[1]
+			if line["engineer_email"] != "None":
+				line["engineer_name"] = engineer_dict[line["engineer_email"]].split()[0] + " " + engineer_dict[line["engineer_email"]].split()[1]
 			# Lookup the surveyors name from the surveyor_dict
-			line["surveyor_name"] = surveyor_dict[line["surveyor_email"]].split()[0] + " " + surveyor_dict[line["surveyor_email"]].split()[1]
+			if line["surveyor_email"] != "None":
+				line["surveyor_name"] = surveyor_dict[line["surveyor_email"]].split()[0] + " " + surveyor_dict[line["surveyor_email"]].split()[1]
 			# Add the dictionary entry engineer_first_name
-			line["engineer_first_name"] = engineer_dict[line["engineer_email"]].split()[0]
+			if line["engineer_email"] != "None":
+				line["engineer_first_name"] = engineer_dict[line["engineer_email"]].split()[0]
 			# Change the installation_date format
 			if line["installation_date"] != "None":
 				line["installation_date"] = datetime.datetime.strptime(line["installation_date"], "%Y-%m-%d")
@@ -627,6 +635,7 @@ class get_installation_appointment(FormView):
 			 'Postcode',  'Installation Date', 'Survey Date',
 			 'Existing Boiler Status', 'Existing Boiler', 'Requested Boiler Type',
 			 'Agreed Boiler Option', 'Option A / Install Days Required',
+			 'Option A Parts List', 'Option B Parts List',
 			'Surveyor', 'Engineer Appointed', 'Boiler Manufacturer', 'Lead Summary Notes', 'Surveyor Notes'],
 			'Customer ID',
 			customer_id,
@@ -645,8 +654,10 @@ class get_installation_appointment(FormView):
 					if value == 'None':
 						line_dict[key] = ''
 				# Convert the surveyor_email address to a full name with some string manipulation
-				at_pos = line_dict.get("surveyor_email").find('@')
-				initial["surveyor"] = ((line_dict.get("surveyor_email").replace('.',' '))[0:at_pos]).title()
+				#at_pos = line_dict.get("surveyor_email").find('@')
+				#initial["surveyor"] = ((line_dict.get("surveyor_email").replace('.',' '))[0:at_pos]).title()
+				# Lookup the surveyors name from the surveyor_dict
+				initial["surveyor"] = surveyor_dict[line_dict["surveyor_email"]].split()[0] + " " + surveyor_dict[line_dict["surveyor_email"]].split()[1]
 				# Convert the installed days string ( with "days") into a float for use in calendar calculation
 				at_pos = line_dict.get("installation_days_required").find(' day')
 				if at_pos > 0:
@@ -683,12 +694,19 @@ class get_installation_appointment(FormView):
 				#initial['website_economy_package_quote'] = line_dict.get("website_economy_package_quote")
 				initial['additional_information'] = line_dict.get("additional_information")
 				initial['surveyor_notes'] = line_dict.get("surveyor_notes")
+				if line_dict.get("agreed_boiler_option") == "Option B Parts":
+					initial['parts_list'] = line_dict.get("option_b_parts_list")
+				else:
+					initial['parts_list'] = line_dict.get("option_a_parts_list")
 				
-				#print(line)	
+				# print("--------------------")
+				# print(line)	
 
 		return initial
 
 	def form_valid(self, form, **kwargs):
+
+		engineer_calendar_id = engineer_calendar_dict[engineer_dict[form.cleaned_data["engineer"]]]	# get engineer yourheat email address for caledar id
 		#print("form is valid")
 		customer_id = self.kwargs['customer_id']
 		#print(customer_id)
@@ -710,7 +728,9 @@ class get_installation_appointment(FormView):
 		#print(installation_start_date)
 		#print(installation_end_date)
 
-
+		# print(form.cleaned_data['surveyor'])
+		#print(form.cleaned_data['engineer'])
+		# print(stop)
 
 		# Update Smartsheet with Appointment Details
 		if settings.YH_SS_INTEGRATION:		
@@ -722,16 +742,25 @@ class get_installation_appointment(FormView):
 				update_data
 			)
 
+		# Inititalise the event_description string for either a calendar appointment or an email
+		event_description = ""
+		#if '@yourheat.co.uk' not in form.cleaned_data['engineer']:  # If an external engineer email address so will send email -> create additional details for top of email
+		
+		
+
+
 		# Create and build the google calendar event
 		event = {}
 
 		event['summary'] = form.cleaned_data["customer_title"] + " " + form.cleaned_data["customer_last_name"] + " " + form.cleaned_data["postcode"]
 		event['location'] = form.cleaned_data["house_name_or_number"] + ", " + form.cleaned_data["street_address"] + ", " + form.cleaned_data["city"] + " " + form.cleaned_data["county"] + " " + form.cleaned_data["postcode"]
-		event_description = "Booking Made: " + str(datetime.datetime.now().date().strftime('%d-%b-%Y')) + "\n\n"
+		event_description = event_description + "Your Heat Boiler Installation Notification" +"\n"
+		event_description = event_description + "Installation Date: " + form.cleaned_data['installation_date'].strftime('%d-%b-%Y') + "\n"
+		event_description = event_description + form.cleaned_data["house_name_or_number"] + ", " + form.cleaned_data["street_address"] + ", " + form.cleaned_data["city"] + ", " + form.cleaned_data["county"] + ", " + form.cleaned_data["postcode"] + "\n"
+		event_description = event_description + "Customer ID: " + customer_id + "\n\n"
+		event_description = event_description + "Booking Made: " + str(datetime.datetime.now().date().strftime('%d-%b-%Y')) + "\n\n"
 		event_description = event_description + "Job Duration: " + str(form.cleaned_data["installation_days_required"]) + " day(s)\n\n"
 		event_description = event_description + "Customer Name: " + form.cleaned_data["customer_title"] + " " + form.cleaned_data["customer_first_name"] + " " + form.cleaned_data["customer_last_name"] + "\n"
-		#event_description = event_description + "Customer Confirmed: " + form.cleaned_data["customer_confirmed"] + "\n"
-		#event_description = event_description + "Survey Attendee: " + form.cleaned_data["survey_attendee"] + "\n"
 		event_description = event_description + "Phone Number: " + form.cleaned_data["customer_primary_phone"] + "\n"
 		event_description = event_description + "Email: " + form.cleaned_data["customer_email"] + "\n"
 		event_description = event_description + "\n"
@@ -740,26 +769,16 @@ class get_installation_appointment(FormView):
 		event_description = event_description + "Surveyor: " + form.cleaned_data["surveyor"] + "\n"
 		event_description = event_description + "Surveyor Notes: " + form.cleaned_data["surveyor_notes"] + "\n\n"
 		event_description = event_description + "Additional Information: " + form.cleaned_data["additional_information"] + "\n\n"
-		event_description = event_description + "For all other details check the Customer Quote and Parts list below.\n"
-		#event_description = event_description + "Boiler Working: " + form.cleaned_data["current_boiler_status"] + "\n"
-		#event_description = event_description + "Fuel: " + form.cleaned_data["fuel_type"] + "\n"
-		#event_description = event_description + "System Wanted: " + form.cleaned_data["system_wanted"] + "\n"
-		#event_description = event_description + "Brand Preference: " + form.cleaned_data["brand_preference"] + "\n"
-		#event_description = event_description + "Current Boiler Location: " + form.cleaned_data["current_boiler_location"] + "\n"
-		#event_description = event_description + "Location of New Boiler: " + form.cleaned_data["location_of_new_boiler"] + "\n"
-		#event_description = event_description + "Parking and Access: " + form.cleaned_data["parking_and_access"] + "\n"
-		#event_description = event_description + "Customer interested in a Bring Forward: " + form.cleaned_data["customer_interested_in_bring_forward"] + "\n"
-		#event_description = event_description + "Property Type: " + form.cleaned_data["property_type"] + "\n"
-		#event_description = event_description + "Number of Bedrooms: " + form.cleaned_data["number_of_bedrooms"] + "\n"
-		#event_description = event_description + "Number of Bathrooms: " + form.cleaned_data["number_of_bathrooms"] + "\n"
-		#event_description = event_description + "Hot Water Cylinder: " + form.cleaned_data["hot_water_cylinder"] + "\n"
+		event_description = event_description + "Parts Listing\n"
+		event_description = event_description + "-------------\n"
+		event_description = event_description + form.cleaned_data["parts_list"].replace("|", "\n")
+		#if '@yourheat.co.uk' in form.cleaned_data['engineer']:	# Internal engineer ( written to Calendar )
+		#	event_description = event_description + "For all other details check the Customer Quote link below.\n"
+		#	event_description = event_description + "\n"
+		#	event_description = event_description + "Customer Quote and Parts List:\n" 
+		#	event_description = event_description + settings.YH_URL_STATIC_FOLDER  + "yourheat/quotes_for_installs/" + customer_id + ".pdf\n"
+		#else:	# External engineer - written to email.
 		event_description = event_description + "\n"
-		event_description = event_description + "Customer Quote and Parts List:\n" 
-		event_description = event_description + settings.YH_URL_STATIC_FOLDER  + "yourheat/quotes_for_installs/" + customer_id + ".pdf\n"
-		event_description = event_description + "\n"
-		#event_description = event_description + "Website Premium Package Quote: " + form.cleaned_data["website_premium_package_quote"] + "\n"
-		#event_description = event_description + "Website Standard Package Quote: " + form.cleaned_data["website_standard_package_quote"] + "\n"
-		#event_description = event_description + "Website Economy Package Quote: " + form.cleaned_data["website_economy_package_quote"] + "\n"
 
 		event['description'] = event_description
 
@@ -778,24 +797,8 @@ class get_installation_appointment(FormView):
 		#end['timezone'] = 'Europe/London'
 		event['end'] = end
 
-		# Google Event colors
-		# 1 Lavender
-		# 2 Sage
-		# 3 Grape
-		# 4 Flamingo
-		# 5 Banana
-		# 6 Tangerine
-		# 7 Peacock
-		# 8 Graphite
-		# 9 Blueberry
-		# 10 Basil
-		# 11 Tomato
-		# surveyor_event_color = {
-		# 	"ivan.painter@yourheat.co.uk": "4",	
-		# 	"lee.hewitt@yourheat.co.uk": "2",	
-		# }
 
-		# event['colorId'] = surveyor_event_color.get(form.cleaned_data["surveyor"])
+		# if '@yourheat.co.uk' in form.cleaned_data['engineer']:   # Internal engineer email address so write to calendar 
 
 		if settings.YH_CAL_ENABLED:					# If enabled Update the Google Calendar
 			# Google Calendar API - Get Credentials
@@ -827,10 +830,22 @@ class get_installation_appointment(FormView):
 			service = build('calendar', 'v3', credentials=creds)
 
 			# Insert the event into the calendar
-			event = service.events().insert(calendarId=form.cleaned_data["engineer"], body=event).execute()
+			event = service.events().insert(calendarId=engineer_calendar_id, body=event).execute()
 			print ('Event created: %s' % (event.get('htmlLink')))
 
-		#return render(self.request, 'yourheat/adminpages/confirm_calendar_appointment.html', {'customer_id': customer_id})
+		#if '@yourheat.co.uk' in form.cleaned_data['engineer']:	# External engineer email address so write to email
+		#	print(event_description)
+		# Send email to engineer email address ( either @yourheat.co.uk or personal email address )
+		mail_subject = "Your Heat Boiler Installation Notification"
+		if settings.YH_TEST_EMAIL:
+			email = EmailMessage(mail_subject, event_description, 'info@yourheat.co.uk' , [form.cleaned_data["engineer"]])
+			#email.content_subtype = "html"  # Main content is now text/html
+			email.send()
+		else:
+			send_email_using_GmailAPI('hello@gmail.com',form.cleaned_data["engineer"], mail_subject, event_description)
+
+			# print(stop)
+
 		return render(self.request, 'yourheat/adminpages/confirm_calendar_appointment.html', {'comms_name': 'Installation Notification Comms', 'customer_id': customer_id})
 
 
@@ -847,36 +862,6 @@ def build_invoice_pdf(customer_id):
 
 	return 
 
-	# comms = "Invoice Comms"
-	# customer_id = 'YH-97'
-	# data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
-
-	# ss_get_data_from_sheet(
-	# 		settings.YH_SS_ACCESS_TOKEN,
-	# 		settings.YH_SS_SHEET_NAME,
-	# 		['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'House Name or Number', 'Street Address', 'City', 'County', 'Postcode', 'Agreed Deposit Amount'],
-	# 		'Customer ID',
-	# 		customer_id,
-	# 		data_filename
-	# 	)
-
-	# Open the text file with the Smartsheet data 
-	# with open(data_filename) as file:
-	# 		file_form_data = []
-	# 		for line in file:
-	# 			file_form_data.append(eval(line))
-
-	# Generate the PDF based on the first row contents of text file
-	# for line in file_form_data:
-	# 	print(line)
-	# 	sourceHtml = "pdf/user_{}/invoice_for_pdf.html".format(settings.YH_MASTER_PROFILE_USERNAME)
-	# 	outputFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/CustomerInvoice_{}_{}.pdf".format(settings.YH_MASTER_PROFILE_USERNAME, line.get("customer_last_name"), line.get("smartsheet_id")))
-	# 	if outputformat == "EmailOutput":
-	# 		pdf_generation_to_file(sourceHtml, outputFilename, {'invoice_data': line})
-	# 		return
-	# 	else:	# outputformat is PDF to screen
-	# 		pdf = pdf_generation(sourceHtml, {'invoice_data': line})
-	# 		return HttpResponse(pdf, content_type='application/pdf')
 
 def confirm_calendar_appointment(request, customer_id=None):
 	''' Function to confirm Calendar Appointment '''
@@ -1148,6 +1133,7 @@ class get_job_parts(FormView):
 
 def test_gmail(request):
 	SCOPES = ['https://www.googleapis.com/auth/calendar','https://www.googleapis.com/auth/gmail.modify']
+	SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 	creds = None
 	# The file token.pickle stores the user's access and refresh tokens, and is
@@ -1156,9 +1142,9 @@ def test_gmail(request):
 	token_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/token.pickle")
 	creds_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/credentials.json")
 	#print(creds_filename)
-	if os.path.exists('token.pickle'):
+	if os.path.exists(token_filename):
 		print("pickle exists")
-		with open('token.pickle', 'rb') as token:
+		with open(token_filename, 'rb') as token:
 			creds = pickle.load(token)
 	# If there are no (valid) credentials available, let the user log in.
 	if not creds or not creds.valid:
@@ -1170,7 +1156,7 @@ def test_gmail(request):
 				creds_filename, SCOPES)
 			creds = flow.run_local_server(port=0)
 		# Save the credentials for the next run
-		with open('token.pickle', 'wb') as token:
+		with open(token_filename, 'wb') as token:
 			pickle.dump(creds, token)
 
 
@@ -1179,7 +1165,10 @@ def test_gmail(request):
 	# Call the Calendar API
 	now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
 	print('Getting the upcoming 10 events')
-	events_result = service.events().list(calendarId='primary', timeMin=now,
+	# events_result = service.events().list(calendarId='primary', timeMin=now,
+	# 																		maxResults=10, singleEvents=True,
+	# 																		orderBy='startTime').execute()
+	events_result = service.events().list(calendarId='jeremy.tomkinson@yourheat.co.uk', timeMin=now,
 																			maxResults=10, singleEvents=True,
 																			orderBy='startTime').execute()
 	events = events_result.get('items', [])
@@ -1188,7 +1177,13 @@ def test_gmail(request):
 			print('No upcoming events found.')
 	for event in events:
 			start = event['start'].get('dateTime', event['start'].get('date'))
-			print(start, event['summary'])
+			end = event['end'].get('dateTime', event['end'].get('date'))
+			#delta =  (datetime.datetime.strptime(end, '%Y-%m-%d') - datetime.datetime.strptime(start, '%Y-%m-%d')).days
+			delta = (dateutil.parser.parse(end) - dateutil.parser.parse(start)).days
+			#delta =  (mdate1 - rdate1).days
+			#print("------", datetime.datetime.strptime(end, '%Y-%m-%d'))
+			
+			print(start, event['summary'], end,delta)
 
 	# Insert the event into the calendar
 	#event = service.events().insert(calendarId=form.cleaned_data["engineer"], body=event).execute()
@@ -1199,21 +1194,21 @@ def test_gmail(request):
 	#message = create_message('hello@yourheat.co.uk', 'gordonlindsay@virginmedia.com', 'THis is a test email', 'This is the content')
 
 
-	outputFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/CustomerQuoteForCustomer_Formula_YH-55.pdf")
-	message = create_message_with_attachment('hello@yourheat.co.uk', 'gordonlindsay@virginmedia.com', 'THis is a test email', '<u>This is the content</u>', outputFilename)
+	#outputFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/CustomerQuoteForCustomer_Formula_YH-55.pdf")
+	#message = create_message_with_attachment('hello@yourheat.co.uk', 'gordonlindsay@virginmedia.com', 'THis is a test email', '<u>This is the content</u>', outputFilename)
 	#message = create_message_with_attachment('hello@yourheat.co.uk', 'gordonlindsay@virginmedia.com', 'THis is a test email', '<u>This is the content</u>', 'CustomerQuoteForCustomer_Formula_YH-55.pdf')
-	sent = send_message(service,'me', message)
+	#sent = send_message(service,'me', message)
 
 	# Call the Gmail API
-	results = service.users().labels().list(userId='me').execute()
-	labels = results.get('labels', [])
+	#results = service.users().labels().list(userId='me').execute()
+	#labels = results.get('labels', [])
 
-	if not labels:
-		print('No labels found.')
-	else:
-		print('Labels:')
-		for label in labels:
-			print(label['name'])
+	#if not labels:
+	#	print('No labels found.')
+	#else:
+	#	print('Labels:')
+	#	for label in labels:
+	#		print(label['name'])
 
 	return
 
@@ -1331,5 +1326,284 @@ class customer_enquiry_form(FormView):
 
 		return HttpResponseRedirect('https://yourheat.co.uk/')
 
+def engineer_hub(request, engineer_name):
+	''' Hub for Engineer to review and update diary '''
+
+	# Get engineer email address from dictionary look to use as reference for google calendar
+	engineer_email = engineer_calendar_dict[engineer_name]
+
+	SCOPES = ['https://www.googleapis.com/auth/calendar']
+
+	creds = None
+	# The file token.pickle stores the user's access and refresh tokens, and is
+	# created automatically when the authorization flow completes for the first
+	# time.
+	token_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/token.pickle")
+	creds_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/credentials.json")
+	#print(creds_filename)
+	if os.path.exists(token_filename):
+		print("pickle exists")
+		with open(token_filename, 'rb') as token:
+			creds = pickle.load(token)
+	# If there are no (valid) credentials available, let the user log in.
+	if not creds or not creds.valid:
+		print("Creds not valid")
+		if creds and creds.expired and creds.refresh_token:
+			creds.refresh(Request())
+		else:
+			flow = InstalledAppFlow.from_client_secrets_file(
+				creds_filename, SCOPES)
+			creds = flow.run_local_server(port=0)
+		# Save the credentials for the next run
+		with open(token_filename, 'wb') as token:
+			pickle.dump(creds, token)
+
+
+	service = build('calendar', 'v3', credentials=creds)
+
+	# Call the Calendar API
+	now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+	print('Getting the upcoming 10 events')
+	# events_result = service.events().list(calendarId='primary', timeMin=now,
+	# 																		maxResults=10, singleEvents=True,
+	# 																		orderBy='startTime').execute()
+	events_result = service.events().list(calendarId=engineer_email, timeMin=now,
+																			maxResults=30, singleEvents=True,
+																			orderBy='startTime').execute()
+	events = events_result.get('items', [])
+
+
+	calendar_events = []
+	if not events:
+			print('No upcoming events found.')
+	for event in events:
+			start = event['start'].get('dateTime', event['start'].get('date'))
+			end = event['end'].get('dateTime', event['end'].get('date'))
+			#delta =  (datetime.datetime.strptime(end, '%Y-%m-%d') - datetime.datetime.strptime(start, '%Y-%m-%d')).days
+			delta = (dateutil.parser.parse(end) - dateutil.parser.parse(start)).days
+			#delta =  (mdate1 - rdate1).days
+			#print("------", datetime.datetime.strptime(end, '%Y-%m-%d'))
+			
+			event_dict = {}
+			event_dict['id'] = event['id']
+			event_dict['summary'] = event['summary']
+			event_dict['start_date'] = datetime.datetime.strftime(dateutil.parser.parse(start).date(),"%b %d")
+			event_dict['end_date'] = dateutil.parser.parse(end).date()
+			event_dict['days'] = delta
+			event_dict['start_time'] = dateutil.parser.parse(start).time()
+			event_dict['end_time'] = dateutil.parser.parse(end).time()
+			calendar_events.append(event_dict)
+
+			print(start, event['summary'], end, delta)
+
+	print(calendar_events)
+
+	return render(request, 'yourheat/adminpages/engineer_hub.html', {'calendar_events': calendar_events, 'engineer_name': engineer_name  })
 
 			
+def engineer_calendar_change(request, change_type, engineer_name):
+
+	print("Engineer Cal change")
+	#print(stop)
+
+	# Get engineer email address from dictionary look to use as reference for google calendar
+	engineer_email = engineer_calendar_dict[engineer_name]
+
+	#print(engineer_email)
+
+	print(change_type)
+
+	if(request.POST):
+		form_data = request.POST.dict()
+		unavailable_date = form_data.get("unavailable_date")
+		long_unavailable_date = datetime.datetime.strftime(datetime.datetime.strptime(unavailable_date, "%d/%m/%Y"), "%B %d %Y")
+	#print(datetime.datetime.strftime(datetime.datetime.strptime(unavailable_date, "%d/%m/%Y"), "%B %d %Y"))
+
+	# print(stop)
+
+	SCOPES = ['https://www.googleapis.com/auth/calendar']
+
+	creds = None
+	# The file token.pickle stores the user's access and refresh tokens, and is
+	# created automatically when the authorization flow completes for the first
+	# time.
+	token_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/token.pickle")
+	creds_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/credentials.json")
+	#print(creds_filename)
+	if os.path.exists(token_filename):
+		print("pickle exists")
+		with open(token_filename, 'rb') as token:
+			creds = pickle.load(token)
+	# If there are no (valid) credentials available, let the user log in.
+	if not creds or not creds.valid:
+		print("Creds not valid")
+		if creds and creds.expired and creds.refresh_token:
+			creds.refresh(Request())
+		else:
+			flow = InstalledAppFlow.from_client_secrets_file(
+				creds_filename, SCOPES)
+			creds = flow.run_local_server(port=0)
+		# Save the credentials for the next run
+		with open(token_filename, 'wb') as token:
+			pickle.dump(creds, token)
+
+
+	service = build('calendar', 'v3', credentials=creds)
+
+	event_text = 'Available on ' + long_unavailable_date
+	print(engineer_email, event_text)
+	#print(stop)
+
+	created_event = service.events().quickAdd(
+					calendarId=engineer_email,
+					text=event_text).execute()
+
+	print(created_event['id'])
+
+	#print(stop)
+
+	return HttpResponseRedirect('/EngineerHub/' + engineer_name + '/')
+
+def engineer_calendar_delete(request, event_id, engineer_name):
+
+	engineer_email = engineer_calendar_dict[engineer_name]
+
+	print("Delete Event", engineer_name, id)
+
+	SCOPES = ['https://www.googleapis.com/auth/calendar']
+
+	creds = None
+	# The file token.pickle stores the user's access and refresh tokens, and is
+	# created automatically when the authorization flow completes for the first
+	# time.
+	token_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/token.pickle")
+	creds_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/credentials.json")
+	#print(creds_filename)
+	if os.path.exists(token_filename):
+		print("pickle exists")
+		with open(token_filename, 'rb') as token:
+			creds = pickle.load(token)
+	# If there are no (valid) credentials available, let the user log in.
+	if not creds or not creds.valid:
+		print("Creds not valid")
+		if creds and creds.expired and creds.refresh_token:
+			creds.refresh(Request())
+		else:
+			flow = InstalledAppFlow.from_client_secrets_file(
+				creds_filename, SCOPES)
+			creds = flow.run_local_server(port=0)
+		# Save the credentials for the next run
+		with open(token_filename, 'wb') as token:
+			pickle.dump(creds, token)
+
+
+	service = build('calendar', 'v3', credentials=creds)
+
+	service.events().delete(calendarId=engineer_email, eventId=event_id).execute()
+
+	return HttpResponseRedirect('/EngineerHub/' + engineer_name + '/')
+
+
+def engineer_hub_job(request, event_id, engineer_name):
+	''' Hub Page for Engineer to review job details '''
+
+	print("Engineer Job Event", event_id)
+
+	engineer_email = engineer_calendar_dict[engineer_name]
+
+	SCOPES = ['https://www.googleapis.com/auth/calendar']
+
+	creds = None
+	# The file token.pickle stores the user's access and refresh tokens, and is
+	# created automatically when the authorization flow completes for the first
+	# time.
+	token_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/token.pickle")
+	creds_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/credentials.json")
+	#print(creds_filename)
+	if os.path.exists(token_filename):
+		print("pickle exists")
+		with open(token_filename, 'rb') as token:
+			creds = pickle.load(token)
+	# If there are no (valid) credentials available, let the user log in.
+	if not creds or not creds.valid:
+		print("Creds not valid")
+		if creds and creds.expired and creds.refresh_token:
+			creds.refresh(Request())
+		else:
+			flow = InstalledAppFlow.from_client_secrets_file(
+				creds_filename, SCOPES)
+			creds = flow.run_local_server(port=0)
+		# Save the credentials for the next run
+		with open(token_filename, 'wb') as token:
+			pickle.dump(creds, token)
+	service = build('calendar', 'v3', credentials=creds)
+
+	event = service.events().get(calendarId=engineer_email, eventId=event_id).execute()
+
+	#print(event['summary'])
+	try:
+		print(event['description'])
+	except:
+		event['description'] = ""
+
+
+	return render(request, 'yourheat/adminpages/engineer_hub_job.html', {'job_description': event['description']})
+
+def engineer_hub_photo_select(request, customer_id, engineer_name):
+	''' Hub Page for Engineer to Select Photos Type '''
+
+	print(engineer_name)
+
+	#engineer_email = engineer_calendar_dict[engineer_name]
+
+	return render(request, 'yourheat/adminpages/engineer_hub_photo_select.html', {'customer_id': customer_id, 'engineer_name': engineer_name})
+
+def engineer_hub_photo_upload(request, customer_id, upload_type, engineer_name):
+	''' Hub Page for Engineer to Upload Photos '''
+
+	#print(engineer_name.replace(" ", ""))
+	#print(stop)
+
+	if request.method == 'POST':
+		form = EngineerPhotoForm(request.POST, request.FILES)
+		if form.is_valid():
+			attach_file_list = []		# Array to send to Smartsheet
+			for i, file in enumerate(request.FILES.getlist('engineer_photos')):
+				#file_without_extension = os.path.splitext(file)[0]
+				file_extention = os.path.splitext(str(file))[1]
+				attach_file_list.append(Path(settings.BASE_DIR + "/pdf_quote_archive/eng_{}/{}".format(engineer_name.replace(" ",""), upload_type + str(i + 1) + file_extention)))
+				def process(f):
+					with open(Path(settings.BASE_DIR + "/pdf_quote_archive/eng_{}/{}".format(engineer_name.replace(" ",""), file)), 'wb+') as destination:
+						for chunk in f.chunks():
+							destination.write(chunk)
+				process(file)
+				# Rename the obsucre local filename to a more meaningful one based upon the file upload type
+				os.rename(Path(settings.BASE_DIR + "/pdf_quote_archive/eng_{}/{}".format(engineer_name.replace(" ",""), file)), Path(settings.BASE_DIR + "/pdf_quote_archive/eng_{}/{}".format(engineer_name.replace(" ",""), upload_type + str(i + 1) + file_extention)))
+
+			# Send Photo Files to be attached to Smartsheet record
+			if settings.YH_SS_INTEGRATION:
+					ss_attach_list_of_image_files(
+						settings.YH_SS_ACCESS_TOKEN,
+						settings.YH_SS_SHEET_NAME,
+						"Customer ID",
+						customer_id,
+						attach_file_list
+					)
+
+			# Delete Uploaded and Renamed Files from System Storage
+			for del_file in attach_file_list:
+				os.remove(del_file)
+
+			print(stop)
+
+			return HttpResponseRedirect('/success/url/')
+	else:
+		form = EngineerPhotoForm()
+
+	return render(request, 'yourheat/adminpages/engineer_hub_photo_upload.html', {'form': form})
+
+
+	
+
+
+

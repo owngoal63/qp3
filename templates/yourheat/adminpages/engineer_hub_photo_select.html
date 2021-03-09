@@ -1,0 +1,44 @@
+{% extends "yourheat/adminpages/basemobile.html" %}
+
+{% block content %}
+
+<h4 class="engineer__heading">Job Photos</h4>
+
+<div class="w3-container events__container">
+    <div class="w3-cell-row headers">
+        <div class="w3-cell" style="width:100%">
+            Select Photo Type: {{ customer_id }}
+        </div>
+    </div>
+</div>
+
+<div class="w3-container events__container">
+    <div class="w3-cell-row">
+        <div class="w3-cell" style="width:100%">
+            <a href="\EngineerHubPhotoUpload\{{ customer_id }}\Install_Serial_Numbers\{{ engineer_name }}/" class="w3-button w3-black">Serial Numbers</a>
+        </div>
+    </div>
+
+    <div class="w3-cell-row">
+        <div class="w3-cell" style="width:100%">
+            <a href="https://www.w3schools.com" class="w3-button w3-black">Benchmark</a>
+        </div>
+    </div>
+
+    <div class="w3-cell-row">
+        <div class="w3-cell" style="width:100%">
+            Serial Numbers<br>
+            Benchmark<br>
+            Image of boiler (stood around 2m back):<br>
+            Flue inside and out<br>
+            Airing cupboard (with all controls in shot)<br>
+            Condense run and termination<br>
+            Anything that requires a further quote (info to be left above)<br>
+            Any damage<br>
+            Anything else<br>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

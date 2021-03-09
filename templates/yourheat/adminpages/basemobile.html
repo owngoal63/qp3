@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Your Heat Engineer Hub</title>
+    </head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css"
+    integrity="sha256-zmfNZmXoNWBMemUOo1XUGFfc0ihGGLYdgtJS3KCr/l0=" crossorigin="anonymous" />
+<link href="{% static 'css/engineer_hub.css' %}" rel="stylesheet" type="text/css">
+
+<body>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" charset="utf-8"></script>
+ 
+ <!-- XDSoft DateTimePicker -->
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous" />
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
+
+ <header class="w3-container">
+    <div class="w3-container header__img-container">
+    <img src="http://www.qpcentral.co.uk/static/images/YourHeatLogo-Transparent.png"/>
+</div>
+  </header>
+
+<!-- Content here -->
+
+{% block content %}
+
+{% endblock content %}
+
+<div class="w3-container mobile__footer">
+    <h7>©2021 Designed by Rorywork</h7>
+</div>
+
+</body>
+
+<script>
+    $(function () {
+      $("#id_survey_date_and_time").datetimepicker({
+        format: 'd/m/Y H:i',
+      });
+      $("#id_installation_date").datetimepicker({
+        format: 'd/m/Y', timepicker: false,
+      });
+      $("#id_job_date").datetimepicker({
+        format: 'd/m/Y', timepicker: false,
+      });
+      $("#id_unavailable_date").datetimepicker({
+        format: 'd/m/Y', timepicker: false,
+      });
+    });
+  </script>
+</html>

@@ -41,6 +41,7 @@ from quotepad.views import hub_home, recommend_a_friend, preview_recommend_a_fri
 from quotepad.views import customer_acceptance, customer_acceptance_email, customer_enquiry_form
 
 from quotepad.views import TestForm, test_gmail
+from quotepad.views import engineer_hub, engineer_calendar_change, engineer_calendar_delete, engineer_hub_job, engineer_hub_photo_select, engineer_hub_photo_upload
 
 urlpatterns = [
     
@@ -168,6 +169,13 @@ urlpatterns = [
     path('CustomerAcceptance/<str:acceptancetype>/<str:customerid>/<str:firstname>/<str:surname>/', customer_acceptance, name = 'CustomerAcceptance'),
     path('CustomerAcceptanceEmail/<str:acceptancetype>/<str:customerid>/<str:firstname>/<str:surname>/', customer_acceptance_email, name = 'CustomerAcceptanceEmail'),
     path('CustomerEnquiry/<str:acceptancetype>/<str:customerid>/<str:firstname>/<str:surname>/', customer_enquiry_form.as_view(), name='CustomerEnquiry'),
+
+    path('EngineerHub/<str:engineer_name>/', engineer_hub, name = 'EngineerHub'),
+    path('EngineerCalendarChange/<str:change_type>/<str:engineer_name>/', engineer_calendar_change, name = 'EngineerCalendarChange'),
+    path('EngineerCalendarDelete/<str:event_id>/<str:engineer_name>/', engineer_calendar_delete, name = 'EngineerCalendarDelete'),
+    path('EngineerHubJob/<str:event_id>/<str:engineer_name>/', engineer_hub_job, name = 'EngineerHubJob'),
+    path('EngineerHubPhotoSelect/<str:customer_id>/<str:engineer_name>/', engineer_hub_photo_select, name = 'EngineerHubPhotoSelect'),
+    path('EngineerHubPhotoUpload/<str:customer_id>/<str:upload_type>/<str:engineer_name>/', engineer_hub_photo_upload, name = 'EngineerHubPhotoUpload'),
 
 	path('', include('payments.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

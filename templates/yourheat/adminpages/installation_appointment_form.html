@@ -176,68 +176,10 @@
                 </div>
             </div>
         </div>
-        <hr>
-        <div class = "row">
-            <div class = "col-6">
-                <div class="form-group">
-                    <label>{{form.lead_booker.label}}</label>
-                    {{ form.lead_booker }}
-                    
-                </div>
-            </div>
-            <div class = "col-6">
-                <div class="form-group">
-                    <label>{{form.customer_confirmed.label}}</label>
-                    {{ form.customer_confirmed}}
-                </div>
-            </div>
-        </div>
-        <div class = "row">
-            <div class = "col-6">
-                <div class="form-group">
-                    <label>{{form.survey_attendee.label}}</label>
-                    {{ form.survey_attendee }}
-                    
-                </div>
-            </div>
-            <div class = "col-6">
-                <div class="form-group">
-                    <label>{{form.brand_preference.label}}</label>
-                    {{ form.brand_preference}}
-                </div>
-            </div>
-        </div>
-        <div class = "row">
-            <div class = "col-6">
-                <div class="form-group">
-                    <label>{{form.current_boiler_location.label}}</label>
-                    {{ form.current_boiler_location }}
-                    
-                </div>
-            </div>
-            <div class = "col-6">
-                <div class="form-group">
-                    <label>{{form.location_of_new_boiler.label}}</label>
-                    {{ form.location_of_new_boiler}}
-                </div>
-            </div>
-        </div>
-        <div class = "row">
-            <div class = "col-6">
-                <div class="form-group">
-                    <label>{{form.parking_and_access.label}}</label>
-                    {{ form.parking_and_access }}
-                    
-                </div>
-            </div>
-            <div class = "col-6">
-                <div class="form-group">
-                    <label>{{form.customer_interested_in_bring_forward.label}}</label>
-                    {{ form.customer_interested_in_bring_forward}}
-                </div>
-            </div>
-        </div>
-
+        <!-- Hidden Field for Parts List  -->
+         {{ form.parts_list }}
+         <br>
+         
         <button class="btn boilerbtn btn-warning" type="submit">Generate Appointment</button>
 
         <a href="{% url 'ProcessingCancelled' %}" class="btn btn-secondary">Cancel</a>

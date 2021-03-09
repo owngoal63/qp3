@@ -1,0 +1,71 @@
+{% extends "yourheat/adminpages/basemobile.html" %}
+
+
+{% block content %}
+
+<h4 class="engineer__heading">Engineer: {{engineer_name}}</h4>
+<hr>
+
+<form action="/EngineerCalendarChange/Unavailable/{{engineer_name}}/" method="POST">
+
+    {% csrf_token %}
+
+    <div class="w3-container">
+        <div class="w3-cell-row">
+            <div class="w3-cell form__container">
+                <label class="form__label">Set Date as <i>Available</i></label>
+                <input class="form__custom-input" type="text" name="unavailable_date" class="form-control" placeholder="DD/MM/YYYY" required="" id="id_unavailable_date">
+                <button class="btn form__custom-button boilerbtn btn-warning w3-button" type="submit">Update Calendar</button>
+            </div>
+        </div>
+</div>
+
+</form>
+
+<br>
+<div class="w3-container events__container">
+    <div class="w3-cell-row headers">
+        <div class="w3-cell" style="width:20%">
+        Date
+        </div>
+
+        <div class="w3-cell" style="width:60%">
+        Event
+        </div>
+
+        <div class="w3-cell" style="width:20%">
+        Duration
+        </div>
+    </div>
+
+
+    {% for calendar_event in calendar_events %}
+    <div class="w3-cell-row">
+        <div class="w3-cell" style="width:20%">
+            <h7>
+                {{ calendar_event.start_date }}{% if calendar_event.days == 0 %}<br>
+                ({{ calendar_event.start_time }}-{{ calendar_event.end_time }}){% endif %}  
+            </h7>
+        </div>
+        <div class="w3-cell" style="width:60%">
+        <h7>
+            {% if calendar_event.summary == "Available" %}
+            <a class="a__unavailable" href="\EngineerCalendarDelete\{{ calendar_event.id }}\{{ engineer_name }}" data-toogle="tooltip" title="Remove Available for this date" >{{ calendar_event.summary }} <i class="fas fa-undo-alt"></i></a>
+            {% else %}
+            <a href="\EngineerHubJob\{{ calendar_event.id }}\{{ engineer_name }}"> {{ calendar_event.summary }}</a>
+            {% endif %} 
+        </h7>
+        </div>
+        <div class="w3-cell" style="width:20%">
+            <h7>{{ calendar_event.days }}</h7>
+        </div>
+
+     </div>
+     {% empty %}
+     <p>No calendar details</p>
+     
+{% endfor %}
+
+</div>
+
+{% endblock %}
