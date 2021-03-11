@@ -109,7 +109,10 @@ def ss_get_data_from_sheet(access_token, sheet_name, column_names, conditional_f
 		"Optional Extras Accepted": "optional_extras_taken",
 		"Price Option A (Inc VAT)": "option_a_price",
 		"Price Option B (Inc VAT)": "option_b_price",
-		"New Fuel Type": "new_fuel_type"
+		"New Fuel Type": "new_fuel_type",
+		"PO Number": "PO_number",
+		"PO Supplier": "PO_supplier",
+		"PO Supplier Address": "PO_supplier_address"
 		}
 
 	# Get the Sheet from Smartsheet - limit it to only the requested columns

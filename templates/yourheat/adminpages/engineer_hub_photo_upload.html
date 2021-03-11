@@ -10,7 +10,7 @@
 <div class="w3-container events__container">
     <div class="w3-cell-row headers">
         <div class="w3-cell" style="width:100%">
-            Select and Upload Photos
+           Photos: {{ upload_type }}
         </div>
     </div>
 </div>
@@ -25,8 +25,14 @@
 
 <div class="w3-container events__container">
     <div class="w3-cell-row">
-        <div class="w3-cell" style="width:100%">
-            <button class="w3-button" type="submit">Upload</button>
+        <div class="w3-cell" style="width:5%">
+            <button class="btn form__back-button w3-button" onclick="goBack()"><i class="fas fa-arrow-circle-left"></i></button>
+        </div>
+        <div class="w3-cell" style="width:90%">
+            <button class="w3-button form__custom-button" type="submit">Upload to Your Heat</button>
+        </div>
+        <div class="w3-cell" style="width:5%">
+            
         </div>
     </div>
 </div>

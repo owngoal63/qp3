@@ -7,7 +7,7 @@
 
 <div class="w3-container events__container">
     <div class="w3-cell-row headers">
-        <div class="w3-cell" style="width:100%">
+        <div class="w3-cell" style="width:90%">
             Job Description
         </div>
     </div>
@@ -25,5 +25,22 @@
     </div>
 </div>
 
+<div class="w3-container events__container">
+    <div class="w3-cell-row">
+        <div class="w3-cell" style="width:5%">
+            <button class="btn form__back-button w3-button" onclick="goBack()"><i class="fas fa-arrow-circle-left"></i></button>
+        </div>
+        <div class="w3-cell" style="width:90%">
+            {% if 'YH' in customer_id %}
+                <a href="\EngineerHubPhotoSelect\{{ customer_id }}\{{ engineer_name }}\" class="w3-button form__custom-button">Upload Photos</a>
+            {% endif %}
+        </div>
+        <div class="w3-cell" style="width:5%">
+            
+        </div>
+    </div>
+</div>
+
 
 {% endblock %}
+

@@ -636,7 +636,8 @@ class get_installation_appointment(FormView):
 			 'Existing Boiler Status', 'Existing Boiler', 'Requested Boiler Type',
 			 'Agreed Boiler Option', 'Option A / Install Days Required',
 			 'Option A Parts List', 'Option B Parts List',
-			'Surveyor', 'Engineer Appointed', 'Boiler Manufacturer', 'Lead Summary Notes', 'Surveyor Notes'],
+			'Surveyor', 'Engineer Appointed', 'Boiler Manufacturer', 'Lead Summary Notes', 'Surveyor Notes',
+			'PO Number', 'PO Supplier', 'PO Supplier Address'],
 			'Customer ID',
 			customer_id,
 			data_filename
@@ -682,9 +683,10 @@ class get_installation_appointment(FormView):
 				initial['postcode'] = line_dict.get("postcode")
 				initial['boiler_brand'] = line_dict.get("brand")
 				initial['agreed_boiler_option'] = line_dict.get("agreed_boiler_option")
-				#initial['fuel_type'] = line_dict.get("fuel_type")
-				#initial['current_system'] = line_dict.get("current_system")
-				#initial['system_wanted'] = line_dict.get("system_wanted")
+
+				initial['PO_number'] = line_dict.get("PO_number")
+				initial['PO_supplier'] = line_dict.get("PO_supplier")
+				initial['PO_supplier_address'] = line_dict.get("PO_supplier_address")
 				#initial['property_type'] = line_dict.get("property_type")
 				#initial['number_of_bedrooms'] = line_dict.get("number_of_bedrooms")
 				#initial['number_of_bathrooms'] = line_dict.get("number_of_bathrooms")
@@ -699,8 +701,8 @@ class get_installation_appointment(FormView):
 				else:
 					initial['parts_list'] = line_dict.get("option_a_parts_list")
 				
-				# print("--------------------")
-				# print(line)	
+				#print("--------------------")
+				#print(line)	
 
 		return initial
 
@@ -754,31 +756,55 @@ class get_installation_appointment(FormView):
 
 		event['summary'] = form.cleaned_data["customer_title"] + " " + form.cleaned_data["customer_last_name"] + " " + form.cleaned_data["postcode"]
 		event['location'] = form.cleaned_data["house_name_or_number"] + ", " + form.cleaned_data["street_address"] + ", " + form.cleaned_data["city"] + " " + form.cleaned_data["county"] + " " + form.cleaned_data["postcode"]
-		event_description = event_description + "Your Heat Boiler Installation Notification" +"\n"
-		event_description = event_description + "Installation Date: " + form.cleaned_data['installation_date'].strftime('%d-%b-%Y') + "\n"
-		event_description = event_description + form.cleaned_data["house_name_or_number"] + ", " + form.cleaned_data["street_address"] + ", " + form.cleaned_data["city"] + ", " + form.cleaned_data["county"] + ", " + form.cleaned_data["postcode"] + "\n"
-		event_description = event_description + "Customer ID: " + customer_id + "\n\n"
-		event_description = event_description + "Booking Made: " + str(datetime.datetime.now().date().strftime('%d-%b-%Y')) + "\n\n"
-		event_description = event_description + "Job Duration: " + str(form.cleaned_data["installation_days_required"]) + " day(s)\n\n"
-		event_description = event_description + "Customer Name: " + form.cleaned_data["customer_title"] + " " + form.cleaned_data["customer_first_name"] + " " + form.cleaned_data["customer_last_name"] + "\n"
-		event_description = event_description + "Phone Number: " + form.cleaned_data["customer_primary_phone"] + "\n"
-		event_description = event_description + "Email: " + form.cleaned_data["customer_email"] + "\n"
-		event_description = event_description + "\n"
-		event_description = event_description + "Boiler Brand: " + form.cleaned_data["boiler_brand"] + "\n"
-		event_description = event_description + "Agreed Boiler Option: " + form.cleaned_data["agreed_boiler_option"] + "\n\n"
-		event_description = event_description + "Surveyor: " + form.cleaned_data["surveyor"] + "\n"
-		event_description = event_description + "Surveyor Notes: " + form.cleaned_data["surveyor_notes"] + "\n\n"
-		event_description = event_description + "Additional Information: " + form.cleaned_data["additional_information"] + "\n\n"
-		event_description = event_description + "Parts Listing\n"
-		event_description = event_description + "-------------\n"
-		event_description = event_description + form.cleaned_data["parts_list"].replace("|", "\n")
+		# event_description = event_description + "Your Heat Boiler Installation Notification" +"\n"
+		# event_description = event_description + "Installation Date: " + form.cleaned_data['installation_date'].strftime('%d-%b-%Y') + "\n"
+		# event_description = event_description + form.cleaned_data["house_name_or_number"] + ", " + form.cleaned_data["street_address"] + ", " + form.cleaned_data["city"] + ", " + form.cleaned_data["county"] + ", " + form.cleaned_data["postcode"] + "\n"
+		# event_description = event_description + "Customer ID: " + customer_id + "\n\n"
+		# event_description = event_description + "Booking Made: " + str(datetime.datetime.now().date().strftime('%d-%b-%Y')) + "\n\n"
+		# event_description = event_description + "Job Duration: " + str(form.cleaned_data["installation_days_required"]) + " day(s)\n\n"
+		# event_description = event_description + "Customer Name: " + form.cleaned_data["customer_title"] + " " + form.cleaned_data["customer_first_name"] + " " + form.cleaned_data["customer_last_name"] + "\n"
+		# event_description = event_description + "Phone Number: " + form.cleaned_data["customer_primary_phone"] + "\n"
+		# event_description = event_description + "Email: " + form.cleaned_data["customer_email"] + "\n"
+		# event_description = event_description + "\n"
+		# event_description = event_description + "Boiler Brand: " + form.cleaned_data["boiler_brand"] + "\n"
+		# event_description = event_description + "Agreed Boiler Option: " + form.cleaned_data["agreed_boiler_option"] + "\n\n"
+		# event_description = event_description + "Surveyor: " + form.cleaned_data["surveyor"] + "\n"
+		# event_description = event_description + "Surveyor Notes: " + form.cleaned_data["surveyor_notes"] + "\n\n"
+		# event_description = event_description + "Additional Information: " + form.cleaned_data["additional_information"] + "\n\n"
+		# event_description = event_description + "Parts Listing\n"
+		# event_description = event_description + "-------------\n"
+		# event_description = event_description + form.cleaned_data["parts_list"].replace("|", "\n")
+
 		#if '@yourheat.co.uk' in form.cleaned_data['engineer']:	# Internal engineer ( written to Calendar )
 		#	event_description = event_description + "For all other details check the Customer Quote link below.\n"
 		#	event_description = event_description + "\n"
 		#	event_description = event_description + "Customer Quote and Parts List:\n" 
 		#	event_description = event_description + settings.YH_URL_STATIC_FOLDER  + "yourheat/quotes_for_installs/" + customer_id + ".pdf\n"
 		#else:	# External engineer - written to email.
-		event_description = event_description + "\n"
+		#event_description = event_description + "\n"
+
+		event_description = event_description + "<b>Your Heat Boiler Installation Notification</b><br>"
+		event_description = event_description + "<b>Customer ID: </b>" + customer_id + "<br>"
+		event_description = event_description + "<b>Installation Date: </b>" + form.cleaned_data['installation_date'].strftime('%d-%b-%Y') + "<br>"
+		event_description = event_description + "<b>Installation Address: </b>" + form.cleaned_data["house_name_or_number"] + ", " + form.cleaned_data["street_address"] + ", " + form.cleaned_data["city"] + ", " + form.cleaned_data["county"] + ", " + form.cleaned_data["postcode"] + "<br><br>"
+
+		event_description = event_description + "<b>Job Duration: </b>" + str(form.cleaned_data["installation_days_required"]) + " day(s)<br><br>"
+		event_description = event_description + "<b>Customer Name: </b>" + form.cleaned_data["customer_title"] + " " + form.cleaned_data["customer_first_name"] + " " + form.cleaned_data["customer_last_name"] + "<br>"
+		event_description = event_description + "<b>Phone Number: </b>" + form.cleaned_data["customer_primary_phone"] + "<br><br><hr><br>"
+
+		event_description = event_description + "<b>Surveyor: </b>" + form.cleaned_data["surveyor"] + "<br>"
+		event_description = event_description + "<b>Surveyor Notes: </b>" + form.cleaned_data["surveyor_notes"] + "<br><br>"
+		event_description = event_description + "<b>Additional Information: </b>" + form.cleaned_data["additional_information"] + "<br><br><hr><br>"
+
+		event_description = event_description + "<b>PO Number: </b>" + form.cleaned_data["PO_number"] + "<br><br>"
+		event_description = event_description + "<b>Supplier: </b>" + form.cleaned_data["PO_supplier"] + "<br><br>"
+		event_description = event_description + "<b>PO Address: </b>" + form.cleaned_data["PO_supplier_address"] + "<br><br>"
+
+		event_description = event_description + "<b>Parts Listing: <button id='js-btn'> Display On/Off </button></b><br>"
+		event_description = event_description + "<div class='parts-list js-parts-list' id='parts-list'>" + form.cleaned_data["parts_list"].replace("|", "<br>") + "</div>"
+		
+
+
 
 		event['description'] = event_description
 
@@ -839,7 +865,7 @@ class get_installation_appointment(FormView):
 		mail_subject = "Your Heat Boiler Installation Notification"
 		if settings.YH_TEST_EMAIL:
 			email = EmailMessage(mail_subject, event_description, 'info@yourheat.co.uk' , [form.cleaned_data["engineer"]])
-			#email.content_subtype = "html"  # Main content is now text/html
+			email.content_subtype = "html"  # Main content is now text/html
 			email.send()
 		else:
 			send_email_using_GmailAPI('hello@gmail.com',form.cleaned_data["engineer"], mail_subject, event_description)
@@ -1368,7 +1394,7 @@ def engineer_hub(request, engineer_name):
 	# 																		maxResults=10, singleEvents=True,
 	# 																		orderBy='startTime').execute()
 	events_result = service.events().list(calendarId=engineer_email, timeMin=now,
-																			maxResults=30, singleEvents=True,
+																			maxResults=50, singleEvents=True,
 																			orderBy='startTime').execute()
 	events = events_result.get('items', [])
 
@@ -1542,12 +1568,21 @@ def engineer_hub_job(request, event_id, engineer_name):
 
 	#print(event['summary'])
 	try:
-		print(event['description'])
+		e = event['description']
+		start = '<b>Customer ID: </b>'
+		end = '<br><b>Installation Date:'
+		print(e.find(start))
+		print(e.find(end))
+		if e.find(start) != -1 and e.find(end) != -1:	# If event contains the customer_id substring
+			customer_id = e[e.find(start)+len(start):e.rfind(end)]	# Extract Customer Id from html string
+		else:
+			customer_id = ""
 	except:
+		customer_id = ""
 		event['description'] = ""
 
 
-	return render(request, 'yourheat/adminpages/engineer_hub_job.html', {'job_description': event['description']})
+	return render(request, 'yourheat/adminpages/engineer_hub_job.html', {'job_description': event['description'], 'customer_id': customer_id, 'engineer_name': engineer_name})
 
 def engineer_hub_photo_select(request, customer_id, engineer_name):
 	''' Hub Page for Engineer to Select Photos Type '''
@@ -1560,9 +1595,6 @@ def engineer_hub_photo_select(request, customer_id, engineer_name):
 
 def engineer_hub_photo_upload(request, customer_id, upload_type, engineer_name):
 	''' Hub Page for Engineer to Upload Photos '''
-
-	#print(engineer_name.replace(" ", ""))
-	#print(stop)
 
 	if request.method == 'POST':
 		form = EngineerPhotoForm(request.POST, request.FILES)
@@ -1594,13 +1626,16 @@ def engineer_hub_photo_upload(request, customer_id, upload_type, engineer_name):
 			for del_file in attach_file_list:
 				os.remove(del_file)
 
-			print(stop)
-
-			return HttpResponseRedirect('/success/url/')
+			return HttpResponseRedirect('/EngineerHubOk/' + customer_id + "/" + engineer_name + "/")
 	else:
 		form = EngineerPhotoForm()
 
-	return render(request, 'yourheat/adminpages/engineer_hub_photo_upload.html', {'form': form})
+	return render(request, 'yourheat/adminpages/engineer_hub_photo_upload.html', {'form': form, 'upload_type': upload_type[8:]})
+
+def engineer_hub_ok(request, customer_id, engineer_name):
+	''' Ok Page after Photo Uploads '''
+
+	return render(request, 'yourheat/adminpages/engineer_hub_ok.html', {'customer_id': customer_id, 'engineer_name': engineer_name})
 
 
 	

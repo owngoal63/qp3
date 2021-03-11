@@ -41,7 +41,7 @@ from quotepad.views import hub_home, recommend_a_friend, preview_recommend_a_fri
 from quotepad.views import customer_acceptance, customer_acceptance_email, customer_enquiry_form
 
 from quotepad.views import TestForm, test_gmail
-from quotepad.views import engineer_hub, engineer_calendar_change, engineer_calendar_delete, engineer_hub_job, engineer_hub_photo_select, engineer_hub_photo_upload
+from quotepad.views import engineer_hub, engineer_calendar_change, engineer_calendar_delete, engineer_hub_job, engineer_hub_photo_select, engineer_hub_photo_upload, engineer_hub_ok
 
 urlpatterns = [
     
@@ -176,6 +176,7 @@ urlpatterns = [
     path('EngineerHubJob/<str:event_id>/<str:engineer_name>/', engineer_hub_job, name = 'EngineerHubJob'),
     path('EngineerHubPhotoSelect/<str:customer_id>/<str:engineer_name>/', engineer_hub_photo_select, name = 'EngineerHubPhotoSelect'),
     path('EngineerHubPhotoUpload/<str:customer_id>/<str:upload_type>/<str:engineer_name>/', engineer_hub_photo_upload, name = 'EngineerHubPhotoUpload'),
+    path('EngineerHubOk/<str:customer_id>/<str:engineer_name>/', engineer_hub_ok, name = 'EngineerHubOk'),
 
 	path('', include('payments.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

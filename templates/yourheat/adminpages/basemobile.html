@@ -51,6 +51,23 @@
       $("#id_unavailable_date").datetimepicker({
         format: 'd/m/Y', timepicker: false,
       });
+
+      
     });
+
+    function goBack() {
+      window.history.back();
+    }
+
+    function goBack2() {
+      window.history.go(-2);
+    }
+
+    function show() {
+      document.getElementById("parts-list").classList.toggle('parts-list'); // toggle the hideP class
+  }
+
+    document.getElementById("js-btn").addEventListener('click', show);
+
   </script>
 </html>
