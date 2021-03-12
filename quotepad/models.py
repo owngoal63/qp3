@@ -14,7 +14,8 @@ PRODUCT_BRAND_DROPDOWN = (
 	('Alpha','Alpha'),
 	('Heatline','Heatline'),
 	('Keston','Keston'),
-	('Grant','Grant')
+	('Grant','Grant'),
+	('Heatrae Sadia','Heatrae Sadia')
 )
 
 PRODUCT_FUEL_TYPE_DROPDOWN = (
