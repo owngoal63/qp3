@@ -55,7 +55,6 @@ def customer_comms(request):
 	ss_customer_id = request.GET.get('customerid', None)
 	ss_customer_name = request.GET.get('customername', None)
 	ss_customer_status = request.GET.get('customerstatus', None)[0]
-	#print(ss_customer_status)
 
 	return render(request, 'yourheat/adminpages/customer_comms_landing_page.html', {'customer_id': ss_customer_id, 'customer_name': ss_customer_name, 'customer_status': ss_customer_status})
 
@@ -164,16 +163,7 @@ def email_comms(request, comms, customer_id=None):
 				file_form_data.append(eval(line))
 
 	for line in file_form_data:
-		
-
-		# if CustomerComm.objects.filter(customer_id = line.get('smartsheet_id'), comms_id = comms ).exists():
-		# 	print(line.get('smartsheet_id'), comms_name, ' already exists - do not resend.' )
-		# else:	
-		# 	# Add record and send
-		# 	if settings.YH_SS_TRACK_COMMS_SENT:
-		# 		CustComm = CustomerComm(user = request.user ,customer_id = line.get('smartsheet_id') , comms_id = comms )
-		# 		CustComm.save()
-
+	
 		if comms != "Special Offer Comms" and comms != "Heat Plan Comms":
 			# Add the image logo url to the dictionary
 			line["image_logo"] = settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png"
@@ -210,7 +200,6 @@ def email_comms(request, comms, customer_id=None):
 				#send_email_using_SendGrid('info@yourheat.co.uk', line.get('customer_email'), mail_subject, html_content )
 				# Generate Invoice PDF File
 				build_invoice_pdf(line.get('smartsheet_id'))
-				#print(stop)
 				AttachFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/CustomerInvoice_{}_{}.pdf".format(settings.YH_MASTER_PROFILE_USERNAME, line.get("customer_last_name"), line.get("smartsheet_id")))
 				send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content, AttachFilename)
 
@@ -226,8 +215,6 @@ def email_comms(request, comms, customer_id=None):
 					
 			else:		# Send comms emails without attachments
 				send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content)
-
-		#print(stop)
 
 		if comms == "Special Offer Comms":
 			special_offer_text = " Special Offer Details: " + strip_tags(line.get("special_offer_details"))
@@ -284,9 +271,6 @@ def list_customers_for_comms(request, comms_name, customer_id=None):
 		else:
 			comms_data[index]["already_sent"] = False
 
-	#print(comms_data)
-	#print(stop)			
-	#return render(request, 'yourheat/adminpages/list_comms_data.html', {'comms_data': comms_data, 'report_name': comms_name, 'data_source_is_report': data_source_is_report })
 	return render(request, 'yourheat/adminpages/show_comms_data.html', {'comms_data': comms_data, 'report_name': comms_name, 'data_source_is_report': data_source_is_report })
 
 # def generate_customer_comms(request, comms_name, customer_id=None):
@@ -384,7 +368,6 @@ class get_survey_appointment(FormView):
 	def get_initial(self, **kwargs):
 		print("Class->Function: get_survey_appointment->get_initial")
 		initial = super().get_initial()
-		#print(self.kwargs['customer_id'])
 		customer_id = self.kwargs['customer_id']
 
 		data_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/SurveyAppointment.txt")
@@ -445,23 +428,15 @@ class get_survey_appointment(FormView):
 				initial['website_standard_package_quote'] = line_dict.get("website_standard_package_quote")
 				initial['website_economy_package_quote'] = line_dict.get("website_economy_package_quote")
 				initial['additional_information'] = line_dict.get("additional_information")
-				
-				#print(line)		
-
+	
 		return initial
 
 	def form_valid(self, form, **kwargs):
 		print("Class->Function: get_survey_appointment->form_valid")
-		#print("form is valid")
 		customer_id = self.kwargs['customer_id']
-		#print(customer_id)
-
-
-		#print(form.cleaned_data['survey_date_and_time'])
 
 		# Build the update dictionary for Smartsheet
 		update_data = []
-		#update_data.append({"Customer Status": "2. Survey Booked"})	now removed due to implementation of Smartsheet formula
 		update_data.append({"Surveyor": form.cleaned_data['surveyor']})
 		survey_date = form.cleaned_data['survey_date_and_time'].date().strftime('%d-%b-%Y')
 		update_data.append({"Survey Date":  str(survey_date)})
@@ -481,9 +456,6 @@ class get_survey_appointment(FormView):
 		update_data.append({"Website Number of Bedrooms": form.cleaned_data['number_of_bedrooms']})
 		update_data.append({"Website Number of Bathrooms": form.cleaned_data['number_of_bathrooms']})
 		update_data.append({"Website Hot Water Cylinder": form.cleaned_data['hot_water_cylinder']})
-		#update_data.append({"Website Standard Package": form.cleaned_data['website_premium_package_quote']})
-		#update_data.append({"Website Premium Package": form.cleaned_data['website_premium_package_quote']})
-		#update_data.append({"Website Economy Package": form.cleaned_data['website_economy_package_quote']})
 		update_data.append({"Existing Boiler": form.cleaned_data['current_system']})
 		update_data.append({"Existing Boiler Status": form.cleaned_data['current_boiler_status']})
 		update_data.append({"Requested Boiler Type": form.cleaned_data['system_wanted']})
@@ -580,7 +552,6 @@ class get_survey_appointment(FormView):
 			# time.
 			token_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/token.pickle")
 			creds_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/credentials.json")
-			#print(creds_filename)
 			if os.path.exists(token_filename):
 				with open(token_filename, 'rb') as token:
 					creds = pickle.load(token)
@@ -599,9 +570,7 @@ class get_survey_appointment(FormView):
 			service = build('calendar', 'v3', credentials=creds)
 
 			# Insert the event into the calendar
-			print(form.cleaned_data["surveyor"])
 			event = service.events().insert(calendarId=form.cleaned_data["surveyor"], body=event).execute()
-			print ('Event created: %s' % (event.get('htmlLink')))
 
 		return render(self.request, 'yourheat/adminpages/confirm_calendar_appointment.html', {'comms_name': 'Survey Booked Comms', 'customer_id': customer_id})
 
@@ -636,7 +605,6 @@ class get_installation_appointment(FormView):
 			data_filename
 		)
 
-		#print(stop)
 
 		# Open the text file with the Smartsheet data to prepopulate the form
 		with open(data_filename) as file:
@@ -694,18 +662,13 @@ class get_installation_appointment(FormView):
 				else:
 					initial['parts_list'] = line_dict.get("option_a_parts_list")
 				
-				#print("--------------------")
-				#print(line)	
-
 		return initial
 
 	def form_valid(self, form, **kwargs):
 		print("Class->Function: get_installation_appointment->form_valid")
 
 		engineer_calendar_id = engineer_calendar_dict[engineer_dict[form.cleaned_data["engineer"]]]	# get engineer yourheat email address for caledar id
-		#print("form is valid")
 		customer_id = self.kwargs['customer_id']
-		#print(customer_id)
 
 		# Build the update dictionary for Smartsheet
 		update_data = []
@@ -721,12 +684,6 @@ class get_installation_appointment(FormView):
 		#update_data.append({"Survey Time":  str(survey_time)})
 		#installation_start_date = installation_date.strftime('%d-%b-%Y')
 		#installation_end_date = installation_date + datetime.timedelta(days=2)
-		#print(installation_start_date)
-		#print(installation_end_date)
-
-		# print(form.cleaned_data['surveyor'])
-		#print(form.cleaned_data['engineer'])
-		# print(stop)
 
 		# Update Smartsheet with Appointment Details
 		if settings.YH_SS_INTEGRATION:		
@@ -831,7 +788,6 @@ class get_installation_appointment(FormView):
 			# time.
 			token_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/token.pickle")
 			creds_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/credentials.json")
-			#print(creds_filename)
 			if os.path.exists(token_filename):
 				with open(token_filename, 'rb') as token:
 					creds = pickle.load(token)
@@ -851,10 +807,7 @@ class get_installation_appointment(FormView):
 
 			# Insert the event into the calendar
 			event = service.events().insert(calendarId=engineer_calendar_id, body=event).execute()
-			print ('Event created: %s' % (event.get('htmlLink')))
 
-		#if '@yourheat.co.uk' in form.cleaned_data['engineer']:	# External engineer email address so write to email
-		#	print(event_description)
 		# Send email to engineer email address ( either @yourheat.co.uk or personal email address )
 		mail_subject = "Your Heat Boiler Installation Notification"
 		if settings.YH_TEST_EMAIL:
@@ -863,8 +816,6 @@ class get_installation_appointment(FormView):
 			email.send()
 		else:
 			send_email_using_GmailAPI('hello@gmail.com',form.cleaned_data["engineer"], mail_subject, event_description)
-
-			# print(stop)
 
 		return render(self.request, 'yourheat/adminpages/confirm_calendar_appointment.html', {'comms_name': 'Installation Notification Comms', 'customer_id': customer_id})
 
@@ -906,8 +857,6 @@ class get_special_offer(FormView):
 		initial = super().get_initial()
 		customer_id = self.kwargs['customer_id']
 
-		print(customer_id)
-
 		data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/customer_comms/Special Offer Comms.txt")
 
 		#Get Customer Info from Smartsheet
@@ -922,8 +871,6 @@ class get_special_offer(FormView):
 			customer_id,
 			data_filename
 		)
-
-		# print(stop)
 
 		# Open the text file with the Smartsheet data to prepopulate the form
 		with open(data_filename) as file:
@@ -952,9 +899,7 @@ class get_special_offer(FormView):
 
 	def form_valid(self, form, **kwargs):
 		print("Class->Function: get_special_offer->form_valid")
-		print(form.cleaned_data)
 		customer_id = form.cleaned_data['smartsheet_id']
-		print(customer_id)
 		data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/customer_comms/Special Offer Comms.txt")
 		file = open(data_filename, "w")
 		file.write(str(form.cleaned_data))
@@ -1008,9 +953,7 @@ class get_heat_plan(FormView):
 
 	def form_valid(self, form, **kwargs):
 		print("Class->Function: get_heat_plan->form_valid")
-		print(form.cleaned_data)
 		customer_id = form.cleaned_data['smartsheet_id']
-		print(customer_id)
 		data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/customer_comms/Heat Plan Comms.txt")
 		file = open(data_filename, "w")
 		file.write(str(form.cleaned_data))
@@ -1046,8 +989,6 @@ class get_job_parts(FormView):
 			customer_id,
 			data_filename
 		)
-
-		#print(stop)
 
 		# Open the text file with the Smartsheet data to prepopulate the form
 		with open(data_filename) as file:
@@ -1086,36 +1027,13 @@ class get_job_parts(FormView):
 
 	def form_valid(self, form, **kwargs):
 		print("Class->Function: get_job_parts->form_valid")
-		print(form.cleaned_data)
-		#form.cleaned_data["parts"] = form.cleaned_data["parts"].replace('\r\n', '<br>')
-		#form.cleaned_data["parts"] = form.cleaned_data["parts"]
-		# Create a dictionary to lookup the correct enginner email address
-		# engineer_emails = {
-		# 	'Kevin Harvey (SM5)': 'kevin.harvey@yourheat.co.uk',
-		# 	'Jeremy Tomkinson (TN2)': 'jeremy.tomkinson@yourheat.co.uk',
-		# 	'Ben Pike (SS12)': 'ben.pike@yourheat.co.uk', 
-		# 	'Dave Easton (ME14)': 'dave.easton@yourheat.co.uk', 
-		# 	'Andy Douglas (BR6)': 'andy.douglas@yourheat.co.uk', 
-		# 	'Jon Hickey (TN24)': 'john.hickey@yourheat.co.uk',
-		# }
 
 		html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/Job Parts Comms.html".format(settings.YH_MASTER_PROFILE_USERNAME))
 		html_content = render_to_string(html_email_filename, form.cleaned_data)
-		#print(html_content)
-		#print(stop)
-
-		#email = EmailMessage(mail_subject, html_content, 'info@yourheat.co.uk' , [line.get('customer_email')])
-		##email = EmailMessage("Test Email", html_content, 'info@yourheat.co.uk' , ['gordonlindsay@virginmedia.com'])
-		##email.content_subtype = "html"  # Main content is now text/html
-		##email.send()
-		#send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content)
 		print("Merchant Email:", form.cleaned_data['merchant'])
 		print("Engineer Email (no longer required):",engineer_postcode_dict.get(form.cleaned_data['engineer']))
 		merchant_email = form.cleaned_data['merchant']
-		#engineer_email = engineer_postcode_dict.get(form.cleaned_data['engineer']) (no longer required)
 
-		#print(settings.YH_TEST_EMAIL)
-		#print(stop)
 		if settings.YH_TEST_EMAIL:
 			email = EmailMessage("Your Heat Job Parts Notification " + form.cleaned_data['PO'], html_content, 'info@yourheat.co.uk' , [merchant_email])
 			email.content_subtype = "html"  # Main content is now text/html
@@ -1128,7 +1046,6 @@ class get_job_parts(FormView):
 			send_email_using_GmailAPI('Purchasing@yourheat.co.uk', merchant_email, "Your Heat Job Parts Notification " + form.cleaned_data['PO'], html_content)
 			#send_email_using_GmailAPI('Purchasing@yourheat.co.uk', engineer_email, "Your Heat Job Parts Notification " + form.cleaned_data['PO'], html_content)
 
-		print(form.cleaned_data['PO'].replace('PO','YH'))
 		smartsheet_id = form.cleaned_data['PO'].replace('PO','YH')
 
 		# Update PO Number Field
@@ -1152,12 +1069,6 @@ class get_job_parts(FormView):
 				["Job Parts email sent to " + merchant_email]
 			)
 
-		#data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/customer_comms/Job Parts.txt")
-		#with open(data_filename, 'w') as f:
-		#	print(form.cleaned_data, file=f)
-		#print(stop)
-		#return render(self.request, 'yourheat/adminpages/confirm_calendar_appointment.html', {'comms_name': 'Installation Notification Comms', 'customer_id': customer_id})
-		#return render(self.request, html_email_filename, form.cleaned_data)
 		return HttpResponseRedirect('/EmailSentToMerchant/')
 
 
@@ -1171,14 +1082,12 @@ def test_gmail(request):
 	# time.
 	token_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/token.pickle")
 	creds_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/credentials.json")
-	#print(creds_filename)
 	if os.path.exists(token_filename):
-		print("pickle exists")
 		with open(token_filename, 'rb') as token:
 			creds = pickle.load(token)
 	# If there are no (valid) credentials available, let the user log in.
 	if not creds or not creds.valid:
-		print("Creds not valid")
+		print("Credentials not valid")
 		if creds and creds.expired and creds.refresh_token:
 			creds.refresh(Request())
 		else:
@@ -1220,25 +1129,6 @@ def test_gmail(request):
 	#print ('Event created: %s' % (event.get('htmlLink')))
 
 	service = build('gmail', 'v1', credentials=creds)
-
-	#message = create_message('hello@yourheat.co.uk', 'gordonlindsay@virginmedia.com', 'THis is a test email', 'This is the content')
-
-
-	#outputFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/CustomerQuoteForCustomer_Formula_YH-55.pdf")
-	#message = create_message_with_attachment('hello@yourheat.co.uk', 'gordonlindsay@virginmedia.com', 'THis is a test email', '<u>This is the content</u>', outputFilename)
-	#message = create_message_with_attachment('hello@yourheat.co.uk', 'gordonlindsay@virginmedia.com', 'THis is a test email', '<u>This is the content</u>', 'CustomerQuoteForCustomer_Formula_YH-55.pdf')
-	#sent = send_message(service,'me', message)
-
-	# Call the Gmail API
-	#results = service.users().labels().list(userId='me').execute()
-	#labels = results.get('labels', [])
-
-	#if not labels:
-	#	print('No labels found.')
-	#else:
-	#	print('Labels:')
-	#	for label in labels:
-	#		print(label['name'])
 
 	return
 
@@ -1374,14 +1264,12 @@ def engineer_hub(request, engineer_name):
 	# time.
 	token_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/token.pickle")
 	creds_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/credentials.json")
-	#print(creds_filename)
 	if os.path.exists(token_filename):
-		print("pickle exists")
 		with open(token_filename, 'rb') as token:
 			creds = pickle.load(token)
 	# If there are no (valid) credentials available, let the user log in.
 	if not creds or not creds.valid:
-		print("Creds not valid")
+		print("Credentials not valid")
 		if creds and creds.expired and creds.refresh_token:
 			creds.refresh(Request())
 		else:
@@ -1416,7 +1304,6 @@ def engineer_hub(request, engineer_name):
 			#delta =  (datetime.datetime.strptime(end, '%Y-%m-%d') - datetime.datetime.strptime(start, '%Y-%m-%d')).days
 			delta = (dateutil.parser.parse(end) - dateutil.parser.parse(start)).days
 			#delta =  (mdate1 - rdate1).days
-			#print("------", datetime.datetime.strptime(end, '%Y-%m-%d'))
 			
 			event_dict = {}
 			event_dict['id'] = event['id']
@@ -1439,23 +1326,13 @@ def engineer_calendar_change(request, change_type, engineer_name):
 	''' Function to change Google calendar for engineer '''
 	print("Function: engineer_calendar_change")
 
-	#print("Engineer Cal change")
-	#print(stop)
-
 	# Get engineer email address from dictionary look to use as reference for google calendar
 	engineer_email = engineer_calendar_dict[engineer_name]
-
-	#print(engineer_email)
-
-	print(change_type)
 
 	if(request.POST):
 		form_data = request.POST.dict()
 		unavailable_date = form_data.get("unavailable_date")
 		long_unavailable_date = datetime.datetime.strftime(datetime.datetime.strptime(unavailable_date, "%d/%m/%Y"), "%B %d %Y")
-	#print(datetime.datetime.strftime(datetime.datetime.strptime(unavailable_date, "%d/%m/%Y"), "%B %d %Y"))
-
-	# print(stop)
 
 	SCOPES = ['https://www.googleapis.com/auth/calendar']
 
@@ -1465,14 +1342,12 @@ def engineer_calendar_change(request, change_type, engineer_name):
 	# time.
 	token_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/token.pickle")
 	creds_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/credentials.json")
-	#print(creds_filename)
 	if os.path.exists(token_filename):
-		print("pickle exists")
 		with open(token_filename, 'rb') as token:
 			creds = pickle.load(token)
 	# If there are no (valid) credentials available, let the user log in.
 	if not creds or not creds.valid:
-		print("Creds not valid")
+		print("Credentials not valid")
 		if creds and creds.expired and creds.refresh_token:
 			creds.refresh(Request())
 		else:
@@ -1487,16 +1362,10 @@ def engineer_calendar_change(request, change_type, engineer_name):
 	service = build('calendar', 'v3', credentials=creds)
 
 	event_text = 'Available on ' + long_unavailable_date
-	print(engineer_email, event_text)
-	#print(stop)
 
 	created_event = service.events().quickAdd(
 					calendarId=engineer_email,
 					text=event_text).execute()
-
-	print(created_event['id'])
-
-	#print(stop)
 
 	return HttpResponseRedirect('/EngineerHub/' + engineer_name + '/')
 
@@ -1516,14 +1385,12 @@ def engineer_calendar_delete(request, event_id, engineer_name):
 	# time.
 	token_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/token.pickle")
 	creds_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/credentials.json")
-	#print(creds_filename)
 	if os.path.exists(token_filename):
-		print("pickle exists")
 		with open(token_filename, 'rb') as token:
 			creds = pickle.load(token)
 	# If there are no (valid) credentials available, let the user log in.
 	if not creds or not creds.valid:
-		print("Creds not valid")
+		print("Credentials not valid")
 		if creds and creds.expired and creds.refresh_token:
 			creds.refresh(Request())
 		else:
@@ -1558,14 +1425,12 @@ def engineer_hub_job(request, event_id, engineer_name):
 	# time.
 	token_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/token.pickle")
 	creds_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/credentials.json")
-	#print(creds_filename)
 	if os.path.exists(token_filename):
-		print("pickle exists")
 		with open(token_filename, 'rb') as token:
 			creds = pickle.load(token)
 	# If there are no (valid) credentials available, let the user log in.
 	if not creds or not creds.valid:
-		print("Creds not valid")
+		print("Credentials not valid")
 		if creds and creds.expired and creds.refresh_token:
 			creds.refresh(Request())
 		else:
@@ -1579,15 +1444,11 @@ def engineer_hub_job(request, event_id, engineer_name):
 
 	event = service.events().get(calendarId=engineer_email, eventId=event_id).execute()
 
-	#print(event['description'])
-
 	# Get the Customer IFD if it exists
 	try:
 		e = event['description']
 		start = '<b>Customer ID: </b>'
 		end = '<br><b>Installation Date:'
-		#print(e.find(start))
-		#print(e.find(end))
 		if e.find(start) != -1 and e.find(end) != -1:	# If event contains the customer_id substring
 			customer_id = e[e.find(start)+len(start):e.rfind(end)]	# Extract Customer Id from html string
 		else:
@@ -1699,9 +1560,7 @@ def engineer_hub_latest_PO_details(request, customer_id, engineer_name):
 	# Open the downloaded file to extract the key details
 	with open(data_filename) as file:
 		for line in file:
-			print(line)
 			line = remove_control_characters(line)
-			print(line)
 			line_dict = json.loads(line)
 			# Check for any "NONE" fields coming from Smartsheet and replace with ''
 			for key, value in line_dict.items():
@@ -1726,8 +1585,6 @@ def engineer_update_serial_numbers(request, customer_id, engineer_name, button_m
 		if form_data.get("cylinder_serial_number") != "":
 			comments.append('Cylinder Serial Number: ' + str(form_data.get("cylinder_serial_number")))
 		
-		#print(comments)
-
 		if settings.YH_SS_INTEGRATION:		# Update Header Comment on Smartsheet
 					ss_add_comments(
 					settings.YH_SS_ACCESS_TOKEN,
