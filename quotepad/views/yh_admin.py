@@ -26,7 +26,6 @@ from quotepad.smartsheet_integration import ss_get_data_from_report, ss_update_d
 #from quotepad.forms import ssCustomerSelectForm, ssPostSurveyQuestionsForm
 
 # Import for Google Calendar API
-#from __future__ import print_function
 import pickle
 import os
 import os.path
@@ -390,7 +389,6 @@ class get_survey_appointment(FormView):
 
 		# Open the text file with the Smartsheet data to prepopulate the form
 		with open(data_filename) as file:
-			#file_form_data = []
 			for line in file:
 				line_dict = json.loads(line)
 				# Check for any "NONE" fields coming from Smartsheet and replace with ''
@@ -515,10 +513,8 @@ class get_survey_appointment(FormView):
 
 		# Google start and end dates and times ( including time overrides as necessary - now changed to Zulu time on October clock change)
 		if form.cleaned_data['time_override'] == 'No override':
-			#start_datetime_for_google = form.cleaned_data['survey_date_and_time'].strftime('%Y-%m-%dT%H:%M:%S+01:00')
 			start_datetime_for_google = form.cleaned_data['survey_date_and_time'].strftime('%Y-%m-%dT%H:%M:%SZ')
 			end_datetime = form.cleaned_data['survey_date_and_time'] + datetime.timedelta(hours=2)
-			#end_datetime_for_google = end_datetime.strftime('%Y-%m-%dT%H:%M:%S+01:00')
 			end_datetime_for_google = end_datetime.strftime('%Y-%m-%dT%H:%M:%SZ')
 		elif form.cleaned_data['time_override'] == 'Anytime':
 			start_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT08:00:00Z')
@@ -608,16 +604,12 @@ class get_installation_appointment(FormView):
 
 		# Open the text file with the Smartsheet data to prepopulate the form
 		with open(data_filename) as file:
-			#file_form_data = []
 			for line in file:
 				line_dict = json.loads(line)
 				# Check for any "NONE" fields coming from Smartsheet and replace with ''
 				for key, value in line_dict.items():
 					if value == 'None':
 						line_dict[key] = ''
-				# Convert the surveyor_email address to a full name with some string manipulation
-				#at_pos = line_dict.get("surveyor_email").find('@')
-				#initial["surveyor"] = ((line_dict.get("surveyor_email").replace('.',' '))[0:at_pos]).title()
 				# Lookup the surveyors name from the surveyor_dict
 				initial["surveyor"] = surveyor_dict[line_dict["surveyor_email"]].split()[0] + " " + surveyor_dict[line_dict["surveyor_email"]].split()[1]
 				# Convert the installed days string ( with "days") into a float for use in calendar calculation
@@ -648,13 +640,6 @@ class get_installation_appointment(FormView):
 				initial['PO_number'] = line_dict.get("PO_number")
 				initial['PO_supplier'] = line_dict.get("PO_supplier")
 				initial['PO_supplier_address'] = line_dict.get("PO_supplier_address")
-				#initial['property_type'] = line_dict.get("property_type")
-				#initial['number_of_bedrooms'] = line_dict.get("number_of_bedrooms")
-				#initial['number_of_bathrooms'] = line_dict.get("number_of_bathrooms")
-				#initial['hot_water_cylinder'] = line_dict.get("hot_water_cylinder")
-				#initial['website_premium_package_quote'] = line_dict.get("website_premium_package_quote")
-				#initial['website_standard_package_quote'] = line_dict.get("website_standard_package_quote")
-				#initial['website_economy_package_quote'] = line_dict.get("website_economy_package_quote")
 				initial['additional_information'] = line_dict.get("additional_information")
 				initial['surveyor_notes'] = line_dict.get("surveyor_notes")
 				if line_dict.get("agreed_boiler_option") == "Option B Parts":
@@ -672,18 +657,10 @@ class get_installation_appointment(FormView):
 
 		# Build the update dictionary for Smartsheet
 		update_data = []
-		#update_data.append({"Customer Status": "5. Booked Installations"})			New removed due to implementation of Smartsheet formula
 		update_data.append({"Engineer Appointed": form.cleaned_data['engineer']})
 		installation_date = form.cleaned_data['installation_date']
-		#survey_date_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%d-%b-%Y')
 		update_data.append({"Installation Date":  str(installation_date)})
 		update_data.append({"Lead Summary Notes": form.cleaned_data['additional_information']})
-		#survey_start_time = str(form.cleaned_data['survey_date_and_time'].time().strftime('%H'))
-		#survey_time_int_plus_two = str(int(form.cleaned_data['survey_date_and_time'].time().strftime('%H')) + 2)
-		#survey_time = survey_start_time + ":00-" + survey_time_int_plus_two + ":00"
-		#update_data.append({"Survey Time":  str(survey_time)})
-		#installation_start_date = installation_date.strftime('%d-%b-%Y')
-		#installation_end_date = installation_date + datetime.timedelta(days=2)
 
 		# Update Smartsheet with Appointment Details
 		if settings.YH_SS_INTEGRATION:		
@@ -697,42 +674,12 @@ class get_installation_appointment(FormView):
 
 		# Inititalise the event_description string for either a calendar appointment or an email
 		event_description = ""
-		#if '@yourheat.co.uk' not in form.cleaned_data['engineer']:  # If an external engineer email address so will send email -> create additional details for top of email
-		
-		
-
 
 		# Create and build the google calendar event
 		event = {}
 
 		event['summary'] = form.cleaned_data["customer_title"] + " " + form.cleaned_data["customer_last_name"] + " " + form.cleaned_data["postcode"]
 		event['location'] = form.cleaned_data["house_name_or_number"] + ", " + form.cleaned_data["street_address"] + ", " + form.cleaned_data["city"] + " " + form.cleaned_data["county"] + " " + form.cleaned_data["postcode"]
-		# event_description = event_description + "Your Heat Boiler Installation Notification" +"\n"
-		# event_description = event_description + "Installation Date: " + form.cleaned_data['installation_date'].strftime('%d-%b-%Y') + "\n"
-		# event_description = event_description + form.cleaned_data["house_name_or_number"] + ", " + form.cleaned_data["street_address"] + ", " + form.cleaned_data["city"] + ", " + form.cleaned_data["county"] + ", " + form.cleaned_data["postcode"] + "\n"
-		# event_description = event_description + "Customer ID: " + customer_id + "\n\n"
-		# event_description = event_description + "Booking Made: " + str(datetime.datetime.now().date().strftime('%d-%b-%Y')) + "\n\n"
-		# event_description = event_description + "Job Duration: " + str(form.cleaned_data["installation_days_required"]) + " day(s)\n\n"
-		# event_description = event_description + "Customer Name: " + form.cleaned_data["customer_title"] + " " + form.cleaned_data["customer_first_name"] + " " + form.cleaned_data["customer_last_name"] + "\n"
-		# event_description = event_description + "Phone Number: " + form.cleaned_data["customer_primary_phone"] + "\n"
-		# event_description = event_description + "Email: " + form.cleaned_data["customer_email"] + "\n"
-		# event_description = event_description + "\n"
-		# event_description = event_description + "Boiler Brand: " + form.cleaned_data["boiler_brand"] + "\n"
-		# event_description = event_description + "Agreed Boiler Option: " + form.cleaned_data["agreed_boiler_option"] + "\n\n"
-		# event_description = event_description + "Surveyor: " + form.cleaned_data["surveyor"] + "\n"
-		# event_description = event_description + "Surveyor Notes: " + form.cleaned_data["surveyor_notes"] + "\n\n"
-		# event_description = event_description + "Additional Information: " + form.cleaned_data["additional_information"] + "\n\n"
-		# event_description = event_description + "Parts Listing\n"
-		# event_description = event_description + "-------------\n"
-		# event_description = event_description + form.cleaned_data["parts_list"].replace("|", "\n")
-
-		#if '@yourheat.co.uk' in form.cleaned_data['engineer']:	# Internal engineer ( written to Calendar )
-		#	event_description = event_description + "For all other details check the Customer Quote link below.\n"
-		#	event_description = event_description + "\n"
-		#	event_description = event_description + "Customer Quote and Parts List:\n" 
-		#	event_description = event_description + settings.YH_URL_STATIC_FOLDER  + "yourheat/quotes_for_installs/" + customer_id + ".pdf\n"
-		#else:	# External engineer - written to email.
-		#event_description = event_description + "\n"
 
 		event_description = event_description + "<b>Your Heat Boiler Installation Notification</b><br>"
 		event_description = event_description + "<b>Customer ID: </b>" + customer_id + "<br>"
@@ -753,9 +700,6 @@ class get_installation_appointment(FormView):
 
 		event_description = event_description + "<b>Parts Listing: <button id='js-btn'> Display On/Off </button></b><br>"
 		event_description = event_description + "<div class='parts-list js-parts-list' id='parts-list'>" + form.cleaned_data["parts_list"].replace("|", "<br>") + "</div>"
-		
-
-
 
 		event['description'] = event_description
 
@@ -773,9 +717,6 @@ class get_installation_appointment(FormView):
 		end['date'] = installation_end_date_for_google
 		#end['timezone'] = 'Europe/London'
 		event['end'] = end
-
-
-		# if '@yourheat.co.uk' in form.cleaned_data['engineer']:   # Internal engineer email address so write to calendar 
 
 		if settings.YH_CAL_ENABLED:					# If enabled Update the Google Calendar
 			# Google Calendar API - Get Credentials
@@ -874,7 +815,6 @@ class get_special_offer(FormView):
 
 		# Open the text file with the Smartsheet data to prepopulate the form
 		with open(data_filename) as file:
-			#file_form_data = []
 			for line in file:
 				line_dict = json.loads(line)
 				# Check for any "NONE" fields coming from Smartsheet and replace with ''
@@ -934,7 +874,6 @@ class get_heat_plan(FormView):
 
 			# Open the text file with the Smartsheet data to prepopulate the form
 			with open(data_filename) as file:
-				#file_form_data = []
 				for line in file:
 					line_dict = json.loads(line)
 					# Check for any "NONE" fields coming from Smartsheet and replace with ''
@@ -973,7 +912,6 @@ class get_job_parts(FormView):
 		initial = super().get_initial()
 		customer_id = self.kwargs['customer_id']
 
-		#data_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/JobParts.txt")
 		data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/customer_comms/Job Parts.txt")
 
 		#Get Customer Info from Smartsheet
@@ -992,7 +930,6 @@ class get_job_parts(FormView):
 
 		# Open the text file with the Smartsheet data to prepopulate the form
 		with open(data_filename) as file:
-			#file_form_data = []
 			for line in file:
 				line_dict = json.loads(line)
 				# Check for any "NONE" fields coming from Smartsheet and replace with ''
@@ -1038,13 +975,9 @@ class get_job_parts(FormView):
 			email = EmailMessage("Your Heat Job Parts Notification " + form.cleaned_data['PO'], html_content, 'info@yourheat.co.uk' , [merchant_email])
 			email.content_subtype = "html"  # Main content is now text/html
 			email.send()
-			#email = EmailMessage("Your Heat Job Parts Notification " + form.cleaned_data['PO'], html_content, 'info@yourheat.co.uk' , [engineer_email])
-			#email.content_subtype = "html"  # Main content is now text/html
-			#email.send()
 		else:
 			# Note that the sender email below can only be hello@yourheat.co.uk due to the API authentication
 			send_email_using_GmailAPI('Purchasing@yourheat.co.uk', merchant_email, "Your Heat Job Parts Notification " + form.cleaned_data['PO'], html_content)
-			#send_email_using_GmailAPI('Purchasing@yourheat.co.uk', engineer_email, "Your Heat Job Parts Notification " + form.cleaned_data['PO'], html_content)
 
 		smartsheet_id = form.cleaned_data['PO'].replace('PO','YH')
 
@@ -1103,10 +1036,7 @@ def test_gmail(request):
 
 	# Call the Calendar API
 	now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-	print('Getting the upcoming 10 events')
-	# events_result = service.events().list(calendarId='primary', timeMin=now,
-	# 																		maxResults=10, singleEvents=True,
-	# 																		orderBy='startTime').execute()
+	#print('Getting the upcoming 10 events')
 	events_result = service.events().list(calendarId='jeremy.tomkinson@yourheat.co.uk', timeMin=now,
 																			maxResults=10, singleEvents=True,
 																			orderBy='startTime').execute()
@@ -1117,16 +1047,9 @@ def test_gmail(request):
 	for event in events:
 			start = event['start'].get('dateTime', event['start'].get('date'))
 			end = event['end'].get('dateTime', event['end'].get('date'))
-			#delta =  (datetime.datetime.strptime(end, '%Y-%m-%d') - datetime.datetime.strptime(start, '%Y-%m-%d')).days
 			delta = (dateutil.parser.parse(end) - dateutil.parser.parse(start)).days
-			#delta =  (mdate1 - rdate1).days
-			#print("------", datetime.datetime.strptime(end, '%Y-%m-%d'))
 			
 			print(start, event['summary'], end,delta)
-
-	# Insert the event into the calendar
-	#event = service.events().insert(calendarId=form.cleaned_data["engineer"], body=event).execute()
-	#print ('Event created: %s' % (event.get('htmlLink')))
 
 	service = build('gmail', 'v1', credentials=creds)
 
@@ -1285,10 +1208,6 @@ def engineer_hub(request, engineer_name):
 
 	# Call the Calendar API
 	now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-	print('EngineerHub - Getting Events')
-	# events_result = service.events().list(calendarId='primary', timeMin=now,
-	# 																		maxResults=10, singleEvents=True,
-	# 																		orderBy='startTime').execute()
 	events_result = service.events().list(calendarId=engineer_email, timeMin=now,
 																			maxResults=50, singleEvents=True,
 																			orderBy='startTime').execute()
@@ -1301,9 +1220,7 @@ def engineer_hub(request, engineer_name):
 	for event in events:
 			start = event['start'].get('dateTime', event['start'].get('date'))
 			end = event['end'].get('dateTime', event['end'].get('date'))
-			#delta =  (datetime.datetime.strptime(end, '%Y-%m-%d') - datetime.datetime.strptime(start, '%Y-%m-%d')).days
 			delta = (dateutil.parser.parse(end) - dateutil.parser.parse(start)).days
-			#delta =  (mdate1 - rdate1).days
 			
 			event_dict = {}
 			event_dict['id'] = event['id']
@@ -1314,10 +1231,6 @@ def engineer_hub(request, engineer_name):
 			event_dict['start_time'] = dateutil.parser.parse(start).time()
 			event_dict['end_time'] = dateutil.parser.parse(end).time()
 			calendar_events.append(event_dict)
-
-			#print(start, event['summary'], end, delta)
-
-	#print(calendar_events)
 
 	return render(request, 'yourheat/adminpages/engineer_hub.html', {'calendar_events': calendar_events, 'engineer_name': engineer_name  })
 
@@ -1488,7 +1401,7 @@ def engineer_hub_photo_upload(request, customer_id, upload_type, engineer_name, 
 						for chunk in f.chunks():
 							destination.write(chunk)
 				process(file)
-				# Rename the obsucre local filename to a more meaningful one based upon the file upload type
+				# Rename the obscure local filename to a more meaningful one based upon the file upload type
 				os.rename(Path(settings.BASE_DIR + "/pdf_quote_archive/eng_{}/{}".format(engineer_name.replace(" ",""), file)), Path(settings.BASE_DIR + "/pdf_quote_archive/eng_{}/{}".format(engineer_name.replace(" ",""), upload_type + str(i + 1) + file_extention)))
 
 			# Send Photo Files to be attached to Smartsheet record
@@ -1532,7 +1445,6 @@ def engineer_hub_get_ss_attachments(request, customer_id, attachment_type):
 
 	if attachment_type == "Quote":
 		return render(request, 'yourheat/adminpages/engineer_hub_get_ss_quote.html', {'quote': attachment_details_list[0]})
-		#return HttpResponse(attachment_details_list[0].get("url"), content_type='application/pdf')
 	else:
 		return render(request, 'yourheat/adminpages/engineer_hub_get_ss_attachments.html', {'photos': attachment_details_list})
 
@@ -1594,7 +1506,7 @@ def engineer_update_serial_numbers(request, customer_id, engineer_name, button_m
 					first_comment
 				)
 		
-		if settings.YH_SS_INTEGRATION:		# Update Comments on Smartsheet
+		if settings.YH_SS_INTEGRATION:		# Update Serial numbers to Comments on Smartsheet
 					ss_add_comments(
 					settings.YH_SS_ACCESS_TOKEN,
 					settings.YH_SS_SHEET_NAME,
