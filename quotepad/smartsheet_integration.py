@@ -648,4 +648,69 @@ def ss_attach_list_of_image_files(access_token, sheet_name, conditional_field_na
 						open(attach_file, 'rb'),
 						mime_type)
 					)
-	return	
+	return
+
+def ss_get_list_of_attachment_files(access_token, sheet_name, conditional_field_name, conditional_field_value, attachment_type):
+
+	if settings.YH_SS_PRODUCTION_SITE:
+		# Initialize client proxy.server:3128 and provide access token
+		proxies = {'https': 'https://proxy.server:3128'}
+		ss = smartsheet.Smartsheet(proxies=proxies, access_token=access_token)
+	else:	# just provide access token
+		# Instantiate smartsheet and specify access token value.
+		ss = smartsheet.Smartsheet(access_token)
+	
+	# Get the id for the Sheet name
+	search_results = ss.Search.search(sheet_name).results
+	sheet_id = next(result.object_id for result in search_results if result.object_type == 'sheet')
+
+	# Get all the columns for the sheet
+	all_columns = ss.Sheets.get_columns(sheet_id, include_all=True)
+	columns = all_columns.data
+
+	# Create two reference dictionaries that will be useful in the subsequent code
+	# colMap {column-name: column-id } and colMapRev { column-id: column-name }
+	colMap = {}
+	colMapRev = {}
+	for col in columns:
+		colMap[col.title] = col.id
+		colMapRev[col.id] = col.title
+
+	# Create an array of ColumnIds to limit the returned dataset
+	col_ids = []
+	col_ids.append(colMap.get(conditional_field_name))
+
+	# Get the Sheet Data and convert to json
+	MySheet = ss.Sheets.get_sheet(sheet_id, column_ids=col_ids)
+	MySheetjson = json.loads(str(MySheet))
+
+	attachment_details_list = []
+
+	for MyRow in MySheetjson["rows"]:
+		for MyCell in MyRow["cells"]:
+			if colMapRev.get(MyCell.get("columnId")) == conditional_field_name and MyCell.get("value") == conditional_field_value:
+
+				response = ss.Attachments.list_row_attachments(
+							sheet_id,       # sheet_id 
+							MyRow["id"],       # row_id 
+							include_all=True)
+				attachments = response.data
+				for attachment in attachments:
+					attachment_details = ss.Attachments.get_attachment(
+  							sheet_id,       # sheet_id
+  							attachment.id)       # attachment_id
+					# print("attachment", attachment_details)
+					attachment_details_json = json.loads(str(attachment_details))
+					if attachment_type == "Quote":
+						if attachment_details_json.get("name") == "Quote - Customer copy.pdf":	
+							attachment_details_list.append(attachment_details_json)
+					else: # Get Photos
+						if attachment_details_json.get("mimeType") == "image/jpeg" or attachment_details_json.get("mimeType") == "image/png":	
+							attachment_details_list.append(attachment_details_json)
+					
+				return attachment_details_list			
+	return
+
+	
+
+	

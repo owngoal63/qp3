@@ -1,0 +1,68 @@
+{% extends "yourheat/adminpages/basemobile.html" %}
+
+{% block content %}
+
+<div class="w3-container events__container">
+    <div class="w3-cell-row headers">
+        <div class="w3-cell" style="width:100%">
+            Serial Number(s): 
+        </div>
+    </div>
+</div>
+
+<form action="/EngineerUpdateSerialNumbers/{{ customer_id }}/{{engineer_name }}/Serial Numbers/" method="POST">
+
+    {% csrf_token %}
+
+    <div class="w3-container">
+        <div class="w3-cell-row">
+            <div class="w3-cell form__container">
+                <label class="form__label">Enter Boiler Serial Number: *</label>
+                <input class="form__custom-input" type="text" name="boiler_serial_number" class="form-control" required>
+            </div>
+        </div>
+    </div>
+    <div class="w3-container">
+        <div class="w3-cell-row">
+            <div class="w3-cell form__container">
+                <label class="form__label">Enter Filter Serial Number: *</label>
+                <input class="form__custom-input" type="text" name="filter_serial_number" class="form-control" required>
+            </div>
+        </div>
+    </div>
+    <div class="w3-container">
+        <div class="w3-cell-row">
+            <div class="w3-cell form__container">
+                <label class="form__label">Enter Control Serial Number:</label>
+                <input class="form__custom-input" type="text" name="control_serial_number" class="form-control">
+            </div>
+        </div>
+    </div>
+    <div class="w3-container">
+        <div class="w3-cell-row">
+            <div class="w3-cell form__container">
+                <label class="form__label">Enter Cylinder Number:</label>
+                <input class="form__custom-input" type="text" name="cylinder_serial_number" class="form-control">
+            </div>
+        </div>
+    </div>
+
+<div class="w3-container events__container">
+    <div class="w3-cell-row">
+        <div class="w3-cell" style="width:5%">
+            <button class="btn form__back-button w3-button" onclick="goBack()"><i class="fas fa-arrow-circle-left"></i></button>
+        </div>
+        <div class="w3-cell" style="width:10%">
+        </div>
+        <div class="w3-cell" style="width:80%">
+            <button class="btn form__custom-button w3-button" type="submit">Upload to Your Heat</button>
+        </div>
+        <div class="w3-cell" style="width:5%">
+        </div>
+    </div>
+</div>
+
+</form>
+
+
+{% endblock %}

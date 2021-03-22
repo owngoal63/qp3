@@ -41,7 +41,7 @@ from quotepad.views import hub_home, recommend_a_friend, preview_recommend_a_fri
 from quotepad.views import customer_acceptance, customer_acceptance_email, customer_enquiry_form
 
 from quotepad.views import TestForm, test_gmail
-from quotepad.views import engineer_hub, engineer_calendar_change, engineer_calendar_delete, engineer_hub_job, engineer_hub_photo_select, engineer_hub_photo_upload, engineer_hub_ok
+from quotepad.views import engineer_hub, engineer_calendar_change, engineer_calendar_delete, engineer_hub_job, engineer_hub_photo_select, engineer_hub_photo_upload, engineer_hub_ok, engineer_hub_get_ss_attachments, engineer_hub_get_serial_numbers, engineer_update_serial_numbers, engineer_hub_latest_PO_details
 
 urlpatterns = [
     
@@ -175,8 +175,12 @@ urlpatterns = [
     path('EngineerCalendarDelete/<str:event_id>/<str:engineer_name>/', engineer_calendar_delete, name = 'EngineerCalendarDelete'),
     path('EngineerHubJob/<str:event_id>/<str:engineer_name>/', engineer_hub_job, name = 'EngineerHubJob'),
     path('EngineerHubPhotoSelect/<str:customer_id>/<str:engineer_name>/', engineer_hub_photo_select, name = 'EngineerHubPhotoSelect'),
-    path('EngineerHubPhotoUpload/<str:customer_id>/<str:upload_type>/<str:engineer_name>/', engineer_hub_photo_upload, name = 'EngineerHubPhotoUpload'),
-    path('EngineerHubOk/<str:customer_id>/<str:engineer_name>/', engineer_hub_ok, name = 'EngineerHubOk'),
+    path('EngineerHubPhotoUpload/<str:customer_id>/<str:upload_type>/<str:engineer_name>/<str:button_message>/', engineer_hub_photo_upload, name = 'EngineerHubPhotoUpload'),
+    path('EngineerHubOk/<str:customer_id>/<str:engineer_name>/<str:button_message>/', engineer_hub_ok, name = 'EngineerHubOk'),
+    path('EngineerHubGetSSAttachments/<str:customer_id>/<str:attachment_type>/', engineer_hub_get_ss_attachments, name = 'EngineerHubGetSSAttachments'),
+    path('EngineerHubGetSerialNumbers/<str:customer_id>/<str:engineer_name>/', engineer_hub_get_serial_numbers, name = 'EngineerHubGetSerialNumbers'),
+    path('EngineerHubLatestPODetails/<str:customer_id>/<str:engineer_name>/', engineer_hub_latest_PO_details, name = 'EngineerHubLatestPODetails'),
+    path('EngineerUpdateSerialNumbers/<str:customer_id>/<str:engineer_name>/<str:button_message>/', engineer_update_serial_numbers, name = 'EngineerUpdateSerialNumbers'),
 
 	path('', include('payments.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

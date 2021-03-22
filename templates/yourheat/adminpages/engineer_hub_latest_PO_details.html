@@ -1,45 +1,36 @@
 {% extends "yourheat/adminpages/basemobile.html" %}
 
-
 {% block content %}
-
-<h4 class="engineer__heading">Job Photos</h4>
-
-<form method="post" enctype="multipart/form-data"> {% csrf_token %}
 
 <div class="w3-container events__container">
     <div class="w3-cell-row headers">
         <div class="w3-cell" style="width:100%">
-           Photos: {{ upload_type }}
+            Latest PO Details
         </div>
     </div>
 </div>
+
 
 <div class="w3-container events__container">
     <div class="w3-cell-row">
-        <div class="w3-cell" style="width:100%">
-            {{ form.engineer_photos }}
+        <div class="w3-cell" style="width:100%"><br>
+            <b>PO Number:</b> {{latest_PO_details.PO_number}} <br><br>
+            <b>Supplier:</b> {{latest_PO_details.PO_supplier}} <br><br>
+            <b>Supplier Address:</b> {{latest_PO_details.PO_supplier_address}} <br><br>
         </div>
     </div>
 </div>
-
-<br>
+ 
 
 <div class="w3-container events__container">
     <div class="w3-cell-row">
         <div class="w3-cell" style="width:5%">
             <button class="btn form__back-button w3-button" onclick="goBack()"><i class="fas fa-arrow-circle-left"></i></button>
         </div>
-        <div class="w3-cell" style="width:90%">
-            <button class="w3-button form__custom-button" type="submit">Upload to Your Heat</button>
-        </div>
-        <div class="w3-cell" style="width:5%">
-            
+        <div class="w3-cell" style="width:95%">
+
         </div>
     </div>
 </div>
-
-</form>
-
 
 {% endblock %}

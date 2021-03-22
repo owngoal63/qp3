@@ -16,13 +16,13 @@ import json
 
 from quotepad.models import CustomerComm
 from quotepad.forms import ssSurveyAppointmentForm, ssInstallationAppointmentForm, JobPartsForm, SpecialOfferForm, CustomerEnquiryForm, HeatPlanForm, EngineerPhotoForm
-from quotepad.utils import send_email_using_SendGrid
+from quotepad.utils import send_email_using_SendGrid, remove_control_characters
 
 # imports associated with sending email ( can be removed for production )
 from django.core.mail import EmailMessage
 
 #Added for Smartsheet
-from quotepad.smartsheet_integration import ss_get_data_from_report, ss_update_data, ss_append_data, ss_attach_pdf, ss_get_data_from_sheet, ss_add_comments, ss_attach_list_of_image_files
+from quotepad.smartsheet_integration import ss_get_data_from_report, ss_update_data, ss_append_data, ss_attach_pdf, ss_get_data_from_sheet, ss_add_comments, ss_attach_list_of_image_files, ss_get_list_of_attachment_files
 #from quotepad.forms import ssCustomerSelectForm, ssPostSurveyQuestionsForm
 
 # Import for Google Calendar API
@@ -1389,7 +1389,7 @@ def engineer_hub(request, engineer_name):
 
 	# Call the Calendar API
 	now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-	print('Getting the upcoming 10 events')
+	print('EngineerHub - Getting Events')
 	# events_result = service.events().list(calendarId='primary', timeMin=now,
 	# 																		maxResults=10, singleEvents=True,
 	# 																		orderBy='startTime').execute()
@@ -1420,9 +1420,9 @@ def engineer_hub(request, engineer_name):
 			event_dict['end_time'] = dateutil.parser.parse(end).time()
 			calendar_events.append(event_dict)
 
-			print(start, event['summary'], end, delta)
+			#print(start, event['summary'], end, delta)
 
-	print(calendar_events)
+	#print(calendar_events)
 
 	return render(request, 'yourheat/adminpages/engineer_hub.html', {'calendar_events': calendar_events, 'engineer_name': engineer_name  })
 
@@ -1566,13 +1566,15 @@ def engineer_hub_job(request, event_id, engineer_name):
 
 	event = service.events().get(calendarId=engineer_email, eventId=event_id).execute()
 
-	#print(event['summary'])
+	#print(event['description'])
+
+	# Get the Customer IFD if it exists
 	try:
 		e = event['description']
 		start = '<b>Customer ID: </b>'
 		end = '<br><b>Installation Date:'
-		print(e.find(start))
-		print(e.find(end))
+		#print(e.find(start))
+		#print(e.find(end))
 		if e.find(start) != -1 and e.find(end) != -1:	# If event contains the customer_id substring
 			customer_id = e[e.find(start)+len(start):e.rfind(end)]	# Extract Customer Id from html string
 		else:
@@ -1580,20 +1582,25 @@ def engineer_hub_job(request, event_id, engineer_name):
 	except:
 		customer_id = ""
 		event['description'] = ""
-
+	
+	# Insert a Check for Updates button onto the Hub page 
+	try:
+		event['description'] = event['description'].replace("<br><br><b>Supplier: </b>",  """&nbsp;<b><button onclick="location.href='""" + "/EngineerHubLatestPODetails/" + customer_id + "/" + engineer_name + """/'" type='button'>View Updates</button></b><br><br><b>Supplier: </b>""")
+	except:
+		print("No event description")
 
 	return render(request, 'yourheat/adminpages/engineer_hub_job.html', {'job_description': event['description'], 'customer_id': customer_id, 'engineer_name': engineer_name})
 
 def engineer_hub_photo_select(request, customer_id, engineer_name):
 	''' Hub Page for Engineer to Select Photos Type '''
 
-	print(engineer_name)
+	#print(engineer_name)
 
 	#engineer_email = engineer_calendar_dict[engineer_name]
 
 	return render(request, 'yourheat/adminpages/engineer_hub_photo_select.html', {'customer_id': customer_id, 'engineer_name': engineer_name})
 
-def engineer_hub_photo_upload(request, customer_id, upload_type, engineer_name):
+def engineer_hub_photo_upload(request, customer_id, upload_type, engineer_name, button_message):
 	''' Hub Page for Engineer to Upload Photos '''
 
 	if request.method == 'POST':
@@ -1626,16 +1633,111 @@ def engineer_hub_photo_upload(request, customer_id, upload_type, engineer_name):
 			for del_file in attach_file_list:
 				os.remove(del_file)
 
-			return HttpResponseRedirect('/EngineerHubOk/' + customer_id + "/" + engineer_name + "/")
+			return HttpResponseRedirect('/EngineerHubOk/' + customer_id + "/" + engineer_name + "/" + button_message + "/")
 	else:
 		form = EngineerPhotoForm()
 
 	return render(request, 'yourheat/adminpages/engineer_hub_photo_upload.html', {'form': form, 'upload_type': upload_type[8:]})
 
-def engineer_hub_ok(request, customer_id, engineer_name):
+def engineer_hub_ok(request, customer_id, engineer_name, button_message):
 	''' Ok Page after Photo Uploads '''
 
-	return render(request, 'yourheat/adminpages/engineer_hub_ok.html', {'customer_id': customer_id, 'engineer_name': engineer_name})
+	return render(request, 'yourheat/adminpages/engineer_hub_ok.html', {'customer_id': customer_id, 'engineer_name': engineer_name, 'button_message': button_message})
+
+def engineer_hub_get_ss_attachments(request, customer_id, attachment_type):
+	''' Page to display survey photos and/or pdf quotes store on Smartsheet '''
+
+	if settings.YH_SS_INTEGRATION:
+			 attachment_details_list = ss_get_list_of_attachment_files(
+				settings.YH_SS_ACCESS_TOKEN,
+				settings.YH_SS_SHEET_NAME,
+				"Customer ID",
+				customer_id,
+				attachment_type
+				)
+
+	if attachment_type == "Quote":
+		return render(request, 'yourheat/adminpages/engineer_hub_get_ss_quote.html', {'quote': attachment_details_list[0]})
+		#return HttpResponse(attachment_details_list[0].get("url"), content_type='application/pdf')
+	else:
+		return render(request, 'yourheat/adminpages/engineer_hub_get_ss_attachments.html', {'photos': attachment_details_list})
+
+def engineer_hub_get_serial_numbers(request, customer_id, engineer_name):
+	''' Page to get serial numbers and add to Notes in Smartsheet '''
+
+	return render(request, 'yourheat/adminpages/engineer_hub_get_serial_numbers.html', {'customer_id': customer_id, 'engineer_name': engineer_name})
+
+def engineer_hub_latest_PO_details(request, customer_id, engineer_name):
+	''' Display the latest PO details from Smartsheet '''
+
+	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/eng_{}/{}".format(engineer_name.replace(" ",""),"PO_details.txt"))
+	ss_get_data_from_sheet(
+				settings.YH_SS_ACCESS_TOKEN,
+				settings.YH_SS_SHEET_NAME,
+				['Customer ID', 
+				'PO Number', 'PO Supplier', 'PO Supplier Address'],
+				'Customer ID',
+				customer_id,
+				data_filename
+			)
+
+	# Open the downloaded file to extract the key details
+	with open(data_filename) as file:
+		for line in file:
+			print(line)
+			line = remove_control_characters(line)
+			print(line)
+			line_dict = json.loads(line)
+			# Check for any "NONE" fields coming from Smartsheet and replace with ''
+			for key, value in line_dict.items():
+				if value == 'None':
+					line_dict[key] = ''
+
+	return render(request, 'yourheat/adminpages/engineer_hub_latest_PO_details.html', {'customer_id': customer_id, 'latest_PO_details': line_dict})
+
+def engineer_update_serial_numbers(request, customer_id, engineer_name, button_message):
+	''' Update Smartsheet Notes with serial Numbers '''
+
+	first_comment = ["Installation Serial Numbers provided by "  + engineer_name + "....."]
+	comments = []
+	if(request.POST):
+		form_data = request.POST.dict()
+		comments.append('Boiler Serial Number: ' + str(form_data.get("boiler_serial_number")))
+		comments.append('Filter Serial Number: ' + str(form_data.get("filter_serial_number")))
+		if form_data.get("control_serial_number") != "":
+			comments.append('Control Serial Number: ' + str(form_data.get("control_serial_number")))
+		if form_data.get("cylinder_serial_number") != "":
+			comments.append('Cylinder Serial Number: ' + str(form_data.get("cylinder_serial_number")))
+		
+		#print(comments)
+
+		if settings.YH_SS_INTEGRATION:		# Update Header Comment on Smartsheet
+					ss_add_comments(
+					settings.YH_SS_ACCESS_TOKEN,
+					settings.YH_SS_SHEET_NAME,
+					'Customer ID',
+					customer_id,
+					first_comment
+				)
+		
+		if settings.YH_SS_INTEGRATION:		# Update Comments on Smartsheet
+					ss_add_comments(
+					settings.YH_SS_ACCESS_TOKEN,
+					settings.YH_SS_SHEET_NAME,
+					'Customer ID',
+					customer_id,
+					comments
+				)
+
+	return HttpResponseRedirect('/EngineerHubOk/' + customer_id + "/" + engineer_name + "/" + button_message + "/")
+
+
+
+
+
+
+
+
 
 
 	

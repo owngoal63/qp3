@@ -25,7 +25,7 @@ SECRET_KEY = 'imw6@yb#gl*)_ma3jfkz8%0ie3ql8t7y+9j9splpwnm@@rhsue'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.0.42','127.0.0.1']
 
 
 # Application definition
@@ -157,7 +157,7 @@ STRIPE_PUBLISHABLE_KEY = 'pk_test_34Pl9iMCAFEIfxCGX84ZrP6G0047uZg93B'
 # yourheat master settings
 YH_MASTER_PROFILE_ID = 6
 YH_MASTER_PROFILE_USERNAME = 'yourheatx'
-YH_TEST_EMAIL = False
+YH_TEST_EMAIL = True
 YH_URL_STATIC_FOLDER = 'http://127.0.0.1:8000/static/'    # Set this to the static folder on the live server
 
 # SmartSheet integration settings for test Smartsheet

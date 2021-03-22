@@ -127,6 +127,7 @@ NEW_FUEL_TYPE_DROPDOWN = (
 	('Gas','Gas'),
 	('LPG','LPG'),
 	('Oil','Oil'),
+	('Electric','Electric'),
 )
 
 NEW_BOILER_TYPE_DROPDOWN = (

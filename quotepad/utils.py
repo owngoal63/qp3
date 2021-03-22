@@ -45,6 +45,9 @@ from google.auth.transport.requests import Request
 from email.mime.application import MIMEApplication
 #from google.oauth2 import service_account
 
+# Added to remove control characters
+import unicodedata
+
 
 ''' Various functions used by the XHtml2pdf library '''
 
@@ -480,4 +483,7 @@ def invoice_pdf_generation(customer_id, outputformat):
 		else:	# outputformat is PDF to screen
 			pdf = pdf_generation(sourceHtml, {'invoice_data': line})
 			return pdf
+
+def remove_control_characters(s):
+    return "".join(ch for ch in s if unicodedata.category(ch)[0]!="C")
 		

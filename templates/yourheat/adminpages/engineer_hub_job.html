@@ -25,17 +25,29 @@
     </div>
 </div>
 
-<div class="w3-container events__container">
+<br>
+
+<div class="button_container">
+
+            {% if 'YH' in customer_id %}
+                <a href="\EngineerHubGetSSAttachments\{{ customer_id }}\Photos\" class="form__custom-button">View Photos</a>
+            {% endif %}
+            {% if 'YH' in customer_id %}
+                <a href="\EngineerHubPhotoSelect\{{ customer_id }}\{{ engineer_name }}\" class="form__custom-button">Upload Photos</a>
+            {% endif %}
+            {% if 'YH' in customer_id %}
+                <a href="\EngineerHubGetSerialNumbers\{{ customer_id }}\{{ engineer_name }}\" class="form__custom-button">Serial Num(s)</a>
+            {% endif %}
+</div>
+
+<div class="w3-container">
     <div class="w3-cell-row">
         <div class="w3-cell" style="width:5%">
             <button class="btn form__back-button w3-button" onclick="goBack()"><i class="fas fa-arrow-circle-left"></i></button>
         </div>
+
+        
         <div class="w3-cell" style="width:90%">
-            {% if 'YH' in customer_id %}
-                <a href="\EngineerHubPhotoSelect\{{ customer_id }}\{{ engineer_name }}\" class="w3-button form__custom-button">Upload Photos</a>
-            {% endif %}
-        </div>
-        <div class="w3-cell" style="width:5%">
             
         </div>
     </div>
