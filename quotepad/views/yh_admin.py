@@ -43,11 +43,13 @@ from .yh_personnel import surveyor_dict, engineer_dict, engineer_postcode_dict, 
 
 def admin_home(request):
 	''' Your Heat Admin Home page '''
+	print("Function: admin_home")
 
 	return render(request, 'yourheat/adminpages/admin_home.html')
 
 def customer_comms(request):
 	''' Function to display landpage for customer comms'''
+	print("Function: customer_comms")
 	# Driven by Smartsheet formula below
 	# ="http://www.qpcentral.co.uk/CustomerComms/?customerid=" + [Customer ID]@row + "&customername=" + Title@row + "%20" + [First Name]@row + "%20" + Surname@row + "&customerstatus=" + [Customer Status]@row
 	ss_customer_id = request.GET.get('customerid', None)
@@ -59,11 +61,13 @@ def customer_comms(request):
 
 def preview_comms(request, comms, customer_id):
 	''' Function to provide preview and Email screen for Comms '''
+	print("Function: preview_comms")
 
 	return render(request, 'yourheat/adminpages/preview_comms.html', {'comms': comms, 'customer_id': customer_id })
 
 def display_comms(request, comms, customer_id=None):
 	''' Function to display the email contents prior to sending the email '''
+	print("Function: display_comms")
 
 	html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/{}.html".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
 	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
@@ -137,6 +141,7 @@ def display_comms(request, comms, customer_id=None):
 
 def email_comms(request, comms, customer_id=None):
 	''' Function to generate communication emails to send to customers based upon Smartsheet data '''
+	print("Function: email_comms")
 	
 	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
 	html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/{}.html".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
@@ -243,6 +248,7 @@ def email_comms(request, comms, customer_id=None):
 
 def list_customers_for_comms(request, comms_name, customer_id=None):
 	''' Function to display list of customers for communications based upon Smartsheet data '''
+	print("Function: list_customers_for_comms")
 
 	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/customer_comms/{}.txt".format(request.user.username, comms_name))
 
@@ -359,10 +365,12 @@ def list_customers_for_comms(request, comms_name, customer_id=None):
 
 def emails_sent_to_customers(request):
 	''' Function to render the emails sent page '''
+	print("Function: emails_sent_to_customers")
 	return render(request,'yourheat/adminpages/emails_sent_to_customers.html')
 
 def email_sent_to_merchant(request):
 	''' Function to render the emails sent page '''
+	print("Function: email_sent_to_merchant")
 	return render(request,'yourheat/adminpages/email_sent_to_merchant.html')	
 
 
@@ -374,6 +382,7 @@ class get_survey_appointment(FormView):
 
 
 	def get_initial(self, **kwargs):
+		print("Class->Function: get_survey_appointment->get_initial")
 		initial = super().get_initial()
 		#print(self.kwargs['customer_id'])
 		customer_id = self.kwargs['customer_id']
@@ -442,6 +451,7 @@ class get_survey_appointment(FormView):
 		return initial
 
 	def form_valid(self, form, **kwargs):
+		print("Class->Function: get_survey_appointment->form_valid")
 		#print("form is valid")
 		customer_id = self.kwargs['customer_id']
 		#print(customer_id)
@@ -558,24 +568,6 @@ class get_survey_appointment(FormView):
 		end['timezone'] = 'Europe/London'
 		event['end'] = end
 
-		# Google Event colors
-		# 1 Lavender
-		# 2 Sage
-		# 3 Grape
-		# 4 Flamingo
-		# 5 Banana
-		# 6 Tangerine
-		# 7 Peacock
-		# 8 Graphite
-		# 9 Blueberry
-		# 10 Basil
-		# 11 Tomato
-		# surveyor_event_color = {
-		# 	"ivan.painter@yourheat.co.uk": "4",	
-		# 	"lee.hewitt@yourheat.co.uk": "2",	
-		# }
-
-		# event['colorId'] = surveyor_event_color.get(form.cleaned_data["surveyor"])
 
 		if settings.YH_CAL_ENABLED:					# If enabled Update the Google Calendar
 			# Google Calendar API - Get Credentials
@@ -621,6 +613,7 @@ class get_installation_appointment(FormView):
 
 
 	def get_initial(self, **kwargs):
+		print("Class->Function: get_installation_appointment->get_initial")
 		initial = super().get_initial()
 		customer_id = self.kwargs['customer_id']
 
@@ -707,6 +700,7 @@ class get_installation_appointment(FormView):
 		return initial
 
 	def form_valid(self, form, **kwargs):
+		print("Class->Function: get_installation_appointment->form_valid")
 
 		engineer_calendar_id = engineer_calendar_dict[engineer_dict[form.cleaned_data["engineer"]]]	# get engineer yourheat email address for caledar id
 		#print("form is valid")
@@ -876,6 +870,7 @@ class get_installation_appointment(FormView):
 
 
 def view_invoice_pdf(request, customer_id):
+	print("Function: view_invoice_pdf")
 
 	pdf = invoice_pdf_generation(customer_id, "PDFOutput")
 
@@ -883,6 +878,7 @@ def view_invoice_pdf(request, customer_id):
 
 
 def build_invoice_pdf(customer_id):
+	print("Function: build_invoice_pdf")
 
 	invoice_pdf_generation(customer_id, "EmailOutput")
 
@@ -891,10 +887,12 @@ def build_invoice_pdf(customer_id):
 
 def confirm_calendar_appointment(request, customer_id=None):
 	''' Function to confirm Calendar Appointment '''
+	print("Function: confirm_calendar_appointment")
 	return render(request,'yourheat/adminpages/confirm_calendar_appointment.html')
 
 def processing_cancelled(request):
 	''' Function to confirm Processing Cancelled '''
+	print("Function: processing_cancelled")
 	return render(request,'yourheat/adminpages/processing_cancelled.html')
 
 class get_special_offer(FormView):
@@ -904,6 +902,7 @@ class get_special_offer(FormView):
 	customer_id = None
 
 	def get_initial(self, **kwargs):
+		print("Class->Function: get_special_offer->get_initial")
 		initial = super().get_initial()
 		customer_id = self.kwargs['customer_id']
 
@@ -952,6 +951,7 @@ class get_special_offer(FormView):
 		return initial
 
 	def form_valid(self, form, **kwargs):
+		print("Class->Function: get_special_offer->form_valid")
 		print(form.cleaned_data)
 		customer_id = form.cleaned_data['smartsheet_id']
 		print(customer_id)
@@ -969,6 +969,7 @@ class get_heat_plan(FormView):
 	customer_id = None
 
 	def get_initial(self, **kwargs):
+		print("Class->Function: get_heat_plan->get_initial")
 		initial = super().get_initial()
 
 		if 'customer_id' in self.kwargs.keys():
@@ -1006,6 +1007,7 @@ class get_heat_plan(FormView):
 		return initial
 
 	def form_valid(self, form, **kwargs):
+		print("Class->Function: get_heat_plan->form_valid")
 		print(form.cleaned_data)
 		customer_id = form.cleaned_data['smartsheet_id']
 		print(customer_id)
@@ -1024,6 +1026,7 @@ class get_job_parts(FormView):
 
 	
 	def get_initial(self, **kwargs):
+		print("Class->Function: get_job_parts->get_initial")
 		initial = super().get_initial()
 		customer_id = self.kwargs['customer_id']
 
@@ -1082,6 +1085,7 @@ class get_job_parts(FormView):
 		return initial
 
 	def form_valid(self, form, **kwargs):
+		print("Class->Function: get_job_parts->form_valid")
 		print(form.cleaned_data)
 		#form.cleaned_data["parts"] = form.cleaned_data["parts"].replace('\r\n', '<br>')
 		#form.cleaned_data["parts"] = form.cleaned_data["parts"]
@@ -1240,6 +1244,7 @@ def test_gmail(request):
 
 def customer_acceptance(request, acceptancetype, customerid, firstname, surname):
 	''' Customer Acceptance Landing Page '''
+	print("Function: customer_acceptance")
 
 	return render(request, 'yourheat/customerpages/customer_acceptance.html',
 	{'acceptancetype': acceptancetype, 'customerid': customerid, 'firstname':firstname, 'surname':surname}
@@ -1247,6 +1252,7 @@ def customer_acceptance(request, acceptancetype, customerid, firstname, surname)
 
 def customer_acceptance_email(request, acceptancetype, customerid, firstname, surname):
 	''' Function to send email to yourheat admin to notify of customer acceptance '''
+	print("Function: customer_acceptance_email")
 
 	if acceptancetype == "Quote":
 		acceptance_type_text = "quote"
@@ -1298,6 +1304,7 @@ class customer_enquiry_form(FormView):
 	template_name = "yourheat/customerpages/customer_enquiry_form.html"
 
 	def form_valid(self, form, **kwargs):
+		print("Class->Function: customer_enquiry_form->get_initial")
 
 		if self.kwargs['acceptancetype'] == "Quote":
 			acceptance_type_text = "quote"
@@ -1353,7 +1360,8 @@ class customer_enquiry_form(FormView):
 		return HttpResponseRedirect('https://yourheat.co.uk/')
 
 def engineer_hub(request, engineer_name):
-	''' Hub for Engineer to review and update diary '''
+	''' Hub for Engineer to review and update diary and landing page for job info/completion'''
+	print("Function: engineer_hub")
 
 	# Get engineer email address from dictionary look to use as reference for google calendar
 	engineer_email = engineer_calendar_dict[engineer_name]
@@ -1428,8 +1436,10 @@ def engineer_hub(request, engineer_name):
 
 			
 def engineer_calendar_change(request, change_type, engineer_name):
+	''' Function to change Google calendar for engineer '''
+	print("Function: engineer_calendar_change")
 
-	print("Engineer Cal change")
+	#print("Engineer Cal change")
 	#print(stop)
 
 	# Get engineer email address from dictionary look to use as reference for google calendar
@@ -1491,6 +1501,8 @@ def engineer_calendar_change(request, change_type, engineer_name):
 	return HttpResponseRedirect('/EngineerHub/' + engineer_name + '/')
 
 def engineer_calendar_delete(request, event_id, engineer_name):
+	''' Function to delete an existing "available calendar entry '''
+	print("Function: engineer_calendar_delete")
 
 	engineer_email = engineer_calendar_dict[engineer_name]
 
@@ -1532,8 +1544,9 @@ def engineer_calendar_delete(request, event_id, engineer_name):
 
 def engineer_hub_job(request, event_id, engineer_name):
 	''' Hub Page for Engineer to review job details '''
+	print("Function: engineer_hub_job")
 
-	print("Engineer Job Event", event_id)
+	#print("Engineer Job Event", event_id)
 
 	engineer_email = engineer_calendar_dict[engineer_name]
 
@@ -1593,15 +1606,13 @@ def engineer_hub_job(request, event_id, engineer_name):
 
 def engineer_hub_photo_select(request, customer_id, engineer_name):
 	''' Hub Page for Engineer to Select Photos Type '''
-
-	#print(engineer_name)
-
-	#engineer_email = engineer_calendar_dict[engineer_name]
+	print("Function: engineer_hub_photo_select")
 
 	return render(request, 'yourheat/adminpages/engineer_hub_photo_select.html', {'customer_id': customer_id, 'engineer_name': engineer_name})
 
 def engineer_hub_photo_upload(request, customer_id, upload_type, engineer_name, button_message):
 	''' Hub Page for Engineer to Upload Photos '''
+	print("Function: engineer_hub_photo_upload")
 
 	if request.method == 'POST':
 		form = EngineerPhotoForm(request.POST, request.FILES)
@@ -1641,11 +1652,13 @@ def engineer_hub_photo_upload(request, customer_id, upload_type, engineer_name, 
 
 def engineer_hub_ok(request, customer_id, engineer_name, button_message):
 	''' Ok Page after Photo Uploads '''
+	print("Function: engineer_hub_ok")
 
 	return render(request, 'yourheat/adminpages/engineer_hub_ok.html', {'customer_id': customer_id, 'engineer_name': engineer_name, 'button_message': button_message})
 
 def engineer_hub_get_ss_attachments(request, customer_id, attachment_type):
 	''' Page to display survey photos and/or pdf quotes store on Smartsheet '''
+	print("Function: engineer_hub_get_ss_attachments")
 
 	if settings.YH_SS_INTEGRATION:
 			 attachment_details_list = ss_get_list_of_attachment_files(
@@ -1664,11 +1677,13 @@ def engineer_hub_get_ss_attachments(request, customer_id, attachment_type):
 
 def engineer_hub_get_serial_numbers(request, customer_id, engineer_name):
 	''' Page to get serial numbers and add to Notes in Smartsheet '''
+	print("Function: engineer_hub_get_serial_numbers")
 
 	return render(request, 'yourheat/adminpages/engineer_hub_get_serial_numbers.html', {'customer_id': customer_id, 'engineer_name': engineer_name})
 
 def engineer_hub_latest_PO_details(request, customer_id, engineer_name):
 	''' Display the latest PO details from Smartsheet '''
+	print("Function: engineer_hub_latest_PO_details")
 
 	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/eng_{}/{}".format(engineer_name.replace(" ",""),"PO_details.txt"))
 	ss_get_data_from_sheet(
@@ -1697,6 +1712,8 @@ def engineer_hub_latest_PO_details(request, customer_id, engineer_name):
 
 def engineer_update_serial_numbers(request, customer_id, engineer_name, button_message):
 	''' Update Smartsheet Notes with serial Numbers '''
+	print("Function: engineer_update_serial_numbers")
+
 
 	first_comment = ["Installation Serial Numbers provided by "  + engineer_name + "....."]
 	comments = []
