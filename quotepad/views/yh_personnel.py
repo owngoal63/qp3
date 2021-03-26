@@ -14,7 +14,8 @@ ENGINEER_DROPDOWN = (
 	('dave_easton@me.com', 'Dave Easton'),
 	('adouglas241@googlemail.com', 'Andy Douglas'),
 	('adam.simmons@yourheat.co.uk', 'Adam Simmons'),
-	('terry.martin@yourheat.co.uk', 'Terry Martin')
+	('terry.martin@yourheat.co.uk', 'Terry Martin'),
+	('tom.sharp@yourheat.co.uk', 'Tom Sharp')
 )
 
 ENGINEER_POSTCODE_DROPDOWN = (
@@ -26,6 +27,7 @@ ENGINEER_POSTCODE_DROPDOWN = (
 	('Andy Douglas (ME12)', 'Andy Douglas (ME12)'),
 	('Adam Simmons (TN10)', 'Adam Simmons (TN10)'),
 	('Terry Martin (TN17)', 'Terry Martin (TN17)'),
+	('Tom Sharp (EN9)', 'Tom Sharp (EN9)'),
 	('Stock Availability Check', 'Stock Availability Check')
 )
 
@@ -44,6 +46,7 @@ engineer_dict = {
 	'adouglas241@googlemail.com': 'Andy Douglas',
 	'adam.simmons@yourheat.co.uk': 'Adam Simmons',
 	'terry.martin@yourheat.co.uk': 'Terry Martin',
+	'tom.sharp@yourheat.co.uk': 'Tom Sharp',
 }
 
 engineer_postcode_dict = {
@@ -54,6 +57,7 @@ engineer_postcode_dict = {
 	'Andy Douglas (ME12)': 'adouglas241@googlemail.com',
 	'Adam Simmons (TN10)': 'adam.simmons@yourheat.co.uk',
 	'Terry Martin (TN17)': 'terry.martin@yourheat.co.uk',
+	'Tom Sharp (EN9)': 'tom.sharp@yourheat.co.uk',
 }
 
 engineer_calendar_dict = {
@@ -64,4 +68,5 @@ engineer_calendar_dict = {
 	'Andy Douglas': 'andy.douglas@yourheat.co.uk',
 	'Adam Simmons': 'adam.simmons@yourheat.co.uk',
 	'Terry Martin': 'terry.martin@yourheat.co.uk',
+	'Tom Sharp': 'tom.sharp@yourheat.co.uk',
 }
