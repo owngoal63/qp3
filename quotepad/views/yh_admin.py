@@ -94,6 +94,7 @@ def display_comms(request, comms, customer_id=None):
 	with open(data_filename) as file:
 			file_form_data = []
 			for line in file:
+				line = remove_control_characters(line)
 				file_form_data.append(eval(line))
 
 
@@ -159,6 +160,7 @@ def email_comms(request, comms, customer_id=None):
 	with open(data_filename) as file:
 			file_form_data = []
 			for line in file:
+				line = remove_control_characters(line)
 				file_form_data.append(eval(line))
 
 	for line in file_form_data:
@@ -261,6 +263,7 @@ def list_customers_for_comms(request, comms_name, customer_id=None):
 	with open(data_filename) as file:
 			comms_data = []
 			for line in file:
+				line = remove_control_characters(line)
 				comms_data.append(eval(line))
 
 	# Check if record has already been sent and add details to dict
@@ -390,6 +393,7 @@ class get_survey_appointment(FormView):
 		# Open the text file with the Smartsheet data to prepopulate the form
 		with open(data_filename) as file:
 			for line in file:
+				line = remove_control_characters(line)
 				line_dict = json.loads(line)
 				# Check for any "NONE" fields coming from Smartsheet and replace with ''
 				for key, value in line_dict.items():
@@ -511,29 +515,29 @@ class get_survey_appointment(FormView):
 
 		event['description'] = event_description
 
-		# Google start and end dates and times ( including time overrides as necessary - now changed to Zulu time on October clock change)
+		# Google start and end dates and times ( removed overrides and Zulu - now driven by Zimezone setting )
 		if form.cleaned_data['time_override'] == 'No override':
-			start_datetime_for_google = form.cleaned_data['survey_date_and_time'].strftime('%Y-%m-%dT%H:%M:%SZ')
+			start_datetime_for_google = form.cleaned_data['survey_date_and_time'].strftime('%Y-%m-%dT%H:%M:%S')
 			end_datetime = form.cleaned_data['survey_date_and_time'] + datetime.timedelta(hours=2)
-			end_datetime_for_google = end_datetime.strftime('%Y-%m-%dT%H:%M:%SZ')
+			end_datetime_for_google = end_datetime.strftime('%Y-%m-%dT%H:%M:%S')
 		elif form.cleaned_data['time_override'] == 'Anytime':
-			start_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT08:00:00Z')
-			end_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT17:00:00Z')
+			start_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT08:00:00')
+			end_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT17:00:00')
 		elif form.cleaned_data['time_override'] == 'Anytime AM':
-			start_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT08:00:00Z')
-			end_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT12:00:00Z')
+			start_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT08:00:00')
+			end_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT12:00:00')
 		elif form.cleaned_data['time_override'] == 'Anytime PM':
-			start_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT12:00:00Z')
-			end_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT17:00:00Z')
+			start_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT12:00:00')
+			end_datetime_for_google = form.cleaned_data['survey_date_and_time'].date().strftime('%Y-%m-%dT17:00:00')
 
 		start = {}
 		start['dateTime'] = start_datetime_for_google
-		start['timezone'] = 'Europe/London'
+		start['timeZone'] = 'Europe/London'
 		event['start'] = start
 
 		end = {}
 		end['dateTime'] = end_datetime_for_google
-		end['timezone'] = 'Europe/London'
+		end['timeZone'] = 'Europe/London'
 		event['end'] = end
 
 
@@ -605,6 +609,7 @@ class get_installation_appointment(FormView):
 		# Open the text file with the Smartsheet data to prepopulate the form
 		with open(data_filename) as file:
 			for line in file:
+				line = remove_control_characters(line)
 				line_dict = json.loads(line)
 				# Check for any "NONE" fields coming from Smartsheet and replace with ''
 				for key, value in line_dict.items():
@@ -816,6 +821,7 @@ class get_special_offer(FormView):
 		# Open the text file with the Smartsheet data to prepopulate the form
 		with open(data_filename) as file:
 			for line in file:
+				line = remove_control_characters(line)
 				line_dict = json.loads(line)
 				# Check for any "NONE" fields coming from Smartsheet and replace with ''
 				for key, value in line_dict.items():
@@ -875,6 +881,7 @@ class get_heat_plan(FormView):
 			# Open the text file with the Smartsheet data to prepopulate the form
 			with open(data_filename) as file:
 				for line in file:
+					line = remove_control_characters(line)
 					line_dict = json.loads(line)
 					# Check for any "NONE" fields coming from Smartsheet and replace with ''
 					for key, value in line_dict.items():
@@ -931,6 +938,7 @@ class get_job_parts(FormView):
 		# Open the text file with the Smartsheet data to prepopulate the form
 		with open(data_filename) as file:
 			for line in file:
+				line = remove_control_characters(line)
 				line_dict = json.loads(line)
 				# Check for any "NONE" fields coming from Smartsheet and replace with ''
 				for key, value in line_dict.items():
@@ -1051,7 +1059,43 @@ def test_gmail(request):
 			
 			print(start, event['summary'], end,delta)
 
-	service = build('gmail', 'v1', credentials=creds)
+	#service = build('gmail', 'v1', credentials=creds)
+
+	# Place a test event on calendar
+	event['summary'] = "Test Event - ignore"
+	event['description'] = "event_description"
+
+	now = datetime.datetime.now()
+
+	print(now)
+
+
+	start_datetime_for_google = now.strftime('%Y-%m-%dT%H:%M:%S')
+	end_datetime = now + datetime.timedelta(hours=2)
+	end_datetime_for_google = end_datetime.strftime('%Y-%m-%dT%H:%M:%S')
+
+	print(start_datetime_for_google)
+	print(end_datetime_for_google)
+
+	#print(stop)
+
+	start = {}
+	start['dateTime'] = start_datetime_for_google
+	start['timeZone'] = 'Europe/London'
+	#start['timezone'] = 'America/New_York'
+	event['start'] = start
+
+	end = {}
+	end['dateTime'] = end_datetime_for_google
+	end['timeZone'] = 'Europe/London'
+	#end['timezone'] = 'America/New_York'
+	event['end'] = end
+
+
+	# Insert the event into the calendar
+	event = service.events().insert(calendarId='jeremy.tomkinson@yourheat.co.uk', body=event).execute()
+
+	#print(stop)
 
 	return
 
@@ -1516,6 +1560,66 @@ def engineer_update_serial_numbers(request, customer_id, engineer_name, button_m
 				)
 
 	return HttpResponseRedirect('/EngineerHubOk/' + customer_id + "/" + engineer_name + "/" + button_message + "/")
+
+def engineer_hub_get_job_completion(request, customer_id, engineer_name):
+	''' Page to get customer details and display checkboxes for job completion '''
+	print("Function: engineer_hub_get_job_completion")
+
+	return render(request, 'yourheat/adminpages/engineer_hub_get_job_completion.html', {'customer_id': customer_id, 'engineer_name': engineer_name})
+
+
+def engineer_hub_job_completion(request, customer_id, engineer_name):
+	''' Generate Job Completion PDF for signature '''
+	print("Function: engineer_hub_job_completion")
+
+	#usr_pdf_template_file = Path(settings.BASE_DIR + "/templates/pdf/user_{}/job_completion_pdf.html".format(settings.YH_MASTER_PROFILE_USERNAME))
+
+	if(request.POST):
+
+		data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/eng_{}/{}".format(engineer_name.replace(" ",""),"Completion_details.txt"))
+		ss_get_data_from_sheet(
+				settings.YH_SS_ACCESS_TOKEN,
+				settings.YH_SS_SHEET_NAME,
+				['Customer ID', 
+				'Title', 'First Name', 'Surname','House Name or Number', 'Street Address', 'City', 'County','Postcode'],
+				'Customer ID',
+				customer_id,
+				data_filename
+			)
+
+		# Open the downloaded file to extract the key details
+		with open(data_filename) as file:
+			for line in file:
+				line = remove_control_characters(line)
+				line_dict = json.loads(line)
+				# Check for any "NONE" fields coming from Smartsheet and replace with ''
+				for key, value in line_dict.items():
+					if value == 'None':
+						line_dict[key] = ''
+
+		sourceHtml = "pdf/user_{}/job_completion_pdf.html".format(settings.YH_MASTER_PROFILE_USERNAME)      # Under templates folder
+
+		form_data = request.POST.dict()
+
+
+		pdf = pdf_generation(sourceHtml, {
+			'customer_details': line_dict,
+			'benchmark_completed': str(form_data.get("benchmark_completed")),
+			'flue_sealed': str(form_data.get("flue_sealed")),
+			'chemicals_used': str(form_data.get("chemicals_used")),
+			'air_removed': str(form_data.get("air_removed")),
+			'explained_to_customer': str(form_data.get("explained_to_customer")),
+			'home_left_clean': str(form_data.get("home_left_clean")),
+			'photos_provided': str(form_data.get("photos_provided")),
+			'serial_numbers': str(form_data.get("serial_numbers")),
+			'additional_info': str(form_data.get("additional_info")),
+
+		})
+
+		return HttpResponse(pdf, content_type='application/pdf')
+
+	#return HttpResponseRedirect('/EngineerHubOk/' + customer_id + "/" + engineer_name + "/" + "button_message" + "/")
+
 
 
 
