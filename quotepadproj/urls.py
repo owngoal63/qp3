@@ -41,7 +41,7 @@ from quotepad.views import hub_home, recommend_a_friend, preview_recommend_a_fri
 from quotepad.views import customer_acceptance, customer_acceptance_email, customer_enquiry_form
 
 from quotepad.views import TestForm, test_gmail
-from quotepad.views import engineer_hub, engineer_calendar_change, engineer_calendar_delete, engineer_hub_job, engineer_hub_photo_select, engineer_hub_photo_upload, engineer_hub_ok, engineer_hub_get_ss_attachments, engineer_hub_get_serial_numbers, engineer_update_serial_numbers, engineer_hub_latest_PO_details
+from quotepad.views import engineer_hub, engineer_calendar_change, engineer_calendar_delete, engineer_hub_job, engineer_hub_photo_select, engineer_hub_photo_upload, engineer_hub_ok, engineer_hub_get_ss_attachments, engineer_hub_get_serial_numbers, engineer_update_serial_numbers, engineer_hub_latest_PO_details, engineer_hub_get_job_completion, engineer_hub_job_completion
 
 urlpatterns = [
     
@@ -181,6 +181,8 @@ urlpatterns = [
     path('EngineerHubGetSerialNumbers/<str:customer_id>/<str:engineer_name>/', engineer_hub_get_serial_numbers, name = 'EngineerHubGetSerialNumbers'),
     path('EngineerHubLatestPODetails/<str:customer_id>/<str:engineer_name>/', engineer_hub_latest_PO_details, name = 'EngineerHubLatestPODetails'),
     path('EngineerUpdateSerialNumbers/<str:customer_id>/<str:engineer_name>/<str:button_message>/', engineer_update_serial_numbers, name = 'EngineerUpdateSerialNumbers'),
+    path('EngineerHubGetJobCompletion/<str:customer_id>/<str:engineer_name>/', engineer_hub_get_job_completion, name = 'EngineerHubGetJobCompletion'),
+    path('EngineerHubJobCompletion/<str:customer_id>/<str:engineer_name>/', engineer_hub_job_completion, name = 'EngineerHubJobCompletion'),
 
 	path('', include('payments.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

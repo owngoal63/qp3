@@ -837,3 +837,72 @@ p.account-details {
     vertical-align: top;
 }
 
+
+/* -----------------------------------------------------------  */
+                 /* Styles for Job completion PDF */
+
+h2#job-completion {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.completion-img-center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 33%;
+    padding:10px;
+  }
+
+table#job-completion {
+    width:100%;
+}
+
+table td#job-completion-small {
+    text-align: right;
+    width:25%;
+    font-size: 1rem;
+    font-weight: 600;
+    padding:5px;
+}
+
+table td#job-completion-large {
+    text-align: left;
+    width:75%;
+    font-size: 1rem;
+    font-weight: 400;
+    padding:5px;
+}
+
+table td#job-checklist-large {
+    text-align: right;
+    width:60%;
+    font-size: 1rem;
+    font-weight: 600;
+    padding:5px;
+}
+
+table td#job-checklist-small {
+    text-align: left;
+    width:40%;
+    font-size: 1rem;
+    font-weight: 400;
+    padding:5px;
+}
+
+table td#job-checklist-text-header {
+    text-align: left;
+    width:100%;
+    font-size: 1rem;
+    font-weight: 600;
+    padding:5px;
+}
+
+table td#job-checklist-text {
+    text-align: left;
+    width:100%;
+    font-size: 1rem;
+    font-weight: 400;
+    padding:5px;
+}

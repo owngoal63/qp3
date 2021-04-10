@@ -515,7 +515,7 @@ class get_survey_appointment(FormView):
 
 		event['description'] = event_description
 
-		# Google start and end dates and times ( removed overrides and Zulu - now driven by Zimezone setting )
+		# Google start and end dates and times ( removed overrides and Zulu - now driven by timeZone setting )
 		if form.cleaned_data['time_override'] == 'No override':
 			start_datetime_for_google = form.cleaned_data['survey_date_and_time'].strftime('%Y-%m-%dT%H:%M:%S')
 			end_datetime = form.cleaned_data['survey_date_and_time'] + datetime.timedelta(hours=2)

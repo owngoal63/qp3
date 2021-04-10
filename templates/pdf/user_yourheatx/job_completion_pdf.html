@@ -1,0 +1,206 @@
+{% load static %}
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <title>Job Completion</title>
+</head>
+
+<body>
+
+    <img class="completion-img-center" src="http://www.qpcentral.co.uk/static/images/YourHeatLogo.png">    
+
+
+    <h2 id = "job-completion">Your Heat Installation Confirmed</h2>
+
+    <br>
+
+
+    <table id="job-completion">
+        <tr>
+            <td id="job-completion-small">
+                Job Number: 
+            </td>
+            <td id="job-completion-large">
+                {{customer_details.smartsheet_id}}
+            </td>
+        </tr>
+
+        <tr>
+            <td id="job-completion-small">
+                Customer Name: 
+            </td>
+            <td id="job-completion-large">
+                {{customer_details.customer_title}} {{customer_details.customer_first_name}} {{customer_details.customer_last_name}}
+            </td>
+        </tr>
+
+        <tr>
+            <td id="job-completion-small">
+                Customer Address: 
+            </td>
+            <td id="job-completion-large">
+                {{customer_details.house_name_or_number|floatformat:0}} {{customer_details.street_address}} {{customer_details.city}} {{customer_details.county}} {{customer_details.postcode}}
+            </td>
+        </tr>
+
+        <tr>
+            <td id="job-completion-small">
+                Completed Date: 
+            </td>
+            <td id="job-completion-large">
+                {% now "jS F Y" %}
+            </td>
+        </tr>
+
+    </table>
+
+    <br>
+
+    <hr>
+
+    <br>
+
+<table id="job-completion">
+    <tr>
+        <td id="job-checklist-large">
+            Benchmark Completed: 
+        </td>
+        <td id="job-checklist-small">
+            {% if benchmark_completed != "None" %}
+                {{benchmark_completed}}
+            {% else %}
+                No
+            {% endif %}
+        </td>
+    </tr>
+
+    <tr>
+        <td id="job-checklist-large">
+            Flue sealed inside and out: 
+        </td>
+        <td id="job-checklist-small">
+            {% if flue_sealed != "None" %}
+                {{flue_sealed}}
+            {% else %}
+                No
+            {% endif %}
+        </td>
+    </tr>
+
+    <tr>
+        <td id="job-checklist-large">
+            Chemicals Used: 
+        </td>
+        <td id="job-checklist-small">
+            {% if chemicals_used != "None" %}
+                {{chemicals_used}}
+            {% else %}
+                No
+            {% endif %}
+        </td>
+    </tr>
+
+    <tr>
+        <td id="job-checklist-large">
+            All air removed from system and customer knows how to top up: 
+        </td>
+        <td id="job-checklist-small">
+            {% if air_removed != "None" %}
+                {{air_removed}}
+            {% else %}
+                No
+            {% endif %}
+        </td>
+    </tr>
+
+    <tr>
+        <td id="job-checklist-large">
+            New boiler and equipment explained to customer: 
+        </td>
+        <td id="job-checklist-small">
+            {% if explained_to_customer != "None" %}
+                {{explained_to_customer}}
+            {% else %}
+                No
+            {% endif %}
+        </td>
+    </tr>
+
+    <tr>
+        <td id="job-checklist-large">
+            Customer home left clean and everything made good: 
+        </td>
+        <td id="job-checklist-small">
+            {% if home_left_clean != "None" %}
+                {{home_left_clean}}
+            {% else %}
+                No
+            {% endif %}
+        </td>
+    </tr>
+
+    <tr>
+        <td id="job-checklist-large">
+            Installation Photo(s) provided: 
+        </td>
+        <td id="job-checklist-small">
+            {% if photos_provided != "None" %}
+                {{photos_provided}}
+            {% else %}
+                No
+            {% endif %}
+        </td>
+    </tr>
+
+    <tr>
+        <td id="job-checklist-large">
+            Serial Numbers Recorded: 
+        </td>
+        <td id="job-checklist-small">
+            {% if serial_numbers != "None" %}
+                {{serial_numbers}}
+            {% else %}
+                No
+            {% endif %}
+        </td>
+    </tr>
+
+</table>
+
+<hr>
+
+<table>
+    <tr>
+        <td id="job-checklist-text-header">
+            Additional Information:
+        </td>
+    </tr>
+    <tr>
+        <td id="job-checklist-text">
+            {% if additional_info != "None" %}
+                {{additional_info}}
+            {% else %}
+                None Provided
+            {% endif %}
+        </td>
+    </tr>
+
+</table>
+
+
+
+<br>
+
+<hr>
+
+<br><br><br><br><br><br>
+
+<br><br><br><br><br><br>
+
+Customer Signature ..................................... Engineer Signature ......................................
+
+</body>
+
+</html>

@@ -1,0 +1,114 @@
+{% extends "yourheat/adminpages/basemobile.html" %}
+
+{% block content %}
+
+<div class="w3-container events__container">
+    <div class="w3-cell-row headers">
+        <div class="w3-cell" style="width:100%">
+            Job Completion Checklist: {{ customer_id }}
+        </div>
+    </div>
+</div>
+
+<form action="/EngineerHubJobCompletion/{{ customer_id }}/{{engineer_name }}/" method="POST">
+
+    {% csrf_token %}
+
+    <div class="w3-container">
+        <div class="w3-cell-row">
+            <div class="w3-cell form__container">
+                <input type="checkbox" id="benchmark_completed" name="benchmark_completed" value="Yes">
+                <label for="benchmark_completed" class = "checkbox-label"> Benchmark Completed Correctly</label><br>
+            </div>
+        </div>
+    </div>
+    <div class="w3-container">
+        <div class="w3-cell-row">
+            <div class="w3-cell form__container">
+                <input type="checkbox" id="flue_sealed" name="flue_sealed" value="Yes">
+                <label for="flue_sealed" class = "checkbox-label"> Flue sealed inside and out</label><br>
+            </div>
+        </div>
+    </div>
+    <div class="w3-container">
+        <div class="w3-cell-row">
+            <div class="w3-cell form__container">
+                <input type="checkbox" id="chemicals_used" name="chemicals_used" value="Yes">
+                <label for="chemicals_used" class = "checkbox-label"> Chemicals Used</label><br>
+            </div>
+        </div>
+    </div>
+    <div class="w3-container">
+        <div class="w3-cell-row">
+            <div class="w3-cell form__container">
+                <input type="checkbox" id="air_removed" name="air_removed" value="Yes">
+                <label for="air_removed" class = "checkbox-label"> All air removed from system and customer knows how to top up</label><br>
+            </div>
+        </div>
+    </div>
+
+    <div class="w3-container">
+        <div class="w3-cell-row">
+            <div class="w3-cell form__container">
+                <input type="checkbox" id="explained_to_customer" name="explained_to_customer" value="Yes">
+                <label for="explained_to_customer" class = "checkbox-label"> New boiler and equipment explained to customer</label><br>
+            </div>
+        </div>
+    </div>
+
+    <div class="w3-container">
+        <div class="w3-cell-row">
+            <div class="w3-cell form__container">
+                <input type="checkbox" id="home_left_clean" name="home_left_clean" value="Yes">
+                <label for="home_left_clean" class = "checkbox-label"> Customer home left clean and everything made good</label><br>
+            </div>
+        </div>
+    </div>
+
+    <div class="w3-container">
+        <div class="w3-cell-row">
+            <div class="w3-cell form__container">
+                <input type="checkbox" id="photos_provided" name="photos_provided" value="Yes">
+                <label for="photos_provided" class = "checkbox-label"> Installation Photo(s) provided</label><br>
+            </div>
+        </div>
+    </div>
+
+    <div class="w3-container">
+        <div class="w3-cell-row">
+            <div class="w3-cell form__container">
+                <input type="checkbox" id="serial_numbers" name="serial_numbers" value="Yes">
+                <label for="serial_numbers" class = "checkbox-label"> Serial Numbers Recorded</label><br>
+            </div>
+        </div>
+    </div>
+
+    <div class="w3-container">
+        <div class="w3-cell-row">
+            <div class="w3-cell form__container">
+                Additional information for office use<br>
+                <textarea name="additional_info" cols="40" rows="5" class="form-control" maxlength="4000" id="additional_info" placeholder="e.g. additional work recommended, faults with system, any damage"></textarea>
+
+            </div>
+        </div>
+    </div>
+
+<div class="w3-container events__container">
+    <div class="w3-cell-row">
+        <div class="w3-cell" style="width:5%">
+            <button class="btn form__back-button w3-button" onclick="goBack()"><i class="fas fa-arrow-circle-left"></i></button>
+        </div>
+        <div class="w3-cell" style="width:10%">
+        </div>
+        <div class="w3-cell" style="width:80%">
+            <button class="btn form__custom-button w3-button" type="submit">Create Completion Form</button>
+        </div>
+        <div class="w3-cell" style="width:5%">
+        </div>
+    </div>
+</div>
+
+</form>
+
+
+{% endblock %}
