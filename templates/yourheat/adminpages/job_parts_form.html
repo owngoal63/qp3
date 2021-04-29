@@ -114,7 +114,12 @@
             </div>
         </div>
 
-        <button class="btn boilerbtn btn-warning" type="submit">Send Email Notification</button>
+
+        {% if form.agreed_boiler_option.value != 'Option A Parts' and form.agreed_boiler_option.value != 'Option B Parts'  %}
+            <p style="color:red;"><b>Agreed Boiler Option has not been set in Smartsheet. Please fix before proceeding</b></p>
+        {% else %}
+            <button class="btn boilerbtn btn-warning" type="submit">Send Email Notification</button>
+        {% endif %}
 
         <a href="{% url 'ProcessingCancelled' %}" class="btn btn-secondary">Cancel</a>
 
