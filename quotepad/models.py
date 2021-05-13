@@ -44,6 +44,7 @@ PRODUCT_GUARANTEE_DROPDOWN = (
 	('10 Year Parts & Labour Guarantee','10 Year Parts & Labour Guarantee'),
 	('11 Year Parts & Labour Guarantee','11 Year Parts & Labour Guarantee'),
 	('12 Year Parts & Labour Guarantee','12 Year Parts & Labour Guarantee'),
+	('14 Year Parts & Labour Guarantee','14 Year Parts & Labour Guarantee'),
 )
 
 COMPONENT_BRAND_DROPDOWN = (
