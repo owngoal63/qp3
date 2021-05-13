@@ -37,7 +37,7 @@
         <div class = "col-4">
             <a class="btn boilerbtn btn-warning" href="{% url 'PreviewComms' 'Survey Booked Comms' customer_id  %}">Resend Survey Booked Comms</a>
         </div>
-        <div class = "col-8">    
+        <div class = "col-8 comms-text">    
             <i>Dear ____, Our surveyor is looking forward to visiting you to provide a free, no-obligation quote...</i><br>
             <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [ Surveyor Name ] [ Survey Date ] [ Survey Time ]</p>
         </div>
@@ -46,17 +46,17 @@
         <div class = "col-4">
             <a class="btn boilerbtn btn-warning" href="{% url 'PreviewComms' 'Boiler Quotation Comms' customer_id  %}">Boiler Quotation Follow-up Comms</a>
         </div>
-        <div class = "col-8">    
-            <i>Dear ____, We've been trying to contact you to discuss the quotation we gave you recently...</i>
+        <div class = "col-8 comms-text">    
+            <i>Dear ____, We tried calling today to discuss the quotation we gave on...</i>
             <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name]</p>
         </div>
     </div>        
     <div class="row comms-row">
         <div class = "col-4">      
-            <a class="btn boilerbtn btn-warning" href="{% url 'PreviewComms' 'Our Priority Comms' customer_id  %}">Our Priority Comms</a>
+            <a class="btn boilerbtn btn-warning" href="{% url 'PreviewComms' 'Our Priority Comms' customer_id  %}">Goodbye Comms</a>
         </div>
-        <div class = "col-8">  
-            <i>Dear ____, We tried calling today to discuss the quotation we gave on...</i>
+        <div class = "col-8 comms-text">  
+            <i>Dear ____, We've been trying to contact you to discuss the quotation we gave you recently...</i>
             <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [Survey Date]</p>
         </div>
     </div>
@@ -64,7 +64,7 @@
         <div class = "col-4">                      
             <a class="btn boilerbtn btn-warning" href="{% url 'GetSpecialOffer' customer_id %}">Special Offer Comms</a>
         </div>
-        <div class = "col-8">    
+        <div class = "col-8 comms-text">    
             <i>Dear ____, We just wanted to thank you for the opportunity to quote...</i>
             <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [Customer ID]</p>
         </div>
@@ -73,7 +73,7 @@
         <div class = "col-4">                      
             <a class="btn boilerbtn btn-warning" href="{% url 'GetHeatPlan' customer_id %}">Heat Plan Comms</a>
         </div>
-        <div class = "col-8">    
+        <div class = "col-8 comms-text">    
             <i>Dear ____, Thank you for taking the time to view our range of care plans...</i>
             <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [Customer ID]</p>
         </div>
@@ -82,7 +82,7 @@
         <div class = "col-4">              
             <a class="btn boilerbtn btn-warning" href="{% url 'PreviewComms' 'Installation Notification Comms' customer_id  %}">Resend Installation Notification Comms</a>
         </div>
-        <div class = "col-8">
+        <div class = "col-8 comms-text">
             <i>Dear ____, Thank you for choosing Your Heat as your trusted boiler installation specialist...</i>
             <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [Installation Date] [Brand] [Engineer Name]</p>
         </div>
@@ -91,7 +91,7 @@
         <div class = "col-4">                      
             <a class="btn boilerbtn btn-warning" href="{% url 'PreviewComms' 'Free Boiler Service Comms' customer_id  %}">Free Boiler Service Comms</a>
         </div>
-        <div class = "col-8">    
+        <div class = "col-8 comms-text">    
             <i>Dear ____, Thank you for choosing Your Heat to look after the installation of your new boiler...</i>
             <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [Customer ID]</p>
         </div>
@@ -100,7 +100,7 @@
         <div class = "col-4">
             <a class="btn boilerbtn btn-warning" href="{% url 'PreviewComms' 'Invoice Comms' customer_id  %}">Invoice Comms</a>
         </div>
-        <div class = "col-8">    
+        <div class = "col-8 comms-text">    
             <i>Dear ____, Thank you for choosing Your Heat. Please find attached a copy of your Deposit Invoice which is payable by return...</i><br>
             <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name]</p>
         </div>

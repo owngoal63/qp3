@@ -661,3 +661,11 @@ The responsive effects on the dashboard page are built using these cards, they a
   color:white;
 }
 
+.comms-text i {
+  font-size: 13px;
+}
+
+.comms-text p {
+  font-size: 13px;
+}
+
