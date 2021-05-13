@@ -43,6 +43,8 @@ from quotepad.views import customer_acceptance, customer_acceptance_email, custo
 from quotepad.views import TestForm, test_gmail
 from quotepad.views import engineer_hub, engineer_calendar_change, engineer_calendar_delete, engineer_hub_job, engineer_hub_photo_select, engineer_hub_photo_upload, engineer_hub_ok, engineer_hub_get_ss_attachments, engineer_hub_get_serial_numbers, engineer_update_serial_numbers, engineer_hub_latest_PO_details, engineer_hub_get_job_completion, engineer_hub_job_completion
 
+from quotepad.views import XeroInitialAuthorisation, XeroInitialRefreshToken, XeroInvoicePost, XeroCreateDepositInvoice
+
 urlpatterns = [
     
     url(r'^admin/', admin.site.urls),
@@ -164,6 +166,7 @@ urlpatterns = [
 
     path('TestForm/', login_required(TestForm.as_view()), name='TestForm'),
     path('TestGmail/', test_gmail, name='TestGmail'),
+
     path('ViewInvoicePDF/<str:customer_id>/', view_invoice_pdf, name = 'ViewInvoicePDF'),
 
     path('CustomerAcceptance/<str:acceptancetype>/<str:customerid>/<str:firstname>/<str:surname>/', customer_acceptance, name = 'CustomerAcceptance'),
@@ -183,6 +186,11 @@ urlpatterns = [
     path('EngineerUpdateSerialNumbers/<str:customer_id>/<str:engineer_name>/<str:button_message>/', engineer_update_serial_numbers, name = 'EngineerUpdateSerialNumbers'),
     path('EngineerHubGetJobCompletion/<str:customer_id>/<str:engineer_name>/', engineer_hub_get_job_completion, name = 'EngineerHubGetJobCompletion'),
     path('EngineerHubJobCompletion/<str:customer_id>/<str:engineer_name>/', engineer_hub_job_completion, name = 'EngineerHubJobCompletion'),
+
+    path('XeroInit/', XeroInitialAuthorisation, name = 'XeroInit'),
+    path('XeroRedirect/', XeroInitialRefreshToken, name = 'XeroRedirect'),
+    path('XeroInvoicePost/', XeroInvoicePost, name = 'XeroInvoicePost'),
+    path('XeroCreateDepositInvoice/', XeroCreateDepositInvoice, name = 'XeroCreateDepositInvoice'),
 
 	path('', include('payments.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

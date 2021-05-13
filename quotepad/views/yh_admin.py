@@ -10,6 +10,7 @@ import datetime
 import dateutil.parser
 from pathlib import Path
 from math import ceil
+import requests
 
 import smartsheet
 import json
@@ -38,6 +39,8 @@ from quotepad.utils import pdf_generation, pdf_generation_to_file, invoice_pdf_g
 
 # Import YH Engineer and surveyor data required for forms
 from .yh_personnel import surveyor_dict, engineer_dict, engineer_postcode_dict, engineer_calendar_dict
+
+from quotepad.xero_integration import XeroFirstAuthStep1, XeroFirstAuthStep2, XeroRefreshToken, XeroTenants, XeroCreateContact, XeroCreateInvoice
 
 
 def admin_home(request):
@@ -231,8 +234,11 @@ def email_comms(request, comms, customer_id=None):
 				line.get('smartsheet_id'),
 				[comms + " email sent." + special_offer_text]
 			)
+	if mail_subject == "Your Heat - Invoice":		# Invoice Comms - Link to Xero Processing Page
+		return HttpResponseRedirect('/XeroInvoicePost/')
+	else:											# Standard Close Window Page
+		return HttpResponseRedirect('/EmailsSentToCustomers/')
 
-	return HttpResponseRedirect('/EmailsSentToCustomers/')	
 
 def list_customers_for_comms(request, comms_name, customer_id=None):
 	''' Function to display list of customers for communications based upon Smartsheet data '''
@@ -1619,6 +1625,112 @@ def engineer_hub_job_completion(request, customer_id, engineer_name):
 		return HttpResponse(pdf, content_type='application/pdf')
 
 	#return HttpResponseRedirect('/EngineerHubOk/' + customer_id + "/" + engineer_name + "/" + "button_message" + "/")
+
+def XeroInitialAuthorisation(request):
+	print("Function: XeroInitialAuthorisation")
+	return redirect(XeroFirstAuthStep1())
+
+def XeroInitialRefreshToken(request):
+	print("Function: XeroInitialRefreshToken")
+	#print(request.GET.get('code', ''))
+	token = XeroFirstAuthStep2(request.GET.get('code', ''))
+	#print(token)
+	print("access_token",token["access_token"])
+	print("refresh_token",token["refresh_token"])
+	xero_tenant = XeroTenants(token["access_token"])
+	print("tenant id", xero_tenant)
+	xero_token_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/xero_refresh_token.txt")
+	return HttpResponse("Copy the following Xero Refresh Token to the file " + str(xero_token_filename) + " : " + token["refresh_token"])
+
+def XeroGetAccessTokenAndTenantID():
+	print("Function: XeroGetAccessTokenAndTenantID")
+	xero_token_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/xero_refresh_token.txt")
+	#print(xero_token_filename)
+	old_refresh_token = open(xero_token_filename, 'r').read()
+	#print("Token from file", old_refresh_token)
+	token = XeroRefreshToken(old_refresh_token)
+	# print("access_token",token["access_token"])
+	# print("refresh_token",token["refresh_token"])
+	xero_tenant = XeroTenants(token["access_token"])
+	return token["access_token"], xero_tenant
+
+def XeroInvoicePost(request):
+	print("Function: XeroInvoicePost")
+	return render(request,'yourheat/adminpages/xero_invoice_post.html')
+
+def XeroCreateDepositInvoice(request):
+	print("Function: XeroCreateDepositInvoice")
+	access_token,tenant_id = XeroGetAccessTokenAndTenantID()
+	#print("access token", access_token)
+	#print("tenant_id", tenant_id)
+	
+	#print("tenant", xero_tenant)
+	# print(stop)
+
+	# get_url = 'https://api.xero.com/api.xro/2.0/Invoices'
+	# response = requests.get(get_url,
+	#                        headers = {
+	#                            'Authorization': 'Bearer ' + token["access_token"],
+	#                            'Xero-tenant-id': xero_tenant,
+	#                            'Accept': 'application/json'
+	#                        })
+	# json_response = response.json()
+	# print(json_response)
+
+	# Get the customer invoice data from Smartsheet 
+	customer_id = 'YH-97'					########### Remember to remove - ONLY FOR TESTING !!!!!!!!!!
+	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/xero_data.txt".format(settings.YH_MASTER_PROFILE_USERNAME))
+	ss_get_data_from_sheet(
+			settings.YH_SS_ACCESS_TOKEN,
+			settings.YH_SS_SHEET_NAME,
+			['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'House Name or Number', 'Street Address', 'City', 'County', 'Postcode', 'Agreed Deposit Amount'],
+			'Customer ID',
+			customer_id,
+			data_filename
+		)
+	# Open the text file with the Smartsheet data 
+	with open(data_filename) as file:
+			file_form_data = []
+			for line in file:
+				line = remove_control_characters(line)
+				file_form_data.append(eval(line))
+
+	for line in file_form_data:
+		xero_contact_name = line["customer_first_name"] + " " + line["customer_last_name"] + " " + line["postcode"]
+		xero_invoice_amount = str(float(line["agreed_deposit_amount"]))
+
+	Xero_Contact_json = XeroCreateContact(access_token, tenant_id, xero_contact_name)
+	print("Xero Contact Creation Status: ", Xero_Contact_json["Status"])
+	if Xero_Contact_json["Status"] == "OK":
+		contact_id = Xero_Contact_json["Contacts"][0]["ContactID"]
+		contact_name = Xero_Contact_json["Contacts"][0]["Name"]
+		print("Xero Contact ID: ", contact_id)
+		print("Xero Contact Name:", contact_name)
+		xero_contact_status = True
+	
+		today_plus_thirty = (datetime.datetime.now() + datetime.timedelta(days=30))
+		# print(today_plus_thirty)
+		iso_date_format = today_plus_thirty.isoformat()
+
+		Xero_Invoice_json = XeroCreateInvoice(access_token, tenant_id, contact_id, xero_invoice_amount, iso_date_format)
+		print("Xero Invoice Creation Status: ", Xero_Invoice_json["Status"])
+		if Xero_Invoice_json["Status"] == "OK":
+			invoice_id = Xero_Invoice_json["Invoices"][0]["InvoiceID"]
+			print("Xero Invoice ID: ", invoice_id)
+			xero_invoice_status = True
+		else:
+			xero_invoice_status = False
+	else:
+		xero_contact_status = False
+
+	if xero_contact_status and xero_invoice_status:
+		print("Xero Transaction Successful")
+		return render(request,'yourheat/adminpages/xero_invoice_success.html')
+	else:
+		print("!!!!!! Xero Transaction Failed !!!!!!")
+		return render(request,'yourheat/adminpages/xero_invoice_fail.html')
+
+
 
 
 
