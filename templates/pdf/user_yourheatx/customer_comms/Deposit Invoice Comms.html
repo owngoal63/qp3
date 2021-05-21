@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <title>Invoice Comms</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Poppins&display=swap');
+
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            text-align: center;
+        }
+
+        .all_text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            text-align:justify;
+        }
+
+        .contact_text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .contact_text a {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .body_text {
+            position: relative;
+            width: 99%;
+            margin: 0 auto;
+        }
+
+        #final-strap-line {
+            text-align: center;
+            color: rgb(251, 126, 51);
+        }
+
+        #final-strap-text {
+            font-family: verdana;
+            font-style: italic;
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        #img2 {
+            position: relative;
+            top: 20px;
+        }
+
+        .text_header {
+            font-family: 'Poppins', sans-serif;
+            font-size: 22px;
+            color: white;
+            bottom:90px;
+            position:relative;
+        }
+
+
+        .background_footer {
+            width: 99%;
+            height: 80px;
+            background-position: center;
+            background-color: black;
+            margin: 25px auto 0px auto;
+        }
+
+        .footer_text {
+            color: white;
+            font-size: 12px;
+            text-align: right;
+        }
+
+        .left {
+            float: left;
+            margin: 1.5rem 2rem 2rem 2rem;
+
+        }
+
+        .right {
+            margin: .4rem 2rem 2rem 2rem;
+            float: right;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .email_header img {
+            width:99%;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Layout Header Snippet to limit email width to 800px  -->
+<table cellpadding="0" cellspacing="0" border="0" style="padding:0px;margin:0px;width:100%;">
+<tr><td colspan="3" style="padding:0px;margin:0px;font-size:20px;height:20px;" height="20">&nbsp;</td></tr>
+<tr>
+<td style="padding:0px;margin:0px;">&nbsp;</td>
+<td style="padding:0px;margin:0px;" width="800">
+<!-- End of Layout Header Snippet  -->
+
+    <div class="email_header">
+        <img src='http://www.qpcentral.co.uk/static/images/YH_email_header_invoice.png' alt="Your Heat Header"/>
+    </div>
+
+    <div class="body_text">
+
+        <div class="content">
+            <div class="contact_text">
+                <img src='http://www.qpcentral.co.uk/static/images/phone-solid.png' width="15" /> <a
+                    href="tel:01732622990">01732 622990</a> | <img
+                    src='http://www.qpcentral.co.uk/static/images/globe-solid.png' width="15" /> <a
+                    href='https://yourheat.co.uk/book-a-job/'>www.yourheat.co.uk</a> | <img
+                    src='http://www.qpcentral.co.uk/static/images/envelope-solid.png' width="15" /> <a
+                    href='mailto:info@yourheat.co.uk'>info@yourheat.co.uk</a>
+            </div>
+
+            <p class="all_text">Dear {{ customer_title }} {{ customer_last_name }},</p>
+
+            <!-- Insert Email body content here  -->
+
+                <p class="all_text">
+                    Thank you for choosing Your Heat as your selected installer for your new {{brand}} boiler.
+                </p>
+                <p class="all_text">      
+                    Please find attached the information required for your deposit payment, we can take this via Credit/Debit card including AMEX,
+                    simply by contacting a member of the team here on <a href="tel:01732622990"><b>01732 622990</b></a>.
+                </p>
+                <p class="all_text">
+                    Alternatively you can send this direct via a bank transfer, please send to:
+                </p>
+                <p class="all_text">
+                    Account Name: <b>Your Heat Ltd</b><br>
+                    Account Number: <b>54576261</b><br>
+                    Sort Code: <b>60-60-08</b><br>
+                    Reference: <b>{{smartsheet_id}}</b>
+                </p>
+
+
+            <p class="all_text">
+                We’re just getting things ready here, once we have received your payment, we will send over your receipt, your confirmation, along with what to expect before and during your installation with us.
+            </p>
+
+            <p class="all_text">
+                Warm regards, The Your Heat Team
+            </p>
+
+            <!-- End of Email body content  -->
+
+            <div id="final-strap-line">
+                <p id="final-strap-text">"Our friendly team will provide you with an efficient service, delivered with a
+                    sense of warmth. Your Heat, is our Priority, ALWAYS."</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="background_footer">
+
+        <div class="left">
+            <img src='http://www.qpcentral.co.uk/static/images/yh_logo_white_text.png' width="150">
+        </div>
+
+        <div class="right">
+            <p class="footer_text">Copyright © 2020 Your Heat Ltd | VAT No. 213 6884 04</p>
+            <p class="footer_text"><a href=' https://yourheat.co.uk/terms-and-conditions/'>Installation Terms and
+                    Conditions</a></p>
+        </div>
+    </div>
+
+<!-- Layout Footer Snippet to limit email width to 800px  -->
+</td>
+<td style="padding:0px;margin:0px;">&nbsp;</td>
+</tr>
+<tr><td colspan="3" style="padding:0px;margin:0px;font-size:20px;height:20px;" height="20">&nbsp;</td></tr>
+</table>
+<!-- End of Layout Footer Snippet  -->
+
+</body>
+
+</html>

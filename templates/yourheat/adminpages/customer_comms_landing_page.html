@@ -6,7 +6,10 @@
 
 <div class="container">
     <div class="row">
-        <div class = "col-12">
+        <div class = "col-3">
+            &nbsp;
+        </div>
+        <div class = "col-9">
             <h4>Customer Operations Administration</h4>
         </div>
      
@@ -30,16 +33,20 @@
     </div>
 
     <hr>
-    <div class = "col-12">
-        <h4>Mailing Communications</h4>
+    <div class="row">
+    <div class = "col-4">
+        <h4 style="text-align:left">&nbsp;Mailing Communications</h4>
     </div>
+    <div class = "col-8">&nbsp;</div>
+    </div>
+
     <div class="row comms-row">
         <div class = "col-4">
             <a class="btn boilerbtn btn-warning" href="{% url 'PreviewComms' 'Survey Booked Comms' customer_id  %}">Resend Survey Booked Comms</a>
         </div>
         <div class = "col-8 comms-text">    
             <i>Dear ____, Our surveyor is looking forward to visiting you to provide a free, no-obligation quote...</i><br>
-            <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [ Surveyor Name ] [ Survey Date ] [ Survey Time ]</p>
+            <!-- <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [ Surveyor Name ] [ Survey Date ] [ Survey Time ]</p> -->
         </div>
     </div>   
     <div class="row comms-row">
@@ -48,7 +55,7 @@
         </div>
         <div class = "col-8 comms-text">    
             <i>Dear ____, We tried calling today to discuss the quotation we gave on...</i>
-            <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name]</p>
+            <!-- <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name]</p> -->
         </div>
     </div>        
     <div class="row comms-row">
@@ -57,7 +64,7 @@
         </div>
         <div class = "col-8 comms-text">  
             <i>Dear ____, We've been trying to contact you to discuss the quotation we gave you recently...</i>
-            <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [Survey Date]</p>
+            <!-- <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [Survey Date]</p> -->
         </div>
     </div>
     <div class="row comms-row">
@@ -66,7 +73,7 @@
         </div>
         <div class = "col-8 comms-text">    
             <i>Dear ____, We just wanted to thank you for the opportunity to quote...</i>
-            <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [Customer ID]</p>
+            <!-- <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [Customer ID]</p> -->
         </div>
     </div>
     <div class="row comms-row">
@@ -75,7 +82,7 @@
         </div>
         <div class = "col-8 comms-text">    
             <i>Dear ____, Thank you for taking the time to view our range of care plans...</i>
-            <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [Customer ID]</p>
+            <!-- <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [Customer ID]</p> -->
         </div>
     </div>
     <div class="row comms-row">
@@ -84,7 +91,7 @@
         </div>
         <div class = "col-8 comms-text">
             <i>Dear ____, Thank you for choosing Your Heat as your trusted boiler installation specialist...</i>
-            <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [Installation Date] [Brand] [Engineer Name]</p>
+            <!-- <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [Installation Date] [Brand] [Engineer Name]</p> -->
         </div>
     </div>
     <div class="row comms-row">
@@ -93,18 +100,34 @@
         </div>
         <div class = "col-8 comms-text">    
             <i>Dear ____, Thank you for choosing Your Heat to look after the installation of your new boiler...</i>
-            <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [Customer ID]</p>
+            <!-- <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name] [Customer ID]</p> -->
         </div>
     </div>
-    <div class="row comms-row">
-        <div class = "col-4">
-            <a class="btn boilerbtn btn-warning" href="{% url 'PreviewComms' 'Invoice Comms' customer_id  %}">Invoice Comms</a>
+   
+    
+    <hr>
+    <div class="row">
+        <div class = "col-3">
+            &nbsp;
         </div>
-        <div class = "col-8 comms-text">    
-            <i>Dear ____, Thank you for choosing Your Heat. Please find attached a copy of your Deposit Invoice which is payable by return...</i><br>
-            <p class="critical_ss_fields">&nbsp;&nbsp;[Customer Title] [Customer Last Name]</p>
+        <div class = "col-9">
+            <h4>Customer Finance Administration</h4>
         </div>
-    </div>         
+    </div>
+    <div class="row">
+        <div class = "col-3">
+            &nbsp;
+        </div>
+        <div class = "col-3">
+            <a class="btn boilerbtn btn-dark" href="{% url 'PreviewComms' 'Deposit Invoice Comms' customer_id  %}">Deposit Invoice Comms & Customer Creation in Xero</a>
+        </div> 
+        <div class = "col-3">
+            <a class="btn boilerbtn btn-dark" href="{% url 'PreviewComms' 'Balance Invoice Comms' customer_id  %}">Balance Invoice Comms & Posting to Xero</a>
+        </div>
+        <div class = "col-3">
+            <a class="btn boilerbtn btn-dark" href="{% url 'GetJobParts' customer_id %}">Xero Balance Receipt Acknowlegement Comms</a>
+        </div> 
+    </div>
       
     <div class="row comms-row">
         <div class = "col-4">            

@@ -1,0 +1,19 @@
+{% extends "yourheat/adminpages/base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h4>Xero Customer Creation - Status: Fail</h4>
+    <br>
+    <h4><b>You should now close this window/tab and check if Xero is running.</b></h4>
+
+</div>
+
+<script>
+    // all_good("Email processing", "Communication email(s) sent to the customer(s).", "adminhome/")
+    not_all_good_no_redirect("Customer Creation Failed", "Customer Failed to Post on Xero")
+    
+</script>
+
+{% endblock %}

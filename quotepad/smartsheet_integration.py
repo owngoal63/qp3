@@ -104,6 +104,7 @@ def ss_get_data_from_sheet(access_token, sheet_name, column_names, conditional_f
 		"Agreed Boiler Option": "agreed_boiler_option",
 		"Option A / Install Days Required": "installation_days_required",
 		"Agreed Deposit Amount": "agreed_deposit_amount",
+		"Customer Balance": "customer_balance",
 		"Option A Parts List": "option_a_parts_list",
 		"Option B Parts List": "option_b_parts_list",
 		"Optional Extras Accepted": "optional_extras_taken",
@@ -458,11 +459,19 @@ def ss_attach_pdf(access_token, sheet_name, conditional_field_name, conditional_
 				#print(str(attachFilename))
 				#print(stop)
  
-				if "CustomerInvoice" in str(attachFilename):		# Attachment is invoice
+				if "DepositInvoice" in str(attachFilename):		# Attachment is Deposit invoice
 					updated_attachment = ss.Attachments.attach_file_to_row(
 						sheet_id,       # sheet_id
 						MyRow["id"],       # row_id
-						('Customer Invoice.pdf',
+						('Deposit Invoice.pdf',
+						open(attachFilename, 'rb'),
+						'application/pdf')
+					)
+				elif "BalanceInvoice" in str(attachFilename):		# Attachment is Balance invoice
+					updated_attachment = ss.Attachments.attach_file_to_row(
+						sheet_id,       # sheet_id
+						MyRow["id"],       # row_id
+						('Balance Invoice.pdf',
 						open(attachFilename, 'rb'),
 						'application/pdf')
 					)

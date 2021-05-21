@@ -28,6 +28,20 @@ function all_good(headertext, maintext, nexturl) {
         });
 }
 
+function all_good_show_cancel(headertext, maintext, nexturl) {
+    return Swal.fire({
+        title: headertext,
+        text: maintext,
+        showCancelButton: true,
+        confirmButtonText: 'OK'
+        }).then((result) => 
+        {
+            if(result.value) {
+            window.location = base_url + nexturl;
+            }
+        });
+}
+
 function not_all_good(headertext, maintext, nexturl) {
     return Swal.fire({
         title: headertext,

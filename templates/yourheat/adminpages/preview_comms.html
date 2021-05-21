@@ -12,9 +12,12 @@
 
     <br><br>
     <!-- <a class="btn btn-primary" href="/RecommendAFriend/" target="_blank">Preview Email Message in new tab</a> -->
-    {% if comms == "Invoice Comms" %}
-        <a class="btn btn-warning" href="/ViewInvoicePDF/{{customer_id}}" target="_blank">Preview Invoice</a>
-    {% endif %}    
+    {% if comms == "Deposit Invoice Comms" %}
+        <a class="btn btn-warning" href="/ViewInvoicePDF/{{customer_id}}/DepositInvoice" target="_blank">Preview Deposit Invoice</a>
+    {% endif %}
+    {% if comms == "Balance Invoice Comms" %}
+        <a class="btn btn-warning" href="/ViewInvoicePDF/{{customer_id}}/BalanceInvoice" target="_blank">Preview Balance Invoice</a>
+    {% endif %}
     <a class="btn btn-primary" href="/EmailComms/{{comms}}/{{customer_id}}">Email to Customer</a>
     <a class="btn btn-secondary" href="/ProcessingCancelled/">Cancel</a>
 

@@ -94,11 +94,22 @@ def XeroTenants(access_token):
         json_dict = tenants
     return json_dict['tenantId']
 
-def XeroCreateContact(access_token, xero_tenant, name):
+def XeroCreateContact(access_token, xero_tenant, name, first_name, last_name, emailaddress):
     print("Function: XeroCreateContact")
     post_url = 'https://api.xero.com/api.xro/2.0/Contacts'
 
-    json_object = json.dumps({'Name': name })
+    #json_object = json.dumps({'Name': name })
+    json_object = json.dumps({
+        "Contacts": [
+            {
+                "Name": name,
+                "FirstName": first_name,
+                "LastName": last_name,
+                "EmailAddress": emailaddress,
+            }
+            ]
+        
+        })
 
     response = requests.post(post_url,
                            headers = {
@@ -114,7 +125,7 @@ def XeroCreateContact(access_token, xero_tenant, name):
     #print(json_response)
     return(json_response)
 
-def XeroCreateInvoice(access_token, xero_tenant, contact_id, amount, due_date):
+def XeroCreateInvoice(access_token, xero_tenant, contact_id, amount, due_date, description, reference):
     print("Function: XeroCreateInvoice")
     post_url = 'https://api.xero.com/api.xro/2.0/Invoices'
 
@@ -124,9 +135,10 @@ def XeroCreateInvoice(access_token, xero_tenant, contact_id, amount, due_date):
                     "ContactID": contact_id
                 },
                 "DueDate":  due_date,
+                "Reference": reference,
                 "LineItems": [
                     {
-                    "Description": "Services as agreed",
+                    "Description": description,
                     "Quantity": "1",
                     "UnitAmount": amount,
                     "AccountCode": "200"

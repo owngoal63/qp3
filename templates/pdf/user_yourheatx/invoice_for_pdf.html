@@ -69,17 +69,28 @@
     </td>
   </tr>
 
+
 </table>
 
 <table id="invoice-block-details">
   <tr>
     <td id="invoice-details-on-gray">
-      Deposit amount due for Boiler Installation and associated works.
+      {{invoice_data.description}}
     </td>
 
     <td id="invoice-amount-on-gray">
-      £{{invoice_data.agreed_deposit_amount|floatformat:2|intcomma}}<br><br>
+      £{{invoice_data.amount|floatformat:2|intcomma}}<br>
       <br>
+    </td>
+  </tr>
+
+  <tr>
+    <td id="invoice-details-on-gray">
+      &nbsp;
+    </td>
+
+    <td id="invoice-amount-on-gray">
+      + VAT 20%   £{{invoice_data.vat_on_amount|floatformat:2|intcomma}}<br>
     </td>
   </tr>
 
@@ -92,7 +103,7 @@
   <tr>
     <td id="invoice-cell-left">&nbsp;</td>
     <td id="invoice-cell-middle"></td>
-    <td id="invoice-cell-right"><b>Total £{{invoice_data.agreed_deposit_amount|floatformat:2|intcomma}}</b></td>
+    <td id="invoice-cell-right"><b>Total inc. VAT £{{invoice_data.amount_plus_vat|floatformat:2|intcomma}}</b></td>
   </tr>
 
 </table>
@@ -117,7 +128,7 @@
     <td id="invoice-cell-middle"></td>
     <td id="invoice-cell-left">
       <br><br>
-      <b>Please reference your Customer Reference ID and/or postcode on the payment</b>
+      <b>Please reference your Customer Reference ID on the payment</b>
     </td>
   </tr>
 </table>

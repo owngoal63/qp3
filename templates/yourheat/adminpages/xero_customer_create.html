@@ -1,0 +1,17 @@
+{% extends "yourheat/adminpages/base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h4>Xero Customer Create - {{customer_id}}</h4>
+    <br>
+    <h4><b>The Customer will be created in Xero</b></h4>
+
+</div>
+
+<script>
+    all_good_show_cancel("Create Customer in Xero", "Click OK to Initiate", "XeroCreateDepositCustomer/{{customer_id}}")
+</script>
+
+{% endblock %}

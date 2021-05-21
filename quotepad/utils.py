@@ -452,15 +452,18 @@ def service_account_login():
 	service = build('gmail', 'v1', credentials=delegated_credentials)
 	return service	
 
-def invoice_pdf_generation(customer_id, outputformat):
-	comms = "Invoice Comms"
+def invoice_pdf_generation(customer_id, outputformat, invoice_type, pdf_file=None):
+	if invoice_type == "BalanceInvoice":
+		comms = "Balance Invoice Comms"
+	else:
+		comms = "Deposit Invoice Comms"
 	#customer_id = 'YH-97'
 	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
 
 	ss_get_data_from_sheet(
 			settings.YH_SS_ACCESS_TOKEN,
 			settings.YH_SS_SHEET_NAME,
-			['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'House Name or Number', 'Street Address', 'City', 'County', 'Postcode', 'Agreed Deposit Amount'],
+			['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'House Name or Number', 'Street Address', 'City', 'County', 'Postcode', 'Agreed Deposit Amount', 'Customer Balance'],
 			'Customer ID',
 			customer_id,
 			data_filename
@@ -472,12 +475,30 @@ def invoice_pdf_generation(customer_id, outputformat):
 			for line in file:
 				file_form_data.append(eval(line))
 
+	# Calulate VAT on line data on either Balance Invoice or Deposit Invoice
+	for line in file_form_data:
+		if invoice_type == "BalanceInvoice":
+			amount = float(line["customer_balance"])
+			vat_on_amount = amount * 0.2
+			amount_plus_vat = amount + vat_on_amount
+			description = settings.BALANCE_INVOICE_DESCRIPTION
+		else:
+			amount = float(line["agreed_deposit_amount"])
+			vat_on_amount = amount * 0.2
+			amount_plus_vat = amount + vat_on_amount
+			description = settings.DEPOSIT_INVOICE_DESCRIPTION
+
 	# Generate the PDF based on the first row contents of text file
 	for line in file_form_data:
+		# Add VAT data to dictionary
+		line["amount"] = amount
+		line["vat_on_amount"] = vat_on_amount
+		line["amount_plus_vat"] = amount_plus_vat
+		line["description"] = description
 		#print(line)
 		sourceHtml = "pdf/user_{}/invoice_for_pdf.html".format(settings.YH_MASTER_PROFILE_USERNAME)
-		outputFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/CustomerInvoice_{}_{}.pdf".format(settings.YH_MASTER_PROFILE_USERNAME, line.get("customer_last_name"), line.get("smartsheet_id")))
 		if outputformat == "EmailOutput":
+			outputFilename = pdf_file
 			pdf_generation_to_file(sourceHtml, outputFilename, {'invoice_data': line})
 			return
 		else:	# outputformat is PDF to screen
@@ -485,5 +506,5 @@ def invoice_pdf_generation(customer_id, outputformat):
 			return pdf
 
 def remove_control_characters(s):
-    return "".join(ch for ch in s if unicodedata.category(ch)[0]!="C")
+	return "".join(ch for ch in s if unicodedata.category(ch)[0]!="C")
 		

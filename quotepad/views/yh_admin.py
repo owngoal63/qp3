@@ -200,11 +200,10 @@ def email_comms(request, comms, customer_id=None):
 				email.send()
 				#send_email_using_GmailAPI('gordonalindsay@gmail.com',line.get('customer_email'), mail_subject, html_content)
 		else:
-			if mail_subject == "Your Heat - Invoice":		# Invoice Comms - Attach Invoice PDF
-				#send_email_using_SendGrid('info@yourheat.co.uk', line.get('customer_email'), mail_subject, html_content )
-				# Generate Invoice PDF File
-				build_invoice_pdf(line.get('smartsheet_id'))
-				AttachFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/CustomerInvoice_{}_{}.pdf".format(settings.YH_MASTER_PROFILE_USERNAME, line.get("customer_last_name"), line.get("smartsheet_id")))
+			if mail_subject == "Your Heat - Deposit Invoice":		# Invoice Comms - Attach Invoice PDF
+				# Generate Deposit Invoice PDF File
+				AttachFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/DepositInvoice_{}_{}.pdf".format(settings.YH_MASTER_PROFILE_USERNAME, line.get("customer_last_name"), line.get("smartsheet_id")))
+				build_invoice_pdf(line.get('smartsheet_id'),"DepositInvoice", AttachFilename)
 				send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content, AttachFilename)
 
 				# Add Invoice PDF to Smartsheet Attachments
@@ -215,7 +214,23 @@ def email_comms(request, comms, customer_id=None):
 						"Customer ID",
 						line.get('smartsheet_id'),
 						AttachFilename
-					)	
+					)
+			elif mail_subject == "Your Heat - Balance Invoice":
+				# Generate Balance Invoice PDF File
+				AttachFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/BalanceInvoice_{}_{}.pdf".format(settings.YH_MASTER_PROFILE_USERNAME, line.get("customer_last_name"), line.get("smartsheet_id")))
+				build_invoice_pdf(line.get('smartsheet_id'),"BalanceInvoice", AttachFilename)
+				send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content, AttachFilename)
+
+				# Add Invoice PDF to Smartsheet Attachments
+				if settings.YH_SS_INTEGRATION:
+					ss_attach_pdf(
+						settings.YH_SS_ACCESS_TOKEN,
+						settings.YH_SS_SHEET_NAME,
+						"Customer ID",
+						line.get('smartsheet_id'),
+						AttachFilename
+					)
+
 					
 			else:		# Send comms emails without attachments
 				send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content)
@@ -234,8 +249,10 @@ def email_comms(request, comms, customer_id=None):
 				line.get('smartsheet_id'),
 				[comms + " email sent." + special_offer_text]
 			)
-	if mail_subject == "Your Heat - Invoice":		# Invoice Comms - Link to Xero Processing Page
-		return HttpResponseRedirect('/XeroInvoicePost/')
+	if mail_subject == "Your Heat - Deposit Invoice":		# Deposit Invoice Comms - Link to Xero Processing Page
+		return HttpResponseRedirect('/XeroCustomerCreate/' + customer_id)
+	elif mail_subject == "Your Heat - Balance Invoice":
+		return HttpResponseRedirect('/XeroInvoicePost/' + customer_id)
 	else:											# Standard Close Window Page
 		return HttpResponseRedirect('/EmailsSentToCustomers/')
 
@@ -772,18 +789,18 @@ class get_installation_appointment(FormView):
 		return render(self.request, 'yourheat/adminpages/confirm_calendar_appointment.html', {'comms_name': 'Installation Notification Comms', 'customer_id': customer_id})
 
 
-def view_invoice_pdf(request, customer_id):
+def view_invoice_pdf(request, customer_id, invoice_type):
 	print("Function: view_invoice_pdf")
 
-	pdf = invoice_pdf_generation(customer_id, "PDFOutput")
+	pdf = invoice_pdf_generation(customer_id, "PDFOutput", invoice_type)
 
 	return HttpResponse(pdf, content_type='application/pdf')
 
 
-def build_invoice_pdf(customer_id):
+def build_invoice_pdf(customer_id, invoice_type, pdf_file):
 	print("Function: build_invoice_pdf")
 
-	invoice_pdf_generation(customer_id, "EmailOutput")
+	invoice_pdf_generation(customer_id, "EmailOutput", invoice_type, pdf_file)
 
 	return 
 
@@ -1257,8 +1274,10 @@ def engineer_hub(request, engineer_name):
 	service = build('calendar', 'v3', credentials=creds)
 
 	# Call the Calendar API
-	now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-	events_result = service.events().list(calendarId=engineer_email, timeMin=now,
+	#now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+	now = datetime.datetime.utcnow()
+	now_minus_seven = (now - datetime.timedelta(days=7)).isoformat() + 'Z' # 'Z' indicates UTC time
+	events_result = service.events().list(calendarId=engineer_email, timeMin=now_minus_seven,
 																			maxResults=50, singleEvents=True,
 																			orderBy='startTime').execute()
 	events = events_result.get('items', [])
@@ -1654,12 +1673,17 @@ def XeroGetAccessTokenAndTenantID():
 	xero_tenant = XeroTenants(token["access_token"])
 	return token["access_token"], xero_tenant
 
-def XeroInvoicePost(request):
+def XeroInvoicePost(request, customer_id):
 	print("Function: XeroInvoicePost")
-	return render(request,'yourheat/adminpages/xero_invoice_post.html')
+	return render(request,'yourheat/adminpages/xero_invoice_post.html',{'customer_id': customer_id})
 
-def XeroCreateDepositInvoice(request):
-	print("Function: XeroCreateDepositInvoice")
+def XeroCustomerCreate(request, customer_id):
+	print("Function: XeroCustomerCreate")
+	return render(request,'yourheat/adminpages/xero_customer_create.html',{'customer_id': customer_id})
+
+def XeroCreateDepositCustomer(request, customer_id):
+	print("Function: XeroCreateDepositCustomer")
+	xero_line_description = settings.DEPOSIT_INVOICE_DESCRIPTION
 	access_token,tenant_id = XeroGetAccessTokenAndTenantID()
 	#print("access token", access_token)
 	#print("tenant_id", tenant_id)
@@ -1678,7 +1702,6 @@ def XeroCreateDepositInvoice(request):
 	# print(json_response)
 
 	# Get the customer invoice data from Smartsheet 
-	customer_id = 'YH-97'					########### Remember to remove - ONLY FOR TESTING !!!!!!!!!!
 	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/xero_data.txt".format(settings.YH_MASTER_PROFILE_USERNAME))
 	ss_get_data_from_sheet(
 			settings.YH_SS_ACCESS_TOKEN,
@@ -1699,7 +1722,8 @@ def XeroCreateDepositInvoice(request):
 		xero_contact_name = line["customer_first_name"] + " " + line["customer_last_name"] + " " + line["postcode"]
 		xero_invoice_amount = str(float(line["agreed_deposit_amount"]))
 
-	Xero_Contact_json = XeroCreateContact(access_token, tenant_id, xero_contact_name)
+	Xero_Contact_json = XeroCreateContact(access_token, tenant_id, xero_contact_name, line["customer_first_name"], line["customer_last_name"],  line["customer_email"] )
+	#invoice_reference = line["smartsheet_id"]
 	print("Xero Contact Creation Status: ", Xero_Contact_json["Status"])
 	if Xero_Contact_json["Status"] == "OK":
 		contact_id = Xero_Contact_json["Contacts"][0]["ContactID"]
@@ -1708,11 +1732,70 @@ def XeroCreateDepositInvoice(request):
 		print("Xero Contact Name:", contact_name)
 		xero_contact_status = True
 	
-		today_plus_thirty = (datetime.datetime.now() + datetime.timedelta(days=30))
+		# today_plus_thirty = (datetime.datetime.now() + datetime.timedelta(days=30))
 		# print(today_plus_thirty)
-		iso_date_format = today_plus_thirty.isoformat()
+		# iso_date_format = today_plus_thirty.isoformat()
 
-		Xero_Invoice_json = XeroCreateInvoice(access_token, tenant_id, contact_id, xero_invoice_amount, iso_date_format)
+		# Xero_Invoice_json = XeroCreateInvoice(access_token, tenant_id, contact_id, xero_invoice_amount, iso_date_format, xero_line_description, invoice_reference)
+		# print("Xero Invoice Creation Status: ", Xero_Invoice_json["Status"])
+		# if Xero_Invoice_json["Status"] == "OK":
+		# 	invoice_id = Xero_Invoice_json["Invoices"][0]["InvoiceID"]
+		# 	print("Xero Invoice ID: ", invoice_id)
+		# 	xero_invoice_status = True
+		# else:
+		# 	xero_invoice_status = False
+	else:
+		xero_contact_status = False
+
+	if xero_contact_status:
+		print("Xero Transaction Successful")
+		return render(request,'yourheat/adminpages/xero_customer_success.html')
+	else:
+		print("!!!!!! Xero Transaction Failed !!!!!!")
+		return render(request,'yourheat/adminpages/xero_customer_fail.html')
+
+def XeroCreateBalanceInvoice(request, customer_id):
+	print("Function: XeroCreateBalanceInvoice")
+	xero_line_description = settings.BALANCE_INVOICE_DESCRIPTION
+	access_token,tenant_id = XeroGetAccessTokenAndTenantID()
+	
+	# Get the customer balance invoice data from Smartsheet 
+	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/xero_data2.txt".format(settings.YH_MASTER_PROFILE_USERNAME))
+	ss_get_data_from_sheet(
+			settings.YH_SS_ACCESS_TOKEN,
+			settings.YH_SS_SHEET_NAME,
+			['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'House Name or Number', 'Street Address', 'City', 'County', 'Postcode', 'Installation Date', 'Customer Balance'],
+			'Customer ID',
+			customer_id,
+			data_filename
+		)
+	# Open the text file with the Smartsheet data 
+	with open(data_filename) as file:
+			file_form_data = []
+			for line in file:
+				line = remove_control_characters(line)
+				file_form_data.append(eval(line))
+
+	for line in file_form_data:
+		print(line["installation_date"])
+		xero_contact_name = line["customer_first_name"] + " " + line["customer_last_name"] + " " + line["postcode"]
+		xero_invoice_amount = str(float(line["customer_balance"]))
+
+	# Create contact ( in case it does not already exist - Xero does not throw an error ) 
+	Xero_Contact_json = XeroCreateContact(access_token, tenant_id, xero_contact_name, line["customer_first_name"], line["customer_last_name"],  line["customer_email"] )
+	invoice_reference = line["smartsheet_id"]
+	print("Xero Contact Creation Status: ", Xero_Contact_json["Status"])
+	if Xero_Contact_json["Status"] == "OK":
+		contact_id = Xero_Contact_json["Contacts"][0]["ContactID"]
+		contact_name = Xero_Contact_json["Contacts"][0]["Name"]
+		print("Xero Contact ID: ", contact_id)
+		print("Xero Contact Name:", contact_name)
+		xero_contact_status = True
+	
+		install_date_plus_five = (datetime.datetime.strptime(line["installation_date"], '%Y-%m-%d') + datetime.timedelta(days=5))
+		iso_date_format = install_date_plus_five.isoformat()
+	
+		Xero_Invoice_json = XeroCreateInvoice(access_token, tenant_id, contact_id, xero_invoice_amount, iso_date_format, xero_line_description, invoice_reference)
 		print("Xero Invoice Creation Status: ", Xero_Invoice_json["Status"])
 		if Xero_Invoice_json["Status"] == "OK":
 			invoice_id = Xero_Invoice_json["Invoices"][0]["InvoiceID"]

@@ -4,15 +4,14 @@
 
 <div class="container">
 
-    <h4>Xero Invoice Posting</h4>
+    <h4>Xero Invoice Posting - {{customer_id}}</h4>
     <br>
     <h4><b>The invoice is now ready for posting to Xero</b></h4>
 
 </div>
 
 <script>
-    // all_good("Email processing", "Communication email(s) sent to the customer(s).", "adminhome/")
-    all_good("Invoice Posting to Xero", "Click to Initiate", "XeroCreateDepositInvoice/")
+    all_good_show_cancel("Post Invoice to Xero", "Click OK to Initiate", "XeroCreateBalanceInvoice/{{customer_id}}")
 </script>
 
 {% endblock %}
