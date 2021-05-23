@@ -173,6 +173,7 @@
                 <td class="midrow">£ {{ form_data.9.ib36_total_payable }}</td>
                 <td class="endrow">£ {{ form_data.9.ib36_monthly_payment }}</td>
             </tr>
+            {% if form_data.9.include_interest_free_option %}
             <tr>
                 <td class="headrowx">Interest Free</td>
                 <td class="midrow">0%</td>
@@ -186,6 +187,7 @@
                 <td class="midrow">£ {{ form_data.9.interest_free_12m_total_payable }}</td>
                 <td class="endrow">£ {{ form_data.9.interest_free_12m_monthly_payment }}</td>
             </tr>
+            {% endif %}
         </table>
         <br>
         <p>
@@ -670,59 +672,99 @@
                                         <td class="col1">{{form_data.7.rad_1}}</td><td class="col2">{{form_data.7.sty_1}}</td><td class="col3">{{form_data.7.loc_1}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.rad_1 %}
+                                {% if form_data.7.rad_2 %}
                                     <tr>
                                         <td>{{form_data.7.rad_2}}</td><td>{{form_data.7.sty_2}}</td><td>{{form_data.7.loc_2}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.rad_1 %}
+                                {% if form_data.7.rad_3 %}
                                     <tr>
                                         <td>{{form_data.7.rad_3}}</td><td>{{form_data.7.sty_3}}</td><td>{{form_data.7.loc_3}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.rad_1 %}
+                                {% if form_data.7.rad_4 %}
                                     <tr>
                                         <td>{{form_data.7.rad_4}}</td><td>{{form_data.7.sty_4}}</td><td>{{form_data.7.loc_4}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.rad_1 %}
+                                {% if form_data.7.rad_5 %}
                                     <tr>
                                         <td>{{form_data.7.rad_5}}</td><td>{{form_data.7.sty_5}}</td><td>{{form_data.7.loc_5}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.rad_1 %}
+                                {% if form_data.7.rad_6 %}
                                     <tr>
                                         <td>{{form_data.7.rad_6}}</td><td>{{form_data.7.sty_6}}</td><td>{{form_data.7.loc_6}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.rad_1 %}
+                                {% if form_data.7.rad_7 %}
                                     <tr>
                                         <td>{{form_data.7.rad_7}}</td><td>{{form_data.7.sty_7}}</td><td>{{form_data.7.loc_7}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.rad_1 %}
+                                {% if form_data.7.rad_8 %}
                                     <tr>
                                         <td>{{form_data.7.rad_8}}</td><td>{{form_data.7.sty_8}}</td><td>{{form_data.7.loc_8}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.rad_1 %}
+                                {% if form_data.7.rad_9 %}
                                     <tr>
                                         <td>{{form_data.7.rad_9}}</td><td>{{form_data.7.sty_9}}</td><td>{{form_data.7.loc_9}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.rad_1 %}
+                                {% if form_data.7.rad_10 %}
                                     <tr>
                                         <td>{{form_data.7.rad_10}}</td><td>{{form_data.7.sty_10}}</td><td>{{form_data.7.loc_10}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.rad_1 %}
+                                {% if form_data.7.rad_11 %}
                                     <tr>
                                         <td>{{form_data.7.rad_11}}</td><td>{{form_data.7.sty_11}}</td><td>{{form_data.7.loc_11}}</td>
                                     </tr>
                                 {% endif %}
-                                {% if form_data.7.rad_1 %}
+                                {% if form_data.7.rad_12 %}
                                     <tr>
                                         <td>{{form_data.7.rad_12}}</td><td>{{form_data.7.sty_12}}</td><td>{{form_data.7.loc_12}}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if form_data.7.rad_13 %}
+                                    <tr>
+                                        <td>{{form_data.7.rad_13}}</td><td>{{form_data.7.sty_13}}</td><td>{{form_data.7.loc_13}}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if form_data.7.rad_14 %}
+                                    <tr>
+                                        <td>{{form_data.7.rad_14}}</td><td>{{form_data.7.sty_14}}</td><td>{{form_data.7.loc_14}}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if form_data.7.rad_15 %}
+                                    <tr>
+                                        <td>{{form_data.7.rad_15}}</td><td>{{form_data.7.sty_15}}</td><td>{{form_data.7.loc_15}}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if form_data.7.rad_16 %}
+                                    <tr>
+                                        <td>{{form_data.7.rad_16}}</td><td>{{form_data.7.sty_16}}</td><td>{{form_data.7.loc_16}}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if form_data.7.rad_17 %}
+                                    <tr>
+                                        <td>{{form_data.7.rad_17}}</td><td>{{form_data.7.sty_17}}</td><td>{{form_data.7.loc_17}}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if form_data.7.rad_18 %}
+                                    <tr>
+                                        <td>{{form_data.7.rad_18}}</td><td>{{form_data.7.sty_18}}</td><td>{{form_data.7.loc_18}}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if form_data.7.rad_19 %}
+                                    <tr>
+                                        <td>{{form_data.7.rad_19}}</td><td>{{form_data.7.sty_19}}</td><td>{{form_data.7.loc_19}}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if form_data.7.rad_20 %}
+                                    <tr>
+                                        <td>{{form_data.7.rad_20}}</td><td>{{form_data.7.sty_20}}</td><td>{{form_data.7.loc_20}}</td>
                                     </tr>
                                 {% endif %}
                                 
@@ -730,7 +772,35 @@
                             </table>
                         {% endif %}
 
+    <!-- If 15 or more radiators then throw extra page breaks for Valves and Towel Rails  -->
+    {% if form_data.7.rad_15 %}
+
+                    </td>
+                </tr>
+            </table>
+        </div>    
+
+
+        <div class="break"></div>
+
+        <!-- Page 5 -->
+    
+        <div class="page-start"><br><br><br><br></div>
+    
+        <div class="tech-details">
+            <table>
+                <tr>
+                    <td class="tech-title" colspan="2">Radiator Requirements</td>
+                </tr>
+                <tr>    
+                    <td class="tech-value" colspan="2">
+
+    {% endif %}
+    <!-- End of 15 or more radiators check -->
+
                         {% if radiator == 'Radiator(s) Required' or radiator == 'Thermostatic Radiator Valves Only' %}
+
+
                         <!-- &bull; Thermostatic Radiator Valves<br>  -->
                             <table class="radiator-table">
                                 <!-- <tr> -->
