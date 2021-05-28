@@ -16,7 +16,9 @@ PRODUCT_BRAND_DROPDOWN = (
 	('Keston','Keston'),
 	('Grant','Grant'),
 	('Heatrae Sadia','Heatrae Sadia'),
-	('Heatline','Heatline')
+	('Heatline','Heatline'),
+	('Viessmann','Viessmann')
+
 )
 
 PRODUCT_FUEL_TYPE_DROPDOWN = (
@@ -57,6 +59,7 @@ COMPONENT_BRAND_DROPDOWN = (
 	('Glow Worm','Glow Worm'),
 	('Baxi','Baxi'),
 	('Heatline','Heatline'),
+	('Viessmann','Viessmann'),
 	('Applicable for All','Applicable for All'),
 )
 
