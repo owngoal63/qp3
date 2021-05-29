@@ -1254,24 +1254,17 @@ class BoilerFormWizardView_yh(SessionWizardView):
 		for index, line in enumerate([form.cleaned_data for form in form_list]):
 			if index == 5:
 				# This code replaces the <object reference> in the form array[5] with the product_id
-				string = str(line)
-				firstDelPos=string.find("<") # get the position of <
-				secondDelPos=string.find(">") # get the position of >
-				stringAfterFirstReplace = string.replace(string[firstDelPos:secondDelPos+1], "'" + str(product_id) + "'", 1)
-				# Repeat for Alternative product Code
+				line["product_choice"] = str(product_id)
+				# Repeat for Alternative product Code ( if it exists )
 				if alt_product_exists:
-					string = stringAfterFirstReplace
-					firstDelPos=string.find("<") # get the position of <
-					secondDelPos=string.find(">") # get the position of >
-					stringAfterReplace = string.replace(string[firstDelPos:secondDelPos+1], "'" + str(alt_product_id) + "'", 1)
-				else:
-					stringAfterReplace = stringAfterFirstReplace
-			
-				file.write(str(stringAfterReplace) + "\n")
-			elif index == 8:
-				string = str(line)
-				file.write(string.replace("<OptionalExtra: ","'").replace(">, '","', '") + "\n")
-			else:	
+					line["alt_product_choice"] = str(alt_product_id)
+				file.write(str(line) + "\n")
+			elif index == 8:	# Optional Extras ( loop through to replace with text string if field is set )
+				for x in range(1, 11):
+					if line.get("extra_" + str(x)):
+						line["extra_" + str(x)] = str(line.get("extra_" + str(x)))
+				file.write(str(line) + "\n")
+			else:	# All the other lines except index 5 or 8	
 				file.write(str(line) + "\n")
 
 		# Write all the component dictionaries to the file ( inclusive of VAT)
@@ -1312,7 +1305,6 @@ class BoilerFormWizardView_yh(SessionWizardView):
 		file.write(str(towel_rail_locations_comp_dict_exVat) + "\n")
 		file.close()
 
-		#print(a_break)
 		# Set all session variables for Hub screen buttons ( Reset state )
 		self.request.session["create_quotation"] = True
 		self.request.session["view_current_quote"] = False
