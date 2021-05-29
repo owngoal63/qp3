@@ -171,6 +171,7 @@ def component_attrib_build(component_name, component_type, user, qty=1, brand=No
 		#ext_price_exVat = round(ext_price / Decimal(1.20),2)
 		cost = ProductComponent.objects.get(Q(brand='Applicable for All') | Q(brand=brand), component_name=component_name, component_type=component_type,user=user).cost
 		#cost_exVat = round(cost / Decimal(1.20),2)
+		ext_cost = cost * qty
 		duration = ProductComponent.objects.get(Q(brand='Applicable for All') | Q(brand=brand), component_name=component_name, component_type=component_type, user=user).est_time_duration
 		ext_duration = duration * qty
 	else:
@@ -181,10 +182,11 @@ def component_attrib_build(component_name, component_type, user, qty=1, brand=No
 		#ext_price_exVat = round(ext_price / Decimal(1.20),2)
 		cost = ProductComponent.objects.get(component_name=component_name, component_type=component_type, user=user).cost
 		#cost_exVat = round(cost / Decimal(1.20),2)
+		ext_cost = cost * qty
 		duration = ProductComponent.objects.get(component_name=component_name, component_type=component_type, user=user).est_time_duration
 		ext_duration = duration * qty
 
-	return {component_name: [qty, price, ext_price, cost, ext_duration]}
+	return {component_name: [qty, price, ext_price, ext_cost, ext_duration]}
 
 def component_attrib_build_exVat(component_name, component_type, user, qty=1, brand=None):
 	if brand:
@@ -195,7 +197,7 @@ def component_attrib_build_exVat(component_name, component_type, user, qty=1, br
 		ext_price = price * qty
 		ext_price_exVat = round(ext_price / Decimal(1.20),2)
 		cost = ProductComponent.objects.get(Q(brand='Applicable for All') | Q(brand=brand), component_name=component_name, component_type=component_type, user=user).cost
-		cost_exVat = round(cost / Decimal(1.20),2)
+		cost_exVat = round(cost / Decimal(1.20),2) * qty
 		duration = ProductComponent.objects.get(Q(brand='Applicable for All') | Q(brand=brand), component_name=component_name, component_type=component_type, user=user).est_time_duration
 		ext_duration = duration * qty
 	else:
@@ -205,7 +207,7 @@ def component_attrib_build_exVat(component_name, component_type, user, qty=1, br
 		ext_price = price * qty
 		ext_price_exVat = round(ext_price / Decimal(1.20),2)
 		cost = ProductComponent.objects.get(component_name=component_name, component_type=component_type, user=user).cost
-		cost_exVat = round(cost / Decimal(1.20),2)
+		cost_exVat = round(cost / Decimal(1.20),2) * qty
 		duration = ProductComponent.objects.get(component_name=component_name, component_type=component_type, user=user).est_time_duration
 		ext_duration = duration * qty
 

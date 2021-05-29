@@ -1797,7 +1797,9 @@ class FinanceForm_yh(forms.Form):
 
 	product_price = forms.DecimalField()
 	component_price_total = forms.DecimalField()
+	component_cost_total = forms.DecimalField()
 	parts_price_total = forms.DecimalField()
+	parts_cost_total = forms.DecimalField()
 	estimated_duration_cost = forms.DecimalField()
 	component_duration_total = forms.DecimalField()
 
@@ -1809,8 +1811,9 @@ class FinanceForm_yh(forms.Form):
 	def __init__(self, *args, **kwargs):
 		self.product_price = kwargs.pop('product_price')
 		self.component_price_total = kwargs.pop('component_price_total')
+		self.component_cost_total = kwargs.pop('component_cost_total')
 		self.parts_price_total = kwargs.pop('parts_price_total')
-		#print(self.parts_price_total)
+		self.parts_cost_total = kwargs.pop('parts_cost_total')
 		self.estimated_duration_cost = kwargs.pop('estimated_duration_cost')
 		self.component_duration_total = kwargs.pop('component_duration_total')
 		self.total_quote_price = kwargs.pop('total_quote_price')
@@ -1828,7 +1831,9 @@ class FinanceForm_yh(forms.Form):
 		self.fields['interest_free_12m_deposit_amount'].initial = (float(self.total_quote_price) * 30) / 100
 		self.fields['product_price'].initial = self.product_price
 		self.fields['component_price_total'].initial = self.component_price_total
+		self.fields['component_cost_total'].initial = self.component_cost_total
 		self.fields['parts_price_total'].initial = self.parts_price_total
+		self.fields['parts_cost_total'].initial = self.parts_cost_total
 		self.fields['estimated_duration_cost'].initial = self.estimated_duration_cost
 		self.fields['component_duration_total'].initial = self.component_duration_total
 		self.fields['alt_total_cost'].initial = self.alt_total_quote_price
