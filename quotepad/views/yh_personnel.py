@@ -16,7 +16,8 @@ ENGINEER_DROPDOWN = (
 	('adam.simmons@yourheat.co.uk', 'Adam Simmons'),
 	('terry.martin@yourheat.co.uk', 'Terry Martin'),
 	('tom.sharp@yourheat.co.uk', 'Tom Sharp'),
-	('keith.myler-dixon@yourheat.co.uk', 'Keith Myler-Dixon')
+	('keith.myler-dixon@yourheat.co.uk', 'Keith Myler-Dixon'),
+	('info@horizonplumbers.com', 'Max Woollen')
 )
 
 ENGINEER_POSTCODE_DROPDOWN = (
@@ -30,6 +31,7 @@ ENGINEER_POSTCODE_DROPDOWN = (
 	('Terry Martin (TN17)', 'Terry Martin (TN17)'),
 	('Tom Sharp (EN9)', 'Tom Sharp (EN9)'),
 	('Keith Myler-Dixon (CM2)', 'Keith Myler-Dixon (CM2)'),
+	('Max Woollen (BR4)', 'Max Woollen (BR4)'),
 	('Stock Availability Check', 'Stock Availability Check')
 )
 
@@ -49,7 +51,8 @@ engineer_dict = {
 	'adam.simmons@yourheat.co.uk': 'Adam Simmons',
 	'terry.martin@yourheat.co.uk': 'Terry Martin',
 	'tom.sharp@yourheat.co.uk': 'Tom Sharp',
-	'keith.myler-dixon@yourheat.co.uk': 'Keith Myler-Dixon'
+	'keith.myler-dixon@yourheat.co.uk': 'Keith Myler-Dixon',
+	'info@horizonplumbers.com': 'Max Woollen'
 }
 
 engineer_postcode_dict = {
@@ -62,6 +65,7 @@ engineer_postcode_dict = {
 	'Terry Martin (TN17)': 'terry.martin@yourheat.co.uk',
 	'Tom Sharp (EN9)': 'tom.sharp@yourheat.co.uk',
 	'Keith Myler-Dixon (CM2)': 'keith.myler-dixon@yourheat.co.uk',
+	'Max Woollen (BR4)': 'info@horizonplumbers.com',
 }
 
 engineer_calendar_dict = {
@@ -74,4 +78,5 @@ engineer_calendar_dict = {
 	'Terry Martin': 'terry.martin@yourheat.co.uk',
 	'Tom Sharp': 'tom.sharp@yourheat.co.uk',
 	'Keith Myler-Dixon': 'keith.myler-dixon@yourheat.co.uk',
+	'Max Woollen': 'max.woollen@yourheat.co.uk'
 }
