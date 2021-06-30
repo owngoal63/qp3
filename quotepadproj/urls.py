@@ -35,7 +35,7 @@ from quotepad.views import admin_home, customer_comms, list_customers_for_comms,
 from quotepad.views import processing_cancelled, preview_comms, display_comms, email_comms, email_sent_to_merchant
 
 # Imports for Hub
-from quotepad.views import hub_home, recommend_a_friend, preview_recommend_a_friend, email_recommend_a_friend, confirmation_page, view_invoice_pdf
+from quotepad.views import hub_home, recommend_a_friend, preview_recommend_a_friend, email_recommend_a_friend, confirmation_page, view_invoice_pdf, view_receipt_pdf
 
 # Imports for Customer Pages
 from quotepad.views import customer_acceptance, customer_acceptance_email, customer_enquiry_form
@@ -168,6 +168,7 @@ urlpatterns = [
     path('TestGmail/', test_gmail, name='TestGmail'),
 
     path('ViewInvoicePDF/<str:customer_id>/<str:invoice_type>/', view_invoice_pdf, name = 'ViewInvoicePDF'),
+    path('ViewReceiptPDF/<str:customer_id>/', view_receipt_pdf, name = 'ViewReceiptPDF'),
 
     path('CustomerAcceptance/<str:acceptancetype>/<str:customerid>/<str:firstname>/<str:surname>/', customer_acceptance, name = 'CustomerAcceptance'),
     path('CustomerAcceptanceEmail/<str:acceptancetype>/<str:customerid>/<str:firstname>/<str:surname>/', customer_acceptance_email, name = 'CustomerAcceptanceEmail'),

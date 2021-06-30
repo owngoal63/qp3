@@ -22,6 +22,13 @@
             text-align:justify;
         }
 
+        .headings_text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            text-align:justify;
+            font-weight: 600;
+        }
+
         .contact_text {
             font-family: 'Poppins', sans-serif;
             font-size: 14px;
@@ -98,6 +105,24 @@
         .email_header img {
             width:99%;
         }
+
+        .orange_box {
+            border: 5px solid orange;
+            border-radius: 25px 0px 25px 0px;
+            padding: 1rem;
+            /* width:250px; */
+            /* text-align: center; */
+        }
+
+        .black_button {
+            border: 5px solid black;
+            background-color: black;
+            border-radius: 5px 0px 5px 0px;
+            color: white;
+            width:250px; 
+            text-align: center;
+            margin: 0 auto;
+        }
     </style>
 </head>
 
@@ -112,7 +137,7 @@
 <!-- End of Layout Header Snippet  -->
 
     <div class="email_header">
-        <img src='http://www.qpcentral.co.uk/static/images/YH_email_header_invoice.png' alt="Your Heat Header"/>
+        <img src='http://www.qpcentral.co.uk/static/images/YH_email_header_thank_you.png' alt="Your Heat Header"/>
     </div>
 
     <div class="body_text">
@@ -127,34 +152,51 @@
                     href='mailto:info@yourheat.co.uk'>info@yourheat.co.uk</a>
             </div>
 
-            <p class="all_text">Dear {{ customer_title }} {{ customer_last_name }},</p>
+            <p class="all_text">Hi {{ customer_first_name }}</p>
 
             <!-- Insert Email body content here  -->
+                <p class="headings_text">
+                    Thank You.
+                </p>
 
                 <p class="all_text">
-                    Thank you again for choosing Your Heat as your selected installer for your new {{brand}} boiler.
+                    Your Heat have received payment for works completed at {{house_name_or_number}} {{street_address}}.  We’d like to take this opportunity to thank you once again for trusting us with your installation.
                 </p>
                 <p class="all_text">
-                    We trust the installation went well and you had a pleasant experience using Your Heat. 
+                    We have attached your receipt to this email.
                 </p>
+                <div class="orange_box">
+                    <p class="headings_text">What Happens Next?</p>
+                    <p class="all_text">The team here will now be taking care of registering your new boiler with the manufacturer and notifying building control, so there is no need to worry about a thing.</p>
+                    <p class="all_text">Paperwork should reach you within 4 – 6 weeks, if it doesn’t, let us know.</p>
+                    <p class="headings_text">Keep your warranty valid.</p>
+                    <p class="all_text">
+                        Your boiler comes with a warranty, as mentioned, paperwork for this should be on its way to you.
+                        To keep this valid, an annual service should be carried out every 12 months around the date of installation by a Gas Safe or Oftec Registered engineer.
+                    </p>
+                    <p class="all_text">
+                        We offer a range of <a href="https://yourheat.co.uk/care-plan-pricing/" target="_blank"><b>Your Heat Care Plans</b></a> which include an annual service as standard by one of our engineers.
+                    </p>
+                    <div style="text-align:center; margin: 0 auto"> <a href="https://yourheat.co.uk/care-plan-pricing/" target="_blank"><div class="black_button">Your Heat Plans</div></a></div>
+                </div>
                 <p class="all_text">      
-                    Please find attached the information required for your balance payment, we can take this via Credit/Debit card including AMEX,
-                    simply by contacting a member of the team here on <a href="tel:01732622990"><b>01732 622990</b></a>.
+                    We hope you had a great experience with us, we’d really love to hear about how we did.  If you have a moment, please do leave us a review.
                 </p>
-                <p class="all_text">
-                    Alternatively you can send this direct via a bank transfer, please send to:
-                </p>
-                <p class="all_text">
-                    Account Name: <b>Your Heat Ltd</b><br>
-                    Account Number: <b>54576261</b><br>
-                    Sort Code: <b>60-60-08</b><br>
-                    Reference: <b>{{smartsheet_id}}</b>
-                </p>
-
-
-
+                <div style="text-align:center; margin: 0 auto"> <a href="https://yourheat.co.uk/contact-us/" target="_blank"><div class="black_button">How did we do?</div></a></div>
+                <br>
+                <!-- <div class="orange_box">
+                    <p class="headings_text">Refer a friend and receive a £50 Amazon voucher</p>
+                    <p class="all_text">How it works</p>
+                    <ol type="1">
+                        <li class="all_text">Use the “refer a friend button” found below, This will open an email to your friend with their unique promo code</li>
+                        <li class="all_text">Enter your friend's email address and simply send the email</li>
+                        <li class="all_text">Do not delete the hello@yourheat.co.uk email address in the cc line. This is so we can make sure you are sent your voucher</li>
+                      </ol>
+                      <div style="text-align:center; margin: 0 auto"> <a href="https://yourheat.co.uk/care-plan-pricing/"><div class="black_button">Refer a friend</div></a></div>
+                </div>
+                <br> -->
             <p class="all_text">
-                Warm regards, The Your Heat Team
+                Many thanks, The Your Heat Team
             </p>
 
             <!-- End of Email body content  -->

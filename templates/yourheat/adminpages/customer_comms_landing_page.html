@@ -42,7 +42,7 @@
 
     <div class="row comms-row">
         <div class = "col-4">
-            <a class="btn boilerbtn btn-warning" href="{% url 'PreviewComms' 'Survey Booked Comms' customer_id  %}">Resend Survey Booked Comms</a>
+            <a class="btn boilerbtn btn-warning btn-comms" href="{% url 'PreviewComms' 'Survey Booked Comms' customer_id  %}">Resend Survey Booked Comms</a>
         </div>
         <div class = "col-8 comms-text">    
             <i>Dear ____, Our surveyor is looking forward to visiting you to provide a free, no-obligation quote...</i><br>
@@ -51,7 +51,7 @@
     </div>   
     <div class="row comms-row">
         <div class = "col-4">
-            <a class="btn boilerbtn btn-warning" href="{% url 'PreviewComms' 'Boiler Quotation Comms' customer_id  %}">Boiler Quotation Follow-up Comms</a>
+            <a class="btn boilerbtn btn-warning btn-comms" href="{% url 'PreviewComms' 'Boiler Quotation Comms' customer_id  %}">Boiler Quotation Follow-up Comms</a>
         </div>
         <div class = "col-8 comms-text">    
             <i>Dear ____, We tried calling today to discuss the quotation we gave on...</i>
@@ -60,7 +60,7 @@
     </div>        
     <div class="row comms-row">
         <div class = "col-4">      
-            <a class="btn boilerbtn btn-warning" href="{% url 'PreviewComms' 'Our Priority Comms' customer_id  %}">Goodbye Comms</a>
+            <a class="btn boilerbtn btn-warning btn-comms" href="{% url 'PreviewComms' 'Our Priority Comms' customer_id  %}">Goodbye Comms</a>
         </div>
         <div class = "col-8 comms-text">  
             <i>Dear ____, We've been trying to contact you to discuss the quotation we gave you recently...</i>
@@ -69,7 +69,7 @@
     </div>
     <div class="row comms-row">
         <div class = "col-4">                      
-            <a class="btn boilerbtn btn-warning" href="{% url 'GetSpecialOffer' customer_id %}">Special Offer Comms</a>
+            <a class="btn boilerbtn btn-warning btn-comms" href="{% url 'GetSpecialOffer' customer_id %}">Special Offer Comms</a>
         </div>
         <div class = "col-8 comms-text">    
             <i>Dear ____, We just wanted to thank you for the opportunity to quote...</i>
@@ -78,7 +78,7 @@
     </div>
     <div class="row comms-row">
         <div class = "col-4">                      
-            <a class="btn boilerbtn btn-warning" href="{% url 'GetHeatPlan' customer_id %}">Heat Plan Comms</a>
+            <a class="btn boilerbtn btn-warning btn-comms" href="{% url 'GetHeatPlan' customer_id %}">Heat Plan Comms</a>
         </div>
         <div class = "col-8 comms-text">    
             <i>Dear ____, Thank you for taking the time to view our range of care plans...</i>
@@ -87,7 +87,7 @@
     </div>
     <div class="row comms-row">
         <div class = "col-4">              
-            <a class="btn boilerbtn btn-warning" href="{% url 'PreviewComms' 'Installation Notification Comms' customer_id  %}">Resend Installation Notification Comms</a>
+            <a class="btn boilerbtn btn-warning btn-comms" href="{% url 'PreviewComms' 'Installation Notification Comms' customer_id  %}">Resend Installation Notification Comms</a>
         </div>
         <div class = "col-8 comms-text">
             <i>Dear ____, Thank you for choosing Your Heat as your trusted boiler installation specialist...</i>
@@ -96,7 +96,7 @@
     </div>
     <div class="row comms-row">
         <div class = "col-4">                      
-            <a class="btn boilerbtn btn-warning" href="{% url 'PreviewComms' 'Free Boiler Service Comms' customer_id  %}">Free Boiler Service Comms</a>
+            <a class="btn boilerbtn btn-warning btn-comms" href="{% url 'PreviewComms' 'Free Boiler Service Comms' customer_id  %}">Free Boiler Service Comms</a>
         </div>
         <div class = "col-8 comms-text">    
             <i>Dear ____, Thank you for choosing Your Heat to look after the installation of your new boiler...</i>
@@ -125,7 +125,7 @@
             <a class="btn boilerbtn btn-dark" href="{% url 'PreviewComms' 'Balance Invoice Comms' customer_id  %}">Balance Invoice Comms & Posting to Xero</a>
         </div>
         <div class = "col-3">
-            <a class="btn boilerbtn btn-dark" href="{% url 'GetJobParts' customer_id %}">Xero Balance Receipt Acknowlegement Comms</a>
+            <a class="btn boilerbtn btn-dark" href="{% url 'PreviewComms' 'Receipt Acknowlegement Comms' customer_id  %}">Xero Balance Receipt Acknowlegement Comms</a>
         </div> 
     </div>
       

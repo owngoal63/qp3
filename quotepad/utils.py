@@ -481,13 +481,13 @@ def invoice_pdf_generation(customer_id, outputformat, invoice_type, pdf_file=Non
 	for line in file_form_data:
 		if invoice_type == "BalanceInvoice":
 			amount = float(line["customer_balance"])
-			vat_on_amount = amount * 0.2
-			amount_plus_vat = amount + vat_on_amount
+			amount_minus_vat = amount / 1.2
+			vat_on_amount = amount - amount_minus_vat
 			description = settings.BALANCE_INVOICE_DESCRIPTION
 		else:
 			amount = float(line["agreed_deposit_amount"])
-			vat_on_amount = amount * 0.2
-			amount_plus_vat = amount + vat_on_amount
+			amount_minus_vat = amount / 1.2
+			vat_on_amount = amount - amount_minus_vat
 			description = settings.DEPOSIT_INVOICE_DESCRIPTION
 
 	# Generate the PDF based on the first row contents of text file
@@ -495,7 +495,7 @@ def invoice_pdf_generation(customer_id, outputformat, invoice_type, pdf_file=Non
 		# Add VAT data to dictionary
 		line["amount"] = amount
 		line["vat_on_amount"] = vat_on_amount
-		line["amount_plus_vat"] = amount_plus_vat
+		line["amount_minus_vat"] = amount_minus_vat
 		line["description"] = description
 		#print(line)
 		sourceHtml = "pdf/user_{}/invoice_for_pdf.html".format(settings.YH_MASTER_PROFILE_USERNAME)
@@ -505,6 +505,50 @@ def invoice_pdf_generation(customer_id, outputformat, invoice_type, pdf_file=Non
 			return
 		else:	# outputformat is PDF to screen
 			pdf = pdf_generation(sourceHtml, {'invoice_data': line})
+			return pdf
+
+def receipt_pdf_generation(customer_id, outputformat, pdf_file=None):
+	comms = "Receipt Acknowlegement Comms"
+	#customer_id = 'YH-97'
+	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
+
+	ss_get_data_from_sheet(
+			settings.YH_SS_ACCESS_TOKEN,
+			settings.YH_SS_SHEET_NAME,
+			['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'House Name or Number', 'Street Address', 'City', 'County', 'Postcode', 'Agreed Deposit Amount', 'Customer Balance'],
+			'Customer ID',
+			customer_id,
+			data_filename
+		)
+
+	# Open the text file with the Smartsheet data 
+	with open(data_filename) as file:
+			file_form_data = []
+			for line in file:
+				file_form_data.append(eval(line))
+
+	# Calulate VAT on line data on either Balance Invoice or Deposit Invoice
+	for line in file_form_data:
+		amount = float(line["agreed_deposit_amount"]) + float(line["customer_balance"])
+		amount_minus_vat = amount / 1.2
+		vat_on_amount = amount - amount_minus_vat
+		description = settings.RECEIPT_DESCRIPTION
+
+	# Generate the PDF based on the first row contents of text file
+	for line in file_form_data:
+		# Add VAT data to dictionary
+		line["amount"] = amount
+		line["vat_on_amount"] = vat_on_amount
+		line["amount_minus_vat"] = amount_minus_vat
+		line["description"] = description
+		#print(line)
+		sourceHtml = "pdf/user_{}/receipt_for_pdf.html".format(settings.YH_MASTER_PROFILE_USERNAME)
+		if outputformat == "EmailOutput":
+			outputFilename = pdf_file
+			pdf_generation_to_file(sourceHtml, outputFilename, {'receipt_data': line})
+			return
+		else:	# outputformat is PDF to screen
+			pdf = pdf_generation(sourceHtml, {'receipt_data': line})
 			return pdf
 
 def remove_control_characters(s):

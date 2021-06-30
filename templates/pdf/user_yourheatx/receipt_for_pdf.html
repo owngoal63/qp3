@@ -5,7 +5,7 @@
 <html>
 
 <head>
-    <title>Invoice PDF</title>
+    <title>Receipt PDF</title>
 </head>
 
 <body>
@@ -22,37 +22,56 @@
     <td id="invoice-cell-left"><img src="http://www.qpcentral.co.uk/static/images/YourHeatLogo.png"> </td>
     <td id="invoice-cell-middle"></td>
     <td id="invoice-cell-left">
-      <b>Your Heat Ltd</b><br>
+      <h4>RECEIPT</h4>
+      <br>
+      <table>
+        <tr>
+          <td id="invoice-cell-left">Reference ID:</td>
+          <td id="invoice-cell-middle"></td>
+          <td id="invoice-cell-right">{{receipt_data.smartsheet_id}}</td>
+        </tr>
+        <tr>
+          <td id="invoice-cell-left">Date:</td>
+          <td id="invoice-cell-middle"></td>
+          <td id="invoice-cell-right">{% now "jS F Y" %}</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<br><br>
+
+
+<table id="invoice">
+  <tr>
+    <td id="invoice-cell-left">RECEIVED FROM</td>
+    <td id="invoice-cell-middle"></td>
+    <td id="invoice-cell-left">RECEIVED BY</td>
+  </tr>
+  <tr>
+    <td id="invoice-cell-left"><hr></td>
+    <td id="invoice-cell-middle"></td>
+    <td id="invoice-cell-left"><hr></td>
+  </tr>
+
+  <tr>
+    <td id="invoice-cell-left">
+      {{receipt_data.customer_title}} &nbsp;{{receipt_data.customer_first_name}} &nbsp;{{receipt_data.customer_last_name}}<br>
+      {{receipt_data.house_name_or_number|floatformat:0}}<br>
+      {{receipt_data.street_address}}<br>
+      {{receipt_data.city}}&nbsp;{{ receipt_data.county}}<br>
+      {{receipt_data.postcode}}<br>
+    </td>
+    <td id="invoice-cell-middle"></td>
+    <td id="invoice-cell-left">
+      Your Heat Ltd<br>
       The Oast<br>
       East Malling Business Centre<br>
       New Road<br>
       East Malling<br>
       Kent<br>
       ME19 6BJ<br><br>
-    </td>
-  </tr>
-</table>
-
-
-<table id="invoice">
-  <tr>
-    <td id="invoice-cell-left"><hr></td>
-    <td id="invoice-cell-middle"></td>
-    <td id="invoice-cell-left"><hr></td>
-  </tr>
-
-  <tr>
-    <td id="invoice-cell-left">
-      {{invoice_data.customer_title}} &nbsp;{{invoice_data.customer_first_name}} &nbsp;{{invoice_data.customer_last_name}}<br>
-      {{invoice_data.house_name_or_number|floatformat:0}}<br>
-      {{invoice_data.street_address}}<br>
-      {{invoice_data.city}}&nbsp;{{ invoice_data.county}}<br>
-      {{invoice_data.postcode}}<br>
-    </td>
-    <td id="invoice-cell-middle"></td>
-    <td id="invoice-cell-left">
-      <b>Customer Reference ID: {{invoice_data.smartsheet_id}}</b><br>
-      {% now "jS F Y" %}<br>
     </td>
   </tr>
 </table>
@@ -75,11 +94,11 @@
 <table id="invoice-block-details">
   <tr>
     <td id="invoice-details-on-gray">
-      {{invoice_data.description}}
+      {{receipt_data.description}}
     </td>
 
     <td id="invoice-amount-on-gray">
-      £{{invoice_data.amount_minus_vat|floatformat:2|intcomma}}<br>
+      £{{receipt_data.amount_minus_vat|floatformat:2|intcomma}}<br>
       <br>
     </td>
   </tr>
@@ -90,7 +109,7 @@
     </td>
 
     <td id="invoice-amount-on-gray">
-      + VAT 20%   £{{invoice_data.vat_on_amount|floatformat:2|intcomma}}<br>
+      + VAT 20%   £{{receipt_data.vat_on_amount|floatformat:2|intcomma}}<br>
     </td>
   </tr>
 
@@ -103,7 +122,7 @@
   <tr>
     <td id="invoice-cell-left">&nbsp;</td>
     <td id="invoice-cell-middle"></td>
-    <td id="invoice-cell-right"><b>Total inc. VAT £{{invoice_data.amount|floatformat:2|intcomma}}</b></td>
+    <td id="invoice-cell-right"><b>Total inc. VAT £{{receipt_data.amount|floatformat:2|intcomma}}</b></td>
   </tr>
 
 </table>
@@ -119,20 +138,16 @@
 
   <tr>
     <td id="invoice-cell-left">
-      <b>Payment Details</b><br><br>
-      Account Name: Your Heat LTD<br>
-      Account Number: 54576261<br>
-      Sort Code: 60-60-08<br>
-      All major debit and credit cards accepted - including AMEX
+      RECEIVED WITH THANKS
+      <br><br><br>
+      <img src="http://www.qpcentral.co.uk/static/images/YH_receipt_signature.png">
+      <hr>
+      SIGNATURE
     </td>
     <td id="invoice-cell-middle"></td>
-    <td id="invoice-cell-left">
-      <br><br>
-      <b>Please reference your Customer Reference ID on the payment</b>
-    </td>
+    <td id="invoice-cell-left"></td>
   </tr>
 </table>
-
 
 </body>
 

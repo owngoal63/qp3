@@ -161,6 +161,11 @@ ul#id_7-radiator_specification li {
   ;
 }
 
+.btn-comms {
+  width:350px;
+  text-align: left;
+}
+
 .trustpilot-logo {
   height: 100px;
   margin-top: 50px;

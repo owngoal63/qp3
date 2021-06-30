@@ -35,7 +35,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 from quotepad.utils import create_message, create_message_with_attachment, send_message, send_email_using_GmailAPI
-from quotepad.utils import pdf_generation, pdf_generation_to_file, invoice_pdf_generation
+from quotepad.utils import pdf_generation, pdf_generation_to_file, invoice_pdf_generation, receipt_pdf_generation
 
 # Import YH Engineer and surveyor data required for forms
 from .yh_personnel import surveyor_dict, engineer_dict, engineer_postcode_dict, engineer_calendar_dict
@@ -78,7 +78,7 @@ def display_comms(request, comms, customer_id=None):
 			ss_get_data_from_sheet(
 				settings.YH_SS_ACCESS_TOKEN,
 				settings.YH_SS_SHEET_NAME,
-				['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'Installation Date', 'Survey Date',  'Surveyor', 'Survey Time', 'Engineer Appointed', 'Boiler Manufacturer'],
+				['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'House Name or Number', 'Street Address', 'Email', 'Installation Date', 'Survey Date',  'Surveyor', 'Survey Time', 'Engineer Appointed', 'Boiler Manufacturer'],
 				'Customer ID',
 				customer_id,
 				data_filename
@@ -99,6 +99,7 @@ def display_comms(request, comms, customer_id=None):
 			for line in file:
 				line = remove_control_characters(line)
 				file_form_data.append(eval(line))
+			
 
 
 	for line in file_form_data:
@@ -130,7 +131,13 @@ def display_comms(request, comms, customer_id=None):
 		try:
 			validate_email(line["customer_email"])
 		except:
-			return HttpResponse("The customer's email address is invalid.")	
+			return HttpResponse("The customer's email address is invalid.")
+
+		if comms == "Receipt Acknowlegement Comms":
+			# Convert house number with a .0 postfix to an integer with string manipulation
+			at_pos = line["house_name_or_number"].find('.0')
+			if at_pos > 0:
+				line["house_name_or_number"] = line["house_name_or_number"][0:at_pos]
 
 	#Check if record has already been sent and add details to dict
 	# for index, line in enumerate(comms_data):
@@ -153,7 +160,7 @@ def email_comms(request, comms, customer_id=None):
 			ss_get_data_from_sheet(
 				settings.YH_SS_ACCESS_TOKEN,
 				settings.YH_SS_SHEET_NAME,
-				['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'Email', 'Installation Date', 'Survey Date', 'Survey Time', 'Surveyor', 'Engineer Appointed', 'Boiler Manufacturer'],
+				['Customer Status', 'Customer ID', 'Title', 'First Name', 'Surname', 'House Name or Number', 'Street Address', 'Email', 'Installation Date', 'Survey Date', 'Survey Time', 'Surveyor', 'Engineer Appointed', 'Boiler Manufacturer'],
 				'Customer ID',
 				customer_id,
 				data_filename
@@ -189,10 +196,18 @@ def email_comms(request, comms, customer_id=None):
 			if comms == "Special Offer Comms":
 				line["survey_date"] = datetime.datetime.strptime(line["survey_date"], "%Y-%m-%d")
 
+		if comms != "Special Offer Comms" and comms != "Heat Plan Comms":
+			# Convert house number with a .0 postfix to an integer with string manipulation
+			at_pos = line["house_name_or_number"].find('.0')
+			if at_pos > 0:
+				line["house_name_or_number"] = line["house_name_or_number"][0:at_pos]
+
 		html_content = render_to_string(html_email_filename, line)
 		# Drop the Comms from the comms_name for the Email subject line
 		at_pos = comms.find('Comms')
 		mail_subject = ('Your Heat - ' + comms[0:at_pos]).strip()
+
+		#print("**" + mail_subject + "**" )
 
 		if settings.YH_TEST_EMAIL:
 				email = EmailMessage(mail_subject, html_content, 'info@yourheat.co.uk' , [line.get('customer_email')])
@@ -219,6 +234,21 @@ def email_comms(request, comms, customer_id=None):
 				# Generate Balance Invoice PDF File
 				AttachFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/BalanceInvoice_{}_{}.pdf".format(settings.YH_MASTER_PROFILE_USERNAME, line.get("customer_last_name"), line.get("smartsheet_id")))
 				build_invoice_pdf(line.get('smartsheet_id'),"BalanceInvoice", AttachFilename)
+				send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content, AttachFilename)
+
+				# Add Invoice PDF to Smartsheet Attachments
+				if settings.YH_SS_INTEGRATION:
+					ss_attach_pdf(
+						settings.YH_SS_ACCESS_TOKEN,
+						settings.YH_SS_SHEET_NAME,
+						"Customer ID",
+						line.get('smartsheet_id'),
+						AttachFilename
+					)
+			elif mail_subject == "Your Heat - Receipt Acknowlegement":
+				# Generate Receipt Acknowledgement PDF File
+				AttachFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/ReceiptAcknowledgement_{}_{}.pdf".format(settings.YH_MASTER_PROFILE_USERNAME, line.get("customer_last_name"), line.get("smartsheet_id")))
+				build_receipt_pdf(line.get('smartsheet_id'),"ReceiptAcknowledgement", AttachFilename)
 				send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content, AttachFilename)
 
 				# Add Invoice PDF to Smartsheet Attachments
@@ -802,7 +832,21 @@ def build_invoice_pdf(customer_id, invoice_type, pdf_file):
 
 	invoice_pdf_generation(customer_id, "EmailOutput", invoice_type, pdf_file)
 
-	return 
+	return
+
+def view_receipt_pdf(request, customer_id):
+	print("Function: view_receipt_pdf")
+
+	pdf = receipt_pdf_generation(customer_id, "PDFOutput")
+
+	return HttpResponse(pdf, content_type='application/pdf')
+
+def build_receipt_pdf(customer_id, invoice_type, pdf_file):
+	print("Function: build_receipt_pdf")
+
+	receipt_pdf_generation(customer_id, "EmailOutput", pdf_file)
+
+	return
 
 
 def confirm_calendar_appointment(request, customer_id=None):
@@ -1779,7 +1823,8 @@ def XeroCreateBalanceInvoice(request, customer_id):
 	for line in file_form_data:
 		print(line["installation_date"])
 		xero_contact_name = line["customer_first_name"] + " " + line["customer_last_name"] + " " + line["postcode"]
-		xero_invoice_amount = str(float(line["customer_balance"]))
+		xero_invoice_amount_inc_vat = float(line["customer_balance"])
+		amount_minus_vat = str(xero_invoice_amount_inc_vat / 1.2)
 
 	# Create contact ( in case it does not already exist - Xero does not throw an error ) 
 	Xero_Contact_json = XeroCreateContact(access_token, tenant_id, xero_contact_name, line["customer_first_name"], line["customer_last_name"],  line["customer_email"] )
@@ -1795,7 +1840,7 @@ def XeroCreateBalanceInvoice(request, customer_id):
 		install_date_plus_five = (datetime.datetime.strptime(line["installation_date"], '%Y-%m-%d') + datetime.timedelta(days=5))
 		iso_date_format = install_date_plus_five.isoformat()
 	
-		Xero_Invoice_json = XeroCreateInvoice(access_token, tenant_id, contact_id, xero_invoice_amount, iso_date_format, xero_line_description, invoice_reference)
+		Xero_Invoice_json = XeroCreateInvoice(access_token, tenant_id, contact_id, amount_minus_vat, iso_date_format, xero_line_description, invoice_reference)
 		print("Xero Invoice Creation Status: ", Xero_Invoice_json["Status"])
 		if Xero_Invoice_json["Status"] == "OK":
 			invoice_id = Xero_Invoice_json["Invoices"][0]["InvoiceID"]
