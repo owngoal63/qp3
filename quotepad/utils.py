@@ -1,4 +1,5 @@
 from io import BytesIO
+from django.db.models.query import FlatValuesListIterable
 from django.http import HttpResponse
 from django.template.loader import get_template
 from django.conf import settings
@@ -47,6 +48,9 @@ from email.mime.application import MIMEApplication
 
 # Added to remove control characters
 import unicodedata
+
+# Added to keep track of invoicing status
+from quotepad.models import CustomerComm
 
 
 ''' Various functions used by the XHtml2pdf library '''
@@ -507,8 +511,11 @@ def invoice_pdf_generation(customer_id, outputformat, invoice_type, pdf_file=Non
 			pdf = pdf_generation(sourceHtml, {'invoice_data': line})
 			return pdf
 
-def receipt_pdf_generation(customer_id, outputformat, pdf_file=None):
-	comms = "Receipt Acknowlegement Comms"
+def receipt_pdf_generation(customer_id, outputformat, receipt_type, pdf_file=None):
+	if receipt_type == "BalanceReceipt":
+		comms = "Balance Receipt Comms"
+	else:
+		comms = "Deposit Receipt Comms"
 	#customer_id = 'YH-97'
 	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
 
@@ -527,12 +534,18 @@ def receipt_pdf_generation(customer_id, outputformat, pdf_file=None):
 			for line in file:
 				file_form_data.append(eval(line))
 
-	# Calulate VAT on line data on either Balance Invoice or Deposit Invoice
+	# Calulate VAT on line data on either Balance Receipt or Deposit Receipt
 	for line in file_form_data:
-		amount = float(line["agreed_deposit_amount"]) + float(line["customer_balance"])
-		amount_minus_vat = amount / 1.2
-		vat_on_amount = amount - amount_minus_vat
-		description = settings.RECEIPT_DESCRIPTION
+		if receipt_type == "BalanceReceipt":
+			amount = float(line["customer_balance"])
+			amount_minus_vat = amount / 1.2
+			vat_on_amount = amount - amount_minus_vat
+			description = settings.BALANCE_RECEIPT_DESCRIPTION
+		else:
+			amount = float(line["agreed_deposit_amount"])
+			amount_minus_vat = amount / 1.2
+			vat_on_amount = amount - amount_minus_vat
+			description = settings.DEPOSIT_RECEIPT_DESCRIPTION
 
 	# Generate the PDF based on the first row contents of text file
 	for line in file_form_data:
@@ -553,4 +566,29 @@ def receipt_pdf_generation(customer_id, outputformat, pdf_file=None):
 
 def remove_control_characters(s):
 	return "".join(ch for ch in s if unicodedata.category(ch)[0]!="C")
+
+
+def update_customer_comms_table(customer_id, status):
+
+	if CustomerComm.objects.filter(user=settings.YH_MASTER_PROFILE_ID, customer_id = customer_id).exists():
+		# Update record
+		obj = CustomerComm.objects.get(user=settings.YH_MASTER_PROFILE_ID, customer_id = customer_id)
+		obj.comms_id = status
+		obj.save()
+	else:
+		# Create record
+		CustomerComm.objects.create(user_id=settings.YH_MASTER_PROFILE_ID, customer_id = customer_id, comms_id = status)
+	return
+
+def get_customer_comms_invoice_status(customer_id):
+	if CustomerComm.objects.filter(user=settings.YH_MASTER_PROFILE_ID, customer_id = customer_id).exists():
+		obj = CustomerComm.objects.get(user=settings.YH_MASTER_PROFILE_ID, customer_id = customer_id)
+		return str(obj.comms_id)
+	else:
+		return False
+
+
+
+	
 		
+

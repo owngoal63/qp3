@@ -18,8 +18,11 @@
     {% if comms == "Balance Invoice Comms" %}
         <a class="btn btn-warning" href="/ViewInvoicePDF/{{customer_id}}/BalanceInvoice" target="_blank">Preview Balance Invoice</a>
     {% endif %}
-    {% if comms == "Receipt Acknowlegement Comms" %}
-        <a class="btn btn-warning" href="/ViewReceiptPDF/{{customer_id}}" target="_blank">Preview Acknowledgement Receipt</a>
+    {% if comms == "Deposit Receipt Comms" %}
+        <a class="btn btn-warning" href="/ViewReceiptPDF/{{customer_id}}/DepositReceipt" target="_blank">Preview Deposit Receipt</a>
+    {% endif %}
+    {% if comms == "Balance Receipt Comms" %}
+        <a class="btn btn-warning" href="/ViewReceiptPDF/{{customer_id}}/BalanceReceipt" target="_blank">Preview Balance Receipt</a>
     {% endif %}
     <a class="btn btn-primary" href="/EmailComms/{{comms}}/{{customer_id}}">Email to Customer</a>
     <a class="btn btn-secondary" href="/ProcessingCancelled/">Cancel</a>

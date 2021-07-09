@@ -168,7 +168,7 @@ urlpatterns = [
     path('TestGmail/', test_gmail, name='TestGmail'),
 
     path('ViewInvoicePDF/<str:customer_id>/<str:invoice_type>/', view_invoice_pdf, name = 'ViewInvoicePDF'),
-    path('ViewReceiptPDF/<str:customer_id>/', view_receipt_pdf, name = 'ViewReceiptPDF'),
+    path('ViewReceiptPDF/<str:customer_id>/<str:receipt_type>/', view_receipt_pdf, name = 'ViewReceiptPDF'),
 
     path('CustomerAcceptance/<str:acceptancetype>/<str:customerid>/<str:firstname>/<str:surname>/', customer_acceptance, name = 'CustomerAcceptance'),
     path('CustomerAcceptanceEmail/<str:acceptancetype>/<str:customerid>/<str:firstname>/<str:surname>/', customer_acceptance_email, name = 'CustomerAcceptanceEmail'),

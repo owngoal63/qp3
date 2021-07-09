@@ -113,19 +113,23 @@
         <div class = "col-9">
             <h4>Customer Finance Administration</h4>
         </div>
+        
     </div>
     <div class="row">
-        <div class = "col-3">
+        <div class = "col-4">
             &nbsp;
         </div>
-        <div class = "col-3">
-            <a class="btn boilerbtn btn-dark" href="{% url 'PreviewComms' 'Deposit Invoice Comms' customer_id  %}">Deposit Invoice Comms & Customer Creation in Xero</a>
-        </div> 
-        <div class = "col-3">
-            <a class="btn boilerbtn btn-dark" href="{% url 'PreviewComms' 'Balance Invoice Comms' customer_id  %}">Balance Invoice Comms & Posting to Xero</a>
+        <div class = "col-2">
+            <a class="btn boilerbtn {% if customer_status == '4' and finance_status == '' or finance_status == 'DI' %} btn-dark {% else %} btn-secondary disabled {% endif %}" href="{% url 'PreviewComms' 'Deposit Invoice Comms' customer_id  %}">Deposit Invoice</a>
         </div>
-        <div class = "col-3">
-            <a class="btn boilerbtn btn-dark" href="{% url 'PreviewComms' 'Receipt Acknowlegement Comms' customer_id  %}">Xero Balance Receipt Acknowlegement Comms</a>
+        <div class = "col-2">
+            <a class="btn boilerbtn {% if finance_status == 'DI' %} btn-dark {% else %} btn-secondary disabled {% endif %}" href="{% url 'PreviewComms' 'Deposit Receipt Comms' customer_id  %}">Deposit Receipt</a>
+        </div> 
+        <div class = "col-2">
+            <a class="btn boilerbtn {% if customer_status == '6' and finance_status == 'DR' or finance_status == 'BI' %} btn-dark {% else %} btn-secondary disabled {% endif %}" href="{% url 'PreviewComms' 'Balance Invoice Comms' customer_id  %}">Balance Invoice</a>
+        </div>
+        <div class = "col-2">
+            <a class="btn boilerbtn {% if finance_status == 'BI' %} btn-dark {% else %} btn-secondary disabled {% endif %}" href="{% url 'PreviewComms' 'Balance Receipt Comms' customer_id  %}">Balance Receipt</a>
         </div> 
     </div>
       

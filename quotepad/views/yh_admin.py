@@ -17,7 +17,7 @@ import json
 
 from quotepad.models import CustomerComm
 from quotepad.forms import ssSurveyAppointmentForm, ssInstallationAppointmentForm, JobPartsForm, SpecialOfferForm, CustomerEnquiryForm, HeatPlanForm, EngineerPhotoForm
-from quotepad.utils import send_email_using_SendGrid, remove_control_characters
+from quotepad.utils import send_email_using_SendGrid, remove_control_characters, update_customer_comms_table, get_customer_comms_invoice_status
 
 # imports associated with sending email ( can be removed for production )
 from django.core.mail import EmailMessage
@@ -58,7 +58,13 @@ def customer_comms(request):
 	ss_customer_name = request.GET.get('customername', None)
 	ss_customer_status = request.GET.get('customerstatus', None)[0]
 
-	return render(request, 'yourheat/adminpages/customer_comms_landing_page.html', {'customer_id': ss_customer_id, 'customer_name': ss_customer_name, 'customer_status': ss_customer_status})
+	if get_customer_comms_invoice_status(ss_customer_id):
+		finance_status = get_customer_comms_invoice_status(ss_customer_id)
+	else:
+		finance_status = ""
+
+
+	return render(request, 'yourheat/adminpages/customer_comms_landing_page.html', {'customer_id': ss_customer_id, 'customer_name': ss_customer_name, 'customer_status': ss_customer_status, 'finance_status': finance_status })
 
 def preview_comms(request, comms, customer_id):
 	''' Function to provide preview and Email screen for Comms '''
@@ -133,7 +139,7 @@ def display_comms(request, comms, customer_id=None):
 		except:
 			return HttpResponse("The customer's email address is invalid.")
 
-		if comms == "Receipt Acknowlegement Comms":
+		if comms == "Deposit Receipt Comms" or comms == "Balance Receipt Comms" :
 			# Convert house number with a .0 postfix to an integer with string manipulation
 			at_pos = line["house_name_or_number"].find('.0')
 			if at_pos > 0:
@@ -230,6 +236,8 @@ def email_comms(request, comms, customer_id=None):
 						line.get('smartsheet_id'),
 						AttachFilename
 					)
+				update_customer_comms_table(line.get('smartsheet_id'), "DI")
+
 			elif mail_subject == "Your Heat - Balance Invoice":
 				# Generate Balance Invoice PDF File
 				AttachFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/BalanceInvoice_{}_{}.pdf".format(settings.YH_MASTER_PROFILE_USERNAME, line.get("customer_last_name"), line.get("smartsheet_id")))
@@ -245,10 +253,12 @@ def email_comms(request, comms, customer_id=None):
 						line.get('smartsheet_id'),
 						AttachFilename
 					)
-			elif mail_subject == "Your Heat - Receipt Acknowlegement":
+				update_customer_comms_table(line.get('smartsheet_id'), "BI")
+
+			elif mail_subject == "Your Heat - Deposit Receipt":
 				# Generate Receipt Acknowledgement PDF File
-				AttachFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/ReceiptAcknowledgement_{}_{}.pdf".format(settings.YH_MASTER_PROFILE_USERNAME, line.get("customer_last_name"), line.get("smartsheet_id")))
-				build_receipt_pdf(line.get('smartsheet_id'),"ReceiptAcknowledgement", AttachFilename)
+				AttachFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/DepositReceipt_{}_{}.pdf".format(settings.YH_MASTER_PROFILE_USERNAME, line.get("customer_last_name"), line.get("smartsheet_id")))
+				build_receipt_pdf(line.get('smartsheet_id'),"DepositReceipt", AttachFilename)
 				send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content, AttachFilename)
 
 				# Add Invoice PDF to Smartsheet Attachments
@@ -260,8 +270,25 @@ def email_comms(request, comms, customer_id=None):
 						line.get('smartsheet_id'),
 						AttachFilename
 					)
+				update_customer_comms_table(line.get('smartsheet_id'), "DR")
 
-					
+			elif mail_subject == "Your Heat - Balance Receipt":
+				# Generate Receipt Acknowledgement PDF File
+				AttachFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/BalanceReceipt_{}_{}.pdf".format(settings.YH_MASTER_PROFILE_USERNAME, line.get("customer_last_name"), line.get("smartsheet_id")))
+				build_receipt_pdf(line.get('smartsheet_id'),"BalanceReceipt", AttachFilename)
+				send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content, AttachFilename)
+
+				# Add Invoice PDF to Smartsheet Attachments
+				if settings.YH_SS_INTEGRATION:
+					ss_attach_pdf(
+						settings.YH_SS_ACCESS_TOKEN,
+						settings.YH_SS_SHEET_NAME,
+						"Customer ID",
+						line.get('smartsheet_id'),
+						AttachFilename
+					)
+				update_customer_comms_table(line.get('smartsheet_id'), "BR")
+			
 			else:		# Send comms emails without attachments
 				send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content)
 
@@ -834,17 +861,17 @@ def build_invoice_pdf(customer_id, invoice_type, pdf_file):
 
 	return
 
-def view_receipt_pdf(request, customer_id):
+def view_receipt_pdf(request, customer_id, receipt_type):
 	print("Function: view_receipt_pdf")
 
-	pdf = receipt_pdf_generation(customer_id, "PDFOutput")
+	pdf = receipt_pdf_generation(customer_id, "PDFOutput", receipt_type)
 
 	return HttpResponse(pdf, content_type='application/pdf')
 
-def build_receipt_pdf(customer_id, invoice_type, pdf_file):
+def build_receipt_pdf(customer_id, receipt_type, pdf_file):
 	print("Function: build_receipt_pdf")
 
-	receipt_pdf_generation(customer_id, "EmailOutput", pdf_file)
+	receipt_pdf_generation(customer_id, "EmailOutput", receipt_type, pdf_file)
 
 	return
 
