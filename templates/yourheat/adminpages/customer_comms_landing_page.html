@@ -115,6 +115,8 @@
         </div>
         
     </div>
+    
+
     <div class="row">
         <div class = "col-4">
             &nbsp;
@@ -132,6 +134,31 @@
             <a class="btn boilerbtn {% if finance_status == 'BI' %} btn-dark {% else %} btn-secondary disabled {% endif %}" href="{% url 'PreviewComms' 'Balance Receipt Comms' customer_id  %}">Balance Receipt</a>
         </div> 
     </div>
+
+    {% if finance_status != '' %}
+    <div class="row">
+        <div class = "col-3">
+            &nbsp;
+        </div>
+        <div class = "col-9">
+            <h5>Status:
+                {% if finance_status == 'DI' %}
+                    &nbsp; Deposit Invoice sent
+                {% endif %}
+                {% if finance_status == 'DR'%}
+                    &nbsp; Deposit Receipt sent
+                {% endif %}
+                {% if finance_status == 'BI'%}
+                    &nbsp; Balance Invoice sent
+                {% endif %}
+                {% if finance_status == 'BR'%}
+                    &nbsp; Balance Receipt sent
+                {% endif %}
+            </h5>
+        </div>
+        
+    </div>
+    {% endif %}
       
     <div class="row comms-row">
         <div class = "col-4">            
