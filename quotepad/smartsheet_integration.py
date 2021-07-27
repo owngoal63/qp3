@@ -475,6 +475,24 @@ def ss_attach_pdf(access_token, sheet_name, conditional_field_name, conditional_
 						open(attachFilename, 'rb'),
 						'application/pdf')
 					)
+
+				elif "DepositReceipt" in str(attachFilename):		# Attachment is Balance invoice
+					updated_attachment = ss.Attachments.attach_file_to_row(
+						sheet_id,       # sheet_id
+						MyRow["id"],       # row_id
+						('Deposit Receipt.pdf',
+						open(attachFilename, 'rb'),
+						'application/pdf')
+					)
+				elif "BalanceReceipt" in str(attachFilename):		# Attachment is Balance invoice
+					updated_attachment = ss.Attachments.attach_file_to_row(
+						sheet_id,       # sheet_id
+						MyRow["id"],       # row_id
+						('Balance Receipt.pdf',
+						open(attachFilename, 'rb'),
+						'application/pdf')
+					)
+
 				else:	# Attachment is Quote(s)	
 					# Get all the attachments for the row so that we can delete previous pdf quotes
 					all_attachments = ss.Attachments.list_row_attachments(sheet_id, MyRow["id"], include_all=True)
@@ -495,23 +513,23 @@ def ss_attach_pdf(access_token, sheet_name, conditional_field_name, conditional_
 						'application/pdf')
 					)
 
-				if attachFilename2:		# Optional Attach second file if provided as parameter
-					updated_attachment = ss.Attachments.attach_file_to_row(
-  						sheet_id,       # sheet_id
-  						MyRow["id"],       # row_id
-  						('Quote - Customer copy.pdf',
-						open(attachFilename2, 'rb'),
-						'application/pdf')
-					)
+					if attachFilename2:		# Optional Attach second file if provided as parameter
+						updated_attachment = ss.Attachments.attach_file_to_row(
+							sheet_id,       # sheet_id
+							MyRow["id"],       # row_id
+							('Quote - Customer copy.pdf',
+							open(attachFilename2, 'rb'),
+							'application/pdf')
+						)
 
-				if attachDataFile:		# Optional Attach Third txt file if provided as parameter
-					updated_attachment = ss.Attachments.attach_file_to_row(
-  						sheet_id,       # sheet_id
-  						MyRow["id"],       # row_id
-  						('current_quote.txt',
-						open(attachDataFile, 'rb'),
-						'text/plain')
-					)	
+					if attachDataFile:		# Optional Attach Third txt file if provided as parameter
+						updated_attachment = ss.Attachments.attach_file_to_row(
+							sheet_id,       # sheet_id
+							MyRow["id"],       # row_id
+							('current_quote.txt',
+							open(attachDataFile, 'rb'),
+							'text/plain')
+						)	
 	return
 
 
