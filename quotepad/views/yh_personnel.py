@@ -17,7 +17,8 @@ ENGINEER_DROPDOWN = (
 	('terry.martin@yourheat.co.uk', 'Terry Martin'),
 	('tom.sharp@yourheat.co.uk', 'Tom Sharp'),
 	('keith.myler-dixon@yourheat.co.uk', 'Keith Myler-Dixon'),
-	('maydayheating@hotmail.com', 'Martin May')
+	('maydayheating@hotmail.com', 'Martin May'),
+	('alfiefitz1987@outlook.com', 'Alfie Fitzpatrick')
 )
 
 ENGINEER_POSTCODE_DROPDOWN = (
@@ -32,6 +33,7 @@ ENGINEER_POSTCODE_DROPDOWN = (
 	('Tom Sharp (EN9)', 'Tom Sharp (EN9)'),
 	('Keith Myler-Dixon (CM2)', 'Keith Myler-Dixon (CM2)'),
 	('Martin May (KT)', 'Martin May (KT)'),
+	('Alfie Fitzpatrick (TN25)', 'Alfie Fitzpatrick (TN25)'),
 	('Stock Availability Check', 'Stock Availability Check')
 )
 
@@ -52,7 +54,8 @@ engineer_dict = {
 	'terry.martin@yourheat.co.uk': 'Terry Martin',
 	'tom.sharp@yourheat.co.uk': 'Tom Sharp',
 	'keith.myler-dixon@yourheat.co.uk': 'Keith Myler-Dixon',
-	'maydayheating@hotmail.com': 'Martin May'
+	'maydayheating@hotmail.com': 'Martin May',
+	'alfiefitz1987@outlook.com': 'Alfie Fitzpatrick'
 }
 
 engineer_postcode_dict = {
@@ -66,6 +69,7 @@ engineer_postcode_dict = {
 	'Tom Sharp (EN9)': 'tom.sharp@yourheat.co.uk',
 	'Keith Myler-Dixon (CM2)': 'keith.myler-dixon@yourheat.co.uk',
 	'Martin May (KT)': 'maydayheating@hotmail.com',
+	'Alfie Fitzpatrick (TN25)': 'alfiefitz1987@outlook.com'
 }
 
 engineer_calendar_dict = {
@@ -78,5 +82,6 @@ engineer_calendar_dict = {
 	'Terry Martin': 'terry.martin@yourheat.co.uk',
 	'Tom Sharp': 'tom.sharp@yourheat.co.uk',
 	'Keith Myler-Dixon': 'keith.myler-dixon@yourheat.co.uk',
-	'Martin May': 'martin.may@yourheat.co.uk'
+	'Martin May': 'martin.may@yourheat.co.uk',
+	'Alfie Fitzpatrick': 'alfie.fitzpatrick@yourheat.co.uk' 
 }
