@@ -24,6 +24,9 @@
     {% if comms == "Balance Receipt Comms" %}
         <a class="btn btn-warning" href="/ViewReceiptPDF/{{customer_id}}/BalanceReceipt" target="_blank">Preview Balance Receipt</a>
     {% endif %}
+    {% if comms == "Customer Guarantee Comms" %}
+        <a class="btn btn-warning" href="/GenerateGuaranteePDF/View" target="_blank">Preview Guarantee Certificate</a>
+    {% endif %}
     <a class="btn btn-primary" href="/EmailComms/{{comms}}/{{customer_id}}">Email to Customer</a>
     <a class="btn btn-secondary" href="/ProcessingCancelled/">Cancel</a>
 

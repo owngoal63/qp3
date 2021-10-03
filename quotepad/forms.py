@@ -1048,6 +1048,23 @@ CUSTOMER_PLAN_TYPE_DROPDOWN = (
 	('Confirmed Landlord', 'Confirmed Landlord')
 )
 
+GUARANTEE_YEARS_DROPDOWN = (
+	('', 'Select One'),
+	('2', '2 Years'),
+	('3', '3 Years'),
+	('4', '4 Years'),
+	('5', '5 Years'),
+	('6', '6 Years'),
+	('7', '7 Years'),
+	('8', '8 Years'),
+	('9', '9 Years'),
+	('10', '10 Years'),
+	('11', '11 Years'),
+	('12', '12 Years'),
+	('13', '13 Years'),
+	('14', '14 Years')
+)
+
 
 ''' Section for defining the multiple forms that will be used for the boiler quote (FormWizard library) '''
 
@@ -2057,17 +2074,28 @@ class EngineerPhotoForm(forms.Form):
     engineer_photos = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
 
 
-
-
-
-
-
-
-
-
-
+class GuaranteeForm(forms.Form):
+	def __init__(self, *args, **kwargs):
+		super(GuaranteeForm, self).__init__(*args, **kwargs)
+		for field in self: 
+			field.field.widget.attrs['class'] = 'form-control'
+	smartsheet_id = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	customer_title = forms.CharField(max_length=20, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))		
+	customer_first_name = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	customer_last_name = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	customer_email = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	installation_date = forms.CharField(max_length=30, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	serial_number = forms.CharField(max_length=100, required=True)
+	guarantee_years = forms.ChoiceField(choices=GUARANTEE_YEARS_DROPDOWN)
 	
-	
+
+
+
+
+
+
+
+
 
 
 

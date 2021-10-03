@@ -11,12 +11,13 @@ import dateutil.parser
 from pathlib import Path
 from math import ceil
 import requests
+from datetime import date
 
 import smartsheet
 import json
 
 from quotepad.models import CustomerComm
-from quotepad.forms import ssSurveyAppointmentForm, ssInstallationAppointmentForm, JobPartsForm, SpecialOfferForm, CustomerEnquiryForm, HeatPlanForm, EngineerPhotoForm
+from quotepad.forms import ssSurveyAppointmentForm, ssInstallationAppointmentForm, JobPartsForm, SpecialOfferForm, CustomerEnquiryForm, HeatPlanForm, EngineerPhotoForm, GuaranteeForm
 from quotepad.utils import send_email_using_SendGrid, remove_control_characters, update_customer_comms_table, get_customer_comms_invoice_status
 
 # imports associated with sending email ( can be removed for production )
@@ -79,7 +80,7 @@ def display_comms(request, comms, customer_id=None):
 	html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/{}.html".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
 	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
 	
-	if comms != "Special Offer Comms" and comms != "Heat Plan Comms":	# Pull the data from Smartsheet and populate the relevant .txt file
+	if comms != "Special Offer Comms" and comms != "Heat Plan Comms" and comms != "Customer Guarantee Comms":	# Pull the data from Smartsheet and populate the relevant .txt file
 		if customer_id:		# customer_id has been passed so get individual record from sheet
 			ss_get_data_from_sheet(
 				settings.YH_SS_ACCESS_TOKEN,
@@ -109,7 +110,7 @@ def display_comms(request, comms, customer_id=None):
 
 
 	for line in file_form_data:
-		if comms != "Special Offer Comms" and comms != "Heat Plan Comms":
+		if comms != "Special Offer Comms" and comms != "Heat Plan Comms" and comms != "Customer Guarantee Comms" :
 			# Add the image logo url to the dictionary
 			line["image_logo"] = settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png"
 			# Look up the engineer_dict to get engineer's name
@@ -161,7 +162,7 @@ def email_comms(request, comms, customer_id=None):
 	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/customer_comms/{}.txt".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
 	html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/{}.html".format(settings.YH_MASTER_PROFILE_USERNAME, comms))
 	
-	if comms != "Special Offer Comms" and comms != "Heat Plan Comms":	# Pull the data from Smartsheet and populate the relevant .txt file
+	if comms != "Special Offer Comms" and comms != "Heat Plan Comms" and comms != "Customer Guarantee Comms":	# Pull the data from Smartsheet and populate the relevant .txt file
 		if customer_id:		# customer_id has been passed so get individual record from sheet
 			ss_get_data_from_sheet(
 				settings.YH_SS_ACCESS_TOKEN,
@@ -181,7 +182,7 @@ def email_comms(request, comms, customer_id=None):
 
 	for line in file_form_data:
 	
-		if comms != "Special Offer Comms" and comms != "Heat Plan Comms":
+		if comms != "Special Offer Comms" and comms != "Heat Plan Comms" and comms != "Customer Guarantee Comms":
 			# Add the image logo url to the dictionary
 			line["image_logo"] = settings.YH_URL_STATIC_FOLDER  + "images/YourHeatLogo-Transparent.png"
 			# Look up the engineer_dict to get engineer's name
@@ -202,7 +203,7 @@ def email_comms(request, comms, customer_id=None):
 			if comms == "Special Offer Comms":
 				line["survey_date"] = datetime.datetime.strptime(line["survey_date"], "%Y-%m-%d")
 
-		if comms != "Special Offer Comms" and comms != "Heat Plan Comms":
+		if comms != "Special Offer Comms" and comms != "Heat Plan Comms" and comms != "Customer Guarantee Comms":
 			# Convert house number with a .0 postfix to an integer with string manipulation
 			at_pos = line["house_name_or_number"].find('.0')
 			if at_pos > 0:
@@ -288,6 +289,23 @@ def email_comms(request, comms, customer_id=None):
 						AttachFilename
 					)
 				update_customer_comms_table(line.get('smartsheet_id'), "BR")
+
+			elif mail_subject == "Your Heat - Customer Guarantee":
+				# Generate Receipt Acknowledgement PDF File
+				AttachFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/CustomerGuarantee_{}_{}.pdf".format(settings.YH_MASTER_PROFILE_USERNAME, line.get("customer_last_name"), line.get("smartsheet_id")))
+				generate_guarantee_pdf(request, "File")
+				#print(stop)
+				send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content, AttachFilename)
+
+				# Add Guarantee PDF to Smartsheet Attachments
+				if settings.YH_SS_INTEGRATION:
+					ss_attach_pdf(
+						settings.YH_SS_ACCESS_TOKEN,
+						settings.YH_SS_SHEET_NAME,
+						"Customer ID",
+						line.get('smartsheet_id'),
+						AttachFilename
+					)
 			
 			else:		# Send comms emails without attachments
 				send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content)
@@ -875,6 +893,49 @@ def build_receipt_pdf(customer_id, receipt_type, pdf_file):
 
 	return
 
+def generate_guarantee_pdf(request, action):
+	print("Function: generate_guarantee_pdf")
+
+	data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/customer_comms/Customer Guarantee Comms.txt")
+
+	with open(data_filename) as file:
+			for line in file:
+				line = remove_control_characters(line)
+				line = line.replace("\'", "\"")		# Change single quote to double
+				line_dict = json.loads(line)
+				# Check for any "NONE" fields coming from Smartsheet and replace with ''
+				for key, value in line_dict.items():
+					if value == 'None':
+						line_dict[key] = ''
+				installation_date = line_dict.get("installation_date")
+				installation_date = datetime.datetime.strptime(installation_date, "%Y-%m-%d").date() # Covert to date type
+				serial_number = line_dict.get("serial_number")
+				guarantee_years = line_dict.get("guarantee_years")
+				expiry_date = date(installation_date.year + int(guarantee_years), installation_date.month, installation_date.day)
+				customer_last_name = line_dict.get("customer_last_name")
+				smartsheet_id = line_dict.get("smartsheet_id")
+
+	
+	AttachFilename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_{}/CustomerGuarantee_{}_{}.pdf".format(settings.YH_MASTER_PROFILE_USERNAME, customer_last_name, smartsheet_id))
+
+	if action == "File":
+		pdf = pdf_generation_to_file("pdf/user_{}/guarantee_for_pdf.html".format(settings.YH_MASTER_PROFILE_USERNAME), AttachFilename,
+		{
+			'installation_date': installation_date,
+			'serial_number': serial_number,
+			'guarantee_years': guarantee_years,
+			'expiry_date': expiry_date
+		})
+	else:	# View pdf on screen
+		pdf = pdf_generation("pdf/user_{}/guarantee_for_pdf.html".format(settings.YH_MASTER_PROFILE_USERNAME) ,{
+			'installation_date': installation_date,
+			'serial_number': serial_number,
+			'guarantee_years': guarantee_years,
+			'expiry_date': expiry_date
+		})
+
+	return HttpResponse(pdf, content_type='application/pdf')
+
 
 def confirm_calendar_appointment(request, customer_id=None):
 	''' Function to confirm Calendar Appointment '''
@@ -885,6 +946,55 @@ def processing_cancelled(request):
 	''' Function to confirm Processing Cancelled '''
 	print("Function: processing_cancelled")
 	return render(request,'yourheat/adminpages/processing_cancelled.html')
+
+class get_guarantee(FormView):
+	form_class = GuaranteeForm
+	template_name = "yourheat/adminpages/guarantee_form.html"
+	customer_id = None
+
+	def get_initial(self, **kwargs):
+		print("Class->Function: get_guarantee->get_initial")
+		initial = super().get_initial()
+		customer_id = self.kwargs['customer_id']
+
+		data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/customer_comms/Customer Guarantee Comms.txt")
+
+		#Get Customer Info from Smartsheet
+		ss_get_data_from_sheet(
+			settings.YH_SS_ACCESS_TOKEN,
+			settings.YH_SS_SHEET_NAME,
+			['Customer ID', 'Title', 'First Name', 'Surname','Installation Date', 'Email'],
+			'Customer ID',
+			customer_id,
+			data_filename
+		)
+
+		# Open the text file with the Smartsheet data to prepopulate the form
+		with open(data_filename) as file:
+			for line in file:
+				line = remove_control_characters(line)
+				line_dict = json.loads(line)
+				# Check for any "NONE" fields coming from Smartsheet and replace with ''
+				for key, value in line_dict.items():
+					if value == 'None':
+						line_dict[key] = ''
+				initial['smartsheet_id'] = line_dict.get("smartsheet_id")
+				initial['customer_title'] = line_dict.get("customer_title")
+				initial['customer_first_name'] = line_dict.get("customer_first_name")
+				initial['customer_last_name'] = line_dict.get("customer_last_name")
+				initial['installation_date'] = line_dict.get("installation_date") 
+				initial['customer_email'] = line_dict.get("customer_email")
+		return initial
+
+	def form_valid(self, form, **kwargs):
+		print("Class->Function: get_guarantee->form_valid")
+		customer_id = form.cleaned_data['smartsheet_id']
+		data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/customer_comms/Customer Guarantee Comms.txt")
+		file = open(data_filename, "w")
+		file.write(str(form.cleaned_data))
+		file.close()
+
+		return HttpResponseRedirect('/PreviewComms/Customer Guarantee Comms/'+ customer_id)
 
 class get_special_offer(FormView):
 

@@ -31,7 +31,7 @@ from quotepad.views import list_quote_archive_yh, upload_for_reprint_yh, QuoteAc
 from quotepad.views import ssCustomerSelect, ssPostSurveyQuestions, ss_customer_comms_yh, ssGetPhotosForUpload
 
 # Imports for Yourheat admin
-from quotepad.views import admin_home, customer_comms, list_customers_for_comms, emails_sent_to_customers, confirm_calendar_appointment, get_survey_appointment, get_installation_appointment, get_job_parts, get_special_offer, get_heat_plan
+from quotepad.views import admin_home, customer_comms, list_customers_for_comms, emails_sent_to_customers, confirm_calendar_appointment, get_survey_appointment, get_installation_appointment, get_job_parts, get_special_offer, get_heat_plan, get_guarantee, generate_guarantee_pdf
 from quotepad.views import processing_cancelled, preview_comms, display_comms, email_comms, email_sent_to_merchant
 
 # Imports for Hub
@@ -159,6 +159,7 @@ urlpatterns = [
     path('GetSpecialOffer/<str:customer_id>/', get_special_offer.as_view(), name='GetSpecialOffer'),
     path('GetHeatPlan/<str:customer_id>/', get_heat_plan.as_view(), name='GetHeatPlan'),
     path('GetHeatPlan/', get_heat_plan.as_view(), name='GetHeatPlan'),
+    path('GetGuarantee/<str:customer_id>/', get_guarantee.as_view(), name='GetGuarantee'),
     path('ProcessingCancelled/', processing_cancelled, name='ProcessingCancelled'),
     path('PreviewComms/<str:comms>/<str:customer_id>/', preview_comms, name = 'PreviewComms'),
     path('DisplayComms/<str:comms>/<str:customer_id>/', display_comms, name = 'DisplayComms'),
@@ -170,6 +171,8 @@ urlpatterns = [
     path('ViewInvoicePDF/<str:customer_id>/<str:invoice_type>/', view_invoice_pdf, name = 'ViewInvoicePDF'),
     path('ViewReceiptPDF/<str:customer_id>/<str:receipt_type>/', view_receipt_pdf, name = 'ViewReceiptPDF'),
 
+    path('GenerateGuaranteePDF/<str:action>/', generate_guarantee_pdf, name = 'GenerateGuaranteePDF'),
+    
     path('CustomerAcceptance/<str:acceptancetype>/<str:customerid>/<str:firstname>/<str:surname>/', customer_acceptance, name = 'CustomerAcceptance'),
     path('CustomerAcceptanceEmail/<str:acceptancetype>/<str:customerid>/<str:firstname>/<str:surname>/', customer_acceptance_email, name = 'CustomerAcceptanceEmail'),
     path('CustomerEnquiry/<str:acceptancetype>/<str:customerid>/<str:firstname>/<str:surname>/', customer_enquiry_form.as_view(), name='CustomerEnquiry'),

@@ -1,0 +1,74 @@
+{% load static %}
+{% load humanize %}
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <title>Customer Guarantee PDF</title>
+</head>
+
+
+  <!-- <style type="text/css">
+    body{margin:0;padding:0}
+    #body{width:800; margin:auto}
+    </style> -->
+  <Style type='text/css' >body{background-color:rgb(255,255,255);background-image:url(http://www.zingerbugimages.com/backgrounds/tan_parchment_paper_wallpaper_texture_seamless.jpg);background-position:top left;background-repeat:repeat;background-attachment:fixed;}</Style>
+  <body>
+  <div style="margin:0 auto;text-align:center;">
+
+  <br><br><br>
+
+  <img src="http://www.qpcentral.co.uk/static/images/YourHeatLogo-TransparentBkg.png">
+
+  <br><br><br><br>
+
+  <h1>Guarantee</h1><br>
+
+  <br><br><br><br>
+
+
+  <b>This is to certify that the following boiler serial number</b><br><br>
+
+  {{serial_number}}
+  <br>
+  ..................................................
+
+
+  <br><br><br><br>
+  <b>Is currently covered under a Your Heat boiler parts and labour guarantee for:</b>
+  
+
+  <br><br>
+
+  {{guarantee_years}} Years
+  <br>
+  ..................................................
+
+
+  <br><br><br><br>
+  <b>Date of installation:  {{installation_date|date:"jS F Y"}}</b>
+
+  <br><br><br><br>
+
+  <i>Your boiler will be covered by the Your Heat guarantee all the while the plan is kept.<br>
+  Any break in the plan will void the guarantee immediately.</i><br><br><br><br>
+  <b>Due to Expire: {{expiry_date|date:"jS F Y"}}</b>
+
+  <br><br><br><br>
+
+  <img src="http://www.qpcentral.co.uk/static/images/YH_receipt_signature_transparentBkg.png">
+  <br>
+  ..................................................
+
+
+
+  </div>
+
+
+
+
+
+</body>
+
+</html>

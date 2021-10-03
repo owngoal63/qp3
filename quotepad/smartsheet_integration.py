@@ -492,6 +492,14 @@ def ss_attach_pdf(access_token, sheet_name, conditional_field_name, conditional_
 						open(attachFilename, 'rb'),
 						'application/pdf')
 					)
+				elif "CustomerGuarantee" in str(attachFilename):		# Attachment is Balance invoice
+					updated_attachment = ss.Attachments.attach_file_to_row(
+						sheet_id,       # sheet_id
+						MyRow["id"],       # row_id
+						('CustomerGuarantee.pdf',
+						open(attachFilename, 'rb'),
+						'application/pdf')
+					)
 
 				else:	# Attachment is Quote(s)	
 					# Get all the attachments for the row so that we can delete previous pdf quotes
