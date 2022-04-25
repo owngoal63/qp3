@@ -18,7 +18,7 @@ from formtools.wizard.views import SessionWizardView
 
 # imports associated with xhtml2pdf
 from django.http import HttpResponseRedirect, HttpResponse, FileResponse
-from quotepad.utils import pdf_generation, pdf_generation_to_file, convertHtmlToPdf, convertHtmlToPdf2, component_attrib_build, component_attrib_build_exVat, send_pdf_email_using_SendGrid, send_email_using_SendGrid
+from quotepad.utils import pdf_generation, pdf_generation_to_file, convertHtmlToPdf, convertHtmlToPdf2, component_attrib_build, component_attrib_build_exVat, send_pdf_email_using_SendGrid, send_email_using_SendGrid, job_alerts_from_quote
 import datetime
 #from datetime import datetime
 from pathlib import Path, PureWindowsPath
@@ -1448,13 +1448,35 @@ def generate_quote_from_file_yh(request, outputformat, quotesource):
 		msg = msg + "<p>Hi {}. Attached is the Quote and Internal Report for <b>{} {} {}</b>.</p>".format(idx_master.first_name, fd[0]['customer_title'], fd[0]['customer_first_name'], fd[0]['customer_last_name'])
 		msg = msg + "<p>Customer Phone No: {}<p>".format(str(fd[0]['customer_primary_phone']))
 		msg = msg + "<p>Customer Email: <a href='mailto:{}'>{}</a><p>".format(fd[0]['customer_email'], fd[0]['customer_email'])
-		msg = msg + "<p>You can contact the surveyor, {} on {} or <a href='mailto:{}'>{}</a><p>.</p>".format(idx.first_name, str(idx.telephone), idx.email, idx.email)
+		msg = msg + "<p>You can contact the surveyor, {} on {} or <a href='mailto:{}'>{}</a>.</p>".format(idx.first_name, str(idx.telephone), idx.email, idx.email)
 		msg = msg + "<p>Also attached is the data file current_quote.txt which can be downloaded and used for re-quotation purposes.</p>"
 
+		# Generate list of quote details that need to be flagged as alert
+		alertlist = []
+		alertlist.append(fd[4]['new_fuel_type'])
+		alertlist.append(fd[5]['scaffolding_required'])
+		alertlist.append(fd[5]['asbestos_containing_materials_identified'])
+		alertlist.append(fd[5]['asbestos_removal_procedure'])
+		alertlist.append(fd[5]['electrical_work_required'])
+		alertlist.append(fd[5]['potential_contractor_attendance_required'])
+		alertlist.append(fd[5]['details_on_potential_contractor_requirements'])
+		alertlist.append(fd[6]['double_handed_lift_required'])
+
+		flagged_alert_list = job_alerts_from_quote(alertlist)
+		if flagged_alert_list:		# Write Alert details to subject header and body of email.
+			alert_header = "!!! Job Alerts !!! "
+			for alert in flagged_alert_list:
+				if alert == "Job Alerts:":
+					msg = msg + "<p><b><u><big>{}</big></u></b></p>".format(alert)
+				else:
+					msg = msg + "<p><b>{}</b></p>".format(alert)
+		else:						# No Alerts
+			alert_header = ""
+
 		if settings.YH_SS_INTEGRATION:
-			mail_subject = 'Boiler Installation Quote Number: {} Smartsheet ID: {} Customer: {} {} Surveyor: {} {}'.format(fd[19]['quote_number'], fd[0]['smartsheet_id'], fd[0]['customer_first_name'], fd[0]['customer_last_name'], idx.first_name, idx.last_name)
+			mail_subject = '{} Boiler Installation Quote Number: {} Smartsheet ID: {} Customer: {} {} Surveyor: {} {}'.format(alert_header, fd[19]['quote_number'], fd[0]['smartsheet_id'], fd[0]['customer_first_name'], fd[0]['customer_last_name'], idx.first_name, idx.last_name)
 		else:
-			mail_subject = 'Boiler Installation Quote Number: {} Customer: {} {} Surveyor: {} {}'.format(fd[19]['quote_number'], fd[0]['customer_first_name'], fd[0]['customer_last_name'], idx.first_name, idx.last_name)
+			mail_subject = '{} Boiler Installation Quote Number: {} Customer: {} {} Surveyor: {} {}'.format(alert_header, fd[19]['quote_number'], fd[0]['customer_first_name'], fd[0]['customer_last_name'], idx.first_name, idx.last_name)
 
 		if settings.YH_TEST_EMAIL:
 			email = EmailMessage(mail_subject, msg, idx.email, [idx_master.email])

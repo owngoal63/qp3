@@ -165,6 +165,30 @@ def pdf_generation_to_file(template_src, outputFilename, context_dict={}):
 
 	return response
 
+def job_alerts_from_quote(alertlist):
+
+	print(alertlist)
+	valid_alert_list = []	
+	if alertlist[0] == "Oil":
+		valid_alert_list.append("Job Type: Oil")
+	if alertlist[1] != "No Scaffolding Required":
+		valid_alert_list.append("Scaffolding Requirements: " + alertlist[1] )
+	if alertlist[2] != "No Asbestos Identified":
+		valid_alert_list.append("Asbestos containing materials identified - details: " + alertlist[3])
+	if alertlist[4] != "Connect to existing wiring":
+		valid_alert_list.append("Electrical Work Required: " + alertlist[4] )
+	if alertlist[5] != "No":
+		valid_alert_list.append("Contractor Work Required - details: " + alertlist[6] )
+	if alertlist[7] != "No":
+		valid_alert_list.append(alertlist[7])
+	if valid_alert_list:	# If list has alerts write string "Job Alerts" to beginning of list
+		valid_alert_list.insert(0, "Job Alerts:")
+	for x in valid_alert_list:	
+		print(x)	
+
+	return valid_alert_list
+
+
 def component_attrib_build(component_name, component_type, user, qty=1, brand=None):
 	if brand:
 		#print(component_type)
