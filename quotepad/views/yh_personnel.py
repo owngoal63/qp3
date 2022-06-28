@@ -13,7 +13,8 @@ ENGINEER_DROPDOWN = (
 	('tom.sharp@yourheat.co.uk', 'Tom Sharp'),
 	('alfiefitz1987@outlook.com', 'Alfie Fitzpatrick'),
 	('liam.barnes@yourheat.co.uk', 'Liam Barnes'),
-	('george.downs@yourheat.co.uk', 'George Downs')
+	('george.downs@yourheat.co.uk', 'George Downs'),
+	('carn.prior@yourheat.co.uk', 'Carn Prior')
 )
 
 ENGINEER_POSTCODE_DROPDOWN = (
@@ -25,6 +26,7 @@ ENGINEER_POSTCODE_DROPDOWN = (
 	('Alfie Fitzpatrick (TN25)', 'Alfie Fitzpatrick (TN25)'),
 	('Liam Barnes (ME12)', 'Liam Barnes (ME12)'),
 	('George Downs (SS7)', 'George Downs (SS7)'),
+	('Carn Prior (TN24)', 'Carn Prior (TN24)'),
 	('Stock Availability Check', 'Stock Availability Check')
 )
 
@@ -48,7 +50,8 @@ engineer_dict = {
 	'maydayheating@hotmail.com': 'Martin May',
 	'alfiefitz1987@outlook.com': 'Alfie Fitzpatrick',
 	'liam.barnes@yourheat.co.uk': 'Liam Barnes',
-	'george.downs@yourheat.co.uk': 'George Downs'
+	'george.downs@yourheat.co.uk': 'George Downs',
+	'carn.prior@yourheat.co.uk': 'Carn Prior'
 }
 
 engineer_postcode_dict = {
@@ -64,7 +67,8 @@ engineer_postcode_dict = {
 	'Martin May (KT)': 'maydayheating@hotmail.com',
 	'Alfie Fitzpatrick (TN25)': 'alfiefitz1987@outlook.com',
 	'Liam Barnes (ME12)' : 'liam.barnes@yourheat.co.uk',
-	'George Downs (SS7)' : 'george.downs@yourheat.co.uk'
+	'George Downs (SS7)' : 'george.downs@yourheat.co.uk',
+	'Carn Prior (TN24)' : 'carn.prior@yourheat.co.uk'
 }
 
 engineer_calendar_dict = {
@@ -80,5 +84,6 @@ engineer_calendar_dict = {
 	'Martin May': 'martin.may@yourheat.co.uk',
 	'Alfie Fitzpatrick': 'alfie.fitzpatrick@yourheat.co.uk',
 	'Liam Barnes': 'liam.barnes@yourheat.co.uk',
-	'George Downs': 'george.downs@yourheat.co.uk' 
+	'George Downs': 'george.downs@yourheat.co.uk',
+	'Carn Prior': 'carn.prior@yourheat.co.uk' 
 }

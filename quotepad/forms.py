@@ -876,11 +876,10 @@ HEAT_LOSS_HOUSE_TYPE_DROPDOWN = (
 LEAD_BOOKER_DROPDOWN = (
 	('','Select One'),
 	('Sarah Dance', 'Sarah Dance'),	
-	('Tom Hewitt', 'Tom Hewitt'),	
-	('Tom Driscoll', 'Tom Driscoll'),	
+	('Tom Hewitt', 'Tom Hewitt'),		
 	('Grace Barrett', 'Grace Barrett'),	
 	('Anna Bishop-Apsey', 'Anna Bishop-Apsey'),	
-	('Jeremy Tomkinson', 'Jeremy Tomkinson'),	
+	('Melissa Brace', 'Melissa Brace'),	
 )
 
 CUSTOMER_CONFIRMED_DROPDOWN = (
