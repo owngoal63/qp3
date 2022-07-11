@@ -25,7 +25,7 @@ SECRET_KEY = 'imw6@yb#gl*)_ma3jfkz8%0ie3ql8t7y+9j9splpwnm@@rhsue'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.0.42','127.0.0.1']
+ALLOWED_HOSTS = ['192.168.0.42','localhost','127.0.0.1']
 
 
 # Application definition
@@ -170,8 +170,9 @@ YH_URL_STATIC_FOLDER = 'http://127.0.0.1:8000/static/'    # Set this to the stat
 
 # SmartSheet integration settings for live Smartsheet
 YH_SS_PRODUCTION_SITE = False       # Setting to determine whether a proxy server needs to be access ( only for PythonAnyhwere )
-YH_SS_INTEGRATION = True
-YH_SS_ACCESS_TOKEN = '727cjzxr1715oenualfctjcsoi'
+YH_SS_INTEGRATION = False
+#YH_SS_ACCESS_TOKEN = '727cjzxr1715oenualfctjcsoi'
+YH_SS_ACCESS_TOKEN = '2JvwbHDONLyZ7f7juDEEdV4b4WlUuXMHGioGr'
 YH_SS_SHEET_NAME = "Master Database Boiler"
 YH_SS_SURVEY_REPORT = "Customers for Survey to QP"
 YH_SS_TRACK_COMMS_SENT = False      # Flag to determine if the Customer Comm model is updated
@@ -186,4 +187,25 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES' : ('rest_framework.permissions.IsAuthenticatedOrReadOnly',)
 }
 
-CORS_ORIGIN_ALLOW_ALL = True 
+CORS_ORIGIN_ALLOW_ALL = True
+
+# XERO Integration Settings
+# GL Account Settings
+#YH_XERO_CLIENT_ID = '9407B59E6ACE4DA8A3B1F83B6CB5969D'
+#YH_XERO_CLIENT_SECRET = 'HvfRYoLVhovXhHG754aPY2tjk-5Mw8YxE0jwJLAZVqttJ9d1'
+#YH_XERO_REDIRECT_URL = 'http://localhost:8000/XeroRedirect/'
+#YH_XERO_SCOPE = 'offline_access accounting.transactions accounting.contacts'
+
+#YH Account settings
+YH_XERO_CLIENT_ID = 'F29F53F0BF5E41098A2B0764C4F4B2D1'
+YH_XERO_CLIENT_SECRET = 'XpagSGc0Jkri2u7acPCOkdCsw37nzu_mJAudKM1PwnV48kwb'
+YH_XERO_REDIRECT_URL = 'http://localhost:8000/XeroRedirect/'
+YH_XERO_SCOPE = 'offline_access accounting.transactions accounting.contacts'
+
+# Invoice Settings
+DEPOSIT_INVOICE_DESCRIPTION = "Deposit amount due for Boiler Installation and associated works."
+BALANCE_INVOICE_DESCRIPTION = "Balance due for completion of Boiler Installation and associated works."
+DEPOSIT_RECEIPT_DESCRIPTION = "Deposit Payment for Boiler Installation and associated works."
+BALANCE_RECEIPT_DESCRIPTION = "Balance Payment for Boiler Installation and associated works."
+
+
