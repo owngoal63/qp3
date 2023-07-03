@@ -975,6 +975,7 @@ MERCHANT_DROPDOWN = (
 	('maidstone@williams.uk.com', 'maidstone@williams.uk.com'),
 	('sosales@drakes.biz', 'sosales@drakes.biz'),
 	('jon@tdlonline.co.uk', 'jon@tdlonline.co.uk'),
+	('CPSSEVENOAKS@cityplumbing.co.uk', 'CPSSEVENOAKS@cityplumbing.co.uk'),
 
 )
 
