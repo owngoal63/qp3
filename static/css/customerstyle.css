@@ -31,7 +31,7 @@ body {
 
 .logo {
     position: relative;
-    background-image: url('../images/yh_logo_white_text.png');
+    background-image: url('../images/plumble_logo_white_text.png');
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
@@ -41,7 +41,8 @@ body {
 }
 
 .content {
-    background-image: url('../images/homepage-page-header-template.jpg');
+    /* background-image: url('../images/homepage-page-header-template.jpg'); */
+    background-color: beige;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

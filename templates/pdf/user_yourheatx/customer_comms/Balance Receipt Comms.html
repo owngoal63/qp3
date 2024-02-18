@@ -49,14 +49,14 @@
 
         #final-strap-line {
             text-align: center;
-            color: rgb(251, 126, 51);
+            color: rgb(34, 34, 34);
         }
 
         #final-strap-text {
             font-family: verdana;
             font-style: italic;
-            font-size: 16px;
-            font-weight: 900;
+            font-size: 14px;
+            font-weight: 800;
         }
 
         #img2 {
@@ -77,7 +77,7 @@
             width: 99%;
             height: 80px;
             background-position: center;
-            background-color: black;
+            background-color: #585858;
             margin: 25px auto 0px auto;
         }
 
@@ -89,7 +89,7 @@
 
         .left {
             float: left;
-            margin: 1.5rem 2rem 2rem 2rem;
+            margin: 0.5rem 2rem 2rem 2rem;
 
         }
 
@@ -106,8 +106,8 @@
             width:99%;
         }
 
-        .orange_box {
-            border: 5px solid orange;
+        .grey_box {
+            border: 5px solid #585858;
             border-radius: 25px 0px 25px 0px;
             padding: 1rem;
             /* width:250px; */
@@ -136,20 +136,20 @@
 <td style="padding:0px;margin:0px;" width="800">
 <!-- End of Layout Header Snippet  -->
 
-    <div class="email_header">
-        <img src='http://www.qpcentral.co.uk/static/images/YH_email_header_thank_you.png' alt="Your Heat Header"/>
-    </div>
+    <!-- <div class="email_header"> -->
+        <img src='https://www.qpcentral.co.uk/static/images/plumble_email_header_thank_you.png' alt="Plumble Header"/>
+    <!-- </div> -->
 
     <div class="body_text">
 
         <div class="content">
             <div class="contact_text">
-                <img src='http://www.qpcentral.co.uk/static/images/phone-solid.png' width="15" /> <a
+                <img src='https://www.qpcentral.co.uk/static/images/phone-solid.png' width="15" /> <a
                     href="tel:01732622990">01732 622990</a> | <img
-                    src='http://www.qpcentral.co.uk/static/images/globe-solid.png' width="15" /> <a
-                    href='https://yourheat.co.uk/book-a-job/'>www.yourheat.co.uk</a> | <img
-                    src='http://www.qpcentral.co.uk/static/images/envelope-solid.png' width="15" /> <a
-                    href='mailto:info@yourheat.co.uk'>info@yourheat.co.uk</a>
+                    src='https://www.qpcentral.co.uk/static/images/globe-solid.png' width="15" /> <a
+                    href='https://www.plumble.co.uk/book-a-job/'>www.plumble.co.uk</a> | <img
+                    src='https://www.qpcentral.co.uk/static/images/envelope-solid.png' width="15" /> <a
+                    href='mailto:hello@plumble.co.uk'>hello@plumble.co.uk</a>
             </div>
 
             <p class="all_text">Hi {{ customer_first_name }}</p>
@@ -160,12 +160,12 @@
                 </p>
 
                 <p class="all_text">
-                    Your Heat have received payment for works completed at {{house_name_or_number}} {{street_address}}.  We’d like to take this opportunity to thank you once again for trusting us with your installation.
+                    Plumble have received payment for works completed at {{house_name_or_number}} {{street_address}}.  We’d like to take this opportunity to thank you once again for trusting us with your installation.
                 </p>
                 <p class="all_text">
                     We have attached your receipt to this email.
                 </p>
-                <div class="orange_box">
+                <div class="grey_box">
                     <p class="headings_text">What Happens Next?</p>
                     <p class="all_text">The team here will now be taking care of registering your new boiler with the manufacturer and notifying building control, so there is no need to worry about a thing.</p>
                     <p class="all_text">Paperwork should reach you within 4 – 6 weeks, if it doesn’t, let us know.</p>
@@ -175,14 +175,14 @@
                         To keep this valid, an annual service should be carried out every 12 months around the date of installation by a Gas Safe or Oftec Registered engineer.
                     </p>
                     <p class="all_text">
-                        We offer a range of <a href="https://yourheat.co.uk/care-plan-pricing/" target="_blank"><b>Your Heat Care Plans</b></a> which include an annual service as standard by one of our engineers.
+                        We offer a range of <a href="https://www.plumble.co.uk/care-plan-pricing/" target="_blank"><b>Plumble Care Plans</b></a> which include an annual service as standard by one of our engineers.
                     </p>
-                    <div style="text-align:center; margin: 0 auto"> <a href="https://yourheat.co.uk/care-plan-pricing/" target="_blank"><div class="black_button">Your Heat Plans</div></a></div>
+                    <div style="text-align:center; margin: 0 auto"> <a href="https://www.plumble.co.uk/care-plan-pricing/" target="_blank"><div class="black_button">Plumble Plans</div></a></div>
                 </div>
                 <p class="all_text">      
                     We hope you had a great experience with us, we’d really love to hear about how we did.  If you have a moment, please do leave us a review.
                 </p>
-                <div style="text-align:center; margin: 0 auto"> <a href="https://yourheat.co.uk/contact-us/" target="_blank"><div class="black_button">How did we do?</div></a></div>
+                <div style="text-align:center; margin: 0 auto"> <a href="https://www.plumble.co.uk/contact-us/" target="_blank"><div class="black_button">How did we do?</div></a></div>
                 <br>
                 <!-- <div class="orange_box">
                     <p class="headings_text">Refer a friend and receive a £50 Amazon voucher</p>
@@ -196,14 +196,14 @@
                 </div>
                 <br> -->
             <p class="all_text">
-                Many thanks, The Your Heat Team
+                Many thanks, The Plumble Team
             </p>
 
             <!-- End of Email body content  -->
 
             <div id="final-strap-line">
                 <p id="final-strap-text">"Our friendly team will provide you with an efficient service, delivered with a
-                    sense of warmth. Your Heat, is our Priority, ALWAYS."</p>
+                    sense of warmth."</p>
             </div>
 
         </div>
@@ -213,12 +213,12 @@
     <div class="background_footer">
 
         <div class="left">
-            <img src='http://www.qpcentral.co.uk/static/images/yh_logo_white_text.png' width="150">
+            <img src='https://www.qpcentral.co.uk/static/images/plumble_logo_white_text.png' width="150">
         </div>
 
         <div class="right">
-            <p class="footer_text">Copyright © 2020 Your Heat Ltd | VAT No. 213 6884 04</p>
-            <p class="footer_text"><a href=' https://yourheat.co.uk/terms-and-conditions/'>Installation Terms and
+            <p class="footer_text">Copyright © 2024 Plumble Ltd | VAT No. 458261280</p>
+            <p class="footer_text"><a href=' https://www.plumble.co.uk.co.uk/terms-and-conditions/'>Installation Terms and
                     Conditions</a></p>
         </div>
     </div>

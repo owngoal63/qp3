@@ -212,7 +212,7 @@ def email_comms(request, comms, customer_id=None):
 		html_content = render_to_string(html_email_filename, line)
 		# Drop the Comms from the comms_name for the Email subject line
 		at_pos = comms.find('Comms')
-		mail_subject = ('Your Heat - ' + comms[0:at_pos]).strip()
+		mail_subject = ('Plumble - ' + comms[0:at_pos]).strip()
 
 		#print("**" + mail_subject + "**" )
 
@@ -1357,7 +1357,7 @@ def customer_acceptance_email(request, acceptancetype, customerid, firstname, su
 			["Customer has confirmed their acceptance of Special Offer/Quote"]
 		)
 
-	return HttpResponseRedirect('https://yourheat.co.uk/')
+	return HttpResponseRedirect('https://www.plumble.co.uk/')
 
 class customer_enquiry_form(FormView):
 
@@ -1418,7 +1418,7 @@ class customer_enquiry_form(FormView):
 				[q_and_a]
 			)
 
-		return HttpResponseRedirect('https://yourheat.co.uk/')
+		return HttpResponseRedirect('https://www.plumble.co.uk/')
 
 def engineer_hub(request, engineer_name):
 	''' Hub for Engineer to review and update diary and landing page for job info/completion'''

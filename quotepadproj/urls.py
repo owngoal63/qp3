@@ -45,6 +45,8 @@ from quotepad.views import engineer_hub, engineer_calendar_change, engineer_cale
 
 from quotepad.views import XeroInitialAuthorisation, XeroInitialRefreshToken, XeroInvoicePost, XeroCustomerCreate, XeroCreateDepositCustomer, XeroCreateBalanceInvoice
 
+from quotepad.utils import create_pickle_file
+
 urlpatterns = [
     
     url(r'^admin/', admin.site.urls),
@@ -197,6 +199,9 @@ urlpatterns = [
     path('XeroCustomerCreate/<str:customer_id>/', XeroCustomerCreate, name = 'XeroCustomerCreate'),
     path('XeroCreateDepositCustomer/<str:customer_id>/', XeroCreateDepositCustomer, name = 'XeroCreateDepositCustomer'),
     path('XeroCreateBalanceInvoice/<str:customer_id>/', XeroCreateBalanceInvoice, name = 'XeroCreateBalanceInvoice'),
+
+    path('Createpicklefile/', create_pickle_file, name = 'create_pickle_file'),
+
 
 	path('', include('payments.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

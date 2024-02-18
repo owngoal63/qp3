@@ -52,6 +52,10 @@ import unicodedata
 # Added to keep track of invoicing status
 from quotepad.models import CustomerComm
 
+# SMTP Email functions
+from django.core.mail import EmailMessage, EmailMultiAlternatives, BadHeaderError
+from django.utils.html import strip_tags
+
 
 ''' Various functions used by the XHtml2pdf library '''
 
@@ -353,8 +357,10 @@ def send_email_using_GmailAPI(sender, receiver, mail_subject, mail_content, atta
 	# The file token.pickle stores the user's access and refresh tokens, and is
 	# created automatically when the authorization flow completes for the first
 	# time.
-	token_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/token.pickle")
-	creds_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/credentials.json")
+	# token_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/token.pickle")
+	# creds_filename = Path(settings.BASE_DIR + "/google_creds/user_yourheatx/credentials.json")
+	token_filename = Path(settings.BASE_DIR + "/google_creds/user_plumble/token.pickle")
+	creds_filename = Path(settings.BASE_DIR + "/google_creds/user_plumble/credentials.json")
 	#print(creds_filename)
 	if os.path.exists(token_filename):
 		with open(token_filename, 'rb') as token:
@@ -610,9 +616,39 @@ def get_customer_comms_invoice_status(customer_id):
 		return str(obj.comms_id)
 	else:
 		return False
+	
+
+def SMTP_send_email_using_Gmail(sender, receiver, mail_subject, mail_content, attach_file=None, attach_txt_file=None):
+	# send_email_using_GmailAPI('hello@gmail.com',line.get('customer_email'), mail_subject, html_content, AttachFilename)
+	# sender = settings.EMAIL_HOST_USER
+
+	plain_message = strip_tags(mail_content)
+	message = EmailMultiAlternatives(
+		subject = mail_subject,
+		body = plain_message,
+		from_email = sender,
+		to = [receiver],
+	)
+	message.attach_alternative(mail_content, "text/html")
+	try:
+		if attach_file != None:
+			# message.attach(attach_file, response.content, 'application/pdf')
+			message.attach_file(attach_file, 'application/pdf')
+		if attach_txt_file != None:
+			message.attach_file(attach_txt_file, 'application/pdf')
+		message.send()
+		print("SMTP_send_email_using_gmail success. Header found")
+	except BadHeaderError:
+		print("SMTP_send_email_using_gmail error. Invalid Header found")
+	return
+	
 
 
+def create_pickle_file(request):
+	send_email_using_GmailAPI('hello@plumble.co.uk','gordonalindsay@gmail.com', "Test to generate pickle file", "<html>Test</html>")
+	return
 
+	
 	
 		
 

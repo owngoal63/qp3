@@ -19,7 +19,7 @@ body {
 }
 
 .img--logo {
-    height:40px;
+    height:50px;
 }
 
 .img--oftec {
@@ -57,7 +57,7 @@ body {
 
     @bottom-left {
 
-        content: "Copyright Yourheat";
+        content: "Copyright Plumble";
 
     }
 
@@ -151,12 +151,13 @@ div.break {
 
 .endrow {
     /* background-color: #4db79c; */
-    background-color: rgb(251,126,51);
+    /* background-color: rgb(251,126,51); */
+    background-color: #fef3a2;
     text-align: center;
     font-size: 0.9rem;
     font-weight: 400;
     padding:3px 6px 3px 6px;
-    color:white;
+    color:black;
 }
 
 .payment-options {
@@ -264,8 +265,10 @@ div.break {
     /* top: 80px; */
     /* height:400px; */
     width:650px;
-    background-color: #e8f1f4;
-    border:5px solid #e8f1f4;
+    /* background-color: #e8f1f4; */
+    background-color: #fef3a2;
+    /* border:5px solid #e8f1f4; */
+    border:5px solid #fef3a2;
     border-radius: 10px 10px 10px 10px;
     text-align: left;
 
@@ -274,13 +277,15 @@ div.break {
 .light-blue-box h2 {
     font-size: 1.5rem;
     font-weight:400;
-    color: #5e90a6;
+    /* color: #5e90a6; */
+    color: rgb(34, 34, 34);
     margin-left:5px;
     margin-right:5px;
 }
 
 .light-blue-box hr {
-    color: #5e90a6;
+    /* color: #5e90a6; */
+    color: rgb(34, 34, 34);
     margin:5px;
 }
 
@@ -462,7 +467,7 @@ table.address {
 
 table.optional-extras {
     width:99%; 
-    border:5px solid orange;
+    border:5px solid #fef3a2;
     border-radius: 25px 0px 25px 0px;
     /* text-align: center; */
     padding-top:5px;
@@ -599,7 +604,7 @@ p.account-details {
 
 #final-strap-line {
     text-align: center;
-    color: rgb(251,126,51);
+    color: lightgray;
 }
 
 #final-strap-text {
@@ -647,7 +652,8 @@ p.account-details {
 /* Rory additions */
 
 .ob-orange-box{
-    border: 5px solid orange;
+    /* border: 5px solid orange; */
+    border: 5px solid #fef3a2;
     border-top-left-radius: 20px;
     border-bottom-right-radius: 20px;
     /* margin: 50px 0px 0px 50px; */
@@ -723,9 +729,9 @@ p.account-details {
 }
 
 .price {
-    background-color: rgb(251,126,51);
+    background-color: #fef3a2;
     border-radius: 8px 0px 8px 0px;
-    color:white;
+    color:black;
     font-size: 0.9rem;
     font-weight: 500;
     text-align: center;
