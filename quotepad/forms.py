@@ -968,14 +968,9 @@ BRING_FORWARD_DROPDOWN = (
 
 MERCHANT_DROPDOWN = (
 	('', 'Select One'),
-	('hello@plumble.co.uk', 'hello@plumble.co.uk'),
-	('dan.lombard2@cityplumbing.co.uk', 'dan.lombard2@cityplumbing.co.uk'),
-	('cpsmedway@cityplumbing.co.uk', 'cpsmedway@cityplumbing.co.uk'),
-	('qs.aylesford@wolseley.co.uk', 'qs.aylesford@wolseley.co.uk'),
-	('maidstone@williams.uk.com', 'maidstone@williams.uk.com'),
-	('sosales@drakes.biz', 'sosales@drakes.biz'),
-	('jon@tdlonline.co.uk', 'jon@tdlonline.co.uk'),
-	('CPSSEVENOAKS@cityplumbing.co.uk', 'CPSSEVENOAKS@cityplumbing.co.uk'),
+	('tom.hewitt@plumble.co.uk', 'tom.hewitt@plumble.co.uk'),
+	('rochester@cityplumbing.co.uk', 'rochester@cityplumbing.co.uk'),
+	('service@plumble.co.uk', 'service@plumble.co.uk'),
 
 )
 
