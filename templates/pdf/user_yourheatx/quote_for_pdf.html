@@ -3,9 +3,18 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 
+{% load quotepad_extras %}
+
 <head>
     <title>Quote PDF</title>
     <!-- <link href="{% static 'css/yh.css' %}" rel="stylesheet" type="text/css">  -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font for Inter, if not already provided by Tailwind defaults */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
 </head>
 
 <body>
@@ -49,7 +58,7 @@
                 <h1 class="price">£{{form_data.9.total_cost|floatformat:2}} Inc. VAT</h1>
                 <h2 class="name">{{product_record.brand}}<br>{{product_record.model_name}}</h2>
                 <ul>
-                    <li class="features">{{product_record.guarantee}}*</li>
+                    <li class="features">{{product_record.guarantee}}</li>
                     {% if form_data.4.new_fuel_type == "Oil" %}
                         <li class="features">OFTEC Installation</li>
                     {% else %}
@@ -71,7 +80,7 @@
                 <h1 class="price">£{{form_data.9.alt_total_cost|floatformat:2}} Inc. VAT</h1>
                 <h2 class="name">{{alt_product_record.brand}}<br>{{alt_product_record.model_name}}</h2>
                 <ul>
-                    <li class="features">{{alt_product_record.guarantee}}*</li>
+                    <li class="features">{{alt_product_record.guarantee}}</li>
                     {% if form_data.4.new_fuel_type == "Oil" %}
                         <li class="features">OFTEC Installation</li>
                     {% else %}
@@ -92,108 +101,123 @@
         <sm>based on 350+ reviews</sm>
     </div> -->
 
-    <div class="page1-lower">
-        <div class="payment-options">Payment Options</div>
-        <p>
-        We understand that replacing your boiler is often unplanned and the extra expense can
-        come as a surprise. We offer the ability to help you spread the cost with our finance options.
-        </p>
+    <br><br>
+    <div class="payment-options">We have a range of flexible payment options to suit any budget</div>
 
-        <table>
-            <tr>
-                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                <td class="headrow">APR %</td>
-                <td class="headrow">Duration</td>
-                <td class="headrow">Deposit</td>
-                <td class="headrow">Loan Amount</td>
-                <td class="headrow">Total Payable</td>
-                <td class="headrow">Monthly Payment</td>
-            </tr>
-            <tr>
-                <td class="headrow">Accelerated 1</td>
-                <td class="midrow">9.9%</td>
-                <td class="midrow">120 Months</td>
-                {% if user_name == 'yourheatx' %}
-                    <td class="midrow">£ {{ form_data.9.deposit_amount|floatformat:2 }}<br>(Optional)</td>
-                {% else %}
-                    <td class="midrow">£ {{ form_data.9.deposit_amount_thirty_percent|floatformat:2 }}<br>(Optional)</td>
-                {% endif %}
-                <td class="midrow">£ {{ form_data.9.ib120_loan_amount }}</td>
-                <td class="midrow">£ {{ form_data.9.ib120_total_payable }}</td>
-                <td class="endrow">£ {{ form_data.9.ib120_monthly_payment }}</td>
-            </tr>
-            <tr>
-                <td class="headrow">Accelerated 2</td>
-                <td class="midrow">9.9%</td>
-                <td class="midrow">96 Months</td>
-                {% if user_name == 'yourheatx' %}
-                    <td class="midrow">£ {{ form_data.9.deposit_amount|floatformat:2 }}<br>(Optional)</td>
-                {% else %}
-                    <td class="midrow">£ {{ form_data.9.deposit_amount_thirty_percent|floatformat:2 }}<br>(Optional)</td>
-                {% endif %}
-                <td class="midrow">£ {{ form_data.9.ib96_loan_amount }}</td>
-                <td class="midrow">£ {{ form_data.9.ib96_total_payable }}</td>
-                <td class="endrow">£ {{ form_data.9.ib96_monthly_payment }}</td>
-            </tr><tr>
-                <td class="headrow">Accelerated 3</td>
-                <td class="midrow">9.9%</td>
-                <td class="midrow">60 Months</td>
-                {% if user_name == 'yourheatx' %}
-                    <td class="midrow">£ {{ form_data.9.deposit_amount|floatformat:2 }}<br>(Optional)</td>
-                {% else %}
-                    <td class="midrow">£ {{ form_data.9.deposit_amount_thirty_percent|floatformat:2 }}<br>(Optional)</td>
-                {% endif %}
-                <td class="midrow">£ {{ form_data.9.ib60_loan_amount }}</td>
-                <td class="midrow">£ {{ form_data.9.ib60_total_payable }}</td>
-                <td class="endrow">£ {{ form_data.9.ib60_monthly_payment }}</td>
-            </tr>
-            <tr>
-                <td class="headrow">Accelerated 4</td>
-                <td class="midrow">9.9%</td>
-                <td class="midrow">48 Months</td>
-                {% if user_name == 'yourheatx' %}
-                    <td class="midrow">£ {{ form_data.9.deposit_amount|floatformat:2 }}<br>(Optional)</td>
-                {% else %}
-                    <td class="midrow">£ {{ form_data.9.deposit_amount_thirty_percent|floatformat:2 }}<br>(Optional)</td>
-                {% endif %}
-                <td class="midrow">£ {{ form_data.9.ib48_loan_amount }}</td>
-                <td class="midrow">£ {{ form_data.9.ib48_total_payable }}</td>
-                <td class="endrow">£ {{ form_data.9.ib48_monthly_payment }}</td>
-            </tr>
-            <tr>
-                <td class="headrow">Accelerated 5</td>
-                <td class="midrow">9.9%</td>
-                <td class="midrow">36 Months</td>
-                {% if user_name == 'yourheatx' %}
-                    <td class="midrow">£ {{ form_data.9.deposit_amount|floatformat:2 }}<br>(Optional)</td>
-                {% else %}
-                    <td class="midrow">£ {{ form_data.9.deposit_amount_thirty_percent|floatformat:2 }}<br>(Optional)</td>
-                {% endif %}
-                <td class="midrow">£ {{ form_data.9.ib36_loan_amount }}</td>
-                <td class="midrow">£ {{ form_data.9.ib36_total_payable }}</td>
-                <td class="endrow">£ {{ form_data.9.ib36_monthly_payment }}</td>
-            </tr>
-            {% if form_data.9.include_interest_free_option %}
-            <tr>
-                <td class="headrowx">Interest Free</td>
-                <td class="midrow">0%</td>
-                <td class="midrow">12 Months</td>
-                {% if user_name == 'yourheatx' %}
-                    <td class="midrow">£ {{ form_data.9.deposit_amount|floatformat:2 }}</td>
-                {% else %}
-                    <td class="midrow">£ {{ form_data.9.deposit_amount_thirty_percent|floatformat:2 }}</td>
-                {% endif %}
-                <td class="midrow">£ {{ form_data.9.interest_free_12m_loan_amount }}</td>
-                <td class="midrow">£ {{ form_data.9.interest_free_12m_total_payable }}</td>
-                <td class="endrow">£ {{ form_data.9.interest_free_12m_monthly_payment }}</td>
-            </tr>
-            {% endif %}
-        </table>
-        <br>
-        <p>
-        Other options available such as Buy Now Pay Later. Ask for details.<br>
-        * Boiler must be serviced annually by Plumble using our service plan. Ask for details.
-        </p>
+   <!-- New Stuff -->
+    <br>
+
+    <div class="main-container">
+        <!-- Payment Options Section -->
+        <div class="payment-options-section">
+            <h2>Payment Options</h2>
+            <p>We understand that replacing your boiler is often unplanned and the extra expense can
+        come as a surprise. We offer the ability to help you spread the cost with our finance options.</p>
+            <div class="payment-boxes-container">
+                <!-- 120 Month Example Credit Box -->
+                <div class="credit-box">
+                    <div class="title-bar">120 MONTH | EXAMPLE</div>
+                    <h3>10.9% APR INTEREST BEARING CREDIT</h3>
+                    <div class="credit-row">
+                        <span class="credit-label">CASH PRICE</span>
+                        <span class="credit-value">£{{form_data.9.total_cost|floatformat:2}}</span>
+                    </div>
+                    <div class="credit-row">
+                        <span class="credit-label">DEPOSIT</span>
+                        <span class="credit-value">£{{ form_data.9.deposit_amount|floatformat:2 }}</span>
+                    </div>
+                    <div class="credit-row">
+                        <span class="credit-label">TOTAL AMOUNT OF CREDIT</span>
+                        <span class="credit-value">£{{ form_data.9.total_cost|subtract:form_data.9.deposit_amount|floatformat:2 }}</span>
+                    </div>
+                    <div class="credit-row">
+                        <span class="credit-label">TERM</span>
+                        <span class="credit-value">120 Months</span>
+                    </div>
+                    <div class="credit-row">
+                        <span class="credit-label">24 MONTHLY PAYMENTS</span>
+                        <span class="credit-value">£{{ form_data.9.ib120_monthly_payment|floatformat:2 }}</span>
+                    </div>
+                    <div class="credit-row">
+                        <span class="credit-label">APR</span>
+                        <span class="credit-value">10.9%</span>
+                    </div>
+                    <div class="credit-row">
+                        <span class="credit-label">FIXED RATE OF INTEREST</span>
+                        <span class="credit-value">10.9%</span>
+                    </div>
+                    <div class="credit-row">
+                        <span class="credit-label">TOTAL AMOUNT PAYABLE</span>
+                        <span class="credit-value">£{{ form_data.9.ib120_total_payable }}</span>
+                    </div>
+                    <div class="credit-row">
+                        <span class="credit-label">TOTAL CHARGE FOR CREDIT</span>
+                        <span class="credit-value">£{{ form_data.9.ib120_total_payable|subtract:form_data.9.total_cost|floatformat:2 }}</span>
+                    </div>
+                </div>
+
+                <!-- 12 Month Example Credit Box -->
+                <div class="credit-box">
+                    <div class="title-bar">12 MONTH | EXAMPLE</div>
+                    <h3>0% APR INTEREST FREE CREDIT</h3>
+                    <div class="credit-row">
+                        <span class="credit-label">CASH PRICE</span>
+                        <span class="credit-value">£{{form_data.9.total_cost|floatformat:2}}</span>
+                    </div>
+                    <div class="credit-row">
+                        <span class="credit-label">DEPOSIT</span>
+                        <span class="credit-value">£{{ form_data.9.deposit_amount|floatformat:2 }}</span>
+                    </div>
+                    <div class="credit-row">
+                        <span class="credit-label">TOTAL AMOUNT OF CREDIT</span>
+                        <span class="credit-value">£{{ form_data.9.total_cost|subtract:form_data.9.deposit_amount|floatformat:2 }}</span>
+                    </div>
+                    <div class="credit-row">
+                        <span class="credit-label">TERM</span>
+                        <span class="credit-value">12 Months</span>
+                    </div>
+                    <div class="credit-row">
+                        <span class="credit-label">12 MONTHLY PAYMENTS</span>
+                        <span class="credit-value">£{{ form_data.9.interest_free_12m_monthly_payment }}</span>
+                    </div>
+                    <div class="credit-row">
+                        <span class="credit-label">APR</span>
+                        <span class="credit-value">0%</span>
+                    </div>
+                    <div class="credit-row">
+                        <span class="credit-label">FIXED RATE OF INTEREST</span>
+                        <span class="credit-value">0%</span>
+                    </div>
+                    <div class="credit-row">
+                        <span class="credit-label">TOTAL AMOUNT PAYABLE</span>
+                        <span class="credit-value">£{{ form_data.9.interest_free_12m_total_payable }}</span>
+                    </div>
+                    <div class="credit-row">
+                        <span class="credit-label">TOTAL CHARGE FOR CREDIT</span>
+                        <span class="credit-value">£0.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Care Options Section -->
+        <div class="care-options-section">
+            <h2>Care Options</h2>
+            <div class="care-boxes-container">
+                <div class="care-text-box">
+                    <h3>Homeowners</h3>
+                    <p>
+                        Protect your system with Plumble. Maintain your guarantee or choose enhanced cover. Whatever you need, we've got your covered, keeping you and your home worry-free.
+                    </p>
+                </div>
+                <div class="care-text-box">
+                    <h3>Landlords</h3>
+                    <p>
+                        Landlord Protection with Plumble. Enjoy all the benefits plus CP12 gas safety certificate. Ensure tenant safety and system reliability with comprehensive coverage. We've got everything covered for you.
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 
 
@@ -255,7 +279,7 @@
         <br>
         <p>
         To discuss or accept your quotation, please call our office on <b>01732 622990</b>, alternatively email
-        <b>info@plumble.co.uk</b>
+        <b>hello@plumble.co.uk</b>
         </p>
         <br>
     </div>

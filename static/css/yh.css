@@ -161,8 +161,9 @@ div.break {
 }
 
 .payment-options {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     font-weight: 500;
+    text-align: center;
 }
 
 .header {
@@ -662,6 +663,22 @@ p.account-details {
     padding: 20px;
 }
 
+.ob-orange-box-small{
+    /* border: 5px solid orange; */
+    border: 5px solid #fef3a2;
+    border-top-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    /* margin: 50px 0px 0px 50px; */
+    height: 120px;
+    width: 190px;
+    padding: 5px;
+    font-size: 11px;
+    float: left;
+    margin-left: 10px;
+    text-align: left;
+    margin-top: 3px;
+}
+
 .ob-top{
     background-color: rgb(255, 255, 255);
     height: 80px;
@@ -918,3 +935,271 @@ h1 {
     font-weight: 500;
     font-style  : italic
 }
+
+/* New stuff  */
+
+       /* Main container for the two large sections (Payment Options and Care Options) */
+        .main-container {
+            display: flex;
+            flex-direction: column; /* Stack sections vertically on small screens */
+            gap: 1.5rem; /* Space between the two main sections (for screen display) */
+            width: 100%; /* Take full width on small screens */
+            max-width: 800px; /* Max width to simulate A4 page width for screen display */
+            padding: 1rem; /* Inner padding for the main container */
+            border-radius: 1rem; /* Rounded corners for the overall layout if desired, though sections have their own */
+        }
+
+        /* Media query for medium screens and up (typically tablets and desktops) */
+        @media (min-width: 768px) {
+            .main-container {
+                flex-direction: row; /* Arrange sections side-by-side on larger screens */
+                align-items: flex-start; /* Align items to the top (important if sections have different heights) */
+                gap: 1rem; /* Adjusted gap for side-by-side display (for screen display) */
+            }
+        }
+
+        /* Styles for the individual main sections (Payment Options and Care Options) */
+        .payment-options-section,
+        .care-options-section {
+            border-radius: 1rem; /* Rounded corners for each section */
+            padding: 1.5rem; /* Inner padding for each section */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            min-width: 0; /* Allows flex items to shrink below their content size */
+        }
+
+        /* Specific flex-grow values for 66% / 33% distribution on larger screens */
+        @media (min-width: 768px) {
+            .payment-options-section {
+                flex: 2; /* Takes 2 parts of available space (approx 66%) */
+            }
+            .care-options-section {
+                flex: 1; /* Takes 1 part of available space (approx 33%) */
+            }
+        }
+
+        /* Specific background colors for each main section */
+        .payment-options-section {
+            background-color: #F8E7B1; /* Light yellowish-brown from the draft */
+        }
+
+        .care-options-section {
+            background-color: #F9D6B2; /* Light orange-brown from the draft */
+        }
+
+        /* Styling for titles within the sections */
+        .payment-options-section h2,
+        .care-options-section h2 {
+            font-size: 1.5rem; /* Larger font size for titles */
+            font-weight: bold;
+            color: #333; /* Dark gray text color */
+            margin-bottom: 0.5rem; /* Space below title */
+            text-align: center; /* Center align titles as per draft */
+        }
+
+        /* Styling for the introductory text in Payment Options */
+        .payment-options-section p {
+            font-size: 0.9rem; /* Smaller font for descriptive text */
+            color: #555; /* Medium gray text color */
+            margin-bottom: 1.5rem; /* Space below text */
+            text-align: center; /* Center align text as per draft */
+        }
+
+        /* Container for the two side-by-side boxes in Payment Options */
+        .payment-boxes-container {
+            display: flex;
+            gap: 1rem; /* Space between the two payment boxes */
+            flex-direction: column; /* Stack payment boxes on very small screens */
+        }
+
+        @media (min-width: 480px) { /* Adjust breakpoint for payment boxes to go side-by-side */
+            .payment-boxes-container {
+                flex-direction: row; /* Side-by-side on slightly larger screens */
+            }
+        }
+
+        /* --- Styles for the Credit Boxes (integrated from previous versions) --- */
+        .credit-box {
+            position: relative;
+            background-color: #fff;
+            border: 2px solid #fbbf24; /* Yellow border */
+            border-radius: 0.75rem; /* Rounded corners */
+            padding: 0.75rem; /* Reduced padding for compactness */
+            width: 100%; /* Take full width within its flex container */
+            max-width: 20rem; /* Adjusted max-width for A4 fit, approx 320px */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            overflow: hidden;
+            flex: 1; /* Allows boxes to take equal width within payment-boxes-container */
+        }
+
+        .credit-box .title-bar {
+            position: absolute;
+            top: 0; /* Aligned with the top border of the main box */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #fbbf24; /* Yellow background for the bar */
+            border-radius: 0.5rem; /* Rounded corners */
+            padding: 0.4rem 0.8rem; /* Further reduced padding for compactness */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Shadow for the bar */
+            color: #1f2937; /* Dark text color */
+            font-weight: bold;
+            font-size: 0.8rem; /* Reduced font size for compactness */
+            white-space: nowrap;
+        }
+
+        .credit-box h3 {
+            text-align: center;
+            color: #374151;
+            font-weight: 600;
+            font-size: 0.75rem; /* Reduced font size for compactness */
+            margin-top: 2.2rem; /* Adjusted to make space for the title bar */
+            padding-bottom: 0.4rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .credit-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.25rem 0; /* Further reduced padding for compactness */
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .credit-row:last-child {
+            border-bottom: 0;
+        }
+
+        .credit-label {
+            font-weight: 600; /* Adjusted to semi-bold */
+            color: #4b5563;
+            font-size: 0.7rem; /* Reduced font size for compactness */
+        }
+
+        .credit-value {
+            color: #1f2937;
+            font-size: 0.7rem; /* Reduced font size for compactness */
+        }
+        /* --- End of Credit Box Styles --- */
+
+        /* Styling for the individual boxes within Care Options */
+        .care-box {
+            background-color: #EEDD99; /* Darker yellow for inner boxes */
+            border-radius: 0.75rem; /* Rounded corners */
+            padding: 1rem;
+            min-height: 100px; /* Placeholder height, adjust as needed */
+            margin-bottom: 1rem; /* Space between stacked care boxes */
+            display: flex; /* For centering content */
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: #333; /* Text color for content inside */
+        }
+
+        /* Remove bottom margin from the last care box */
+        .care-box:last-child {
+            margin-bottom: 0;
+        }
+
+        .care-boxes-container {
+            gap: 0.5rem; /* Adjust gap between care boxes for print */
+            margin-top: 0.5rem; /* Adjust margin for print */
+        }
+
+        .care-text-box {
+            padding: 0.6rem; /* Adjust padding for print */
+            box-shadow: none; /* Remove shadows for print */
+        }
+
+        /* Print-specific styles */
+        @media print {
+            body {
+                background-color: #fff; /* White background for print */
+                padding: 0.5rem; /* Reduced padding for print */
+                display: block; /* Revert to block display for print flow */
+            }
+
+            .main-container {
+                flex-direction: row; /* Ensure side-by-side layout for print */
+                width: 100%; /* Take full width of the page */
+                max-width: none; /* Remove max-width constraint for print */
+                padding: 0; /* No inner padding for print */
+                box-shadow: none; /* Remove shadows for print */
+                gap: 0; /* Reset gap for print to use margins */
+            }
+
+            .payment-options-section {
+                flex: 2; /* Ensure 66% width for print */
+                box-shadow: none; /* Remove shadows for print */
+                padding: 0.8rem; /* Slightly reduced padding for print */
+                margin-right: 0.8rem; /* Add margin to create gap for print */
+            }
+
+            .care-options-section {
+                flex: 1; /* Ensure 33% width for print */
+                box-shadow: none; /* Remove shadows for print */
+                padding: 0.8rem; /* Slightly reduced padding for print */
+            }
+
+            .payment-boxes-container {
+                flex-direction: row; /* Ensure credit boxes are side-by-side */
+                gap: 0.5rem; /* Reduce gap between credit boxes for print */
+            }
+
+            .credit-box {
+                padding: 0.5rem; /* Further reduced padding for print */
+                max-width: none; /* Allow credit boxes to scale freely */
+                box-shadow: none; /* Remove shadows for print */
+            }
+
+            .credit-box .title-bar {
+                padding: 0.3rem 0.6rem; /* Adjust title bar padding for print */
+                font-size: 0.7rem; /* Adjust title bar font size for print */
+                box-shadow: none; /* Remove shadows for print */
+            }
+
+            .credit-box h3 {
+                font-size: 0.65rem; /* Adjust heading font size for print */
+                margin-top: 1.8rem; /* Adjust margin for print */
+            }
+
+            .credit-label,
+            .credit-value {
+                font-size: 0.6rem; /* Adjust label/value font size for print */
+            }
+
+            .credit-row {
+                padding: 0.2rem 0; /* Adjust row padding for print */
+            }
+
+        .care-boxes-container {
+            display: flex;
+            flex-direction: column; /* Stack care boxes vertically */
+            gap: 0.5rem; /* Space between care boxes */
+            flex-grow: 1; /* Allow this container to grow to fill space */
+            margin-top: 0.8rem; /* Space below the Care Options heading */
+        }
+
+        .care-text-box {
+            background-color: #fff; /* White background */
+            border: 2px solid #fbbf24; /* Yellow border */
+            border-radius: 0.75rem; /* Rounded corners */
+            padding: 0.75rem; /* Padding inside the box */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            flex: 1; /* Allows boxes to take equal height within care-boxes-container */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .care-text-box h3 {
+            font-size: 0.9rem; /* Heading font size */
+            font-weight: bold;
+            color: #1f2937; /* Dark text color */
+            margin-bottom: 0.1rem; /* Space below heading */
+            text-align: center; /* Center align heading */
+        }
+
+        .care-text-box p {
+            font-size: 0.70rem; /* Paragraph text size */
+            color: #374151; /* Medium dark text color */
+            line-height: 1.4; /* Improve readability */
+            text-align: center;
+        }
+        }
