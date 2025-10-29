@@ -120,6 +120,7 @@ REMOVALS_CHOICES = (
 	('Fireplace','Fireplace'),
 	('Multipoint Water Heater','Multipoint Water Heater'),
 	('Shower Pump','Shower Pump'),
+	('No Boiler present','No Boiler present'),
 )
 
 NEW_FUEL_TYPE_DROPDOWN = (
