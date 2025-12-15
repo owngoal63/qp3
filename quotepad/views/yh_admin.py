@@ -668,7 +668,9 @@ class get_survey_appointment(FormView):
 			service = build('calendar', 'v3', credentials=creds)
 
 			# Insert the event into the calendar
-			event = service.events().insert(calendarId=form.cleaned_data["surveyor"], body=event).execute()
+			# event = service.events().insert(calendarId=form.cleaned_data["surveyor"], body=event).execute()
+			# Now hardcoded with Tom Hewitt's email - all calendar appointments go into his calendar.
+			event = service.events().insert(calendarId='tom.hewitt@plumble.co.uk', body=event).execute()
 
 		return render(self.request, 'yourheat/adminpages/confirm_calendar_appointment.html', {'comms_name': 'Survey Booked Comms', 'customer_id': customer_id})
 
@@ -784,7 +786,7 @@ class get_installation_appointment(FormView):
 		event['summary'] = form.cleaned_data["customer_title"] + " " + form.cleaned_data["customer_last_name"] + " " + form.cleaned_data["postcode"]
 		event['location'] = form.cleaned_data["house_name_or_number"] + ", " + form.cleaned_data["street_address"] + ", " + form.cleaned_data["city"] + " " + form.cleaned_data["county"] + " " + form.cleaned_data["postcode"]
 
-		event_description = event_description + "<b>Your Heat Boiler Installation Notification</b><br>"
+		event_description = event_description + "<b>Plumble Boiler Installation Notification</b><br>"
 		event_description = event_description + "<b>Customer ID: </b>" + customer_id + "<br>"
 		event_description = event_description + "<b>Installation Date: </b>" + form.cleaned_data['installation_date'].strftime('%d-%b-%Y') + "<br>"
 		event_description = event_description + "<b>Installation Address: </b>" + form.cleaned_data["house_name_or_number"] + ", " + form.cleaned_data["street_address"] + ", " + form.cleaned_data["city"] + ", " + form.cleaned_data["county"] + ", " + form.cleaned_data["postcode"] + "<br><br>"
@@ -853,7 +855,7 @@ class get_installation_appointment(FormView):
 			event = service.events().insert(calendarId=engineer_calendar_id, body=event).execute()
 
 		# Send email to engineer email address ( either @yourheat.co.uk or personal email address )
-		mail_subject = "Your Heat Boiler Installation Notification"
+		mail_subject = "Plumble Boiler Installation Notification"
 		if settings.YH_TEST_EMAIL:
 			email = EmailMessage(mail_subject, event_description, 'info@yourheat.co.uk' , [form.cleaned_data["engineer"]])
 			email.content_subtype = "html"  # Main content is now text/html
@@ -1184,12 +1186,12 @@ class get_job_parts(FormView):
 		merchant_email = form.cleaned_data['merchant']
 
 		if settings.YH_TEST_EMAIL:
-			email = EmailMessage("Your Heat Job Parts Notification " + form.cleaned_data['PO'], html_content, 'info@yourheat.co.uk' , [merchant_email])
+			email = EmailMessage("Plumble Job Parts Notification " + form.cleaned_data['PO'], html_content, 'info@yourheat.co.uk' , [merchant_email])
 			email.content_subtype = "html"  # Main content is now text/html
 			email.send()
 		else:
 			# Note that the sender email below can only be hello@yourheat.co.uk due to the API authentication
-			send_email_using_GmailAPI('Purchasing@yourheat.co.uk', merchant_email, "Your Heat Job Parts Notification " + form.cleaned_data['PO'], html_content)
+			send_email_using_GmailAPI('Purchasing@yourheat.co.uk', merchant_email, "Plumble Job Parts Notification " + form.cleaned_data['PO'], html_content)
 
 		smartsheet_id = form.cleaned_data['PO'].replace('PO','YH')
 
