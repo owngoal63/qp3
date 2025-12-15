@@ -1,55 +1,86 @@
 SURVEYOR_DROPDOWN = (
 	('','Select One'),
 	('tom.hewitt@plumble.co.uk', 'Tom Hewitt'),
-	('carn@plumble.co.uk', 'Carn Prior'),
-	('tom.hewitt@plumble.co.uk', 'Dev Pun'),
-	('tom.hewitt@plumble.co.uk', 'Joseph Allen'),
-	('tom.hewitt@plumble.co.uk', 'Liam Barnes')
+	('gareth.coulson@plumble.co.uk', 'Gareth Coulson'),
+	('richard.steadman@plumble.co.uk', 'Richard Steadman'),
+	('niall.enright@plumble.co.uk', 'Niall Enright'),
+	('liam.barnes@plumble.co.uk', 'Liam Barnes')
 )
 
 ENGINEER_DROPDOWN = (
 	('','Select One'),
-	('carn@plumble.co.uk', 'Carn Prior'),
 	('james.duval@plumble.co.uk', 'James Duval'),
-	('tom.hewitt@plumble.co.uk', 'Matthew Peters'),
-	('tom.hewitt@plumble.co.uk', 'Alfie Fitzpatrick')
+	('tom.hewitt@plumble.co.uk', 'Nick Cook'),
+	('tom.hewitt@plumble.co.uk', 'Billy Saward'),
+	('tom.hewitt@plumble.co.uk', 'Richard Steadman'),
+	('tom.hewitt@plumble.co.uk', 'Niall Enright'),
+	('tom.hewitt@plumble.co.uk', 'Liam Barnes'),
+    ('tom.hewitt@plumble.co.uk', 'Shaun McNicholas'),
+    ('tom.hewitt@plumble.co.uk', 'Lee Parker'),
+    ('tom.hewitt@plumble.co.uk', 'Sean Witham'),
+    ('tom.hewitt@plumble.co.uk', 'James Bishop')
 )
 
 ENGINEER_POSTCODE_DROPDOWN = (
 	('','Select One'),
-	('Carn Prior (RM12)', 'Carn Prior (RM12)'),
+	('Niall Enright (E17)', 'Niall Enright (E17)'),
 	('James Duval (SS6)', 'James Duval (SS6)'),
-	('Matthew Peters (ME8)', 'Matthew Peters (ME8)'),
-	('Alfie Fitzpatrick (TN24)', 'Alfie Fitzpatrick (TN24)'),
+	('Nick Cook (ME6)', 'Nick Cook (ME6)'),
+	('Billy Saward (TN21)', 'Billy Saward (TN21)'),
+	('Richard Steadman (TN12)', 'Richard Steadman (TN12)'),
+	('Liam Barnes (ME12)', 'Liam Barnes (ME12)'),
+    ('Shaun McNicholas (IG6)', 'Shaun McNicholas (IG6)'),
+    ('Lee Parker (ME6)', 'Lee Parker (ME6)'),
+    ('Sean Witham (IG7)', 'Sean Witham (IG7)'),
+    ('James Bishop (TN4)', 'James Bishop (TN4)'),
 	('Stock Availability Check', 'Stock Availability Check')
 )
 
 surveyor_dict = {
-	'tom.hewitt@plumble.co.uk': 'Tom Hewitt (Plumble)',
-	'tom.hewitt@yourheat.co.uk': 'Tom Hewitt (Your Heat)',
+	'tom.hewitt@plumble.co.uk': 'Tom Hewitt',
+	'gareth.coulson@plumble.co.uk': 'Gareth Coulson',
+	'richard.steadman@plumble.co.uk': 'Richard Steadman',
+	'niall.enright@plumble.co.uk': 'Niall Enright',
+	'liam.barnes@plumble.co.uk': 'Liam Barnes',
+	'tom.hewitt@yourheat.co.uk': 'Tom Hewitt',
 	'carn@plumble.co.uk': 'Carn Prior',
-	'tom.hewitt@plumble.co.uk': 'Dev Pun',
-	'tom.hewitt@plumble.co.uk': 'Joseph Allen',
-	'tom.hewitt@plumble.co.uk': 'Liam Barnes',
 }
 
 engineer_dict = {
-	'carn@plumble.co.uk': 'Carn Prior',
 	'james.duval@plumble.co.uk': 'James Duval',
-	'tom.hewitt@plumble.co.uk': 'Matthew Peters',
-	'tom.hewitt@plumble.co.uk': 'Alfie Fitzpatrick'
+	'tom.hewitt@plumble.co.uk': 'Nick Cook',
+	'tom.hewitt@plumble.co.uk': 'Billy Saward',
+	'tom.hewitt@plumble.co.uk': 'Richard Steadman',
+	'tom.hewitt@plumble.co.uk': 'Niall Enright',
+	'tom.hewitt@plumble.co.uk': 'Liam Barnes',
+    'tom.hewitt@plumble.co.uk': 'Shaun McNicholas',
+	'tom.hewitt@plumble.co.uk': 'Lee Parker',
+	'tom.hewitt@plumble.co.uk': 'Sean Witham',
+	'tom.hewitt@plumble.co.uk': 'James Bishop'
 }
 
 engineer_postcode_dict = {
-	'Carn Prior (RM12)': 'carn@plumble.co.uk',
+	'Niall Enright (E17)': 'tom.hewitt@plumble.co.uk',
 	'James Duval (SS6)': 'james.duval@plumble.co.uk',
-	'Matthew Peters (ME8)': 'tom.hewitt@plumble.co.uk',
-	'Alfie Fitzpatrick (TN24)': 'tom.hewitt@plumble.co.uk'
+	'Nick Cook (ME6)': 'tom.hewitt@plumble.co.uk',
+	'Billy Saward (TN21)': 'tom.hewitt@plumble.co.uk',
+	'Richard Steadman (TN12)': 'tom.hewitt@plumble.co.uk',
+	'Liam Barnes (ME12)': 'tom.hewitt@plumble.co.uk',
+    'Shaun McNicholas (IG6)': 'tom.hewitt@plumble.co.uk',
+    'Lee Parker (ME6)': 'tom.hewitt@plumble.co.uk',
+    'Sean Witham (IG7)': 'tom.hewitt@plumble.co.uk',
+    'James Bishop (TN4)': 'tom.hewitt@plumble.co.uk'
 }
 
 engineer_calendar_dict = {
-	'Carn Prior': 'carn@plumble.co.uk',
-	'James Duval': 'james.duval@plumble.co.uk',
-	'Matthew Peters': 'tom.hewitt@plumble.co.uk',
-	'Alfie Fitzpatrick': 'tom.hewitt@plumble.co.uk'
+    'James Duval': 'james.duval@plumble.co.uk',
+	'Nick Cook': 'tom.hewitt@plumble.co.uk',
+	'Billy Saward': 'tom.hewitt@plumble.co.uk',
+	'Richard Steadman': 'tom.hewitt@plumble.co.uk',
+	'Niall Enright': 'tom.hewitt@plumble.co.uk',
+	'Liam Barnes': 'tom.hewitt@plumble.co.uk',
+    'Shaun McNicholas': 'tom.hewitt@plumble.co.uk',
+    'Lee Parker': 'tom.hewitt@plumble.co.uk',
+    'Sean Witham': 'tom.hewitt@plumble.co.uk',
+    'James Bishop': 'tom.hewitt@plumble.co.uk' 
 }
