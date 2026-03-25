@@ -161,14 +161,17 @@
                 {% endif %}    
             </p>
 
-            <p class="all_text">Dear {{ customer_title }} {{ customer_last_name }},</p>
+            <p class="all_text">Hi {{ customer_first_name }},</p>
 
             <!-- Insert Email body content here  -->
 
 
+            <p class="all_text"> 
+                Thank you again for the opportunity to visit and provide your fixed price quotation for your new boiler on {{ survey_date|date:"D j F Y" }} — we hope you found the appointment helpful.
+            </p>
+
             <p class="all_text">
-                We just wanted to thank you for the opportunity to quote for your new central heating boiler on {{ survey_date|date:"D j F Y" }} with one of our FIXED PRICED QUOTATIONS, we hope you found the appointment valuable.
-                We understand it’s a difficult decision, deciding who to choose to install your new boiler and equipment. So we we’re hoping to make your decision a little easier with a special offer. 
+                We understand that choosing the right company and system is an important decision, and not always an easy one. With that in mind, we wanted to make things a little easier by offering you something extra to help you move forward.    
             </p>
             
             <hr>
@@ -176,8 +179,17 @@
                 {{special_offer_details|safe }}
             </p>
             <hr>
+
             <p class="all_text">
-                If you would like to take advantage of this special offer, please give us a call on <a href="tel:01732622990">01732 622990.</a>
+                If your new boiler is still something you’re considering, this is a great opportunity to get everything in place with a little added value.
+            </p>
+
+            <p class="all_text">
+                If you’d like to take advantage of this offer, simply give us a call on <a href="tel:01732622990">01732 622990</a>, or use one of the options below and we’ll take care of the rest.
+            </p>
+
+            <p class="all_text">
+                As always, if you have any questions, would like to make any changes, or want to talk things through — we’re here to help.
             </p>
 
             <p class="all_text">
@@ -187,8 +199,7 @@
             <!-- End of Email body content  -->
 
             <div id="final-strap-line">
-                <p id="final-strap-text">"Our friendly team will provide you with an efficient service, delivered with a
-                    sense of warmth."</p>
+                <p id="final-strap-text">"Our friendly team will provide you with an efficient service, delivered with a sense of warmth"</p>
             </div>
 
         </div>

@@ -125,17 +125,36 @@
                     href='mailto:hello@plumble.co.uk'>hello@plumble.co.uk</a>
             </div>
 
-            <p class="all_text">Dear {{ customer_title }} {{ customer_last_name }},</p>
+            <p class="all_text">Hi {{ customer_first_name }},</p>
 
             <!-- Insert Email body content here  -->
 
             <p class="all_text">
-                We tried calling today to discuss the quotation we gave on {{ survey_date|date:"D j F Y" }}. We'd like to know if you had any questions relating to the quotation, or if there was anything further we could do to support you at this stage as we'd love to have you on board as a customer.
-                If you'd like to arrange a convenient time for us to give you a call, simply reply to this email and one of our team will be happy to schedule a call.
+                We tried calling you today to follow up on the quotation we provided on {{ survey_date|date:"D j F Y" }}.
+            </p>
+            <p class="all_text">
+                Just checking in to see if you had any questions, if anything’s unclear, or if you’d like to tweak anything in the quote — we’re here to make things as easy and straightforward as possible.
             </p>
             
             <p class="all_text">
-                Alternatively, please feel free to ask any questions by email, and we'll reply with the information you need.
+                If you’ve had another quote, let’s talk about it. We can go through it together, look at any differences, and make sure you feel confident you’re making the right call for your new boiler.
+            </p>
+
+            <p class="all_text">
+                <b>If you’d like to go ahead with your new boiler, the next steps are simple:</b><br>
+
+                &#10004;  Let us know you’re happy to proceed <br>
+                &#10004;  Tell us if you’d like to make any changes first <br>
+                &#10004;  We’ll get an installation date booked in <br>
+                &#10004;  Then we’ll take care of everything from start to finish <br>
+            </p>
+
+            <p class="all_text">
+                If you'd rather have a quick chat, just reply to this email and we’ll arrange a time that suits you.
+            </p>
+
+            <p class="all_text">
+                Or feel free to reply with any questions — no pressure, no obligation, just honest advice.
             </p>
             
             <p class="all_text">
@@ -145,8 +164,7 @@
             <!-- End of Email body content  -->
 
             <div id="final-strap-line">
-                <p id="final-strap-text">"Our friendly team will provide you with an efficient service, delivered with a
-                    sense of warmth."</p>
+                <p id="final-strap-text">"Our friendly team delivers efficient service with a genuine sense of warmth."</p>
             </div>
 
         </div>
