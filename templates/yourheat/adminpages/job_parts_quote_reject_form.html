@@ -1,0 +1,37 @@
+{% extends "yourheat/adminpages/base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <h4>Job Quote Rejection Form (Not this time…But thanks)</h4>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+
+        <div class = "row">
+            <div class = "col-12">
+                <div class="form-group">
+                    <label>PO</label>
+                    {{ form.PO }}
+                </div>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-12">
+                <div class="form-group">
+                    <label>{{form.merchant.label}}</label>
+                    {{ form.merchant }}
+                </div>
+            </div>
+        </div>
+
+            <button class="btn boilerbtn btn-warning" type="submit">Send Email To Merchant</button>
+
+        <a href="{% url 'ProcessingCancelled' %}" class="btn btn-secondary">Cancel</a>
+
+    </form>
+
+</div>
+{% endblock content %}

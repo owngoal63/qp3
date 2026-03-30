@@ -973,7 +973,6 @@ MERCHANT_DROPDOWN = (
 	('chatham@plumbase.co.uk', 'chatham@plumbase.co.uk'),
 	('cpsmaidstonehartstreet@cityplumbing.co.uk', 'cpsmaidstonehartstreet@cityplumbing.co.uk'),
 	('service@plumble.co.uk', 'service@plumble.co.uk'),
-
 )
 
 TIME_OVERRIDE_DROPDOWN = (
@@ -1061,6 +1060,11 @@ GUARANTEE_YEARS_DROPDOWN = (
 	('12', '12 Years'),
 	('13', '13 Years'),
 	('14', '14 Years')
+)
+
+YES_NO_CHOICES = (
+    ('yes', 'Yes'),
+    ('no', 'No'),
 )
 
 
@@ -1999,18 +2003,28 @@ class JobPartsForm(forms.Form):
 	house_name_or_number = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
 	street_address = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
 	city = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	customer_primary_phone = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
 	county = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
 	postcode = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
 	#job_date = forms.DateField(initial=datetime.datetime.now().strftime('%d/%m/%Y'), input_formats=['%d/%m/%Y'])
 	installation_date = forms.DateField(input_formats=['%d/%m/%Y'])
 	engineer = forms.ChoiceField(choices=ENGINEER_POSTCODE_DROPDOWN)
 	merchant = forms.ChoiceField(choices=MERCHANT_DROPDOWN)
-	delivery_or_collection = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':3, 'cols':60}))
+	delivery_or_collection = forms.CharField(max_length=2000, initial='Delivery to the job address Pre-9:30 on the day of installation (unless specified)', widget=forms.Textarea(attrs={'class': 'form-control', 'rows':3, 'cols':60, 'help_text': 'Enter delivery information and any special requirements here...'}))
 	agreed_boiler_option = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
 	parts = forms.CharField(max_length=4000, required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':5, 'cols':60}))
 	optional_extras_taken = forms.CharField(max_length=4000, required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':5, 'cols':60}))
 	additional_information = forms.CharField(max_length=2000, required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'rows':3, 'cols':60}))
+	customer_accepts_delivery_prior_to_installation = forms.ChoiceField(choices=YES_NO_CHOICES, initial='yes', widget=forms.Select(attrs={'class': 'form-control'}))
 
+class JobPartsQuoteRejectForm(forms.Form):
+	def __init__(self, *args, **kwargs):
+		super(JobPartsQuoteRejectForm, self).__init__(*args, **kwargs)
+		for field in self: 
+			field.field.widget.attrs['class'] = 'form-control'
+	PO = forms.CharField(max_length=100, required=False, widget = forms.TextInput(attrs={'readonly':'readonly'}))
+	merchant = forms.ChoiceField(choices=MERCHANT_DROPDOWN)
+	
 class SpecialOfferForm(forms.Form):
 	def __init__(self, *args, **kwargs):
 		super(SpecialOfferForm, self).__init__(*args, **kwargs)

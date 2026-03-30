@@ -17,7 +17,7 @@ import smartsheet
 import json
 
 from quotepad.models import CustomerComm
-from quotepad.forms import ssSurveyAppointmentForm, ssInstallationAppointmentForm, JobPartsForm, SpecialOfferForm, CustomerEnquiryForm, HeatPlanForm, EngineerPhotoForm, GuaranteeForm
+from quotepad.forms import ssSurveyAppointmentForm, ssInstallationAppointmentForm, JobPartsForm, SpecialOfferForm, CustomerEnquiryForm, HeatPlanForm, EngineerPhotoForm, GuaranteeForm, JobPartsQuoteRejectForm
 from quotepad.utils import send_email_using_SendGrid, remove_control_characters, update_customer_comms_table, get_customer_comms_invoice_status
 
 # imports associated with sending email ( can be removed for production )
@@ -1116,14 +1116,26 @@ class get_heat_plan(FormView):
 class get_job_parts(FormView):
 
 	form_class = JobPartsForm
-	template_name = "yourheat/adminpages/job_parts_form.html"
 	customer_id = None
+
+	def get_template_names(self):
+		job_awarded = (self.kwargs.get('job_awarded', 'false')).lower() == 'true'
+		if job_awarded:
+			return ["yourheat/adminpages/job_parts_form.html"]
+		else:
+			return ["yourheat/adminpages/job_parts_quote_request_form.html"]
 
 	
 	def get_initial(self, **kwargs):
 		print("Class->Function: get_job_parts->get_initial")
 		initial = super().get_initial()
 		customer_id = self.kwargs['customer_id']
+		job_awarded = (self.kwargs.get('job_awarded', 'false')).lower() == 'true' # optional url parameter converted to Boolean. If True then Job has been awarded.
+
+		if job_awarded:
+			template_name = "yourheat/adminpages/job_parts_quote_request_form.html"
+		else:
+			template_name = "yourheat/adminpages/job_parts_form.html"
 
 		data_filename = Path(settings.BASE_DIR + "/pdf_quote_archive/user_yourheatx/customer_comms/Job Parts.txt")
 
@@ -1162,6 +1174,7 @@ class get_job_parts(FormView):
 				initial['street_address'] = line_dict.get("street_address")
 				initial['city'] = line_dict.get("city")
 				initial['county'] = line_dict.get("county")
+				initial['customer_primary_phone'] = line_dict.get("customer_primary_phone")
 				initial['postcode'] = line_dict.get("postcode")
 				if line_dict.get("installation_date"):
 					ss_date = datetime.datetime.strptime(line_dict.get("installation_date"), "%Y-%m-%d")
@@ -1175,23 +1188,39 @@ class get_job_parts(FormView):
 					initial['parts'] = line_dict.get("option_a_parts_list").replace('|', '\r\n')
 
 		return initial
+	
+	def form_invalid(self, form):
+		print("FORM INVALID", form.errors)
+		return super().form_invalid(form)
 
 	def form_valid(self, form, **kwargs):
 		print("Class->Function: get_job_parts->form_valid")
 
-		html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/Job Parts Comms.html".format(settings.YH_MASTER_PROFILE_USERNAME))
+		job_awarded = (self.kwargs.get('job_awarded', 'false')).lower() == 'true'
+		if job_awarded:
+			html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/Job Parts Comms.html".format(settings.YH_MASTER_PROFILE_USERNAME))
+		else:
+			html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/Job Parts Quote Request.html".format(settings.YH_MASTER_PROFILE_USERNAME))
+
+		
 		html_content = render_to_string(html_email_filename, form.cleaned_data)
 		print("Merchant Email:", form.cleaned_data['merchant'])
 		print("Engineer Email (no longer required):",engineer_postcode_dict.get(form.cleaned_data['engineer']))
 		merchant_email = form.cleaned_data['merchant']
 
 		if settings.YH_TEST_EMAIL:
-			email = EmailMessage("Plumble Job Parts Notification " + form.cleaned_data['PO'], html_content, 'info@yourheat.co.uk' , [merchant_email])
+			if job_awarded:
+				email = EmailMessage("Plumble Job Parts Notification " + form.cleaned_data['PO'], html_content, 'info@yourheat.co.uk' , [merchant_email])
+			else:
+				email = EmailMessage("Plumble Request for Quotation " + form.cleaned_data['PO'], html_content, 'info@yourheat.co.uk' , [merchant_email])
 			email.content_subtype = "html"  # Main content is now text/html
 			email.send()
 		else:
 			# Note that the sender email below can only be hello@yourheat.co.uk due to the API authentication
-			send_email_using_GmailAPI('Purchasing@yourheat.co.uk', merchant_email, "Plumble Job Parts Notification " + form.cleaned_data['PO'], html_content)
+			if job_awarded:
+				send_email_using_GmailAPI('Purchasing@yourheat.co.uk', merchant_email, "JOB AWARDED - Plumble Job Parts Notification " + form.cleaned_data['PO'], html_content)
+			else:
+				send_email_using_GmailAPI('Purchasing@yourheat.co.uk', merchant_email, "Plumble Request for Quotation " + form.cleaned_data['PO'], html_content)
 
 		smartsheet_id = form.cleaned_data['PO'].replace('PO','YH')
 
@@ -1215,6 +1244,35 @@ class get_job_parts(FormView):
 				smartsheet_id,
 				["Job Parts email sent to " + merchant_email]
 			)
+				
+
+		return HttpResponseRedirect('/EmailSentToMerchant/')
+	
+class job_quote_reject(FormView):
+
+	form_class = JobPartsQuoteRejectForm
+	template_name = "yourheat/adminpages/job_parts_quote_reject_form.html"
+	customer_id = None
+
+	def get_initial(self, **kwargs):
+		print("Class->Function: job_quote_reject->get_initial")
+		initial = super().get_initial()
+		customer_id = self.kwargs['customer_id']
+		initial['PO'] = customer_id.replace('YH','PO')
+
+		return initial
+
+	def form_valid(self, form, **kwargs):
+		html_email_filename = Path(settings.BASE_DIR + "/templates/pdf/user_{}/customer_comms/Job Parts Quote Reject Comms.html".format(settings.YH_MASTER_PROFILE_USERNAME))
+		html_content = render_to_string(html_email_filename, form.cleaned_data)
+		merchant_email = form.cleaned_data['merchant']
+
+		if settings.YH_TEST_EMAIL:
+			email = EmailMessage("Plumble Job Quote Notification - " + form.cleaned_data['PO'], html_content, 'info@yourheat.co.uk' , [merchant_email])
+			email.content_subtype = "html"  # Main content is now text/html
+			email.send()
+		else:
+			send_email_using_GmailAPI('Purchasing@yourheat.co.uk', merchant_email, "Plumble Job Quote Notification - " + form.cleaned_data['PO'], html_content)
 
 		return HttpResponseRedirect('/EmailSentToMerchant/')
 

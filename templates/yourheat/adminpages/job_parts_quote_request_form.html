@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="container">
-    <h4>Job Parts Notification to Merchant</h4>
+    <h4>Job Quote Request To Merchants</h4>
 
     <form method="POST">
 
@@ -25,28 +25,22 @@
         </div>
 
         <div class = "row">
-            <div class = "col-3">
+            <div class = "col-4">
                 <div class="form-group">
                     <label>{{form.house_name_or_number.label}}</label>
                     {{ form.house_name_or_number }}
                 </div>
             </div>
-            <div class = "col-3">
+            <div class = "col-4">
                 <div class="form-group">
                     <label>{{form.street_address.label}}</label>
                     {{ form.street_address }}
                 </div>
             </div>
-            <div class = "col-3">
+            <div class = "col-4">
                 <div class="form-group">
                     <label>{{form.city.label}}</label>
                     {{ form.city }}
-                </div>
-            </div>
-            <div class = "col-3">
-                <div class="form-group">
-                    <label>{{form.customer_primary_phone.label}}</label>
-                    {{ form.customer_primary_phone }}
                 </div>
             </div>
         </div>
@@ -108,7 +102,7 @@
         <div class = "row">
             <div class = "col-6">
                 <div class="form-group">
-                    <label>{{form.delivery_or_collection.label}}</label>
+                    <label>Delivery Instructions</label>
                     {{ form.delivery_or_collection }}
                 </div>
             </div>
@@ -119,24 +113,12 @@
                 </div>
             </div>
         </div>
-
-        <div class = "row">
-            <div class = "col-6">
-                <div class="form-group">
-                    <label>{{form.customer_accepts_delivery_prior_to_installation.label}}</label>
-                    {{ form.customer_accepts_delivery_prior_to_installation }}
-                </div>
-            </div>
-            <div class = "col-6">
-                &nbsp;
-            </div>
-        </div>
-
+        <input type="hidden" name="customer_accepts_delivery_prior_to_installation" value="yes">
 
         {% if form.agreed_boiler_option.value != 'Option A Parts' and form.agreed_boiler_option.value != 'Option B Parts'  %}
             <p style="color:red;"><b>Agreed Boiler Option has not been set in Smartsheet. Please fix before proceeding</b></p>
         {% else %}
-            <button class="btn boilerbtn btn-warning" type="submit">Send Email Notification</button>
+            <button class="btn boilerbtn btn-warning" type="submit">Send Email Request</button>
         {% endif %}
 
         <a href="{% url 'ProcessingCancelled' %}" class="btn btn-secondary">Cancel</a>

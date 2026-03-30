@@ -15,20 +15,27 @@
      
     </div>
     <div class="row">
-        <div class = "col-3"  style="color:rgb(0,48,89)">
+        <div class="col-3" style="color:rgb(0,48,89)">
             &nbsp;&nbsp;<i class="fas fa-address-card"></i>
             <strong>{{ customer_name }}</strong><br>
             &nbsp;&nbsp;<img src="{% static 'images/smartsheet_tick_transparent.png' %}">
             <strong>{{ customer_id }}</strong>
         </div>  
-        <div class = "col-3">
-            <a class="btn boilerbtn {% if customer_status != '1' %} btn-secondary disabled {% else %} btn-primary {% endif %} " href="{% url 'GetSurveyAppointment' customer_id %}">Schedule Survey Calendar Booking</a>
+        <div class="col-3">
+            <a class="btn boilerbtn {% if customer_status != '1' %} btn-secondary disabled {% else %} btn-primary {% endif %}" href="{% url 'GetSurveyAppointment' customer_id %}">Schedule Survey Calendar Booking</a>
         </div> 
-        <div class = "col-3">
-            <a class="btn boilerbtn {% if customer_status != '4' %} boilerbtn btn-secondary disabled {% else %} btn-primary {% endif %}" href="{% url 'GetInstallationAppointment' customer_id %}">Schedule Installation Calendar Booking</a>
+        <div class="col-3">
+            <a class="btn boilerbtn {% if customer_status != '4' %} btn-secondary disabled {% else %} btn-primary {% endif %}" href="{% url 'GetInstallationAppointment' customer_id %}">Schedule Installation Calendar Booking</a>
         </div>
-        <div class = "col-3">
-            <a class="btn boilerbtn btn-primary" href="{% url 'GetJobParts' customer_id %}">Generate Job Parts Email for Merchant</a>
+        <div class="col-3">
+            <div class="d-flex flex-column gap-2">
+                <a class="btn boilerbtn btn-primary" href="{% url 'GetJobParts' customer_id %}" style="font-size: 0.75rem;">Request Job Quotes from Merchants</a>
+                <hr style="margin: 0; padding: 0; border-top: 1px solid #ccc;">
+                <div class="d-flex justify-content-between gap-2">
+                    <a class="btn boilerbtn btn-success" href="{% url 'GetJobParts' customer_id 'true' %}" style="font-size: 0.75rem;">Job Awarded</a>
+                    <a class="btn boilerbtn btn-danger" href="{% url 'JobQuoteReject' customer_id %}" style="font-size: 0.75rem;">Not this time…</a>
+                </div>
+            </div>
         </div>  
     </div>
 
