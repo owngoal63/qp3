@@ -658,9 +658,10 @@ p.account-details {
     border-top-left-radius: 20px;
     border-bottom-right-radius: 20px;
     /* margin: 50px 0px 0px 50px; */
-    height: 350px;
+    height: 380px;
     width: 620px;
     padding: 20px;
+    padding-bottom: 15px;
 }
 
 .ob-orange-box-small{
